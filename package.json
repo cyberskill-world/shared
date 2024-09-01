@@ -51,8 +51,8 @@
         "lint:check": "npx tsx src/commands.ts lint:check",
         "lint:fix": "npx tsx src/commands.ts lint:fix",
         "prepare": "husky",
-        "release": "npm run build && npx release-it",
-        "setup": "rimraf node_modules package-lock.json && npm i -f"
+        "release": "npm run build && npx release-it --only-version",
+        "setup": "npx tsx src/commands.ts setup"
     },
     "dependencies": {
         "@typescript-eslint/utils": "8.3.0",
