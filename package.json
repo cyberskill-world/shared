@@ -1,0 +1,92 @@
+{
+    "name": "cyberskill",
+    "version": "2024.9.0",
+    "description": "CyberSkill Shared",
+    "license": "MIT",
+    "author": "Stephen Cheng",
+    "type": "module",
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.js"
+        },
+        "./commands": {
+            "require": "./dist/commands/index.cjs",
+            "import": "./dist/commands/index.js"
+        },
+        "./configs": {
+            "require": "./dist/configs/index.cjs",
+            "import": "./dist/configs/index.js"
+        },
+        "./constants": {
+            "require": "./dist/constants/index.cjs",
+            "import": "./dist/constants/index.js"
+        },
+        "./controllers": {
+            "require": "./dist/controllers/index.cjs",
+            "import": "./dist/controllers/index.js"
+        },
+        "./typescript": {
+            "require": "./dist/typescript/index.cjs",
+            "import": "./dist/typescript/index.js"
+        },
+        "./utils": {
+            "require": "./dist/utils/index.cjs",
+            "import": "./dist/utils/index.js"
+        }
+    },
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "bin": {
+        "cyberskill": "./dist/commands.js"
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "rimraf dist && env NODE_ENV=production tsup",
+        "dev": "rimraf dist && tsup --watch",
+        "lint-staged": "npx tsx src/commands.ts lint-staged",
+        "lint:check": "npx tsx src/commands.ts lint:check",
+        "lint:fix": "npx tsx src/commands.ts lint:fix",
+        "prepare": "husky",
+        "release": "npm run build && npx release-it",
+        "setup": "rimraf node_modules package-lock.json && npm i -f"
+    },
+    "dependencies": {
+        "@typescript-eslint/utils": "8.3.0",
+        "auto-changelog": "2.4.0",
+        "chalk": "4.1.0",
+        "eslint": "9.9.1",
+        "eslint-config-prettier": "9.1.0",
+        "eslint-plugin-prettier": "5.2.1",
+        "eslint-plugin-simple-import-sort": "12.1.1",
+        "graphql": "16.9.0",
+        "husky": "9.1.5",
+        "lint-staged": "15.2.10",
+        "mongoose": "8.6.0",
+        "mongoose-aggregate-paginate-v2": "1.1.2",
+        "mongoose-paginate-v2": "1.8.3",
+        "ora": "5.4.1",
+        "prettier": "3.3.3",
+        "react": "18.3.1",
+        "react-dom": "18.3.1",
+        "release-it": "17.6.0",
+        "rimraf": "6.0.1",
+        "tsup": "8.2.4",
+        "tsx": "4.19.0",
+        "typescript": "5.5.4",
+        "typescript-eslint": "8.3.0",
+        "uuid": "10.0.0",
+        "yargs": "17.7.2"
+    },
+    "devDependencies": {
+        "@csmith/release-it-calver-plugin": "2023.12.0",
+        "@types/mongoose-aggregate-paginate-v2": "1.0.12",
+        "@types/react": "18.3.5",
+        "@types/react-dom": "18.3.0",
+        "@types/uuid": "10.0.0",
+        "@types/yargs": "17.0.33"
+    }
+}
