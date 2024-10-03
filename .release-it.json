@@ -1,7 +1,17 @@
 {
+    "npm": {
+        "publish": true,
+        "tag": "latest"
+    },
     "git": {
         "commitMessage": "chore: release v${version}",
-        "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+        "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs",
+        "tagName": "${version}",
+        "push": true,
+        "requireCleanWorkingDir": true
+    },
+    "github": {
+        "release": true
     },
     "hooks": {
         "after:bump": "npx auto-changelog -p"
@@ -11,8 +21,5 @@
             "format": "yyyy.mm.minor",
             "increment": "calendar"
         }
-    },
-    "npm": {
-        "publish": true
     }
 }

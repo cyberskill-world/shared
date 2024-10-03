@@ -1,18 +1,32 @@
 {
     "compilerOptions": {
+        /* Basic Options */
         "target": "ES6",
         "module": "NodeNext",
-        "lib": ["ESNext", "DOM"],
-        "declaration": true,
-        "declarationDir": "./dist",
         "outDir": "dist",
         "rootDir": "src",
-        "moduleResolution": "NodeNext",
-        "esModuleInterop": true,
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "declaration": true,
+        "declarationDir": "./dist",
+
+        /* Source Map Options */
+        "sourceMap": true,
+        "inlineSources": true,
+        "sourceRoot": "/",
+
+        /* Strict Type-Checking Options */
         "strict": true,
         "noImplicitAny": false,
-        "strictPropertyInitialization": false,
-        "skipLibCheck": true
+
+        /* Module Resolution Options */
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true,
+
+        /* Advanced Options */
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowJs": true,
+        "checkJs": false
     },
     "include": ["src/**/*"]
 }
