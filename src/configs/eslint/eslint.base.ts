@@ -6,16 +6,12 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
     eslint.configs.recommended,
-    ...tseslint.configs.strictTypeChecked,
-    ...tseslint.configs.stylisticTypeChecked,
+    ...tseslint.configs.recommended,
     eslintPluginPrettierRecommended,
     {
         languageOptions: {
             ecmaVersion: 'latest',
             globals: { ...globals.node },
-            parserOptions: {
-                projectService: true,
-            },
         },
         plugins: {
             'simple-import-sort': simpleImportSort,
