@@ -3,9 +3,9 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import tseslint from 'typescript-eslint';
 
 export default {
-    merge: (type = 'eslint', baseConfig, ...configs) => {
+    merge: (type = 'eslint', rootConfig, ...configs) => {
         if (!configs.length) {
-            return baseConfig;
+            return rootConfig;
         }
 
         switch (type) {
@@ -14,7 +14,7 @@ export default {
                     eslint.configs.recommended,
                     ...tseslint.configs.recommended,
                     eslintPluginPrettierRecommended,
-                    ...baseConfig,
+                    ...rootConfig,
                     ...configs.reduce(
                         (acc, config) => ({ ...acc, ...config }),
                         {},
@@ -23,7 +23,7 @@ export default {
             }
             case 'prettier': {
                 return {
-                    ...baseConfig,
+                    ...rootConfig,
                     ...configs.reduce(
                         (acc, config) => ({ ...acc, ...config }),
                         {},
@@ -49,7 +49,7 @@ export default {
                         }
                         return mergedConfig;
                     },
-                    { ...baseConfig },
+                    { ...rootConfig },
                 );
             }
             default: {
