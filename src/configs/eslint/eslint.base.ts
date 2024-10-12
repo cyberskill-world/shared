@@ -16,6 +16,7 @@ export default [
             '@typescript-eslint/no-var-requires': 'warn',
             '@typescript-eslint/no-explicit-any': 'warn',
             '@typescript-eslint/no-unused-vars': 'warn',
+            '@typescript-eslint/no-unused-expressions': 'warn',
             'no-console': 'warn',
             'no-debugger': 'warn',
         },
