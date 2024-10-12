@@ -3,49 +3,62 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import tseslint from 'typescript-eslint';
 
 export default {
-    merge: (
-        type: 'eslint' | 'prettier' | 'lint-staged' = 'eslint',
-        rootConfig: Record<string, any>,
-        ...configs: Record<string, any>[]
-    ) => {
-        const mergeConfigs = (
-            baseConfig: Record<string, any>,
-            configs: Record<string, any>[],
-        ) =>
-            configs.reduce((acc, config) => Object.assign(acc, config), {
-                ...baseConfig,
-            });
-
-        const recommendedEslintConfigs = [
-            eslint.configs.recommended,
-            ...tseslint.configs.recommended,
-            eslintPluginPrettierRecommended,
-        ];
-
+    merge: (type = 'eslint', rootConfig, ...configs) => {
         switch (type) {
             case 'eslint': {
+                if (!configs.length) {
+                    return tseslint.config(
+                        eslint.configs.recommended,
+                        ...tseslint.configs.recommended,
+                        eslintPluginPrettierRecommended,
+                        ...rootConfig,
+                    );
+                }
+
                 return tseslint.config(
-                    ...recommendedEslintConfigs,
-                    mergeConfigs(rootConfig, configs),
+                    eslint.configs.recommended,
+                    ...tseslint.configs.recommended,
+                    eslintPluginPrettierRecommended,
+                    ...rootConfig,
+                    ...configs.reduce(
+                        (acc, config) => ({ ...acc, ...config }),
+                        {},
+                    ),
                 );
             }
             case 'prettier': {
-                return mergeConfigs(rootConfig, configs);
+                if (!configs.length) {
+                    return rootConfig;
+                }
+
+                return {
+                    ...rootConfig,
+                    ...configs.reduce(
+                        (acc, config) => ({ ...acc, ...config }),
+                        {},
+                    ),
+                };
             }
             case 'lint-staged': {
+                if (!configs.length) {
+                    return rootConfig;
+                }
+
                 return configs.reduce(
-                    (mergedConfig, config) => {
+                    (mergedConfig, config: Record<string, string[]>) => {
                         for (const [pattern, commands] of Object.entries(
                             config,
                         )) {
-                            mergedConfig[pattern] = mergedConfig[pattern]
-                                ? Array.from(
-                                      new Set([
-                                          ...mergedConfig[pattern],
-                                          ...commands,
-                                      ]),
-                                  )
-                                : commands;
+                            if (mergedConfig[pattern]) {
+                                mergedConfig[pattern] = Array.from(
+                                    new Set([
+                                        ...mergedConfig[pattern],
+                                        ...commands,
+                                    ]),
+                                );
+                            } else {
+                                mergedConfig[pattern] = commands;
+                            }
                         }
                         return mergedConfig;
                     },
