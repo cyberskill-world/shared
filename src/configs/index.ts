@@ -1,3 +1,5 @@
+import eslint from '@eslint/js';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import tseslint from 'typescript-eslint';
 
 export default {
@@ -8,7 +10,13 @@ export default {
 
         switch (type) {
             case 'eslint': {
-                return tseslint.config(...baseConfig, ...configs);
+                return tseslint.config(
+                    eslint.configs.recommended,
+                    ...tseslint.configs.recommended,
+                    eslintPluginPrettierRecommended,
+                    baseConfig,
+                    ...configs,
+                );
             }
             case 'prettier': {
                 return {

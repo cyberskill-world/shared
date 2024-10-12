@@ -1,29 +1,20 @@
-import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-    eslint.configs.recommended,
-    ...tseslint.configs.recommended,
-    eslintPluginPrettierRecommended,
-    {
-        languageOptions: {
-            ecmaVersion: 'latest',
-            globals: { ...globals.node },
-        },
-        plugins: {
-            'simple-import-sort': simpleImportSort,
-        },
-        rules: {
-            '@typescript-eslint/no-explicit-any': 'warn',
-            '@typescript-eslint/no-unused-vars': 'warn',
-            '@typescript-eslint/no-var-requires': 'warn',
-        },
+export default {
+    languageOptions: {
+        ecmaVersion: 'latest',
+        globals: { ...globals.node },
     },
-    {
-        files: ['**/*.js'],
-        ...tseslint.configs.disableTypeChecked,
+    plugins: {
+        'simple-import-sort': simpleImportSort,
     },
-);
+    rules: {
+        '@typescript-eslint/no-require-imports': 'warn',
+        '@typescript-eslint/no-var-requires': 'warn',
+        '@typescript-eslint/no-explicit-any': 'warn',
+        '@typescript-eslint/no-unused-vars': 'warn',
+        'no-console': 'warn',
+        'no-debugger': 'warn',
+    },
+};

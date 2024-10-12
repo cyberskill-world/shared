@@ -1,7 +1,3 @@
-import tseslint from 'typescript-eslint';
-
-import baseConfig from './eslint.base.js';
-
-export default tseslint.config(...baseConfig, {
+export default {
     ignores: ['dist'],
-});
+};
