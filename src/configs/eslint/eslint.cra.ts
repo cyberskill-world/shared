@@ -1,3 +1,8 @@
-export default {
-    ignores: ['build'],
-};
+import baseConfig from './eslint.base.js';
+
+export default [
+    baseConfig,
+    {
+        ignores: ['build'],
+    },
+];

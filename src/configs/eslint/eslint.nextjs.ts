@@ -1,3 +1,8 @@
-export default {
-    ignores: ['.next', 'next.config.js'],
-};
+import baseConfig from './eslint.base.js';
+
+export default [
+    baseConfig,
+    {
+        ignores: ['.next', 'next.config.js'],
+    },
+];

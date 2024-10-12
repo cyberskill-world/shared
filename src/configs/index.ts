@@ -14,8 +14,11 @@ export default {
                     eslint.configs.recommended,
                     ...tseslint.configs.recommended,
                     eslintPluginPrettierRecommended,
-                    baseConfig,
-                    ...configs,
+                    ...baseConfig,
+                    ...configs.reduce(
+                        (acc, config) => ({ ...acc, ...config }),
+                        {},
+                    ),
                 );
             }
             case 'prettier': {
