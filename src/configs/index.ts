@@ -3,49 +3,49 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import tseslint from 'typescript-eslint';
 
 export default {
-    merge: (type = 'eslint', rootConfig, ...configs) => {
-        if (!configs.length) {
-            return rootConfig;
-        }
+    merge: (
+        type: 'eslint' | 'prettier' | 'lint-staged' = 'eslint',
+        rootConfig: Record<string, any>,
+        ...configs: Record<string, any>[]
+    ) => {
+        const mergeConfigs = (
+            baseConfig: Record<string, any>,
+            configs: Record<string, any>[],
+        ) =>
+            configs.reduce((acc, config) => Object.assign(acc, config), {
+                ...baseConfig,
+            });
+
+        const recommendedEslintConfigs = [
+            eslint.configs.recommended,
+            ...tseslint.configs.recommended,
+            eslintPluginPrettierRecommended,
+        ];
 
         switch (type) {
             case 'eslint': {
                 return tseslint.config(
-                    eslint.configs.recommended,
-                    ...tseslint.configs.recommended,
-                    eslintPluginPrettierRecommended,
-                    ...rootConfig,
-                    ...configs.reduce(
-                        (acc, config) => ({ ...acc, ...config }),
-                        {},
-                    ),
+                    ...recommendedEslintConfigs,
+                    mergeConfigs(rootConfig, configs),
                 );
             }
             case 'prettier': {
-                return {
-                    ...rootConfig,
-                    ...configs.reduce(
-                        (acc, config) => ({ ...acc, ...config }),
-                        {},
-                    ),
-                };
+                return mergeConfigs(rootConfig, configs);
             }
             case 'lint-staged': {
                 return configs.reduce(
-                    (mergedConfig, config: Record<string, string[]>) => {
+                    (mergedConfig, config) => {
                         for (const [pattern, commands] of Object.entries(
                             config,
                         )) {
-                            if (mergedConfig[pattern]) {
-                                mergedConfig[pattern] = Array.from(
-                                    new Set([
-                                        ...mergedConfig[pattern],
-                                        ...commands,
-                                    ]),
-                                );
-                            } else {
-                                mergedConfig[pattern] = commands;
-                            }
+                            mergedConfig[pattern] = mergedConfig[pattern]
+                                ? Array.from(
+                                      new Set([
+                                          ...mergedConfig[pattern],
+                                          ...commands,
+                                      ]),
+                                  )
+                                : commands;
                         }
                         return mergedConfig;
                     },
