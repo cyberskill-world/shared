@@ -14,7 +14,7 @@ const logStep = (step: string, message: string, icon: string = 'ℹ️') => {
 };
 
 export const lintCheck = async () => {
-    logStep('1', 'Starting lint check...', '🚀');
+    logStep('1', `Starting lint check for ${process.env.INIT_CWD}`, '🚀');
 
     const spinner = createSpinner('Running checks...').start();
 
@@ -55,7 +55,11 @@ export const lintCheck = async () => {
 };
 
 export const lintFix = async () => {
-    logStep('1', 'Starting lint and format fix...', '🚀');
+    logStep(
+        '1',
+        `Starting lint and format fix for ${process.env.INIT_CWD}`,
+        '🚀',
+    );
 
     const spinner = createSpinner('Fixing issues...').start();
 
@@ -82,7 +86,11 @@ export const lintFix = async () => {
 };
 
 export const lintStaged = async () => {
-    logStep('1', 'Starting lint-staged process...', '🚀');
+    logStep(
+        '1',
+        `Starting lint-staged process for ${process.env.INIT_CWD}`,
+        '🚀',
+    );
 
     const spinner = createSpinner('Running lint-staged...').start();
 
@@ -123,7 +131,7 @@ export const lintStaged = async () => {
 };
 
 export const setup = async () => {
-    logStep('1', 'Starting setup process...', '🚀');
+    logStep('1', `Starting setup process for ${process.env.INIT_CWD}`, '🚀');
 
     const spinner = createSpinner('Setting up...').start();
 

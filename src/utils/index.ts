@@ -25,6 +25,7 @@ export const deepMerge = (...configs: (T_Config | T_Config[])[]): T_Config => {
                 }
             }
         }
+
         return target;
     };
 
