@@ -2,48 +2,24 @@ import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import tseslint from 'typescript-eslint';
 
+import { T_Config } from '../typescript/index.js';
+import { deepMerge } from '../utils/index.js';
+
 export default {
-    merge: (type = 'eslint', rootConfig, ...configs) => {
+    merge: (type = 'eslint', ...configs: T_Config[]) => {
         switch (type) {
             case 'eslint': {
-                if (!configs.length) {
-                    return tseslint.config(
-                        eslint.configs.recommended,
-                        ...tseslint.configs.recommended,
-                        eslintPluginPrettierRecommended,
-                        ...rootConfig,
-                    );
-                }
-
                 return tseslint.config(
                     eslint.configs.recommended,
                     ...tseslint.configs.recommended,
                     eslintPluginPrettierRecommended,
-                    ...rootConfig,
-                    ...configs.reduce(
-                        (acc, config) => ({ ...acc, ...config }),
-                        {},
-                    ),
+                    deepMerge(configs),
                 );
             }
             case 'prettier': {
-                if (!configs.length) {
-                    return rootConfig;
-                }
-
-                return {
-                    ...rootConfig,
-                    ...configs.reduce(
-                        (acc, config) => ({ ...acc, ...config }),
-                        {},
-                    ),
-                };
+                return deepMerge(configs);
             }
             case 'lint-staged': {
-                if (!configs.length) {
-                    return rootConfig;
-                }
-
                 return configs.reduce(
                     (mergedConfig, config: Record<string, string[]>) => {
                         for (const [pattern, commands] of Object.entries(
@@ -62,7 +38,6 @@ export default {
                         }
                         return mergedConfig;
                     },
-                    { ...rootConfig },
                 );
             }
             default: {
