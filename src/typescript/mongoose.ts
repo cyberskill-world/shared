@@ -130,18 +130,16 @@ export type T_OptionalUnlessRequiredId<T> = OptionalUnlessRequiredId<T>;
 
 // Input Interfaces
 
-export interface I_Input_FindOne<T> {
+export interface I_Input_FindOne<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
     projection?: T_ProjectionType<T>;
     options?: T_QueryOptions<T>;
-    populate?: T_PopulateOption;
 }
 
-export interface I_Input_FindAll<T> {
+export interface I_Input_FindAll<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
     projection?: T_ProjectionType<T>;
     options?: T_QueryOptions<T>;
-    populate?: T_PopulateOption;
 }
 
 export interface T_PaginateOptionsWithPopulate
@@ -166,13 +164,13 @@ export interface I_Input_CreateMany<T> {
     docs: T[];
 }
 
-export interface I_Input_UpdateOne<T> {
+export interface I_Input_UpdateOne<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
     update: T_UpdateQuery<T>;
     options?: I_UpdateOptionsExtended;
 }
 
-export interface I_Input_UpdateMany<T> {
+export interface I_Input_UpdateMany<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
     update: T_UpdateQuery<T>;
     options?: I_UpdateOptionsExtended;

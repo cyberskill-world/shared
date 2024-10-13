@@ -59,7 +59,7 @@
         "lint:check": "npx tsx src/commands.ts lint:check",
         "lint:fix": "npx tsx src/commands.ts lint:fix",
         "prepare": "husky",
-        "release": "npm run build && dotenv release-it --",
+        "release": "npm run build && dotenv release-it --only-version",
         "setup": "npx tsx src/commands.ts setup"
     },
     "dependencies": {
