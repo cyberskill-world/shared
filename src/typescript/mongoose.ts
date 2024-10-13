@@ -10,6 +10,7 @@ import mongoose, {
     PaginateOptions,
     PaginateResult,
     PipelineStage,
+    PopulateOption,
     PopulateOptions,
     ProjectionType,
     QueryOptions,
@@ -115,7 +116,8 @@ export type T_FilterQuery<T> = FilterQuery<T>;
 export type T_ProjectionType<T> = ProjectionType<T>;
 export type T_QueryOptions<T> = QueryOptions<T>;
 export type T_PaginateOptions = PaginateOptions;
-export type T_PopulateOptions = PopulateOptions | PopulateOptions[];
+export type T_PopulateOption = PopulateOption;
+export type T_PopulateOptions = PopulateOptions;
 export type T_PipelineStage = PipelineStage;
 export type T_PaginateResult<T> = PaginateResult<T>;
 export type T_AggregatePaginateResult<T> = AggregatePaginateResult<T>;
@@ -132,19 +134,19 @@ export interface I_Input_FindOne<T> {
     filter: T_FilterQuery<T>;
     projection?: T_ProjectionType<T>;
     options?: T_QueryOptions<T>;
-    populate?: T_PopulateOptions;
+    populate?: T_PopulateOption;
 }
 
 export interface I_Input_FindAll<T> {
     filter: T_FilterQuery<T>;
     projection?: T_ProjectionType<T>;
     options?: T_QueryOptions<T>;
-    populate?: T_PopulateOptions;
+    populate?: T_PopulateOption;
 }
 
-export interface T_PaginateOptionsWithPopulate extends T_PaginateOptions {
-    populate?: T_PopulateOptions;
-}
+export interface T_PaginateOptionsWithPopulate
+    extends T_PaginateOptions,
+        PopulateOption {}
 
 export interface I_Input_FindPaging<T> {
     filter?: T_FilterQuery<T>;
