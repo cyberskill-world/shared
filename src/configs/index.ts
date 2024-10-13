@@ -15,12 +15,18 @@ export default {
                     ? ignores.filter((item) => typeof item === 'string')
                     : undefined;
 
+                const configOptions = {
+                    ...rest,
+                    ...(normalizedIgnores
+                        ? { ignores: normalizedIgnores }
+                        : {}),
+                };
+
                 return tseslint.config(
                     eslint.configs.recommended,
                     ...tseslint.configs.recommended,
                     eslintPluginPrettierRecommended,
-                    rest,
-                    { ignores: normalizedIgnores },
+                    configOptions,
                 );
             }
             case 'prettier':
