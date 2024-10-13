@@ -7,8 +7,9 @@ import {
     T_AggregatePaginateResult,
     T_DeleteResult,
     T_FilterQuery,
+    T_Input_Populate,
     T_InsertManyOptions,
-    T_PaginateOptions,
+    T_PaginateOptionsWithPopulate,
     T_PaginateResult,
     T_PipelineStage,
     T_PopulateOptions,
@@ -29,17 +30,13 @@ export class MongooseController<D extends Partial<C_Document>> {
         filter: T_FilterQuery<D> = {},
         projection: T_ProjectionType<D> = {},
         options: T_QueryOptions<D> = {},
-        populate?: T_PopulateOptions,
+        populate?: T_Input_Populate,
     ): Promise<I_Return<D>> {
         try {
             const query = this.model.findOne(filter, projection, options);
 
             if (populate) {
-                if (Array.isArray(populate)) {
-                    populate.forEach((option) => query.populate(option));
-                } else {
-                    query.populate(populate);
-                }
+                query.populate(populate as T_PopulateOptions);
             }
 
             const result = await query.exec();
@@ -66,17 +63,13 @@ export class MongooseController<D extends Partial<C_Document>> {
         filter: T_FilterQuery<D> = {},
         projection: T_ProjectionType<D> = {},
         options: T_QueryOptions<D> = {},
-        populate?: T_PopulateOptions,
+        populate?: T_Input_Populate,
     ): Promise<I_Return<D[]>> {
         try {
             const query = this.model.find(filter, projection, options);
 
             if (populate) {
-                if (Array.isArray(populate)) {
-                    populate.forEach((option) => query.populate(option));
-                } else {
-                    query.populate(populate);
-                }
+                query.populate(populate as T_PopulateOptions);
             }
 
             const result = await query.exec();
@@ -94,7 +87,7 @@ export class MongooseController<D extends Partial<C_Document>> {
 
     async findPaging(
         filter: T_FilterQuery<D> = {},
-        options: T_PaginateOptions = {},
+        options: T_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<D>>> {
         try {
             const result = await this.model.paginate(filter, options);
@@ -112,7 +105,7 @@ export class MongooseController<D extends Partial<C_Document>> {
 
     async findPagingAggregate(
         pipeline: T_PipelineStage[],
-        options: T_PaginateOptions = {},
+        options: T_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_AggregatePaginateResult<D>>> {
         try {
             const result = await this.model.aggregatePaginate(

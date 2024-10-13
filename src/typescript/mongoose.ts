@@ -128,6 +128,16 @@ export type T_DeleteResult = DeleteResult;
 export type T_WithId<T> = WithId<T>;
 export type T_OptionalUnlessRequiredId<T> = OptionalUnlessRequiredId<T>;
 
+export type T_Input_Populate =
+    | string
+    | string[]
+    | T_PopulateOptions
+    | T_PopulateOptions[];
+
+export interface T_PaginateOptionsWithPopulate
+    extends T_PaginateOptions,
+        T_PopulateOption {}
+
 // Input Interfaces
 
 export interface I_Input_FindOne<T> extends T_PopulateOption {
@@ -141,10 +151,6 @@ export interface I_Input_FindAll<T> extends T_PopulateOption {
     projection?: T_ProjectionType<T>;
     options?: T_QueryOptions<T>;
 }
-
-export interface T_PaginateOptionsWithPopulate
-    extends T_PaginateOptions,
-        PopulateOption {}
 
 export interface I_Input_FindPaging<T> {
     filter?: T_FilterQuery<T>;
