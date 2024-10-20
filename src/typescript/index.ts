@@ -1,3 +1,4 @@
+export * from './command.js';
 export * from './log.js';
 export * from './mongoose.js';
 

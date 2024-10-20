@@ -1,164 +1,249 @@
 #!/usr/bin/env node
 import chalk from 'chalk';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
 import fs from 'fs';
 import ora from 'ora';
-import { default as yargs } from 'yargs';
+import util from 'util';
 import { hideBin } from 'yargs/helpers';
+import yargs from 'yargs/yargs';
 
+import {
+    E_ErrorType,
+    E_SpinnerMessage,
+    I_ErrorEntry,
+} from './typescript/command.js';
+
+const execPromise = util.promisify(exec);
+
+const INIT_CWD = process.env.INIT_CWD || process.cwd();
+const TSCONFIG_PATH = `${INIT_CWD}/tsconfig.json`;
+const FILE_EXTENSIONS = '**/*.{ts,tsx,js,jsx,json,css,scss,less}';
+
+const errorList: I_ErrorEntry[] = [];
+
+// Spinner utility function
 const createSpinner = (text: string) =>
     ora({ text, color: 'cyan', spinner: 'dots' });
 
-const logStep = (step: string, message: string, icon: string = 'ℹ️') => {
+// Log process steps
+const logProcessStep = (step: string, message: string, icon: string = 'ℹ️') => {
     console.log(`${icon} ${chalk.blue(`[${step}]`)} ${chalk.white(message)}`);
 };
 
-export const lintCheck = async () => {
-    logStep('1', `Starting lint check for ${process.env.INIT_CWD}`, '🚀');
-
-    const spinner = createSpinner('Running checks...').start();
+// Execute a command and handle its output (either ESLint or TypeScript)
+const executeAndParseCommand = async (
+    command: string,
+    step: string,
+    description: string,
+): Promise<void> => {
+    logProcessStep(step, description, '🔍');
 
     try {
-        logStep('1.1', 'Running TypeScript compiler check...', '🔍');
+        const { stdout } = await execPromise(command);
 
-        const tsConfigPath = `${process.env.INIT_CWD}/tsconfig.json`;
-
-        if (fs.existsSync(tsConfigPath)) {
-            execSync(`npx tsc -p ${tsConfigPath} --noEmit`, {
-                stdio: 'inherit',
-            });
-        } else {
-            logStep('1.1', 'tsconfig.json file not found.', '⚠️');
+        if (stdout) {
+            parseCommandOutput(stdout);
         }
-
-        logStep('1.1', 'TypeScript check completed successfully.', '✅');
-
-        logStep('1.2', 'Running ESLint check...', '🔍');
-        execSync(`npx eslint ${process.env.INIT_CWD}`, {
-            stdio: 'inherit',
-        });
-        logStep('1.2', 'ESLint check completed successfully.', '✅');
-
-        logStep('1.3', 'Running Prettier check...', '🔍');
-        execSync(
-            `npx prettier --check '${process.env.INIT_CWD}/**/*.{ts,tsx,js,jsx,json,css,scss,less}'`,
-            { stdio: 'inherit' },
-        );
-        logStep('1.3', 'Prettier check completed successfully.', '✅');
-
-        spinner.succeed('Lint check passed successfully!');
     } catch (error) {
-        spinner.fail('Lint check failed.');
-        console.error(`${chalk.red('❌ [Error]')} ${(error as Error).message}`);
-        process.exit(1);
+        const { stdout, message } = error as {
+            stdout?: string;
+            message: string;
+        };
+
+        if (stdout) {
+            parseCommandOutput(stdout);
+        } else {
+            console.error(`Command failed: ${message}`);
+        }
     }
 };
 
-export const lintFix = async () => {
-    logStep(
-        '1',
-        `Starting lint and format fix for ${process.env.INIT_CWD}`,
-        '🚀',
+// Spinner wrapper to simplify starting/stopping spinners
+const withSpinner = async (
+    message: string,
+    action: () => Promise<void>,
+): Promise<void> => {
+    const spinner = createSpinner(message).start();
+
+    try {
+        await action();
+        spinner.succeed(`${message}${E_SpinnerMessage.Success}`);
+    } catch (error) {
+        spinner.fail(`${message}${E_SpinnerMessage.Fail}`);
+        throw error;
+    }
+};
+
+// Helper to check if output is JSON
+const isJson = (str: string): boolean => {
+    try {
+        JSON.parse(str);
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+// Parse ESLint JSON output
+const parseEslintJsonOutput = (output: string): void => {
+    try {
+        const results: Array<{
+            filePath: string;
+            messages: Array<{
+                line: number;
+                column: number;
+                severity: number;
+                message: string;
+            }>;
+        }> = JSON.parse(output);
+
+        results.forEach((result) => {
+            result.messages.forEach((message) => {
+                errorList.push({
+                    type:
+                        message.severity === 2
+                            ? E_ErrorType.Error
+                            : E_ErrorType.Warning,
+                    file: result.filePath,
+                    position: `${message.line}:${message.column}`,
+                    message: message.message,
+                });
+            });
+        });
+    } catch (error) {
+        console.error(
+            'Failed to parse ESLint JSON output:',
+            (error as Error).message,
+        );
+    }
+};
+
+// Parse TypeScript or plain text errors
+const parseTextErrors = (output: string): void => {
+    const tsRegex = /^(.+)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(.+)$/;
+    const lines = output.split('\n');
+
+    lines.forEach((line) => {
+        const match = tsRegex.exec(line);
+
+        if (match) {
+            errorList.push({
+                file: match[1],
+                position: `${match[2]}:${match[3]}`,
+                type: match[4] as E_ErrorType,
+                message: match[5].trim(),
+            });
+        }
+    });
+};
+
+// Unified helper function to process command output
+const parseCommandOutput = (stdout: string): void => {
+    if (isJson(stdout)) {
+        parseEslintJsonOutput(stdout);
+    } else {
+        parseTextErrors(stdout);
+    }
+};
+
+// Unified function to run different checks (TypeScript, ESLint, Prettier)
+const runCheck = async (
+    tool: string,
+    fix = false,
+    extensions: string = '',
+    configPath: string = '',
+): Promise<void> => {
+    const command = `npx ${tool} ${fix ? '--fix ' : ''}${extensions} ${configPath}`;
+    await executeAndParseCommand(
+        command,
+        '1.2',
+        `${tool} ${fix ? 'fix' : 'check'}`,
+    );
+};
+
+// Run TypeScript check
+const runTypeScriptCheck = async (): Promise<void> => {
+    if (fs.existsSync(TSCONFIG_PATH)) {
+        await runCheck('tsc', false, '', `-p ${TSCONFIG_PATH} --noEmit`);
+    } else {
+        logProcessStep('1.1', 'tsconfig.json file not found.', '⚠️');
+    }
+};
+
+// Run ESLint check
+const runESLint = (fix = false) =>
+    runCheck('eslint', fix, INIT_CWD, '--format json');
+
+// Run Prettier check
+const runPrettier = (fix = false) =>
+    runCheck('prettier', fix, `'${INIT_CWD}/${FILE_EXTENSIONS}'`);
+
+// Display collected errors and warnings
+const displayResults = (): void => {
+    if (errorList.length === 0) {
+        return;
+    }
+
+    const sortedErrors = errorList.sort((a, b) => a.type.localeCompare(b.type));
+    console.table(
+        sortedErrors.map(({ file, position, type, message }) => ({
+            Type: type,
+            File: file,
+            Position: position,
+            Message: message,
+        })),
     );
 
-    const spinner = createSpinner('Fixing issues...').start();
+    const errorCount = errorList.filter(
+        (e) => e.type === E_ErrorType.Error,
+    ).length;
+    const warningCount = errorList.filter(
+        (e) => e.type === E_ErrorType.Warning,
+    ).length;
 
-    try {
-        logStep('1.1', 'Running ESLint fix...', '🔧');
-        execSync(`npx eslint --fix ${process.env.INIT_CWD}`, {
-            stdio: 'inherit',
-        });
-        logStep('1.1', 'ESLint fix completed successfully.', '✅');
-
-        logStep('1.2', 'Running Prettier fix...', '🔧');
-        execSync(
-            `npx prettier --write '${process.env.INIT_CWD}/**/*.{ts,tsx,js,jsx,json,css,scss,less}'`,
-            { stdio: 'inherit' },
-        );
-        logStep('1.2', 'Prettier fix completed successfully.', '✅');
-
-        spinner.succeed('Lint and format fixes applied successfully!');
-    } catch (error) {
-        spinner.fail('Lint and format fix failed.');
-        console.error(`${chalk.red('❌ [Error]')} ${(error as Error).message}`);
-        process.exit(1);
-    }
+    console.log(chalk.red(`\nTotal Errors: ${errorCount}`));
+    console.log(chalk.yellow(`Total Warnings: ${warningCount}`));
 };
 
-export const lintStaged = async () => {
-    logStep(
-        '1',
-        `Starting lint-staged process for ${process.env.INIT_CWD}`,
-        '🚀',
-    );
+// Perform lint check
+const performLintCheck = async (): Promise<void> => {
+    logProcessStep('1', `Starting lint check for ${INIT_CWD}`, '🚀');
 
-    const spinner = createSpinner('Running lint-staged...').start();
-
-    try {
-        logStep('1.1', 'Running TypeScript compiler check...', '🔍');
-
-        const tsConfigPath = `${process.env.INIT_CWD}/tsconfig.json`;
-
-        if (fs.existsSync(tsConfigPath)) {
-            execSync(`npx tsc -p ${tsConfigPath} --noEmit`, {
-                stdio: 'inherit',
-            });
-        } else {
-            logStep('1.1', 'tsconfig.json file not found.', '⚠️');
-        }
-
-        logStep('1.1', 'TypeScript check completed successfully.', '✅');
-
-        logStep('1.2', 'Running ESLint fix...', '🔧');
-        execSync(`npx eslint --fix ${process.env.INIT_CWD}`, {
-            stdio: 'inherit',
-        });
-        logStep('1.2', 'ESLint fix completed successfully.', '✅');
-
-        logStep('1.3', 'Running Prettier fix...', '🔧');
-        execSync(
-            `npx prettier --write '${process.env.INIT_CWD}/**/*.{ts,tsx,js,jsx,json,css,scss,less}'`,
-            { stdio: 'inherit' },
-        );
-        logStep('1.3', 'Prettier fix completed successfully.', '✅');
-
-        spinner.succeed('Lint-staged process completed successfully!');
-    } catch (error) {
-        spinner.fail('Lint-staged process failed.');
-        console.error(`${chalk.red('❌ [Error]')} ${(error as Error).message}`);
-        process.exit(1);
-    }
+    await withSpinner(E_SpinnerMessage.LintCheck, async () => {
+        errorList.length = 0;
+        await Promise.all([runTypeScriptCheck(), runESLint(), runPrettier()]);
+        displayResults();
+    });
 };
 
-export const setup = async () => {
-    logStep('1', `Starting setup process for ${process.env.INIT_CWD}`, '🚀');
+// Perform lint and format fix
+const performLintFix = async (): Promise<void> => {
+    logProcessStep('1', `Starting lint and format fix for ${INIT_CWD}`, '🚀');
 
-    const spinner = createSpinner('Setting up...').start();
-
-    try {
-        execSync(
-            `npx rimraf ${process.env.INIT_CWD}/node_modules ${process.env.INIT_CWD}/package-lock.json && npm i -f`,
-            {
-                stdio: 'inherit',
-            },
-        );
-
-        spinner.succeed('Setup process completed successfully!');
-    } catch (error) {
-        spinner.fail('Setup process failed.');
-        console.error(`${chalk.red('❌ [Error]')} ${(error as Error).message}`);
-        process.exit(1);
-    }
+    await withSpinner(E_SpinnerMessage.LintFix, async () => {
+        await Promise.all([runESLint(true), runPrettier(true)]);
+        displayResults();
+    });
 };
 
+// Setup project (cleanup and install)
+const performSetup = async (): Promise<void> => {
+    logProcessStep('1', `Starting setup process for ${INIT_CWD}`, '🚀');
+
+    await withSpinner(E_SpinnerMessage.Setup, async () => {
+        await runCheck(
+            'rimraf',
+            false,
+            `${INIT_CWD}/node_modules ${INIT_CWD}/package-lock.json`,
+        );
+        await executeAndParseCommand('npm i -f', '1.2', 'Install dependencies');
+    });
+};
+
+// CLI command definitions using yargs
 yargs(hideBin(process.argv))
-    .command('lint:check', 'Run linting checks', lintCheck)
-    .command('lint:fix', 'Fix linting and formatting issues', lintFix)
-    .command(
-        'lint-staged',
-        'Run lint-staged with given configuration',
-        lintStaged,
-    )
-    .command('setup', 'Run setup with given configuration', setup)
+    .command('lint:check', 'Run linting checks', performLintCheck)
+    .command('lint:fix', 'Fix linting and formatting issues', performLintFix)
+    .command('setup', 'Run setup with given configuration', performSetup)
     .help()
     .parse();

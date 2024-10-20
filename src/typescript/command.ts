@@ -1,0 +1,19 @@
+export enum E_SpinnerMessage {
+    LintCheck = 'Running lint checks...',
+    LintFix = 'Fixing issues...',
+    Setup = 'Setting up...',
+    Success = ' completed successfully!',
+    Fail = ' failed.',
+}
+
+export enum E_ErrorType {
+    Error = 'error',
+    Warning = 'warning',
+}
+
+export interface I_ErrorEntry {
+    file: string;
+    position: string;
+    message: string;
+    type: E_ErrorType;
+}
