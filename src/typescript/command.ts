@@ -16,6 +16,7 @@ export interface I_ErrorEntry {
     position: string;
     message: string;
     type: E_ErrorType;
+    rule?: string;
 }
 
 export interface I_EslintError {
@@ -25,5 +26,6 @@ export interface I_EslintError {
         column: number;
         severity: number;
         message: string;
+        ruleId: string;
     }>;
 }

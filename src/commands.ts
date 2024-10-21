@@ -96,6 +96,7 @@ const parseCommandOutput = (stdout: string): void => {
                             : E_ErrorType.Warning,
                     file: result.filePath,
                     position: `${message.line}:${message.column}`,
+                    rule: message.ruleId,
                     message: message.message,
                 });
             });
@@ -110,6 +111,7 @@ const parseTextErrors = (output: string): void => {
     const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(.+)$/;
     output.split('\n').forEach((line) => {
         const match = tsRegex.exec(line);
+
         if (match) {
             errorList.push({
                 file: match[1],
@@ -131,10 +133,13 @@ const logResults = (
 ): void => {
     if (group.length > 0) {
         console.log(labelColor(figlet.textSync(groupName)));
-        group.forEach(({ file, position, message }) => {
+        group.forEach(({ file, position, message, rule }) => {
             console.log(
                 `${labelColor(`${icon}  File:`)} ${chalk.blue(file + ':' + position)}`,
             );
+            if (rule) {
+                console.log(`   ${labelColor('Rule:')} ${messageColor(rule)}`);
+            }
             console.log(
                 `   ${labelColor('Message:')} ${messageColor(message)}`,
             );
