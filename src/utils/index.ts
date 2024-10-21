@@ -46,3 +46,13 @@ export const deepMerge = (...configs: (T_Config | T_Config[])[]): T_Config => {
 
     return flattenedConfigs.reduce((acc, config) => merge(acc, config), {});
 };
+
+export const isJson = (str: string): boolean => {
+    try {
+        JSON.parse(str);
+
+        return true;
+    } catch {
+        return false;
+    }
+};

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import chalk from 'chalk';
+import chalkAnimation from 'chalk-animation';
 import { exec } from 'child_process';
+import figlet from 'figlet';
 import fs from 'fs';
 import ora from 'ora';
 import util from 'util';
@@ -11,26 +13,31 @@ import {
     E_ErrorType,
     E_SpinnerMessage,
     I_ErrorEntry,
+    I_EslintError,
 } from './typescript/command.js';
+import { isJson } from './utils/index.js';
 
 const execPromise = util.promisify(exec);
 
-const INIT_CWD = process.env.INIT_CWD || process.cwd();
-const TSCONFIG_PATH = `${INIT_CWD}/tsconfig.json`;
-const FILE_EXTENSIONS = '**/*.{ts,tsx,js,jsx,json,css,scss,less}';
+// Centralized configuration
+const config = {
+    INIT_CWD: process.env.INIT_CWD || process.cwd(),
+    TSCONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
+    FILE_EXTENSIONS: '**/*.{ts,tsx,js,jsx,json,css,scss,less}',
+};
 
 const errorList: I_ErrorEntry[] = [];
 
-// Spinner utility function
+// Utility function for spinners
 const createSpinner = (text: string) =>
     ora({ text, color: 'cyan', spinner: 'dots' });
 
-// Log process steps
+// Utility function to log process steps with a message and icon
 const logProcessStep = (step: string, message: string, icon: string = 'ℹ️') => {
     console.log(`${icon} ${chalk.blue(`[${step}]`)} ${chalk.white(message)}`);
 };
 
-// Execute a command and handle its output (either ESLint or TypeScript)
+// Execute a command and handle its output
 const executeAndParseCommand = async (
     command: string,
     step: string,
@@ -39,7 +46,9 @@ const executeAndParseCommand = async (
     logProcessStep(step, description, '🔍');
 
     try {
-        const { stdout } = await execPromise(command);
+        const { stdout } = await execPromise(command, {
+            maxBuffer: 1024 * 1024 * 100,
+        });
 
         if (stdout) {
             parseCommandOutput(stdout);
@@ -58,7 +67,7 @@ const executeAndParseCommand = async (
     }
 };
 
-// Spinner wrapper to simplify starting/stopping spinners
+// Wrapper for handling a spinner
 const withSpinner = async (
     message: string,
     action: () => Promise<void>,
@@ -74,30 +83,11 @@ const withSpinner = async (
     }
 };
 
-// Helper to check if output is JSON
-const isJson = (str: string): boolean => {
-    try {
-        JSON.parse(str);
-        return true;
-    } catch {
-        return false;
-    }
-};
-
-// Parse ESLint JSON output
+// Parse ESLint JSON output and add to errorList
 const parseEslintJsonOutput = (output: string): void => {
     try {
-        const results: Array<{
-            filePath: string;
-            messages: Array<{
-                line: number;
-                column: number;
-                severity: number;
-                message: string;
-            }>;
-        }> = JSON.parse(output);
-
-        results.forEach((result) => {
+        const results = JSON.parse(output);
+        results.forEach((result: I_EslintError) => {
             result.messages.forEach((message) => {
                 errorList.push({
                     type:
@@ -121,9 +111,7 @@ const parseEslintJsonOutput = (output: string): void => {
 // Parse TypeScript or plain text errors
 const parseTextErrors = (output: string): void => {
     const tsRegex = /^(.+)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(.+)$/;
-    const lines = output.split('\n');
-
-    lines.forEach((line) => {
+    output.split('\n').forEach((line) => {
         const match = tsRegex.exec(line);
 
         if (match) {
@@ -137,7 +125,7 @@ const parseTextErrors = (output: string): void => {
     });
 };
 
-// Unified helper function to process command output
+// Unified command output parser
 const parseCommandOutput = (stdout: string): void => {
     if (isJson(stdout)) {
         parseEslintJsonOutput(stdout);
@@ -146,14 +134,15 @@ const parseCommandOutput = (stdout: string): void => {
     }
 };
 
-// Unified function to run different checks (TypeScript, ESLint, Prettier)
+// Generic check runner
 const runCheck = async (
     tool: string,
     fix = false,
-    extensions: string = '',
-    configPath: string = '',
+    extensions = '',
+    configPath = '',
 ): Promise<void> => {
     const command = `npx ${tool} ${fix ? '--fix ' : ''}${extensions} ${configPath}`;
+
     await executeAndParseCommand(
         command,
         '1.2',
@@ -163,8 +152,8 @@ const runCheck = async (
 
 // Run TypeScript check
 const runTypeScriptCheck = async (): Promise<void> => {
-    if (fs.existsSync(TSCONFIG_PATH)) {
-        await runCheck('tsc', false, '', `-p ${TSCONFIG_PATH} --noEmit`);
+    if (fs.existsSync(config.TSCONFIG_PATH)) {
+        await runCheck('tsc', false, '', `-p ${config.TSCONFIG_PATH} --noEmit`);
     } else {
         logProcessStep('1.1', 'tsconfig.json file not found.', '⚠️');
     }
@@ -172,45 +161,123 @@ const runTypeScriptCheck = async (): Promise<void> => {
 
 // Run ESLint check
 const runESLint = (fix = false) =>
-    runCheck('eslint', fix, INIT_CWD, '--format json');
+    runCheck('eslint', fix, config.INIT_CWD, '--format json');
 
 // Run Prettier check
 const runPrettier = (fix = false) =>
-    runCheck('prettier', fix, `'${INIT_CWD}/${FILE_EXTENSIONS}'`);
+    runCheck('prettier', fix, `'${config.INIT_CWD}/${config.FILE_EXTENSIONS}'`);
 
-// Display collected errors and warnings
 const displayResults = (): void => {
-    if (errorList.length === 0) {
+    const errors = errorList.filter((e) => e.type === E_ErrorType.Error);
+    const warnings = errorList.filter((e) => e.type === E_ErrorType.Warning);
+
+    const renderWordArt = (
+        text: string,
+        font: string,
+        colorFn: chalk.Chalk,
+    ): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            figlet.text(text, { font }, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(colorFn(data));
+                }
+            });
+        });
+    };
+
+    const renderSuccessMessage = (): void => {
+        figlet('No issues found!', { font: 'Standard' }, (err, data) => {
+            if (err) {
+                console.error('Error generating success message:', err);
+                return;
+            }
+            const rainbowAnimation = chalkAnimation.rainbow(data);
+            rainbowAnimation.start();
+            setTimeout(() => rainbowAnimation.stop(), 3000);
+        });
+    };
+
+    if (errors.length === 0 && warnings.length === 0) {
+        renderSuccessMessage();
         return;
     }
 
-    const sortedErrors = errorList.sort((a, b) => a.type.localeCompare(b.type));
-    console.table(
-        sortedErrors.map(({ file, position, type, message }) => ({
-            Type: type,
-            File: file,
-            Position: position,
-            Message: message,
-        })),
-    );
+    const spinner = ora('Processing results...').start();
 
-    const errorCount = errorList.filter(
-        (e) => e.type === E_ErrorType.Error,
-    ).length;
-    const warningCount = errorList.filter(
-        (e) => e.type === E_ErrorType.Warning,
-    ).length;
+    const displayGroup = (
+        group: I_ErrorEntry[],
+        icon: string,
+        labelColor: chalk.Chalk,
+        messageColor: chalk.Chalk,
+    ): void => {
+        group.forEach(({ file, position, message }) => {
+            console.log(
+                `${labelColor(`${icon}  File:`)} ${chalk.blue(file + ':' + position)}`,
+            );
+            console.log(
+                `   ${labelColor('Message:')} ${messageColor(message)}`,
+            );
+            console.log(chalk.gray('─'.repeat(40)));
+        });
+    };
 
-    console.log(chalk.red(`\nTotal Errors: ${errorCount}`));
-    console.log(chalk.yellow(`Total Warnings: ${warningCount}`));
+    const handleWordArt = async (
+        text: string,
+        font: string,
+        group: I_ErrorEntry[],
+        icon: string,
+        labelColor: chalk.Chalk,
+        messageColor: chalk.Chalk,
+    ): Promise<void> => {
+        try {
+            const wordArt = await renderWordArt(text, font, labelColor);
+            console.log(wordArt);
+            displayGroup(group, icon, labelColor, messageColor);
+        } catch (error) {
+            console.error('Error generating word art:', error);
+        }
+    };
+
+    setTimeout(async () => {
+        spinner.stop();
+
+        if (warnings.length > 0) {
+            await handleWordArt(
+                'Warnings',
+                'Standard',
+                warnings,
+                '⚠',
+                chalk.yellow,
+                chalk.yellow,
+            );
+        } else {
+            console.log(chalk.green('✔ No warnings found.'));
+        }
+
+        if (errors.length > 0) {
+            await handleWordArt(
+                'Errors',
+                'Standard',
+                errors,
+                '✖',
+                chalk.red,
+                chalk.red,
+            );
+        } else {
+            console.log(chalk.green('✔ No errors found.'));
+        }
+    }, 1000);
 };
 
 // Perform lint check
 const performLintCheck = async (): Promise<void> => {
-    logProcessStep('1', `Starting lint check for ${INIT_CWD}`, '🚀');
+    logProcessStep('1', `Starting lint check for ${config.INIT_CWD}`, '🚀');
 
     await withSpinner(E_SpinnerMessage.LintCheck, async () => {
         errorList.length = 0;
+
         await Promise.all([runTypeScriptCheck(), runESLint(), runPrettier()]);
         displayResults();
     });
@@ -218,7 +285,11 @@ const performLintCheck = async (): Promise<void> => {
 
 // Perform lint and format fix
 const performLintFix = async (): Promise<void> => {
-    logProcessStep('1', `Starting lint and format fix for ${INIT_CWD}`, '🚀');
+    logProcessStep(
+        '1',
+        `Starting lint and format fix for ${config.INIT_CWD}`,
+        '🚀',
+    );
 
     await withSpinner(E_SpinnerMessage.LintFix, async () => {
         await Promise.all([runESLint(true), runPrettier(true)]);
@@ -228,13 +299,13 @@ const performLintFix = async (): Promise<void> => {
 
 // Setup project (cleanup and install)
 const performSetup = async (): Promise<void> => {
-    logProcessStep('1', `Starting setup process for ${INIT_CWD}`, '🚀');
+    logProcessStep('1', `Starting setup process for ${config.INIT_CWD}`, '🚀');
 
     await withSpinner(E_SpinnerMessage.Setup, async () => {
         await runCheck(
             'rimraf',
             false,
-            `${INIT_CWD}/node_modules ${INIT_CWD}/package-lock.json`,
+            `${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
         );
         await executeAndParseCommand('npm i -f', '1.2', 'Install dependencies');
     });

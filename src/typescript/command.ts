@@ -17,3 +17,13 @@ export interface I_ErrorEntry {
     message: string;
     type: E_ErrorType;
 }
+
+export interface I_EslintError {
+    filePath: string;
+    messages: Array<{
+        line: number;
+        column: number;
+        severity: number;
+        message: string;
+    }>;
+}
