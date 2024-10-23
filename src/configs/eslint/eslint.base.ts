@@ -6,7 +6,7 @@ export default [
     {
         languageOptions: {
             ecmaVersion: 'latest',
-            globals: { ...globals.node },
+            globals: { ...globals.node, ...globals.browser },
         },
         plugins: {
             'simple-import-sort': simpleImportSort,

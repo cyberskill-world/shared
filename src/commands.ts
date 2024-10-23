@@ -22,7 +22,7 @@ const execPromise = util.promisify(exec);
 const config = {
     INIT_CWD: process.env.INIT_CWD || process.cwd(),
     TSCONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
-    FILE_EXTENSIONS: '**/*.{ts,tsx,js,jsx,json,css,scss,less}',
+    FILE_EXTENSIONS: `**/*.{ts,tsx,js,jsx,json,css,scss,less}`,
 };
 
 const errorList: I_ErrorEntry[] = [];
@@ -46,21 +46,30 @@ const executeCommand = async (
     logProcessStep(step, description, '🔍');
 
     try {
-        const { stdout } = await execPromise(command, {
+        const { stdout, stderr } = await execPromise(command, {
             maxBuffer: 1024 * 1024 * 100,
         });
 
         if (stdout) {
             parser(stdout);
         }
+
+        if (stderr) {
+            parser(stderr);
+        }
     } catch (error) {
-        const { stdout, message } = error as {
+        const { stdout, stderr, message } = error as {
             stdout?: string;
+            stderr?: string;
             message: string;
         };
 
         if (stdout) {
             parser(stdout);
+        }
+
+        if (stderr) {
+            parser(stderr);
         } else {
             console.error(`Command failed: ${message}`);
         }
@@ -106,19 +115,40 @@ const parseCommandOutput = (stdout: string): void => {
     }
 };
 
-// Parse TypeScript or plain text errors
+// Parse TypeScript or Prettier errors
 const parseTextErrors = (output: string): void => {
-    const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(.+)$/;
+    const prettierWarnRegex = /^\[warn\] (.+)$/;
+
     output.split('\n').forEach((line) => {
-        const match = tsRegex.exec(line);
+        const match = prettierWarnRegex.exec(line);
 
         if (match) {
+            const fileName = match[1];
+
+            if (fileName.includes('Code style issues found')) {
+                return;
+            }
+
             errorList.push({
-                file: match[1],
-                position: `${match[2]}:${match[3]}`,
-                type: match[4] as E_ErrorType,
-                message: match[5].trim(),
+                type: E_ErrorType.Warning,
+                file: fileName,
+                position: '',
+                rule: 'Prettier',
+                message: 'Code style issue found',
             });
+        } else {
+            const tsRegex =
+                /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(.+)$/;
+            const tsMatch = tsRegex.exec(line);
+
+            if (tsMatch) {
+                errorList.push({
+                    file: tsMatch[1],
+                    position: `${tsMatch[2]}:${tsMatch[3]}`,
+                    type: tsMatch[4] as E_ErrorType,
+                    message: tsMatch[5].trim(),
+                });
+            }
         }
     });
 };
@@ -172,27 +202,41 @@ const displayResults = (): void => {
     }
 };
 
-// Unified command runner for lint, setup, etc.
-const runLintCheck = async (tool: string, fix = false): Promise<void> => {
-    const fixCommand = fix ? '--fix' : '';
-    const command = `npx ${tool} ${fixCommand} ${config.INIT_CWD} --format json`;
-
-    await executeCommand(command, '1.2', `${tool} ${fix ? 'fix' : 'check'}`);
-};
-
-// Updated check functions with reduced redundancy
-const runTypeScriptCheck = async (): Promise<void> => {
+// Run TypeScript check if tsconfig.json is present
+const runTypescript = async (): Promise<void> => {
     const tsConfigPath = config.TSCONFIG_PATH;
+    const command = `npx tsc -p ${tsConfigPath} --noEmit`;
 
     if (fs.existsSync(tsConfigPath)) {
-        await executeCommand(
-            `npx tsc -p ${tsConfigPath} --noEmit`,
-            '1.2',
-            'TypeScript check',
-        );
+        await executeCommand(command, '1.2', `TypeScript checking...`);
     } else {
         logProcessStep('1.1', 'tsconfig.json file not found.', '⚠️');
     }
+};
+
+// Run lint check or fix for ESLint
+const runEslint = async (fix = false): Promise<void> => {
+    const fixCommand = fix ? ' --fix' : '';
+    const formatCommand = fix ? '' : ' --format json';
+    const command = `npx eslint ${config.INIT_CWD}${fixCommand}${formatCommand}`;
+
+    await executeCommand(
+        command,
+        '1.2',
+        `Eslint ${fix ? 'fixing' : 'checking'}...`,
+    );
+};
+
+// Run lint check or fix for Prettier
+const runPrettier = async (fix = false): Promise<void> => {
+    const fixCommand = fix ? ' --write' : ' --check';
+    const command = `npx prettier '${config.INIT_CWD}/${config.FILE_EXTENSIONS}'${fixCommand}`;
+
+    await executeCommand(
+        command,
+        '1.2',
+        `Prettier ${fix ? 'fixing' : 'checking'}...`,
+    );
 };
 
 // Perform lint and format check or fix
@@ -201,11 +245,7 @@ const performLintCheck = async (): Promise<void> => {
 
     await runWithSpinner(E_SpinnerMessage.LintCheck, async () => {
         errorList.length = 0;
-        await Promise.all([
-            runTypeScriptCheck(),
-            runLintCheck('eslint'),
-            runLintCheck('prettier'),
-        ]);
+        await Promise.all([runTypescript(), runEslint(), runPrettier()]);
         displayResults();
     });
 };
@@ -219,10 +259,7 @@ const performLintFix = async (): Promise<void> => {
     );
 
     await runWithSpinner(E_SpinnerMessage.LintFix, async () => {
-        await Promise.all([
-            runLintCheck('eslint', true),
-            runLintCheck('prettier', true),
-        ]);
+        await Promise.all([runEslint(true), runPrettier(true)]);
         displayResults();
     });
 };
