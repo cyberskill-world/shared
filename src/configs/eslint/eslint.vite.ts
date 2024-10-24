@@ -6,7 +6,7 @@ import baseConfig from './eslint.base.js';
 export default [
     ...baseConfig,
     {
-        ignores: ['dist'],
+        ignores: ['dist', '.ncurc.cjs'],
         files: ['**/*.{ts,tsx}'],
         plugins: {
             'react-hooks': reactHooks,
