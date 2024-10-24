@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import chalk, { ChalkInstance } from 'chalk';
+import chalk from 'chalk';
 import chalkAnimation from 'chalk-animation';
 import { exec } from 'child_process';
 import figlet from 'figlet';
@@ -156,8 +156,8 @@ const parseTextErrors = (output: string): void => {
 // Simplified logging function for multiple entries
 const logResults = (
     group: I_ErrorEntry[],
-    labelColor: ChalkInstance,
-    messageColor: ChalkInstance,
+    labelColor = chalk.white,
+    messageColor = chalk.white,
     icon: string,
     groupName: string,
 ): void => {

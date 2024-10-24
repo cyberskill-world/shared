@@ -1,5 +1,5 @@
 import js from '@eslint/js';
-import eslintPluginImportX from 'eslint-plugin-import-x';
+import importPlugin from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import tseslint from 'typescript-eslint';
 
@@ -18,8 +18,7 @@ export default {
 
                 const configArray = [
                     js.configs.recommended,
-                    eslintPluginImportX.flatConfigs.recommended,
-                    eslintPluginImportX.flatConfigs.typescript,
+                    importPlugin.flatConfigs.recommended,
                     eslintPluginPrettierRecommended,
                     ...tseslint.configs.recommended,
                     rest,

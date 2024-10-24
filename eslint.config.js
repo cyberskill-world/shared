@@ -4,5 +4,6 @@ import configs from './dist/configs/index.js';
 export default configs.merge('eslint', config, {
     rules: {
         'no-console': 'off',
+        'import/no-nodejs-modules': 'off',
     },
 });
