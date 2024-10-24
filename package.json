@@ -58,6 +58,10 @@
             "require": "./dist/configs/lint-staged/lint-staged.base.cjs",
             "import": "./dist/configs/lint-staged/lint-staged.base.js"
         },
+        "./configs/commitlint": {
+            "require": "./dist/configs/commitlint/commitlint.base.cjs",
+            "import": "./dist/configs/commitlint/commitlint.base.js"
+        },
         "./constants": {
             "require": "./dist/constants/index.cjs",
             "import": "./dist/constants/index.js"
@@ -95,6 +99,8 @@
         "setup": "npx tsx src/commands.ts setup"
     },
     "dependencies": {
+        "@commitlint/cli": "19.5.0",
+        "@commitlint/config-conventional": "19.5.0",
         "@csmith/release-it-calver-plugin": "2023.12.0",
         "@eslint/js": "9.13.0",
         "@types/eslint__js": "8.42.3",

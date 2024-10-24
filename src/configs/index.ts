@@ -29,7 +29,8 @@ export default {
                 return tseslint.config(...configArray);
             }
             case 'prettier':
-            case 'lint-staged': {
+            case 'lint-staged':
+            case 'commitlint': {
                 return deepMerge(...configs);
             }
             default: {
