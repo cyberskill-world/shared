@@ -5,7 +5,6 @@ import globals from 'globals';
 export default [
     {
         languageOptions: {
-            ecmaVersion: 'latest',
             globals: { ...globals.node, ...globals.browser },
         },
         plugins: {
@@ -14,6 +13,9 @@ export default [
         rules: {
             'no-console': 'warn',
             'no-debugger': 'warn',
+            'no-unused-vars': 'warn',
+            'import-x/no-dynamic-require': 'warn',
+            'import-x/no-nodejs-modules': 'warn',
         },
     },
 ];
