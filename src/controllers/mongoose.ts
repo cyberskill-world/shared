@@ -18,6 +18,11 @@ import {
     T_UpdateQuery,
     T_UpdateResult,
 } from '../typescript/index.js';
+import {
+    generateShortId,
+    generateSlug,
+    generateSlugQuery,
+} from '../utils/index.js';
 
 export class MongooseController<D extends Partial<C_Document>> {
     constructor(private model: I_ExtendedModel<D>) {}
@@ -273,6 +278,76 @@ export class MongooseController<D extends Partial<C_Document>> {
                 success: false,
                 message: (error as Error).message,
             };
+        }
+    }
+
+    async generateShortId(id: string): Promise<I_Return<string>> {
+        const maxRetries = 10;
+        const existingShortIds = new Set();
+
+        for (let retries = 0; retries < maxRetries; retries++) {
+            const shortId = generateShortId(id, retries + 4);
+
+            if (!existingShortIds.has(shortId)) {
+                existingShortIds.add(shortId);
+
+                const shortIdExists = await this.model.exists({ shortId });
+
+                if (!shortIdExists) {
+                    return { success: true, result: shortId };
+                }
+            }
+        }
+
+        return {
+            success: false,
+            message: 'Failed to generate a unique shortId',
+        };
+    }
+
+    async generateSlug(
+        fieldName: string,
+        fields: D,
+        filters: T_FilterQuery<D> = {},
+    ): Promise<I_Return<string>> {
+        try {
+            const slug = await generateSlug(fields[fieldName]);
+
+            let existingDoc = await this.model.findOne(
+                generateSlugQuery<D>(slug, filters, fields.id),
+            );
+
+            if (!existingDoc) {
+                return { success: true, result: slug };
+            }
+
+            let suffix = 1;
+            let uniqueSlug;
+
+            do {
+                uniqueSlug = `${slug}-${suffix}`;
+                existingDoc = await this.model.findOne(
+                    generateSlugQuery<D>(uniqueSlug, filters, fields.id),
+                );
+                suffix++;
+            } while (existingDoc);
+
+            return { success: true, result: uniqueSlug };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Failed to generate a unique slug: ${(error as Error).message}`,
+            };
+        }
+    }
+
+    async aggregate(pipeline: T_PipelineStage[]): Promise<I_Return<D[]>> {
+        try {
+            const result = await this.model.aggregate<D>(pipeline);
+
+            return { success: true, result };
+        } catch (error) {
+            return { success: false, message: (error as Error).message };
         }
     }
 }

@@ -1,4 +1,11 @@
-import { T_Config } from '../typescript/index.js';
+import cryptoJS from 'crypto-js';
+import slugifyRaw from 'slugify';
+
+import {
+    I_SlugifyOptions,
+    T_Config,
+    T_FilterQuery,
+} from '../typescript/index.js';
 
 export * from './log.js';
 export * from './mongoose.js';
@@ -56,3 +63,43 @@ export const isJson = (str: string): boolean => {
         return false;
     }
 };
+
+const slugify = slugifyRaw.default || slugifyRaw;
+
+export const generateSlug = (
+    str?: string,
+    options?: I_SlugifyOptions,
+): string => {
+    if (!str) {
+        return '';
+    }
+
+    const { lower = true, locale = 'vi' } = options || {};
+
+    return slugify(str, {
+        lower,
+        locale,
+        ...options,
+    });
+};
+
+export const generateShortId = (uuid: string, length = 4) => {
+    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).substr(0, length);
+};
+
+export const generateSlugQuery = <D>(
+    slug: string,
+    filters: T_FilterQuery<D> = {},
+    id?: string,
+) => ({
+    ...(filters && { ...filters }),
+    ...(id && { id: { $ne: id } }),
+    $or: [
+        {
+            slug,
+        },
+        {
+            slugHistory: slug,
+        },
+    ],
+});
