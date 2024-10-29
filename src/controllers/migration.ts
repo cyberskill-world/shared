@@ -33,7 +33,6 @@ export class MigrationController<D extends Partial<C_Document>> {
                 result,
             };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }
@@ -59,7 +58,6 @@ export class MigrationController<D extends Partial<C_Document>> {
                 result,
             };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }
@@ -76,7 +74,6 @@ export class MigrationController<D extends Partial<C_Document>> {
             }
             return { success: true, message: 'Document found', result };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }
@@ -92,7 +89,6 @@ export class MigrationController<D extends Partial<C_Document>> {
                 result,
             };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }
@@ -117,7 +113,6 @@ export class MigrationController<D extends Partial<C_Document>> {
                 result,
             };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }
@@ -142,7 +137,6 @@ export class MigrationController<D extends Partial<C_Document>> {
                 result,
             };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }
@@ -164,7 +158,6 @@ export class MigrationController<D extends Partial<C_Document>> {
                 result,
             };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }
@@ -186,7 +179,6 @@ export class MigrationController<D extends Partial<C_Document>> {
                 result,
             };
         } catch (error) {
-            console.error(error);
             return { success: false, message: (error as Error).message };
         }
     }

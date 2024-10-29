@@ -55,8 +55,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -81,8 +79,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -99,8 +95,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -120,8 +114,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -135,8 +127,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -157,19 +147,12 @@ export class MongooseController<D extends Partial<C_Document>> {
                         return doc.toObject() as D;
                     }
 
-                    console.error(
-                        'Document is not an instance of MongooseDocument:',
-                        doc,
-                    );
-
                     return null;
                 })
                 .filter((doc): doc is D => doc !== null);
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -199,8 +182,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -220,8 +201,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -247,8 +226,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
@@ -272,8 +249,6 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             return { success: true, result };
         } catch (error) {
-            console.error(error);
-
             return {
                 success: false,
                 message: (error as Error).message,
