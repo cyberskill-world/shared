@@ -253,53 +253,75 @@ const performLintFix = async (): Promise<void> => {
 const performSetup = async (): Promise<void> => {
     logProcessStep('1', `Starting setup process for ${config.INIT_CWD}`, '🚀');
 
+    const packageJsonPath = `${config.INIT_CWD}/package.json`;
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+
+    if (packageJson.name === 'cyberskill') {
+        logProcessStep('0', `No setup needed.`, '✔️');
+        return;
+    }
+
     const cyberskillPath = `${config.INIT_CWD}/node_modules/cyberskill`;
+    const isCyberskillInPackageJson =
+        packageJson.dependencies?.cyberskill === 'latest';
     const isCyberskillInstalled = fs.existsSync(cyberskillPath);
 
     const setupAction = async () => {
-        if (!isCyberskillInstalled) {
+        let shouldInstall = false;
+
+        if (!isCyberskillInPackageJson) {
             logProcessStep(
                 '1.1',
-                'Cyberskill not found, performing clean install',
+                'Adding cyberskill as "latest" in package.json',
                 '⚠️',
             );
+            packageJson.dependencies = {
+                ...packageJson.dependencies,
+                cyberskill: 'latest',
+            };
+            fs.writeFileSync(
+                packageJsonPath,
+                JSON.stringify(packageJson, null, 2),
+            );
+            await executeCommand(
+                'npx sort-package-json',
+                '1.2',
+                'Sorting package.json',
+            );
+            shouldInstall = true;
+        }
+
+        if (!isCyberskillInstalled || shouldInstall) {
+            logProcessStep('1.3', 'Performing clean install', '🔄');
             await executeCommand(
                 `npx rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
-                '1.2',
-                'Cleaning up node_modules and package-lock.json',
+                '1.4',
+                'Cleaning node_modules and package-lock.json',
             );
             await executeCommand(
                 'npm i -f',
-                '1.3',
+                '1.5',
                 'Installing all dependencies',
             );
         } else {
-            const checkCyberskillOutdated = async () => {
-                const { stdout } = await execPromise(
-                    'npm outdated cyberskill --json',
-                );
-                const outdatedPackages = JSON.parse(stdout || '{}');
-                return Object.prototype.hasOwnProperty.call(
-                    outdatedPackages,
-                    'cyberskill',
-                );
-            };
-
-            const isCyberskillOutdated = await checkCyberskillOutdated();
+            const { stdout } = await execPromise(
+                'npm outdated cyberskill --json',
+            );
+            const isCyberskillOutdated = JSON.parse(stdout || '{}').cyberskill;
 
             if (isCyberskillOutdated) {
                 logProcessStep(
-                    '1.2',
-                    'Cyberskill is outdated, updating it',
+                    '1.6',
+                    'Updating cyberskill to latest version',
                     '🔄',
                 );
                 await executeCommand(
                     'npm i cyberskill@latest -f',
-                    '1.3',
+                    '1.7',
                     'Reinstalling cyberskill to latest version',
                 );
             } else {
-                logProcessStep('1.2', 'Cyberskill is already up to date', '✔️');
+                logProcessStep('1.6', 'Cyberskill is already up to date', '✔️');
             }
         }
     };
