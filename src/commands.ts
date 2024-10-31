@@ -252,14 +252,59 @@ const performLintFix = async (): Promise<void> => {
 
 const performSetup = async (): Promise<void> => {
     logProcessStep('1', `Starting setup process for ${config.INIT_CWD}`, '🚀');
-    await runWithSpinner(E_SpinnerMessage.Setup, async () => {
-        await executeCommand(
-            `npx rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
-            '1.2',
-            'Clean up node_modules and package-lock.json',
-        );
-        await executeCommand('npm i -f', '1.3', 'Install dependencies');
-    });
+
+    const cyberskillPath = `${config.INIT_CWD}/node_modules/cyberskill`;
+    const isCyberskillInstalled = fs.existsSync(cyberskillPath);
+
+    const setupAction = async () => {
+        if (!isCyberskillInstalled) {
+            logProcessStep(
+                '1.1',
+                'Cyberskill not found, performing clean install',
+                '⚠️',
+            );
+            await executeCommand(
+                `npx rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
+                '1.2',
+                'Cleaning up node_modules and package-lock.json',
+            );
+            await executeCommand(
+                'npm i -f',
+                '1.3',
+                'Installing all dependencies',
+            );
+        } else {
+            const checkCyberskillOutdated = async () => {
+                const { stdout } = await execPromise(
+                    'npm outdated cyberskill --json',
+                );
+                const outdatedPackages = JSON.parse(stdout || '{}');
+                return Object.prototype.hasOwnProperty.call(
+                    outdatedPackages,
+                    'cyberskill',
+                );
+            };
+
+            const isCyberskillOutdated = await checkCyberskillOutdated();
+
+            if (isCyberskillOutdated) {
+                logProcessStep(
+                    '1.2',
+                    'Cyberskill is outdated, updating it',
+                    '🔄',
+                );
+                await executeCommand(
+                    'npm i cyberskill@latest -f',
+                    '1.3',
+                    'Reinstalling cyberskill to latest version',
+                );
+            } else {
+                logProcessStep('1.2', 'Cyberskill is already up to date', '✔️');
+            }
+        }
+    };
+
+    await runWithSpinner(E_SpinnerMessage.Setup, setupAction);
 };
 
 yargs(hideBin(process.argv))
