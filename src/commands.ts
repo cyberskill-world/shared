@@ -250,14 +250,13 @@ const performSetup = async (): Promise<void> => {
     logProcessStep('1', `Starting setup process for ${config.INIT_CWD}`, '🚀');
 
     const packageJsonPath = `${config.INIT_CWD}/package.json`;
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-    const isCyberskill = packageJson.name === 'cyberskill';
-    const isCyberskillInPackageJson = packageJson.dependencies?.cyberskill;
-    const isCyberskillInstalled = fs.existsSync(
-        `${config.INIT_CWD}/node_modules/cyberskill`,
-    );
 
     const addCyberskillAndInstall = async (prevStep: number) => {
+        const packageJson = JSON.parse(
+            fs.readFileSync(packageJsonPath, 'utf-8'),
+        );
+        const isCyberskillInPackageJson = packageJson.dependencies?.cyberskill;
+
         if (!isCyberskillInPackageJson) {
             packageJson.dependencies = {
                 ...packageJson.dependencies,
@@ -286,18 +285,24 @@ const performSetup = async (): Promise<void> => {
 
         await executeCommand(
             'npm install -f',
-            `1.${prevStep + 3}`,
+            `1.${prevStep + 4}`,
             'Installing all dependencies with cyberskill as latest',
         );
     };
 
     const checkAndHandleCyberskillVersion = async () => {
+        const packageJson = JSON.parse(
+            fs.readFileSync(packageJsonPath, 'utf-8'),
+        );
+
         try {
             const { stdout } = await execPromise(
                 'npm outdated cyberskill --json',
             );
             const outdatedData = JSON.parse(stdout || '{}');
-            const isOutdated = !!outdatedData.cyberskill;
+            const isOutdated =
+                !outdatedData.cyberskill ||
+                packageJson.dependencies.cyberskill !== 'latest';
 
             if (isOutdated) {
                 logProcessStep(
@@ -321,7 +326,7 @@ const performSetup = async (): Promise<void> => {
                 const outdatedData = JSON.parse(execError.stdout || '{}');
 
                 if (
-                    outdatedData.cyberskill ||
+                    !outdatedData.cyberskill ||
                     packageJson.dependencies.cyberskill !== 'latest'
                 ) {
                     logProcessStep(
@@ -345,6 +350,13 @@ const performSetup = async (): Promise<void> => {
             }
         }
     };
+
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+    const isCyberskill = packageJson.name === 'cyberskill';
+    const isCyberskillInPackageJson = packageJson.dependencies?.cyberskill;
+    const isCyberskillInstalled = fs.existsSync(
+        `${config.INIT_CWD}/node_modules/cyberskill`,
+    );
 
     if (isCyberskill) {
         logProcessStep(
