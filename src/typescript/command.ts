@@ -2,6 +2,7 @@ export enum E_SpinnerMessage {
     LintCheck = 'Running lint checks...',
     LintFix = 'Fixing issues...',
     Setup = 'Setting up...',
+    Reset = 'Resetting...',
     Success = ' completed successfully!',
     Fail = ' failed.',
 }
@@ -28,10 +29,4 @@ export interface I_EslintError {
         message: string;
         ruleId: string;
     }>;
-}
-
-export interface I_ExecError {
-    code?: number;
-    stdout?: string;
-    stderr?: string;
 }
