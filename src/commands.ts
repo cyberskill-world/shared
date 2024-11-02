@@ -105,17 +105,14 @@ const parseTextErrors = (output: string): void => {
 
     output.split('\n').forEach((line) => {
         const match = prettierWarnRegex.exec(line);
-
-        if (match) {
-            if (!match[1].includes('Code style issues found')) {
-                errorList.push({
-                    type: E_ErrorType.Warning,
-                    file: match[1],
-                    position: '',
-                    rule: 'Prettier',
-                    message: 'Code style issue found',
-                });
-            }
+        if (match && !match[1].includes('Code style issues found')) {
+            errorList.push({
+                type: E_ErrorType.Warning,
+                file: match[1],
+                position: '',
+                rule: 'Prettier',
+                message: 'Code style issue found',
+            });
         } else {
             const tsMatch = tsRegex.exec(line);
 
@@ -134,24 +131,13 @@ const parseTextErrors = (output: string): void => {
 const boxAround = (
     text: string,
     color: typeof green | typeof yellow | typeof red,
-) => {
-    let borderColor;
-
-    if (color === red) {
-        borderColor = 'red';
-    } else if (color === yellow) {
-        borderColor = 'yellow';
-    } else {
-        borderColor = 'green';
-    }
-
-    return boxen(bold(color(text)), {
+) =>
+    boxen(bold(color(text)), {
         padding: 1,
         margin: 1,
         borderStyle: 'arrow',
-        borderColor,
+        borderColor: color.name,
     });
-};
 
 const logResults = (
     entries: I_ErrorEntry[],
@@ -162,8 +148,9 @@ const logResults = (
     if (entries.length) {
         entries.forEach(({ file, position, rule, message }) => {
             console.log(
-                `${color(`${icon} File:`)} ${blue(file + ':' + position)}`,
+                `${color(`${icon} File:`)} ${blue(`${file}:${position}`)}`,
             );
+
             if (rule) {
                 console.log(`   ${color('Rule:')} ${color(rule)}`);
             }
@@ -191,7 +178,7 @@ const displayResults = () => {
     const warnings = errorList.filter((e) => e.type === E_ErrorType.Warning);
 
     if (!errors.length && !warnings.length) {
-        console.log(boxAround(bold(green(`✔ No issue found!`)), green));
+        console.log(boxAround(bold(green('✔ No issue found!')), green));
     } else {
         logResults(warnings, yellow, '⚠', 'Warnings');
         logResults(errors, red, '✖', 'Errors');
@@ -199,11 +186,9 @@ const displayResults = () => {
 };
 
 const runTypescript = async (): Promise<void> => {
-    const tsConfigPath = config.TSCONFIG_PATH;
-
-    if (fs.existsSync(tsConfigPath)) {
+    if (fs.existsSync(config.TSCONFIG_PATH)) {
         await executeCommand(
-            `npx tsc -p ${tsConfigPath} --noEmit`,
+            `npx tsc -p ${config.TSCONFIG_PATH} --noEmit`,
             '1.2',
             'TypeScript checking...',
         );
@@ -256,27 +241,19 @@ const performSetup = async (): Promise<void> => {
 
     const packageJsonPath = `${config.INIT_CWD}/package.json`;
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-    const cyberskillPath = `${config.INIT_CWD}/node_modules/cyberskill`;
-    const isCyberskillInstalled = fs.existsSync(cyberskillPath);
-    let cyberskillVersion = '';
 
+    const isCyberskillInstalled = fs.existsSync(
+        `${config.INIT_CWD}/node_modules/cyberskill`,
+    );
+    let cyberskillVersion = '';
     if (isCyberskillInstalled) {
         const { stdout } = await execPromise('npm ls cyberskill --json');
-        const cyberskillData = JSON.parse(stdout || '{}').dependencies
-            ?.cyberskill;
-        cyberskillVersion = cyberskillData?.version || 'unkown';
+        cyberskillVersion =
+            JSON.parse(stdout || '{}').dependencies?.cyberskill?.version ||
+            'unknown';
     }
 
-    if (packageJson.name === 'cyberskill') {
-        await executeCommand(
-            'npm i -f',
-            '1.1',
-            `Installing all dependencies, cyberskill version: ${packageJson.version}`,
-        );
-        return;
-    }
-
-    const updatePackageJsonDependency = async () => {
+    const updateCyberskillDependency = async () => {
         if (
             packageJson.dependencies?.cyberskill &&
             packageJson.dependencies.cyberskill !== 'latest'
@@ -314,78 +291,46 @@ const performSetup = async (): Promise<void> => {
     };
 
     const updateCyberskillIfNeeded = async () => {
-        try {
-            const { stdout: outdatedStdout } = await execPromise(
-                'npm outdated cyberskill --json',
+        const { stdout: outdatedStdout } = await execPromise(
+            'npm outdated cyberskill --json',
+        );
+        const isOutdated = !!JSON.parse(outdatedStdout || '{}').cyberskill;
+
+        if (isOutdated || packageJson.dependencies.cyberskill !== 'latest') {
+            logProcessStep(
+                '1.3',
+                `Updating cyberskill to latest version (current version: ${cyberskillVersion})`,
+                '🔄',
             );
-            const outdatedInfo = JSON.parse(outdatedStdout || '{}');
-
-            const cyberskillInfo = outdatedInfo.cyberskill;
-            const isOutdated =
-                cyberskillInfo &&
-                cyberskillInfo.current !== cyberskillInfo.latest;
-
-            if (
-                isOutdated ||
-                packageJson.dependencies.cyberskill !== 'latest'
-            ) {
-                logProcessStep(
-                    '1.3',
-                    `Updating cyberskill to latest version (current version: ${cyberskillInfo.current})`,
-                    '🔄',
-                );
-                await executeCommand(
-                    'npm i cyberskill@latest -f',
-                    '1.4',
-                    `Reinstalling cyberskill to latest version (previous version: ${cyberskillInfo.current})`,
-                );
-            } else {
-                logProcessStep(
-                    '1.3',
-                    `Cyberskill is already up to date (version: ${cyberskillInfo.current})`,
-                    '✔️',
-                );
-            }
-        } catch (error) {
-            const stdout = (error as { stdout?: string }).stdout || '{}';
-            const outdatedInfo = JSON.parse(stdout);
-            const cyberskillInfo = outdatedInfo.cyberskill;
-
-            const isOutdated =
-                cyberskillInfo &&
-                cyberskillInfo.current !== cyberskillInfo.latest;
-
-            if (
-                isOutdated ||
-                packageJson.dependencies.cyberskill !== 'latest'
-            ) {
-                logProcessStep(
-                    '1.3',
-                    `Updating cyberskill to latest version (current version: ${cyberskillInfo.current})`,
-                    '🔄',
-                );
-                await executeCommand(
-                    'npm i cyberskill@latest -f',
-                    '1.4',
-                    `Reinstalling cyberskill to latest version (previous version: ${cyberskillInfo.current})`,
-                );
-            } else {
-                logProcessStep(
-                    '1.3',
-                    `Cyberskill is already up to date (version: ${cyberskillInfo.current})`,
-                    '✔️',
-                );
-            }
+            await executeCommand(
+                'npm i cyberskill@latest -f',
+                '1.4',
+                `Reinstalling cyberskill to latest version (previous version: ${cyberskillVersion})`,
+            );
+        } else {
+            logProcessStep(
+                '1.3',
+                `Cyberskill is already up to date (version: ${cyberskillVersion})`,
+                '✔️',
+            );
         }
     };
 
     const setupAction = async () => {
-        await updatePackageJsonDependency();
-
-        if (!isCyberskillInstalled) {
-            await cleanAndInstallDependencies();
+        if (packageJson.name === 'cyberskill') {
+            await executeCommand(
+                'npm i -f',
+                '1.1',
+                `Installing all dependencies, cyberskill version: ${packageJson.version}`,
+            );
         } else {
-            await updateCyberskillIfNeeded();
+            await updateCyberskillDependency();
+
+            if (!isCyberskillInstalled) {
+                await cleanAndInstallDependencies();
+            } else {
+                await updateCyberskillIfNeeded();
+            }
         }
     };
 
