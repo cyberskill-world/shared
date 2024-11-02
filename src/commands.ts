@@ -131,13 +131,22 @@ const parseTextErrors = (output: string): void => {
 const boxAround = (
     text: string,
     color: typeof green | typeof yellow | typeof red,
-) =>
-    boxen(bold(color(text)), {
+) => {
+    const colorMap = new Map([
+        [red, 'red'],
+        [yellow, 'yellow'],
+        [green, 'green'],
+    ]);
+
+    const borderColor = colorMap.get(color) || 'green';
+
+    return boxen(bold(color(text)), {
         padding: 1,
         margin: 1,
         borderStyle: 'arrow',
-        borderColor: color.name,
+        borderColor,
     });
+};
 
 const logResults = (
     entries: I_ErrorEntry[],
