@@ -15,6 +15,7 @@ import {
     E_SpinnerMessage,
     I_ErrorEntry,
     I_EslintError,
+    I_ExecError,
 } from './typescript/command.js';
 
 const { blue, red, yellow, green, gray, white, bold } = chalk;
@@ -272,9 +273,14 @@ const performSetup = async (): Promise<void> => {
                 '⚠️',
             );
             await executeCommand(
-                'npm run lint:fix',
+                'npx sort-pacakge-json',
                 `1.${prevStep + 2}`,
-                'Running lint:fix to format package.json',
+                'Sorting package.json',
+            );
+            await executeCommand(
+                'npm run lint:fix',
+                `1.${prevStep + 3}`,
+                'Fixing lint issues',
             );
         }
 
@@ -308,26 +314,56 @@ const performSetup = async (): Promise<void> => {
             } else {
                 logProcessStep('1.1', `Cyberskill is up to date`, '✔️');
             }
-        } catch {
-            logProcessStep(
-                '1.1',
-                'Cyberskill is up to date or cannot check version',
-                '✔️',
-            );
+        } catch (error) {
+            const execError = error as I_ExecError;
+
+            if (execError.code === 1 && execError.stdout) {
+                const outdatedData = JSON.parse(execError.stdout || '{}');
+
+                if (
+                    outdatedData.cyberskill ||
+                    packageJson.dependencies.cyberskill !== 'latest'
+                ) {
+                    logProcessStep(
+                        '1.1',
+                        `Cyberskill is outdated. Removing and reinstalling as latest`,
+                        '🔄',
+                    );
+                    await executeCommand(
+                        `npm uninstall cyberskill`,
+                        '1.2',
+                        'Removing outdated cyberskill',
+                    );
+                    await addCyberskillAndInstall(2);
+                } else {
+                    logProcessStep(
+                        '1.1',
+                        'Cyberskill is up to date or cannot check version',
+                        '✔️',
+                    );
+                }
+            }
         }
     };
 
-    if (!isCyberskill) {
-        if (!isCyberskillInPackageJson || !isCyberskillInstalled) {
-            logProcessStep(
-                '1.1',
-                'Cyberskill not found. Adding to package.json and installing.',
-                '🔄',
-            );
-            await addCyberskillAndInstall(0);
-        } else {
-            await checkAndHandleCyberskillVersion();
-        }
+    if (isCyberskill) {
+        logProcessStep(
+            '1.1',
+            'Cyberskill is the current project. Skipping setup.',
+            '✔️',
+        );
+        return;
+    }
+
+    if (!isCyberskillInPackageJson || !isCyberskillInstalled) {
+        logProcessStep(
+            '1.1',
+            'Cyberskill not found. Adding to package.json and installing.',
+            '🔄',
+        );
+        await addCyberskillAndInstall(0);
+    } else {
+        await checkAndHandleCyberskillVersion();
     }
 };
 
