@@ -314,28 +314,68 @@ const performSetup = async (): Promise<void> => {
     };
 
     const updateCyberskillIfNeeded = async () => {
-        const { stdout: outdatedStdout } = await execPromise(
-            'npm outdated cyberskill --json',
-        );
-        const isOutdated = !!JSON.parse(outdatedStdout || '{}').cyberskill;
+        try {
+            const { stdout: outdatedStdout } = await execPromise(
+                'npm outdated cyberskill --json',
+            );
+            const outdatedInfo = JSON.parse(outdatedStdout || '{}');
 
-        if (isOutdated || packageJson.dependencies.cyberskill !== 'latest') {
-            logProcessStep(
-                '1.3',
-                `Updating cyberskill to latest version (current version: ${cyberskillVersion})`,
-                '🔄',
-            );
-            await executeCommand(
-                'npm i cyberskill@latest -f',
-                '1.4',
-                `Reinstalling cyberskill to latest version (previous version: ${cyberskillVersion})`,
-            );
-        } else {
-            logProcessStep(
-                '1.3',
-                `Cyberskill is already up to date (version: ${cyberskillVersion})`,
-                '✔️',
-            );
+            const cyberskillInfo = outdatedInfo.cyberskill;
+            const isOutdated =
+                cyberskillInfo &&
+                cyberskillInfo.current !== cyberskillInfo.latest;
+
+            if (
+                isOutdated ||
+                packageJson.dependencies.cyberskill !== 'latest'
+            ) {
+                logProcessStep(
+                    '1.3',
+                    `Updating cyberskill to latest version (current version: ${cyberskillInfo.current})`,
+                    '🔄',
+                );
+                await executeCommand(
+                    'npm i cyberskill@latest -f',
+                    '1.4',
+                    `Reinstalling cyberskill to latest version (previous version: ${cyberskillInfo.current})`,
+                );
+            } else {
+                logProcessStep(
+                    '1.3',
+                    `Cyberskill is already up to date (version: ${cyberskillInfo.current})`,
+                    '✔️',
+                );
+            }
+        } catch (error) {
+            const stdout = (error as { stdout?: string }).stdout || '{}';
+            const outdatedInfo = JSON.parse(stdout);
+            const cyberskillInfo = outdatedInfo.cyberskill;
+
+            const isOutdated =
+                cyberskillInfo &&
+                cyberskillInfo.current !== cyberskillInfo.latest;
+
+            if (
+                isOutdated ||
+                packageJson.dependencies.cyberskill !== 'latest'
+            ) {
+                logProcessStep(
+                    '1.3',
+                    `Updating cyberskill to latest version (current version: ${cyberskillInfo.current})`,
+                    '🔄',
+                );
+                await executeCommand(
+                    'npm i cyberskill@latest -f',
+                    '1.4',
+                    `Reinstalling cyberskill to latest version (previous version: ${cyberskillInfo.current})`,
+                );
+            } else {
+                logProcessStep(
+                    '1.3',
+                    `Cyberskill is already up to date (version: ${cyberskillInfo.current})`,
+                    '✔️',
+                );
+            }
         }
     };
 
