@@ -20,7 +20,7 @@ export default [
         rules: {
             'no-console': 'warn',
             'no-debugger': 'warn',
-            'no-unused-vars': 'off',
+            'no-unused-vars': 'warn',
             'import/no-dynamic-require': 'warn',
             'import/no-nodejs-modules': 'warn',
         },

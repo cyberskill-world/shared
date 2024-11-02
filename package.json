@@ -18,10 +18,6 @@
             "require": "./dist/index.cjs",
             "import": "./dist/index.js"
         },
-        "./commands": {
-            "require": "./dist/commands/index.cjs",
-            "import": "./dist/commands/index.js"
-        },
         "./configs": {
             "require": "./dist/configs/index.cjs",
             "import": "./dist/configs/index.js"
@@ -70,6 +66,7 @@
             "require": "./dist/controllers/index.cjs",
             "import": "./dist/controllers/index.js"
         },
+        "./assets/styles/reset.css": "./dist/assets/styles/reset.css",
         "./typescript": {
             "require": "./dist/typescript/index.cjs",
             "import": "./dist/typescript/index.js"
@@ -77,6 +74,10 @@
         "./utils": {
             "require": "./dist/utils/index.cjs",
             "import": "./dist/utils/index.js"
+        },
+        "./commands": {
+            "require": "./dist/commands/index.cjs",
+            "import": "./dist/commands/index.js"
         }
     },
     "main": "./dist/index.js",
@@ -90,6 +91,7 @@
     ],
     "scripts": {
         "build": "rimraf dist && env NODE_ENV=production tsup",
+        "clean": "rimraf node_modules package-lock.json && npm i -f",
         "dev": "rimraf dist && tsup --watch",
         "lint-staged": "npx tsx src/commands.ts lint-staged",
         "lint:check": "npx tsx src/commands.ts lint:check",
@@ -102,7 +104,7 @@
         "@commitlint/cli": "19.5.0",
         "@commitlint/config-conventional": "19.5.0",
         "@csmith/release-it-calver-plugin": "2023.12.0",
-        "@eslint/js": "9.13.0",
+        "@eslint/js": "9.14.0",
         "@swc/core": "1.7.42",
         "@types/eslint__js": "8.42.3",
         "@types/mongoose-aggregate-paginate-v2": "1.0.12",
@@ -117,7 +119,7 @@
         "chalk": "5.3.0",
         "crypto-js": "4.2.0",
         "dotenv-cli": "7.4.2",
-        "eslint": "9.13.0",
+        "eslint": "9.14.0",
         "eslint-config-next": "15.0.2",
         "eslint-config-prettier": "9.1.0",
         "eslint-import-resolver-typescript": "3.6.3",
@@ -129,10 +131,10 @@
         "graphql": "16.9.0",
         "husky": "9.1.6",
         "lint-staged": "15.2.10",
-        "mongoose": "8.7.3",
+        "mongoose": "8.8.0",
         "mongoose-aggregate-paginate-v2": "1.1.2",
         "mongoose-paginate-v2": "1.8.5",
-        "ora": "8.1.0",
+        "ora": "8.1.1",
         "prettier": "3.3.3",
         "react": "18.3.1",
         "react-dom": "18.3.1",
