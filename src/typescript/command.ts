@@ -30,9 +30,3 @@ export interface I_EslintError {
         ruleId: string;
     }>;
 }
-
-export interface I_ExecError {
-    code?: number;
-    stdout?: string;
-    stderr?: string;
-}
