@@ -236,7 +236,6 @@ const performSetup = async (): Promise<void> => {
     logProcessStep(`Starting setup process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.Setup, async () => {
         const packageJsonPath = `${config.INIT_CWD}/package.json`;
-        const cyberskillPackageJsonPath = `${config.INIT_CWD}/node_modules/cyberskill/package.json`;
 
         const getLatestCyberskillVersion = async (): Promise<string> => {
             const response = await fetch(
@@ -247,37 +246,46 @@ const performSetup = async (): Promise<void> => {
             return data.version;
         };
 
-        const updatePackageJsonWithVersion = async (version: string) => {
-            const packageJson = JSON.parse(
-                fs.readFileSync(packageJsonPath, 'utf-8'),
-            );
-            packageJson.dependencies = {
-                ...packageJson.dependencies,
-                cyberskill: version,
-            };
-            fs.writeFileSync(
-                packageJsonPath,
-                JSON.stringify(packageJson, null, 2),
-            );
-            await executeCommand(
-                'npx --yes sort-package-json',
-                'Sorting package.json...',
-            );
-            await executeCommand('npm run lint:fix', 'Fixing lint issues...');
-        };
+        const isCyberskillOutdated = async (): Promise<boolean> => {
+            const latestVersion = await getLatestCyberskillVersion();
 
-        const isCyberskillOutdated = (latestVersion: string): boolean => {
             try {
+                const cyberskillPackageJsonPath = `${config.INIT_CWD}/node_modules/cyberskill/package.json`;
                 const { version: installedVersion } = JSON.parse(
                     fs.readFileSync(cyberskillPackageJsonPath, 'utf-8'),
                 );
+
                 return installedVersion !== latestVersion;
             } catch {
                 return true;
             }
         };
 
-        const latestVersion = await getLatestCyberskillVersion();
+        const updateCyberskill = async (): Promise<void> => {
+            const latestVersion = await getLatestCyberskillVersion();
+            const packageJson = JSON.parse(
+                fs.readFileSync(packageJsonPath, 'utf-8'),
+            );
+            packageJson.dependencies = {
+                ...packageJson.dependencies,
+                cyberskill: latestVersion,
+            };
+            fs.writeFileSync(
+                packageJsonPath,
+                JSON.stringify(packageJson, null, 2),
+            );
+
+            await executeCommand(
+                'npx --yes sort-package-json',
+                'Sorting package.json...',
+            );
+            await executeCommand(
+                'npm i -f',
+                'Installing all dependencies with updated cyberskill...',
+            );
+            await executeCommand('npm run lint:fix', 'Fixing lint issues...');
+        };
+
         const packageJson = JSON.parse(
             fs.readFileSync(packageJsonPath, 'utf-8'),
         );
@@ -285,26 +293,19 @@ const performSetup = async (): Promise<void> => {
         if (packageJson.name === 'cyberskill') {
             logProcessStep(
                 `Cyberskill is the current project. No setup needed.`,
-                '✔️',
+                '✅',
             );
             return;
         }
 
         if (
             !packageJson.dependencies?.cyberskill ||
-            isCyberskillOutdated(latestVersion)
+            (await isCyberskillOutdated())
         ) {
-            logProcessStep(
-                `Cyberskill is missing or outdated. Updating to version ${latestVersion}.`,
-                '🔄',
-            );
-            await updatePackageJsonWithVersion(latestVersion);
-            await executeCommand(
-                'npm i -f',
-                'Installing all dependencies with updated cyberskill...',
-            );
+            logProcessStep(`Cyberskill is missing or outdated. Updating...`);
+            await updateCyberskill();
         } else {
-            logProcessStep(`Cyberskill is up to date`, '✔️');
+            logProcessStep(`Cyberskill is up to date`, '✅');
         }
     });
 };
@@ -314,9 +315,9 @@ const performReset = async () => {
     await runWithSpinner(E_SpinnerMessage.Reset, async () => {
         await executeCommand(
             `npx --yes rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
-            'Cleaning node_modules and package-lock.json',
+            'Cleaning node_modules and package-lock.json...',
         );
-        await executeCommand('npm i -f', 'Installing all dependencies');
+        await executeCommand('npm i -f', 'Installing all dependencies...');
     });
 };
 
