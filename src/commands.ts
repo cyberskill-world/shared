@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-/* eslint-disable import/no-nodejs-modules */
 /* eslint-disable no-console */
+/* eslint-disable import/no-nodejs-modules */
 import boxen from 'boxen';
 import chalk from 'chalk';
 import { exec } from 'child_process';
@@ -38,7 +38,7 @@ const logProcessStep = (message: string, icon: string = '') =>
 const executeCommand = async (
     command: string,
     description: string,
-    parser: (output: string) => void = parseCommandOutput,
+    parser = parseCommandOutput,
 ): Promise<void> => {
     logProcessStep(description);
 
@@ -197,7 +197,7 @@ const displayResults = () => {
 const runTypescript = async (): Promise<void> => {
     if (fs.existsSync(config.TSCONFIG_PATH)) {
         await executeCommand(
-            `npx tsc -p ${config.TSCONFIG_PATH} --noEmit`,
+            `npx --yes tsc -p ${config.TSCONFIG_PATH} --noEmit`,
             'TypeScript checking...',
         );
     } else {
@@ -206,12 +206,12 @@ const runTypescript = async (): Promise<void> => {
 };
 
 const runEslint = async (fix = false): Promise<void> => {
-    const command = `npx eslint ${config.INIT_CWD}${fix ? ' --fix' : ' --format json'}`;
+    const command = `npx --yes eslint ${config.INIT_CWD}${fix ? ' --fix' : ' --format json'}`;
     await executeCommand(command, `Eslint ${fix ? 'fixing' : 'checking'}...`);
 };
 
 const runPrettier = async (fix = false): Promise<void> => {
-    const command = `npx prettier '${config.INIT_CWD}/${config.FILE_EXTENSIONS}'${fix ? ' --write' : ' --check'}`;
+    const command = `npx --yes prettier '${config.INIT_CWD}/${config.FILE_EXTENSIONS}'${fix ? ' --write' : ' --check'}`;
     await executeCommand(command, `Prettier ${fix ? 'fixing' : 'checking'}...`);
 };
 
@@ -234,78 +234,86 @@ const performLintFix = async (): Promise<void> => {
 
 const performSetup = async (): Promise<void> => {
     logProcessStep(`Starting setup process for ${config.INIT_CWD}`, '🚀');
+    await runWithSpinner(E_SpinnerMessage.Setup, async () => {
+        const packageJsonPath = `${config.INIT_CWD}/package.json`;
+        const cyberskillPackageJsonPath = `${config.INIT_CWD}/node_modules/cyberskill/package.json`;
 
-    const packageJsonPath = `${config.INIT_CWD}/package.json`;
-    const cyberskillPackageJsonPath = `${config.INIT_CWD}/node_modules/cyberskill/package.json`;
+        const getLatestCyberskillVersion = async (): Promise<string> => {
+            const response = await fetch(
+                'https://registry.npmjs.org/cyberskill/latest',
+            );
+            const data = (await response.json()) as { version: string };
 
-    const getLatestCyberskillVersion = async (): Promise<string> => {
-        const response = await fetch(
-            'https://registry.npmjs.org/cyberskill/latest',
-        );
-        const data = (await response.json()) as { version: string };
+            return data.version;
+        };
 
-        return data.version;
-    };
+        const updatePackageJsonWithVersion = async (version: string) => {
+            const packageJson = JSON.parse(
+                fs.readFileSync(packageJsonPath, 'utf-8'),
+            );
+            packageJson.dependencies = {
+                ...packageJson.dependencies,
+                cyberskill: version,
+            };
+            fs.writeFileSync(
+                packageJsonPath,
+                JSON.stringify(packageJson, null, 2),
+            );
+            await executeCommand(
+                'npx --yes sort-package-json',
+                'Sorting package.json...',
+            );
+            await executeCommand('npm run lint:fix', 'Fixing lint issues...');
+        };
 
-    const updatePackageJsonWithVersion = async (version: string) => {
+        const isCyberskillOutdated = (latestVersion: string): boolean => {
+            try {
+                const { version: installedVersion } = JSON.parse(
+                    fs.readFileSync(cyberskillPackageJsonPath, 'utf-8'),
+                );
+                return installedVersion !== latestVersion;
+            } catch {
+                return true;
+            }
+        };
+
+        const latestVersion = await getLatestCyberskillVersion();
         const packageJson = JSON.parse(
             fs.readFileSync(packageJsonPath, 'utf-8'),
         );
-        packageJson.dependencies = {
-            ...packageJson.dependencies,
-            cyberskill: version,
-        };
-        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-        await executeCommand(
-            'npx --yes sort-package-json',
-            'Sorting package.json...',
-        );
-        await executeCommand('npm run lint:fix', 'Fixing lint issues...');
-    };
 
-    const isCyberskillOutdated = (latestVersion: string): boolean => {
-        try {
-            const { version: installedVersion } = JSON.parse(
-                fs.readFileSync(cyberskillPackageJsonPath, 'utf-8'),
+        if (packageJson.name === 'cyberskill') {
+            logProcessStep(
+                `Cyberskill is the current project. No setup needed.`,
+                '✔️',
             );
-            return installedVersion !== latestVersion;
-        } catch {
-            return true;
+            return;
         }
-    };
-    const latestVersion = await getLatestCyberskillVersion();
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
-    if (packageJson.name === 'cyberskill') {
-        logProcessStep(
-            `Cyberskill is the current project. No setup needed.`,
-            '✔️',
-        );
-        return;
-    }
-
-    if (
-        !packageJson.dependencies?.cyberskill ||
-        isCyberskillOutdated(latestVersion)
-    ) {
-        logProcessStep(
-            `Cyberskill is missing or outdated. Updating to version ${latestVersion}.`,
-            '🔄',
-        );
-        await updatePackageJsonWithVersion(latestVersion);
-        await executeCommand(
-            'npm i -f',
-            'Installing all dependencies with updated cyberskill...',
-        );
-    } else {
-        logProcessStep(`Cyberskill is up to date`, '✔️');
-    }
+        if (
+            !packageJson.dependencies?.cyberskill ||
+            isCyberskillOutdated(latestVersion)
+        ) {
+            logProcessStep(
+                `Cyberskill is missing or outdated. Updating to version ${latestVersion}.`,
+                '🔄',
+            );
+            await updatePackageJsonWithVersion(latestVersion);
+            await executeCommand(
+                'npm i -f',
+                'Installing all dependencies with updated cyberskill...',
+            );
+        } else {
+            logProcessStep(`Cyberskill is up to date`, '✔️');
+        }
+    });
 };
 
 const performReset = async () => {
+    logProcessStep(`Starting reset process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.Reset, async () => {
         await executeCommand(
-            `npx rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
+            `npx --yes rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
             'Cleaning node_modules and package-lock.json',
         );
         await executeCommand('npm i -f', 'Installing all dependencies');
