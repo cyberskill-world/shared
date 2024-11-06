@@ -105,6 +105,7 @@ export interface I_Return<D> {
     success: boolean;
     result?: D;
     message?: string;
+    code?: number | string;
 }
 
 // MongoDB and Mongoose Type Aliases

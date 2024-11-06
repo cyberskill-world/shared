@@ -7,8 +7,8 @@ export default defineConfig((options) => {
         format: ['cjs', 'esm'], // Output formats: CommonJS and ESM
         target: 'es5', // Target the latest JavaScript (change to 'es2017' or 'es2020' for broader support)
         splitting: false, // Disable code splitting
-        sourcemap: true, // Enable sourcemaps during development (watch mode)
-        minify: false, // Minify the output in production mode
+        sourcemap: !!options.watch, // Enable sourcemaps during development (watch mode)
+        minify: !options.watch, // Minify the output in production mode
         clean: true, // Clean the output directory before bundling
         dts: true, // Generate TypeScript declaration files (.d.ts)
         shims: true, // Enable polyfills for `__dirname`, `__filename`, etc.
