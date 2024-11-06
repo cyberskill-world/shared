@@ -20,9 +20,18 @@ export default [
         rules: {
             'no-console': 'warn',
             'no-debugger': 'warn',
-            'no-unused-vars': 'warn',
             'import/no-dynamic-require': 'warn',
             'import/no-nodejs-modules': 'warn',
+            '@typescript-eslint/no-unused-vars': [
+                'warn',
+                {
+                    args: 'after-used',
+                    ignoreRestSiblings: true,
+                    vars: 'all',
+                    argsIgnorePattern: '^_',
+                    varsIgnorePattern: '^ignore',
+                },
+            ],
         },
     },
 ];
