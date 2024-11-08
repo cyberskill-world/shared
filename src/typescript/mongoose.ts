@@ -104,7 +104,8 @@ export interface I_ExtendedModel<D extends Partial<C_Document>>
     extends PaginateModel<D>,
         AggregatePaginateModel<D> {}
 
-export interface I_Return<D, E = unknown> {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface I_Return<D, E = {}> {
     success: boolean;
     result?: D & E;
     message?: string;
