@@ -1,24 +1,3 @@
-import mongoose, {
-    AggregatePaginateModel,
-    AggregatePaginateResult,
-    ClientSession,
-    Document,
-    FilterQuery,
-    InsertManyOptions,
-    Model,
-    PaginateModel,
-    PaginateOptions,
-    PaginateResult,
-    PipelineStage,
-    PopulateOption,
-    PopulateOptions,
-    ProjectionType,
-    QueryOptions,
-    QueryWithHelpers,
-    SchemaDefinition,
-    UpdateQuery,
-} from 'mongoose';
-
 import {
     Collection,
     Db,
@@ -30,6 +9,30 @@ import {
     UpdateResult,
     WithId,
 } from 'mongodb';
+import mongoose, {
+    AggregatePaginateModel,
+    AggregatePaginateResult,
+    ClientSession,
+    Document,
+    FilterQuery,
+    InsertManyOptions,
+    Model,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    PaginateModel,
+    PaginateOptions,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    PaginateResult,
+    PipelineStage,
+    PopulateOption,
+    PopulateOptions,
+    ProjectionType,
+    QueryOptions,
+    QueryWithHelpers,
+    SchemaDefinition,
+    UpdateQuery,
+} from 'mongoose';
 
 // Class Definitions
 
@@ -101,9 +104,9 @@ export interface I_ExtendedModel<D extends Partial<C_Document>>
     extends PaginateModel<D>,
         AggregatePaginateModel<D> {}
 
-export interface I_Return<D> {
+export interface I_Return<D, E = unknown> {
     success: boolean;
-    result?: D;
+    result?: D & E;
     message?: string;
     code?: number | string;
 }

@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 /* eslint-disable import/no-nodejs-modules */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-ignore
-import yargs from 'yargs/yargs';
+
 import boxen from 'boxen';
 import chalk from 'chalk';
 import { exec } from 'child_process';
@@ -12,6 +10,9 @@ import fetch from 'node-fetch';
 import ora from 'ora';
 import * as util from 'util';
 import { hideBin } from 'yargs/helpers';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import yargs from 'yargs/yargs';
 
 import {
     E_ErrorType,
@@ -273,7 +274,6 @@ const performLintFix = async (): Promise<void> => {
     logProcessStep(`Starting lint and format fix for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.LintFix, async () => {
         await Promise.all([runEslint(true), runPrettier(true)]);
-        displayResults();
     });
 };
 
