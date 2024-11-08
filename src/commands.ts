@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 /* eslint-disable import/no-nodejs-modules */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import yargs from 'yargs/yargs';
 import boxen from 'boxen';
 import chalk from 'chalk';
 import { exec } from 'child_process';
-import fs from 'fs';
+import * as fs from 'fs';
 import fetch from 'node-fetch';
 import ora from 'ora';
-import util from 'util';
+import * as util from 'util';
 import { hideBin } from 'yargs/helpers';
-import yargs from 'yargs/yargs';
 
 import {
     E_ErrorType,
@@ -69,7 +71,12 @@ const runWithSpinner = async (
 
     try {
         await action();
-        spinner.succeed(`${message}${E_SpinnerMessage.Success}`);
+
+        if (errorList.length) {
+            process.exit(1);
+        } else {
+            spinner.succeed(`${message}${E_SpinnerMessage.Success}`);
+        }
     } catch (error) {
         spinner.fail(`${message}${E_SpinnerMessage.Fail}`);
         throw error;
@@ -100,29 +107,56 @@ const parseCommandOutput = (output: string): void => {
 };
 
 const parseTextErrors = (output: string): void => {
+    const eslintErrorDetailsRegex =
+        /^\s*(\d+):(\d+)\s+(error|warning)\s+(.*?)\s+(\S+)$/;
     const prettierWarnRegex = /^\[warn\] (.+)$/;
     const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(.+)$/;
 
-    output.split('\n').forEach((line) => {
-        const match = prettierWarnRegex.exec(line);
-        if (match && !match[1].includes('Code style issues found')) {
-            errorList.push({
-                type: E_ErrorType.Warning,
-                file: match[1],
-                position: '',
-                rule: 'Prettier',
-                message: 'Code style issue found',
-            });
-        } else {
-            const tsMatch = tsRegex.exec(line);
+    let lastFilePath = '';
 
-            if (tsMatch) {
+    output.split('\n').forEach((line) => {
+        if (line.startsWith('/')) {
+            lastFilePath = line.trim();
+        } else {
+            const eslintMatch = eslintErrorDetailsRegex.exec(line);
+
+            if (eslintMatch && lastFilePath) {
                 errorList.push({
-                    file: tsMatch[1],
-                    position: `${tsMatch[2]}:${tsMatch[3]}`,
-                    type: tsMatch[4] as E_ErrorType,
-                    message: tsMatch[5].trim(),
+                    file: lastFilePath,
+                    position: `${eslintMatch[1]}:${eslintMatch[2]}`,
+                    type:
+                        eslintMatch[3] === 'error'
+                            ? E_ErrorType.Error
+                            : E_ErrorType.Warning,
+                    message: eslintMatch[4].trim(),
+                    rule: eslintMatch[5].trim(),
                 });
+            } else {
+                const prettierMatch = prettierWarnRegex.exec(line);
+
+                if (
+                    prettierMatch &&
+                    !prettierMatch[1].includes('Code style issues found')
+                ) {
+                    errorList.push({
+                        type: E_ErrorType.Warning,
+                        file: prettierMatch[1],
+                        position: '',
+                        rule: 'Prettier',
+                        message: 'Code style issue found',
+                    });
+                } else {
+                    const tsMatch = tsRegex.exec(line);
+
+                    if (tsMatch) {
+                        errorList.push({
+                            file: tsMatch[1],
+                            position: `${tsMatch[2]}:${tsMatch[3]}`,
+                            type: tsMatch[4] as E_ErrorType,
+                            message: tsMatch[5].trim(),
+                        });
+                    }
+                }
             }
         }
     });
@@ -172,9 +206,15 @@ const logResults = (
             ),
         );
     } else {
+        const typeColor = groupName === 'Warnings' ? yellow : red;
+
         console.log(
             boxAround(
-                bold(green(`✔ No ${groupName.toLowerCase()} found.`)),
+                bold(
+                    green(`✔ No `) +
+                        typeColor(`${groupName.toUpperCase()}`) +
+                        green(` found.`),
+                ),
                 green,
             ),
         );
@@ -187,7 +227,7 @@ const displayResults = () => {
     const warnings = errorList.filter((e) => e.type === E_ErrorType.Warning);
 
     if (!errors.length && !warnings.length) {
-        console.log(boxAround(bold(green('✔ No issue found!')), green));
+        console.log(boxAround(bold(green('✔ NO ISSUE FOUND!')), green));
     } else {
         logResults(warnings, yellow, '⚠', 'Warnings');
         logResults(errors, red, '✖', 'Errors');
@@ -215,6 +255,11 @@ const runPrettier = async (fix = false): Promise<void> => {
     await executeCommand(command, `Prettier ${fix ? 'fixing' : 'checking'}...`);
 };
 
+const runLintStaged = async (): Promise<void> => {
+    const command = `npx --yes lint-staged`;
+    await executeCommand(command, `Lint-staged processing...`);
+};
+
 const performLintCheck = async (): Promise<void> => {
     logProcessStep(`Starting lint check for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.LintCheck, async () => {
@@ -228,6 +273,18 @@ const performLintFix = async (): Promise<void> => {
     logProcessStep(`Starting lint and format fix for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.LintFix, async () => {
         await Promise.all([runEslint(true), runPrettier(true)]);
+        displayResults();
+    });
+};
+
+const performLintStaged = async () => {
+    logProcessStep(
+        `Starting lint-staged process for ${process.env.INIT_CWD}`,
+        '🚀',
+    );
+    await runWithSpinner(E_SpinnerMessage.LintStaged, async () => {
+        errorList.length = 0;
+        await Promise.all([runTypescript(), runLintStaged()]);
         displayResults();
     });
 };
@@ -324,6 +381,11 @@ const performReset = async () => {
 yargs(hideBin(process.argv))
     .command('lint:check', 'Run linting checks', performLintCheck)
     .command('lint:fix', 'Fix linting and formatting issues', performLintFix)
+    .command(
+        'lint-staged',
+        'Run lint-staged with given configuration',
+        performLintStaged,
+    )
     .command('setup', 'Run setup with given configuration', performSetup)
     .command('reset', 'Reset dependencies and install', performReset)
     .help()

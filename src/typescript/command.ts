@@ -1,6 +1,7 @@
 export enum E_SpinnerMessage {
     LintCheck = 'Running lint checks...',
     LintFix = 'Fixing issues...',
+    LintStaged = 'Running lint-staged...',
     Setup = 'Setting up...',
     Reset = 'Resetting...',
     Success = ' completed successfully!',

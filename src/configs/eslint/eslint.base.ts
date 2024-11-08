@@ -1,6 +1,6 @@
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import * as simpleImportSort from 'eslint-plugin-simple-import-sort';
 
-import globals from 'globals';
+import * as globals from 'globals';
 
 export default [
     {
@@ -23,7 +23,7 @@ export default [
             'import/no-dynamic-require': 'warn',
             'import/no-nodejs-modules': 'warn',
             '@typescript-eslint/no-unused-vars': [
-                'warn',
+                'error',
                 {
                     args: 'after-used',
                     ignoreRestSiblings: true,
