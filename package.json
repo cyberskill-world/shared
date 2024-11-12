@@ -78,28 +78,30 @@
         "dist"
     ],
     "scripts": {
-        "build": "npx --yes rimraf dist && env NODE_ENV=production tsup",
-        "clean": "npx --yes rimraf node_modules package-lock.json && npm i -f",
-        "dev": "npx --yes rimraf dist && tsup --watch",
-        "postinstall": "npx --yes simple-git-hooks",
-        "lint": "npx --yes tsx src/commands.ts lint",
-        "lint:fix": "npx --yes tsx src/commands.ts lint:fix",
-        "lint:inspect": "npx --yes @eslint/config-inspector",
+        "build": "npx rimraf dist && env NODE_ENV=production tsup",
+        "clean": "npx rimraf node_modules package-lock.json && npm i -f",
+        "dev": "npx rimraf dist && tsup --watch",
+        "postinstall": "npx simple-git-hooks",
+        "lint": "npx tsx src/commands.ts lint",
+        "lint:fix": "npx tsx src/commands.ts lint:fix",
+        "lint:inspect": "npx @eslint/config-inspector",
         "release": "npm run build && dotenv release-it -- --only-version",
-        "reset": "npx --yes tsx src/commands.ts reset",
-        "setup": "npx --yes tsx src/commands.ts setup"
+        "reset": "npx tsx src/commands.ts reset",
+        "setup": "npx tsx src/commands.ts setup"
     },
     "dependencies": {
         "@antfu/eslint-config": "3.8.0",
         "@commitlint/cli": "19.5.0",
         "@commitlint/config-conventional": "19.5.0",
         "@csmith/release-it-calver-plugin": "2023.12.0",
+        "@eslint/config-inspector": "0.5.6",
         "@swc/core": "1.9.2",
         "@types/mongoose-aggregate-paginate-v2": "1.0.12",
         "@types/react": "18.3.12",
         "@types/react-dom": "18.3.1",
         "@types/uuid": "10.0.0",
         "@types/yargs": "17.0.33",
+        "auto-changelog": "2.5.0",
         "boxen": "8.0.1",
         "chalk": "5.3.0",
         "crypto-js": "4.2.0",
@@ -117,18 +119,20 @@
         "react": "18.3.1",
         "react-dom": "18.3.1",
         "release-it": "17.10.0",
+        "rimraf": "6.0.1",
         "slugify": "1.6.6",
         "tsup": "8.3.5",
+        "tsx": "4.19.2",
         "typescript": "5.6.3",
         "uuid": "11.0.3",
         "yargs": "17.7.2"
     },
     "simple-git-hooks": {
-        "pre-commit": "npx --yes lint-staged",
+        "pre-commit": "npx lint-staged",
         "commit-msg": "npx --no -- commitlint --edit $1"
     },
     "lint-staged": {
-        "**/*.(ts|tsx)": "npx --yes tsc --noEmit",
-        "*": "npx --yes eslint --fix"
+        "**/*.(ts|tsx)": "npx tsc --noEmit",
+        "*": "npx eslint --fix"
     }
 }

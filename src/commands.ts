@@ -216,7 +216,7 @@ function displayResults() {
 async function runTypescript(): Promise<void> {
     if (fs.existsSync(config.TSCONFIG_PATH)) {
         await executeCommand(
-            `npx --yes tsc -p ${config.TSCONFIG_PATH} --noEmit`,
+            `npx tsc -p ${config.TSCONFIG_PATH} --noEmit`,
             'TypeScript checking...',
         );
     }
@@ -226,12 +226,12 @@ async function runTypescript(): Promise<void> {
 }
 
 async function runEslint(fix = false): Promise<void> {
-    const command = `npx --yes eslint ${config.INIT_CWD}${fix ? ' --fix' : ' --format json'}`;
+    const command = `npx eslint ${config.INIT_CWD}${fix ? ' --fix' : ' --format json'}`;
     await executeCommand(command, `Eslint ${fix ? 'fixing' : 'checking'}...`);
 }
 
 async function runLintStaged(): Promise<void> {
-    const command = `npx --yes lint-staged`;
+    const command = `npx lint-staged`;
     await executeCommand(command, `Lint-staged processing...`);
 }
 
@@ -252,7 +252,7 @@ async function performLintFix(): Promise<void> {
 }
 
 async function performLintInspect(): Promise<void> {
-    const command = `npx --yes @eslint/config-inspector`;
+    const command = `npx @eslint/config-inspector`;
     await executeCommand(command, `Lint inspect processing...`);
 }
 
@@ -348,7 +348,7 @@ async function performReset() {
     logProcessStep(`Starting reset process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.Reset, async () => {
         await executeCommand(
-            `npx --yes rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
+            `npx rimraf ${config.INIT_CWD}/node_modules ${config.INIT_CWD}/package-lock.json`,
             'Cleaning node_modules and package-lock.json...',
         );
         await executeCommand('npm i -f', 'Installing all dependencies...');
