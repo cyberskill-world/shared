@@ -268,6 +268,11 @@ async function performLintStaged() {
     });
 }
 
+async function performCommitlint(): Promise<void> {
+    const command = `npx --no -- commitlint --edit $1`;
+    await executeCommand(command, `Commitlint processing...`);
+}
+
 async function performSetup(): Promise<void> {
     logProcessStep(`Starting setup process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.Setup, async () => {
@@ -364,6 +369,7 @@ yargs(hideBin(process.argv))
         'Run lint-staged with given configuration',
         performLintStaged,
     )
+    .command('commitlint', 'Run commitlint with given configuration', performCommitlint)
     .command('setup', 'Run setup with given configuration', performSetup)
     .command('reset', 'Reset dependencies and install', performReset)
     .help()

@@ -131,6 +131,6 @@
     },
     "simple-git-hooks": {
         "pre-commit": "npx tsx src/commands.ts lint-staged",
-        "commit-msg": "npx --no -- commitlint --edit $1"
+        "commit-msg": "npx tsx src/commands.ts commitlint"
     }
 }
