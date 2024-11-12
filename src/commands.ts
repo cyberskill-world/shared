@@ -313,10 +313,6 @@ async function performSetup(): Promise<void> {
             );
 
             await executeCommand(
-                'npx --yes sort-package-json',
-                'Sorting package.json...',
-            );
-            await executeCommand(
                 'npm i -f',
                 'Installing all dependencies with updated cyberskill...',
             );

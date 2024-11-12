@@ -6,7 +6,8 @@ export default [
             globals: { ...globals.node, ...globals.browser },
         },
         rules: {
-            'antfu/top-level-function': 'off',
+            'no-console': 'warn',
+            'no-debugger': 'warn',
         },
     },
 ];
