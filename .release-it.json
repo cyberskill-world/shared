@@ -5,7 +5,7 @@
     },
     "git": {
         "commitMessage": "chore: release v${version}",
-        "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs",
+        "changelog": "npx --yes auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs",
         "tagName": "${version}",
         "push": true,
         "requireCleanWorkingDir": true
@@ -14,7 +14,7 @@
         "release": true
     },
     "hooks": {
-        "after:bump": "npx auto-changelog -p"
+        "after:bump": "npx --yes auto-changelog -p"
     },
     "plugins": {
         "@csmith/release-it-calver-plugin": {

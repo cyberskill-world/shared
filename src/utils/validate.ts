@@ -33,7 +33,7 @@ export const validate = {
         isUniqueValidator(fields: string[]) {
             return async function (this, value) {
                 const existingDocument = await this.constructor.findOne({
-                    $or: fields.map((field) => ({
+                    $or: fields.map(field => ({
                         [field]: value,
                     })),
                 });

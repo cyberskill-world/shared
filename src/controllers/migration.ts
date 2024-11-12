@@ -1,4 +1,4 @@
-import {
+import type {
     C_Collection,
     C_Db,
     C_Document,
@@ -32,7 +32,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: 'Document created successfully',
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }
@@ -57,7 +58,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: `${result.insertedCount} documents created successfully`,
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }
@@ -73,7 +75,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 return { success: false, message: 'Document not found' };
             }
             return { success: true, message: 'Document found', result };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }
@@ -88,7 +91,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: 'Documents retrieved successfully',
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }
@@ -112,7 +116,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: 'Document updated successfully',
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }
@@ -136,7 +141,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: 'Documents updated successfully',
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }
@@ -157,7 +163,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: 'Document deleted successfully',
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }
@@ -178,7 +185,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: 'Documents deleted successfully',
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }

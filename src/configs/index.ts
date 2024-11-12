@@ -1,9 +1,6 @@
-import js from '@eslint/js';
-import importPlugin from 'eslint-plugin-import';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import tseslint from 'typescript-eslint';
+import type { T_Config } from '../typescript/index.js';
 
-import { T_Config } from '../typescript/index.js';
+import antfu from '@antfu/eslint-config';
 import { deepMerge } from '../utils/index.js';
 
 export default {
@@ -13,25 +10,26 @@ export default {
                 const { ignores, ...rest } = deepMerge(...configs);
 
                 const normalizedIgnores = Array.isArray(ignores)
-                    ? ignores.filter((item) => typeof item === 'string')
+                    ? ignores.filter(item => typeof item === 'string')
                     : undefined;
 
-                const configArray = [
-                    js.configs.recommended,
-                    importPlugin.flatConfigs.recommended,
-                    eslintPluginPrettierRecommended,
-                    ...tseslint.configs.recommended,
-                    rest,
-                ];
+                const configArray = [rest];
 
                 if (normalizedIgnores) {
                     configArray.push({ ignores: normalizedIgnores });
                 }
 
-                return tseslint.config(...configArray);
+                return antfu(
+                    {
+                        stylistic: {
+                            semi: true,
+                            indent: 4,
+                            quotes: 'single',
+                        },
+                    },
+                    ...configArray,
+                );
             }
-            case 'prettier':
-            case 'lint-staged':
             case 'commitlint': {
                 return deepMerge(...configs);
             }

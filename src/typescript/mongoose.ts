@@ -1,6 +1,4 @@
-import {
-    Collection,
-    Db,
+import type {
     DeleteResult,
     Filter,
     InsertManyResult,
@@ -9,20 +7,14 @@ import {
     UpdateResult,
     WithId,
 } from 'mongodb';
-import mongoose, {
+import type {
     AggregatePaginateModel,
     AggregatePaginateResult,
     ClientSession,
-    Document,
     FilterQuery,
     InsertManyOptions,
-    Model,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
     PaginateModel,
     PaginateOptions,
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
     PaginateResult,
     PipelineStage,
     PopulateOption,
@@ -33,18 +25,27 @@ import mongoose, {
     SchemaDefinition,
     UpdateQuery,
 } from 'mongoose';
+import type mongoose from 'mongoose';
+import {
+    Collection,
+    Db,
+} from 'mongodb';
+import {
+    Document,
+    Model,
+} from 'mongoose';
 
 // Class Definitions
 
-export class C_Model extends Model {}
-export class C_Db extends Db {}
-export class C_Document extends Document {}
+export class C_Model extends Model { }
+export class C_Db extends Db { }
+export class C_Document extends Document { }
 
 // Define Collection with Partial Documents
 
 export class C_Collection<
     D extends Partial<C_Document>,
-> extends Collection<D> {}
+> extends Collection<D> { }
 
 // Interfaces
 
@@ -86,6 +87,7 @@ export interface I_MongooseOptions<D extends Partial<C_Document>> {
 export interface I_GenerateSchemaOptions<D extends Partial<C_Document>>
     extends I_MongooseOptions<D> {
     schema: SchemaDefinition<D>;
+    standalone?: boolean;
 }
 
 export interface I_GenerateModelOptions<D extends Partial<C_Document>>
@@ -102,10 +104,10 @@ export interface I_GenerateModelOptions<D extends Partial<C_Document>>
 
 export interface I_ExtendedModel<D extends Partial<C_Document>>
     extends PaginateModel<D>,
-        AggregatePaginateModel<D> {}
+    AggregatePaginateModel<D> { }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface I_Return<D, E = {}> {
+// eslint-disable-next-line ts/no-empty-object-type
+export interface I_Return<D = void, E = {}> {
     success: boolean;
     result?: D & E;
     message?: string;
@@ -141,7 +143,7 @@ export type T_Input_Populate =
 
 export interface T_PaginateOptionsWithPopulate
     extends T_PaginateOptions,
-        T_PopulateOption {}
+    T_PopulateOption { }
 
 // Input Interfaces
 

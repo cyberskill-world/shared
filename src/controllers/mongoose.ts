@@ -1,4 +1,4 @@
-import {
+import type {
     C_Document,
     I_DeleteOptionsExtended,
     I_ExtendedModel,
@@ -54,7 +54,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             }
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -78,7 +79,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             const result = await query.exec();
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -94,7 +96,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             const result = await this.model.paginate(filter, options);
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -113,7 +116,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             );
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -126,7 +130,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             const result = await this.model.create(doc);
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -152,7 +157,8 @@ export class MongooseController<D extends Partial<C_Document>> {
                 .filter((doc): doc is D => doc !== null);
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -181,7 +187,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             }
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -200,7 +207,8 @@ export class MongooseController<D extends Partial<C_Document>> {
                 .exec();
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -225,7 +233,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             }
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -248,7 +257,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             }
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,
@@ -308,7 +318,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             } while (existingDoc);
 
             return { success: true, result: uniqueSlug };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: `Failed to generate a unique slug: ${(error as Error).message}`,
@@ -321,7 +332,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             const result = await this.model.aggregate<D>(pipeline);
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }

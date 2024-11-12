@@ -176,7 +176,7 @@ export const RESPONSE_STATUS = {
     },
     IM_A_TEAPOT: {
         CODE: 418,
-        MESSAGE: "I'm a teapot",
+        MESSAGE: 'I\'m a teapot',
     },
     INSUFFICIENT_SPACE_ON_RESOURCE: {
         CODE: 419,
