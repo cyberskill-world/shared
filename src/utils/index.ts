@@ -1,11 +1,11 @@
-import type {
+import cryptoJS from 'crypto-js';
+import slugifyRaw from 'slugify';
+
+import {
     I_SlugifyOptions,
     T_Config,
     T_FilterQuery,
 } from '../typescript/index.js';
-import cryptoJS from 'crypto-js';
-
-import slugifyRaw from 'slugify';
 
 export * from './log.js';
 export * from './mongoose.js';

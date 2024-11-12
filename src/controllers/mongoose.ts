@@ -1,4 +1,4 @@
-import type {
+import {
     C_Document,
     I_DeleteOptionsExtended,
     I_ExtendedModel,
@@ -25,7 +25,7 @@ import {
 } from '../utils/index.js';
 
 export class MongooseController<D extends Partial<C_Document>> {
-    constructor(private model: I_ExtendedModel<D>) {}
+    constructor(private model: I_ExtendedModel<D>) { }
 
     private getModelName(): string {
         return this.model.modelName;

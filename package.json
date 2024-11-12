@@ -130,11 +130,7 @@
         "yargs": "17.7.2"
     },
     "simple-git-hooks": {
-        "pre-commit": "npx lint-staged",
+        "pre-commit": "npx tsx src/commands.ts lint-staged",
         "commit-msg": "npx --no -- commitlint --edit $1"
-    },
-    "lint-staged": {
-        "**/*.(ts|tsx)": "npx tsc --noEmit",
-        "*": "npx eslint --fix"
     }
 }

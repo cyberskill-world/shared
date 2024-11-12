@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
-import type {
-    I_ErrorEntry,
-    I_EslintError,
-} from './typescript/command.js';
+import boxen from 'boxen';
+import chalk from 'chalk';
+import fetch from 'node-fetch';
 import { exec } from 'node:child_process';
 import * as fs from 'node:fs';
 import process from 'node:process';
 import * as util from 'node:util';
-import boxen from 'boxen';
-import chalk from 'chalk';
-import fetch from 'node-fetch';
 import ora from 'ora';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
+
 import {
     E_ErrorType,
     E_SpinnerMessage,
+
+    I_ErrorEntry,
+    I_EslintError,
 } from './typescript/command.js';
 
 const { blue, red, yellow, green, gray, white, bold } = chalk;

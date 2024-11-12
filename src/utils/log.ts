@@ -1,7 +1,7 @@
-import type { T_ThrowResponseArgs } from '../typescript/index.js';
-
 import { GraphQLError } from 'graphql';
+
 import { RESPONSE_STATUS } from '../constants/index.js';
+import { T_ThrowResponseArgs } from '../typescript/index.js';
 
 export function throwResponse({
     message,
