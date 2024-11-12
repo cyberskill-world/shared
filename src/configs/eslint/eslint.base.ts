@@ -8,14 +8,12 @@ export default [
         rules: {
             'no-console': 'warn',
             'no-debugger': 'warn',
-            rules: {
-                'perfectionist/sort-imports': [
-                    'error',
-                    {
-                        internalPattern: ['#*/**'],
-                    },
-                ],
-            }
+            'perfectionist/sort-imports': [
+                'error',
+                {
+                    internalPattern: ['#*/**'],
+                },
+            ],
         },
     },
 ];
