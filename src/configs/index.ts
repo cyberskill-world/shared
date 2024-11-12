@@ -26,6 +26,7 @@ export default {
                             indent: 4,
                             quotes: 'single',
                         },
+                        yaml: false,
                     },
                     ...configArray,
                 );
