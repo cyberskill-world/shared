@@ -322,6 +322,8 @@ async function performSetup(): Promise<void> {
                 'Installing all dependencies with updated cyberskill...',
             );
             await executeCommand('npm run lint:fix', 'Fixing lint issues...');
+
+            await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
         };
 
         const packageJson = JSON.parse(
@@ -357,6 +359,8 @@ async function performReset() {
             'Cleaning node_modules and package-lock.json...',
         );
         await executeCommand('npm i -f', 'Installing all dependencies...');
+
+        await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
     });
 }
 
