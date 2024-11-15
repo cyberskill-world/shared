@@ -1,3 +1,4 @@
+import { RESPONSE_STATUS } from '../constants/response-status.js';
 import {
     C_Document,
     I_DeleteOptionsExtended,
@@ -50,6 +51,7 @@ export class MongooseController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: `No ${this.getModelName()} found.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
 
@@ -59,6 +61,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -84,6 +87,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -101,6 +105,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -121,6 +126,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -135,6 +141,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -162,6 +169,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -183,6 +191,7 @@ export class MongooseController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: `Failed to update ${this.getModelName()}.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
 
@@ -192,6 +201,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -212,6 +222,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -229,6 +240,7 @@ export class MongooseController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: `No ${this.getModelName()} found to delete.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
 
@@ -238,6 +250,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -253,6 +266,7 @@ export class MongooseController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: `No documents found to delete.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
 
@@ -262,6 +276,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -287,6 +302,7 @@ export class MongooseController<D extends Partial<C_Document>> {
         return {
             success: false,
             message: 'Failed to generate a unique shortId',
+            code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
         };
     }
 
@@ -323,6 +339,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return {
                 success: false,
                 message: `Failed to generate a unique slug: ${(error as Error).message}`,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
     }
@@ -334,7 +351,7 @@ export class MongooseController<D extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return { success: false, message: (error as Error).message, code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE };
         }
     }
 }

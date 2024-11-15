@@ -6,7 +6,6 @@ import {
     InsertManyResult,
     InsertOneResult,
     OptionalUnlessRequiredId,
-
     UpdateResult,
     WithId,
 } from 'mongodb';
@@ -18,6 +17,11 @@ import mongoose, {
     FilterQuery,
     InsertManyOptions,
     Model,
+    MongooseDefaultQueryMiddleware,
+    MongooseDistinctDocumentMiddleware,
+    MongooseDistinctQueryMiddleware,
+    MongooseQueryAndDocumentMiddleware,
+    MongooseQueryOrDocumentMiddleware,
     PaginateModel,
     PaginateOptions,
     PaginateResult,
@@ -27,7 +31,6 @@ import mongoose, {
     ProjectionType,
     QueryOptions,
     QueryWithHelpers,
-
     SchemaDefinition,
     UpdateQuery,
 } from 'mongoose';
@@ -75,41 +78,58 @@ interface I_VirtualOptions {
 export interface I_MongooseOptions<D extends Partial<C_Document>> {
     mongoose: typeof mongoose;
     virtuals?: {
+        name: keyof D | string;
+        options: I_VirtualOptions;
         get?: (this: D) => void;
-        name: string;
-        options?: I_VirtualOptions;
     }[];
 }
 
+export type T_MongooseShema<D> = mongoose.Schema<D>;
+
+export type T_Input_MongooseSchema<D> = SchemaDefinition<D>;
+
 export interface I_GenerateSchemaOptions<D extends Partial<C_Document>>
     extends I_MongooseOptions<D> {
-    schema: SchemaDefinition<D>;
+    schema: T_Input_MongooseSchema<D>;
     standalone?: boolean;
+}
+
+export type T_MongooseModelMiddlewareFunction = (this: T_MiddlewareContext<C_Document>, next: I_HookNextFunction) => void;
+
+export interface I_MongooseModelMiddleware {
+    method: string;
+    fn: T_MongooseModelMiddlewareFunction;
 }
 
 export interface I_GenerateModelOptions<D extends Partial<C_Document>>
     extends I_MongooseOptions<D> {
-    schema: SchemaDefinition<D>;
+    schema: T_Input_MongooseSchema<D>;
     name: string;
     aggregate?: boolean;
-    middlewares?: {
-        fn: (this: T_MiddlewareContext<D>, next: I_HookNextFunction) => void;
-        method: 'save' | 'findOneAndUpdate';
-    }[];
+    middlewares?: I_MongooseModelMiddleware[];
     pagination?: boolean;
 }
 
 export interface I_ExtendedModel<D extends Partial<C_Document>>
-    extends PaginateModel<D>,
+    extends Model<D>, PaginateModel<D>,
     AggregatePaginateModel<D> { }
 
 // eslint-disable-next-line ts/no-empty-object-type
-export interface I_Return<D = void, E = {}> {
-    success: boolean;
-    result?: D & E;
+export interface I_ReturnSuccess<D, E = {}> {
+    success: true;
+    result: D & E;
     message?: string;
     code?: number | string;
 }
+
+export interface I_ReturnFailure {
+    success: false;
+    message: string;
+    code: number | string;
+}
+
+// eslint-disable-next-line ts/no-empty-object-type
+export type I_Return<D = void, E = {}> = I_ReturnSuccess<D, E> | I_ReturnFailure;
 
 // MongoDB and Mongoose Type Aliases
 

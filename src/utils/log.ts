@@ -7,7 +7,7 @@ export function throwResponse({
     message,
     status = RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
     type = 'graphql',
-}: T_ThrowResponseArgs) {
+}: T_ThrowResponseArgs): never {
     const responseMessage
         = message ?? status.MESSAGE ?? 'Internal server error';
 
@@ -16,6 +16,7 @@ export function throwResponse({
             extensions: { code: status.CODE },
         });
     }
+
     else {
         throw new Error(responseMessage);
     }
