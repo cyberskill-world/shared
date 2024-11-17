@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-
 import boxen from 'boxen';
 import chalk from 'chalk';
 import fetch from 'node-fetch';
@@ -37,7 +36,8 @@ function createSpinner(text: string) {
 }
 
 function logProcessStep(message: string, icon: string = ''): void {
-    console.log(`${icon} ${white(message)}`);
+    const timestamp = new Date().toLocaleString();
+    console.log(`${icon} [${timestamp}] ${white(message)}`);
 }
 
 async function executeCommand(command: string, description: string, parser = parseCommandOutput): Promise<void> {
@@ -286,8 +286,8 @@ async function performCommitlint(): Promise<void> {
 async function setupGitHook(): Promise<void> {
     if (fs.existsSync(config.HUSKY_PATH)) {
         await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`, 'Removing husky hooks...');
-        await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
     }
+    await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
 }
 
 async function performSetup(): Promise<void> {

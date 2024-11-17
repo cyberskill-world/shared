@@ -5,61 +5,58 @@ import {
     I_SlugifyOptions,
     T_Config,
     T_FilterQuery,
+    T_GenerateSlugQueryResponse,
 } from '../typescript/index.js';
 
+// Re-export modules for cleaner imports
 export * from './log.js';
 export * from './mongoose.js';
 export * from './validate.js';
 
+// Utility to deeply merge configurations
 export function deepMerge(...configs: (T_Config | T_Config[])[]): T_Config {
     const merge = (target: T_Config, source: T_Config): T_Config => {
-        for (const key in source) {
-            if (Object.prototype.hasOwnProperty.call(source, key)) {
-                if (Array.isArray(source[key])) {
-                    // If the value is an array, concatenate arrays and remove duplicates
-                    const targetArray = Array.isArray(target[key])
-                        ? target[key]
-                        : [];
-                    target[key] = [
-                        ...new Set([...targetArray, ...source[key]]),
-                    ];
-                }
-                else if (
-                    typeof source[key] === 'object'
-                    && source[key] !== null
-                    && !Array.isArray(source[key])
-                ) {
-                    // If the value is an object (but not null), recursively merge
-                    target[key] = merge(
-                        typeof target[key] === 'object'
-                        && !Array.isArray(target[key])
-                            ? target[key]
-                            : {},
-                        source[key],
-                    );
-                }
-                else {
-                    // Otherwise, directly assign the value (primitives: string, number, boolean)
-                    target[key] = source[key];
-                }
-            }
-        }
+        Object.keys(source).forEach((key) => {
+            const sourceValue = source[key];
+            const targetValue = target[key];
 
+            if (Array.isArray(sourceValue)) {
+                // Merge arrays and remove duplicates
+                target[key] = [
+                    ...new Set([...(Array.isArray(targetValue) ? targetValue : []), ...sourceValue]),
+                ];
+            }
+            else if (
+                typeof sourceValue === 'object'
+                && sourceValue !== null
+                && !Array.isArray(sourceValue)
+            ) {
+                // Recursively merge objects
+                target[key] = merge(
+                    typeof targetValue === 'object' && !Array.isArray(targetValue)
+                        ? targetValue
+                        : {},
+                    sourceValue,
+                );
+            }
+            else {
+                // Overwrite with primitive values
+                target[key] = sourceValue;
+            }
+        });
         return target;
     };
 
-    // Handle the case where the input is an array of objects or just one object
-    const flattenedConfigs = configs.flatMap(config =>
-        Array.isArray(config) ? config : [config],
-    );
-
-    return flattenedConfigs.reduce((acc, config) => merge(acc, config), {});
+    // Flatten configs and merge them
+    return configs
+        .flatMap(config => (Array.isArray(config) ? config : [config]))
+        .reduce((acc, config) => merge(acc, config), {});
 }
 
+// Check if a string is valid JSON
 export function isJson(str: string): boolean {
     try {
         JSON.parse(str);
-
         return true;
     }
     catch {
@@ -67,37 +64,32 @@ export function isJson(str: string): boolean {
     }
 }
 
+// Initialize slugify with fallback handling
 const slugify = slugifyRaw.default || slugifyRaw;
 
-export function generateSlug(str?: string, options?: I_SlugifyOptions): string {
-    if (!str) {
-        return '';
-    }
-
-    const { lower = true, locale = 'vi' } = options || {};
-
-    return slugify(str, {
-        lower,
-        locale,
-        ...options,
-    });
+// Generate a slug from a string with optional settings
+export function generateSlug(str = '', options?: I_SlugifyOptions): string {
+    const { lower = true, locale = 'vi', ...rest } = options || {};
+    return slugify(str, { lower, locale, ...rest });
 }
 
-export function generateShortId(uuid: string, length = 4) {
-    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).substr(0, length);
+// Generate a short ID from a UUID using SHA256
+export function generateShortId(uuid: string, length = 4): string {
+    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
 }
 
-export function generateSlugQuery<D>(slug: string, filters: T_FilterQuery<D> = {}, id?: string) {
+// Generate a query object for slug uniqueness validation
+export function generateSlugQuery<D>(
+    slug: string,
+    filters: T_FilterQuery<D> = {},
+    id?: string,
+): T_GenerateSlugQueryResponse<D> {
     return {
-        ...(filters && { ...filters }),
-        ...(id && { id: { $ne: id } }),
+        ...filters,
+        ...(id && { id: { $ne: id } }), // Exclude the current document by ID
         $or: [
-            {
-                slug,
-            },
-            {
-                slugHistory: slug,
-            },
+            { slug },
+            { slugHistory: slug },
         ],
     };
 }

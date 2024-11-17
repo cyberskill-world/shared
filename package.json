@@ -15,55 +15,68 @@
     },
     "exports": {
         "./configs": {
+            "types": "./dist/configs/index.d.ts",
             "import": "./dist/configs/index.js",
             "require": "./dist/configs/index.cjs"
         },
         "./configs/eslint": {
+            "types": "./dist/configs/eslint/eslint.base.d.ts",
             "import": "./dist/configs/eslint/eslint.base.js",
             "require": "./dist/configs/eslint/eslint.base.cjs"
         },
         "./configs/eslint/cra": {
+            "types": "./dist/configs/eslint/eslint.cra.d.ts",
             "import": "./dist/configs/eslint/eslint.cra.js",
             "require": "./dist/configs/eslint/eslint.cra.cjs"
         },
         "./configs/eslint/nestjs": {
+            "types": "./dist/configs/eslint/eslint.nestjs.d.ts",
             "import": "./dist/configs/eslint/eslint.nestjs.js",
             "require": "./dist/configs/eslint/eslint.nestjs.cjs"
         },
         "./configs/eslint/nextjs": {
+            "types": "./dist/configs/eslint/eslint.nextjs.d.ts",
             "import": "./dist/configs/eslint/eslint.nextjs.js",
             "require": "./dist/configs/eslint/eslint.nextjs.cjs"
         },
         "./configs/eslint/nodejs": {
+            "types": "./dist/configs/eslint/eslint.nodejs.d.ts",
             "import": "./dist/configs/eslint/eslint.nodejs.js",
             "require": "./dist/configs/eslint/eslint.nodejs.cjs"
         },
         "./configs/eslint/vite": {
+            "types": "./dist/configs/eslint/eslint.vite.d.ts",
             "import": "./dist/configs/eslint/eslint.vite.js",
             "require": "./dist/configs/eslint/eslint.vite.cjs"
         },
         "./configs/commitlint": {
+            "types": "./dist/configs/commitlint/commitlint.base.d.ts",
             "import": "./dist/configs/commitlint/commitlint.base.js",
             "require": "./dist/configs/commitlint/commitlint.base.cjs"
         },
         "./constants": {
+            "types": "./dist/constants/index.d.ts",
             "import": "./dist/constants/index.js",
             "require": "./dist/constants/index.cjs"
         },
         "./controllers": {
+            "types": "./dist/controllers/index.d.ts",
             "import": "./dist/controllers/index.js",
             "require": "./dist/controllers/index.cjs"
         },
         "./assets/styles/reset.css": "./dist/assets/styles/reset.css",
         "./typescript": {
+            "types": "./dist/typescript/index.d.ts",
             "import": "./dist/typescript/index.js",
             "require": "./dist/typescript/index.cjs"
         },
         "./utils": {
+            "types": "./dist/utils/index.d.ts",
             "import": "./dist/utils/index.js",
             "require": "./dist/utils/index.cjs"
         },
         "./commands": {
+            "types": "./dist/commands/index.d.ts",
             "import": "./dist/commands/index.js",
             "require": "./dist/commands/index.cjs"
         }
@@ -97,6 +110,7 @@
         "@eslint/config-inspector": "0.5.6",
         "@swc/core": "1.9.2",
         "@types/mongoose-aggregate-paginate-v2": "1.0.12",
+        "@types/mongoose-paginate-v2": "1.6.5",
         "@types/react": "18.3.12",
         "@types/react-dom": "18.3.1",
         "@types/uuid": "10.0.0",
