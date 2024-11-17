@@ -312,7 +312,9 @@ export class MongooseController<D extends Partial<C_Document>> {
         filters: T_FilterQuery<D> = {},
     ): Promise<I_Return<string>> {
         try {
-            const slug = await generateSlug(fields[fieldName]);
+            // eslint-disable-next-line ts/ban-ts-comment
+            // @ts-ignore
+            const slug = generateSlug(fields[fieldName]);
 
             let existingDoc = await this.model.findOne(
                 generateSlugQuery<D>(slug, filters, fields.id),

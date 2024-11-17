@@ -1,4 +1,7 @@
+/* eslint-disable ts/ban-ts-comment */
+// @ts-ignore
 import reactHooks from 'eslint-plugin-react-hooks';
+// @ts-ignore
 import reactRefresh from 'eslint-plugin-react-refresh';
 
 import baseConfig from './eslint.base.js';

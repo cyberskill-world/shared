@@ -5,7 +5,7 @@ export const validate = {
          * @param {any} value - The value to check.
          * @returns {boolean} - True if the value is empty; otherwise, false.
          */
-        isEmpty(value) {
+        isEmpty(value: any) {
             if (value === null || value === undefined) {
                 return true;
             }
@@ -32,7 +32,7 @@ export const validate = {
          * @returns {Function} - The validation function.
          */
         isEmptyValidator() {
-            return async function (this, value) {
+            return async function (this: any, value: any) {
                 return !validate.common.isEmpty(value);
             };
         },
@@ -42,8 +42,8 @@ export const validate = {
          * @param {string[]} fields - Fields to check for uniqueness.
          * @returns {Function} - The validation function.
          */
-        isUniqueValidator(fields) {
-            return async function (this, value) {
+        isUniqueValidator(fields: string[]) {
+            return async function (this: any, value: any) {
                 if (!Array.isArray(fields) || fields.length === 0) {
                     throw new Error('Fields must be a non-empty array of strings.');
                 }
@@ -60,8 +60,8 @@ export const validate = {
          * @param {RegExp[]} regexArray - Array of regex patterns.
          * @returns {Function} - The validation function.
          */
-        matchesRegexValidator(regexArray) {
-            return async function (value) {
+        matchesRegexValidator(regexArray: RegExp[]) {
+            return async function (value: string) {
                 if (!Array.isArray(regexArray) || regexArray.some(r => !(r instanceof RegExp))) {
                     throw new Error('regexArray must be an array of valid RegExp objects.');
                 }
