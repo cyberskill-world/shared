@@ -128,3 +128,5 @@ export function generateModel<D extends Partial<C_Document>>({
     // Create and return the model
     return mongoose.model<D>(name, generatedSchema) as I_ExtendedModel<D>;
 }
+
+export { aggregatePaginate, mongoosePaginate };
