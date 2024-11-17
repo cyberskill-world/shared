@@ -10,6 +10,7 @@ import {
     I_GenerateSchemaOptions,
     I_GenericDocument,
     I_MongooseModelMiddleware,
+    T_MongoosePlugin,
     T_MongooseShema,
 } from '../typescript/mongoose.js';
 
@@ -18,8 +19,10 @@ import {
  * @param schema - The schema to enhance.
  * @param plugins - List of plugins to apply.
  */
-function applyPlugins<D>(schema: T_MongooseShema<D>, plugins: Array<any>) {
-    plugins.forEach(plugin => plugin && schema.plugin(plugin));
+function applyPlugins<D>(schema: T_MongooseShema<D>, plugins: Array<T_MongoosePlugin | false>) {
+    plugins
+        .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
+        .forEach(plugin => schema.plugin(plugin));
 }
 
 /**

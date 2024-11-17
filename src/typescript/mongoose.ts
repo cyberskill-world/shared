@@ -26,6 +26,7 @@ import mongoose, {
     ProjectionType,
     QueryOptions,
     QueryWithHelpers,
+    Schema,
     SchemaDefinition,
     UpdateQuery,
 } from 'mongoose';
@@ -80,6 +81,8 @@ export interface I_MongooseOptions<D extends Partial<C_Document>> {
 }
 
 export type T_MongooseShema<D> = mongoose.Schema<D>;
+
+export type T_MongoosePlugin = (schema: Schema, options?: Record<string, unknown>) => void;
 
 export type T_Input_MongooseSchema<D> = SchemaDefinition<D>;
 

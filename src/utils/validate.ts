@@ -2,10 +2,10 @@ export const validate = {
     common: {
         /**
          * Check if a value is empty (null, undefined, empty string, empty array, or empty object).
-         * @param {any} value - The value to check.
+         * @param {unknown} value - The value to check.
          * @returns {boolean} - True if the value is empty; otherwise, false.
          */
-        isEmpty(value: any) {
+        isEmpty(value: unknown): boolean {
             if (value === null || value === undefined) {
                 return true;
             }
@@ -24,15 +24,16 @@ export const validate = {
             if (typeof value === 'string') {
                 return value.trim().length === 0;
             }
+
             return false;
         },
 
         /**
          * Validator to check if a value is not empty.
-         * @returns {Function} - The validation function.
+         * @returns {(value: unknown) => Promise<boolean>} - The validation function.
          */
-        isEmptyValidator() {
-            return async function (this: any, value: any) {
+        isEmptyValidator<T>(): (this: T, value: unknown) => Promise<boolean> {
+            return async function (this: T, value: unknown): Promise<boolean> {
                 return !validate.common.isEmpty(value);
             };
         },
@@ -40,10 +41,10 @@ export const validate = {
         /**
          * Validator to check if a value is unique in specified fields.
          * @param {string[]} fields - Fields to check for uniqueness.
-         * @returns {Function} - The validation function.
+         * @returns {(value: unknown) => Promise<boolean>} - The validation function.
          */
-        isUniqueValidator(fields: string[]) {
-            return async function (this: any, value: any) {
+        isUniqueValidator<T extends { constructor: { findOne: (query: Record<string, unknown>) => Promise<unknown> } }>(fields: string[]) {
+            return async function (this: T, value: unknown): Promise<boolean> {
                 if (!Array.isArray(fields) || fields.length === 0) {
                     throw new Error('Fields must be a non-empty array of strings.');
                 }
@@ -58,10 +59,10 @@ export const validate = {
         /**
          * Validator to check if a value matches all regex patterns in an array.
          * @param {RegExp[]} regexArray - Array of regex patterns.
-         * @returns {Function} - The validation function.
+         * @returns {(value: string) => Promise<boolean>} - The validation function.
          */
-        matchesRegexValidator(regexArray: RegExp[]) {
-            return async function (value: string) {
+        matchesRegexValidator(regexArray: RegExp[]): (value: string) => Promise<boolean> {
+            return async function (value: string): Promise<boolean> {
                 if (!Array.isArray(regexArray) || regexArray.some(r => !(r instanceof RegExp))) {
                     throw new Error('regexArray must be an array of valid RegExp objects.');
                 }
