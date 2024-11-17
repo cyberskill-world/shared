@@ -5,7 +5,10 @@ import chalk from 'chalk';
 import fetch from 'node-fetch';
 import { exec } from 'node:child_process';
 import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { dirname } from 'node:path';
 import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 import * as util from 'node:util';
 import ora from 'ora';
 import { hideBin } from 'yargs/helpers';
@@ -18,15 +21,19 @@ import {
     I_EslintError,
 } from './typescript/command.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const { blue, red, yellow, green, gray, white, bold } = chalk;
 const execPromise = util.promisify(exec);
 
 const config = {
+    FILE_EXTENSIONS: `**/*.{ts,tsx,js,jsx,json,css,scss,less}`,
     INIT_CWD: process.env.INIT_CWD || process.cwd(),
     TSCONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
     HUSKY_PATH: `${process.env.INIT_CWD || process.cwd()}/.husky`,
     GIT_HOOK_PATH: `${process.env.INIT_CWD || process.cwd()}/.git/hooks`,
-    FILE_EXTENSIONS: `**/*.{ts,tsx,js,jsx,json,css,scss,less}`,
+    GIT_COMMIT_MSG: `${process.env.INIT_CWD || process.cwd()}/.git/COMMIT_EDITMSG`,
+    SIMPLE_GIT_HOOKS_PATH: `${process.env.INIT_CWD || process.cwd()}/.simple-git-hooks.json`,
 };
 
 const errorList: I_ErrorEntry[] = [];
@@ -116,10 +123,12 @@ function parseCommandOutput(output: string): void {
 }
 
 function parseTextErrors(output: string): void {
-    const eslintErrorDetailsRegex
-        = /^\s*(\d+):(\d+)\s+(error|warning)\s+(\S+)\s+(\S+)$/;
+    const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(\S+)\s+(\S+)$/;
     const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
+    // eslint-disable-next-line regexp/no-super-linear-backtracking
+    const commitlintRegex = /^✖\s+(.*?)\s+\[(.*?)\]$/;
 
+    const unmatchedLines: string[] = [];
     let lastFilePath = '';
 
     output.split('\n').forEach((line) => {
@@ -133,10 +142,7 @@ function parseTextErrors(output: string): void {
                 errorList.push({
                     file: lastFilePath,
                     position: `${eslintMatch[1]}:${eslintMatch[2]}`,
-                    type:
-                        eslintMatch[3] === 'error'
-                            ? E_ErrorType.Error
-                            : E_ErrorType.Warning,
+                    type: eslintMatch[3] === 'error' ? E_ErrorType.Error : E_ErrorType.Warning,
                     message: eslintMatch[4].trim(),
                     rule: eslintMatch[5].trim(),
                 });
@@ -152,9 +158,29 @@ function parseTextErrors(output: string): void {
                         message: tsMatch[5].trim(),
                     });
                 }
+                else {
+                    const commitlintMatch = commitlintRegex.exec(line);
+
+                    if (commitlintMatch) {
+                        errorList.push({
+                            file: 'commitlint',
+                            type: E_ErrorType.Error,
+                            message: commitlintMatch[1].trim(),
+                            rule: commitlintMatch[2].trim(),
+                        });
+                    }
+                    else {
+                        unmatchedLines.push(line.trim());
+                    }
+                }
             }
         }
     });
+
+    if (unmatchedLines.length > 0) {
+        console.log(gray('Unmatched lines:'));
+        unmatchedLines.forEach(line => console.info(line));
+    }
 }
 
 function boxAround(text: string, color: typeof green | typeof yellow | typeof red): string {
@@ -178,7 +204,7 @@ function logResults(entries: I_ErrorEntry[], color: typeof yellow | typeof red, 
     if (entries.length) {
         entries.forEach(({ file, position, rule, message }) => {
             console.log(
-                `${color(`${icon} File:`)} ${blue(`${file}:${position}`)}`,
+                `${color(`${icon} File:`)} ${blue(`${file}${position ? `:${position}` : ''}`)}`,
             );
 
             if (rule) {
@@ -192,22 +218,8 @@ function logResults(entries: I_ErrorEntry[], color: typeof yellow | typeof red, 
                 color,
             ),
         );
+        console.log(gray('─'.repeat(40)));
     }
-    else {
-        const typeColor = groupName === 'Warnings' ? yellow : red;
-
-        console.log(
-            boxAround(
-                bold(
-                    green(`✔ No `)
-                    + typeColor(`${groupName.toUpperCase()}`)
-                    + green(` found.`),
-                ),
-                green,
-            ),
-        );
-    }
-    console.log(gray('─'.repeat(40)));
 }
 
 function displayResults(): void {
@@ -279,15 +291,29 @@ async function performLintStaged(): Promise<void> {
 }
 
 async function performCommitlint(): Promise<void> {
-    const command = `npx --no -- commitlint --edit $1`;
-    await executeCommand(command, `Commitlint processing...`);
+    logProcessStep(`Starting commitlint process for ${config.INIT_CWD}`, '🚀');
+    await runWithSpinner(E_SpinnerMessage.CommitLint, async () => {
+        errorList.length = 0;
+        const configPath = path.resolve(__dirname, './configs/commitlint/commitlint.base.js');
+        const command = `npx --no -- commitlint --edit ${config.GIT_COMMIT_MSG} --config ${configPath}`;
+        await executeCommand(command, `Commitlint processing...`);
+        displayResults();
+    });
 }
 
 async function setupGitHook(): Promise<void> {
     if (fs.existsSync(config.HUSKY_PATH)) {
         await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`, 'Removing husky hooks...');
     }
-    await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
+    fs.writeFileSync(
+        config.SIMPLE_GIT_HOOKS_PATH,
+        JSON.stringify({
+            'pre-commit': 'npx --yes cyberskill lint-staged',
+            'commit-msg': 'npx --yes cyberskill commitlint',
+        }, null, 4),
+    );
+    await executeCommand(`npx simple-git-hooks`, 'Setting up git hooks...');
+    fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
 }
 
 async function performSetup(): Promise<void> {

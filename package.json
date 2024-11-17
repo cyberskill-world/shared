@@ -94,7 +94,7 @@
         "build": "npx rimraf dist && env NODE_ENV=production tsup",
         "clean": "npx rimraf node_modules package-lock.json && npm i -f",
         "dev": "npx rimraf dist && tsup --watch",
-        "postinstall": "npx simple-git-hooks",
+        "postinstall": "npm run setup",
         "lint": "npx tsx src/commands.ts lint",
         "lint:fix": "npx tsx src/commands.ts lint:fix",
         "lint:inspect": "npx @eslint/config-inspector",

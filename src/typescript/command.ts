@@ -2,6 +2,7 @@ export enum E_SpinnerMessage {
     LintCheck = 'Running lint checks...',
     LintFix = 'Fixing issues...',
     LintStaged = 'Running lint-staged...',
+    CommitLint = 'Running commitlint...',
     Setup = 'Setting up...',
     Reset = 'Resetting...',
     Success = ' completed successfully!',
@@ -14,10 +15,10 @@ export enum E_ErrorType {
 }
 
 export interface I_ErrorEntry {
-    file: string;
-    position: string;
-    message: string;
     type: E_ErrorType;
+    file: string;
+    message: string;
+    position?: string;
     rule?: string;
 }
 
