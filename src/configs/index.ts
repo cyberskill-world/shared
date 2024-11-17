@@ -5,38 +5,37 @@ import { deepMerge } from '../utils/index.js';
 
 export default {
     merge: (type = 'eslint', ...configs: T_Config[]) => {
-        switch (type) {
-            case 'eslint': {
-                const { ignores, ...rest } = deepMerge(...configs);
+        const mergeConfigs = () => deepMerge(...configs);
 
-                const normalizedIgnores = Array.isArray(ignores)
-                    ? ignores.filter(item => typeof item === 'string')
-                    : undefined;
+        if (type === 'eslint') {
+            const { ignores, ...rest } = mergeConfigs();
 
-                const configArray = [rest];
+            const normalizedIgnores = Array.isArray(ignores)
+                ? ignores.filter(item => typeof item === 'string')
+                : undefined;
 
-                if (normalizedIgnores) {
-                    configArray.push({ ignores: normalizedIgnores });
-                }
+            const configArray = [
+                rest,
+                normalizedIgnores ? { ignores: normalizedIgnores } : null,
+            ].filter((item): item is Exclude<typeof item, null> => !!item);
 
-                return antfu(
-                    {
-                        stylistic: {
-                            semi: true,
-                            indent: 4,
-                            quotes: 'single',
-                        },
-                        yaml: false,
+            return antfu(
+                {
+                    stylistic: {
+                        semi: true,
+                        indent: 4,
+                        quotes: 'single',
                     },
-                    ...configArray,
-                );
-            }
-            case 'commitlint': {
-                return deepMerge(...configs);
-            }
-            default: {
-                throw new Error(`Unknown type: ${type}`);
-            }
+                    yaml: false,
+                },
+                ...configArray,
+            );
         }
+
+        if (type === 'commitlint') {
+            return mergeConfigs();
+        }
+
+        throw new Error(`Unknown type: ${type}`);
     },
 };
