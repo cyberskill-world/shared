@@ -15,7 +15,6 @@ import yargs from 'yargs/yargs';
 import {
     E_ErrorType,
     E_SpinnerMessage,
-
     I_ErrorEntry,
     I_EslintError,
 } from './typescript/command.js';
@@ -26,6 +25,8 @@ const execPromise = util.promisify(exec);
 const config = {
     INIT_CWD: process.env.INIT_CWD || process.cwd(),
     TSCONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
+    HUSKY_PATH: `${process.env.INIT_CWD || process.cwd()}/.husky`,
+    GIT_HOOK_PATH: `${process.env.INIT_CWD || process.cwd()}/.git/hooks`,
     FILE_EXTENSIONS: `**/*.{ts,tsx,js,jsx,json,css,scss,less}`,
 };
 
@@ -35,16 +36,25 @@ function createSpinner(text: string) {
     return ora({ text, color: 'cyan', spinner: 'dots' });
 }
 
-function logProcessStep(message: string, icon: string = '') {
-    return console.log(`${icon} ${white(message)}`);
+function logProcessStep(message: string, icon: string = ''): void {
+    console.log(`${icon} ${white(message)}`);
 }
 
 async function executeCommand(command: string, description: string, parser = parseCommandOutput): Promise<void> {
     logProcessStep(description);
 
+    const controller = new AbortController();
+
+    process.on('SIGINT', () => {
+        console.log('Terminating process...');
+        controller.abort();
+        process.exit();
+    });
+
     try {
         const { stdout, stderr } = await execPromise(command, {
             maxBuffer: 1024 * 1024 * 100,
+            signal: controller.signal,
         });
         [stdout, stderr].forEach(output => output && parser(output));
     }
@@ -147,7 +157,7 @@ function parseTextErrors(output: string): void {
     });
 }
 
-function boxAround(text: string, color: typeof green | typeof yellow | typeof red) {
+function boxAround(text: string, color: typeof green | typeof yellow | typeof red): string {
     const colorMap = new Map([
         [red, 'red'],
         [yellow, 'yellow'],
@@ -164,7 +174,7 @@ function boxAround(text: string, color: typeof green | typeof yellow | typeof re
     });
 }
 
-function logResults(entries: I_ErrorEntry[], color: typeof yellow | typeof red, icon: string, groupName: string) {
+function logResults(entries: I_ErrorEntry[], color: typeof yellow | typeof red, icon: string, groupName: string): void {
     if (entries.length) {
         entries.forEach(({ file, position, rule, message }) => {
             console.log(
@@ -200,7 +210,7 @@ function logResults(entries: I_ErrorEntry[], color: typeof yellow | typeof red, 
     console.log(gray('─'.repeat(40)));
 }
 
-function displayResults() {
+function displayResults(): void {
     const errors = errorList.filter(e => e.type === E_ErrorType.Error);
     const warnings = errorList.filter(e => e.type === E_ErrorType.Warning);
 
@@ -256,7 +266,7 @@ async function performLintInspect(): Promise<void> {
     await executeCommand(command, `Lint inspect processing...`);
 }
 
-async function performLintStaged() {
+async function performLintStaged(): Promise<void> {
     logProcessStep(
         `Starting lint-staged process for ${process.env.INIT_CWD}`,
         '🚀',
@@ -271,6 +281,13 @@ async function performLintStaged() {
 async function performCommitlint(): Promise<void> {
     const command = `npx --no -- commitlint --edit $1`;
     await executeCommand(command, `Commitlint processing...`);
+}
+
+async function setupGitHook(): Promise<void> {
+    if (fs.existsSync(config.HUSKY_PATH)) {
+        await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`, 'Removing husky hooks...');
+        await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
+    }
 }
 
 async function performSetup(): Promise<void> {
@@ -322,8 +339,6 @@ async function performSetup(): Promise<void> {
                 'Installing all dependencies with updated cyberskill...',
             );
             await executeCommand('npm run lint:fix', 'Fixing lint issues...');
-
-            await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
         };
 
         const packageJson = JSON.parse(
@@ -335,23 +350,25 @@ async function performSetup(): Promise<void> {
                 `Cyberskill is the current project. No setup needed.`,
                 '✅',
             );
-            return;
-        }
-
-        if (
-            !packageJson.dependencies?.cyberskill
-            || (await isCyberskillOutdated())
-        ) {
-            logProcessStep(`Cyberskill is missing or outdated. Updating...`);
-            await updateCyberskill();
         }
         else {
-            logProcessStep(`Cyberskill is up to date`, '✅');
+            if (
+                !packageJson.dependencies?.cyberskill
+                || (await isCyberskillOutdated())
+            ) {
+                logProcessStep(`Cyberskill is missing or outdated. Updating...`);
+                await updateCyberskill();
+            }
+            else {
+                logProcessStep(`Cyberskill is up to date`, '✅');
+            }
         }
+
+        setupGitHook();
     });
 }
 
-async function performReset() {
+async function performReset(): Promise<void> {
     logProcessStep(`Starting reset process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.Reset, async () => {
         await executeCommand(
@@ -360,7 +377,7 @@ async function performReset() {
         );
         await executeCommand('npm i -f', 'Installing all dependencies...');
 
-        await executeCommand('npx simple-git-hooks', 'Setting up git hooks...');
+        setupGitHook();
     });
 }
 
