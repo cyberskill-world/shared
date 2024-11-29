@@ -115,7 +115,7 @@ export interface I_ExtendedModel<D extends Partial<C_Document>>
 // eslint-disable-next-line ts/no-empty-object-type
 export interface I_ReturnSuccess<D, E = {}> {
     success: true;
-    result?: D & E;
+    result: D & E;
     message?: string;
     code?: number | string;
 }
