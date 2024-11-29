@@ -155,7 +155,7 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             const result = createdDocuments
                 .map((doc) => {
-                    if (doc instanceof Document) {
+                    if (doc instanceof C_Document) {
                         return doc.toObject() as D;
                     }
 

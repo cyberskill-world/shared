@@ -27,6 +27,12 @@ export default {
                         quotes: 'single',
                     },
                     yaml: false,
+                    react: true,
+                    formatters: {
+                        css: true,
+                        html: true,
+                        markdown: 'prettier',
+                    },
                 },
                 ...configArray,
             );
