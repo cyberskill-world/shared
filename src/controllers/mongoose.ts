@@ -1,3 +1,5 @@
+import { Document } from 'mongoose';
+
 import { RESPONSE_STATUS } from '../constants/response-status.js';
 import {
     C_Document,
@@ -155,7 +157,7 @@ export class MongooseController<D extends Partial<C_Document>> {
 
             const result = createdDocuments
                 .map((doc) => {
-                    if (doc instanceof C_Document) {
+                    if (doc instanceof Document) {
                         return doc.toObject() as D;
                     }
 
