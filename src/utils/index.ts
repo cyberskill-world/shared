@@ -8,7 +8,7 @@ import {
     T_GenerateSlugQueryResponse,
 } from '../typescript/index.js';
 
-// Re-export modules for cleaner imports
+export * from './localStorage.js';
 export * from './log.js';
 export * from './mongoose.js';
 export * from './validate.js';
