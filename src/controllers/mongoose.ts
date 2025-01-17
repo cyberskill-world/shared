@@ -133,6 +133,20 @@ export class MongooseController<D extends Partial<C_Document>> {
         }
     }
 
+    async count(filter: T_FilterQuery<D> = {}): Promise<I_Return<number>> {
+        try {
+            const result = await this.model.countDocuments(filter);
+
+            return { success: true, result };
+        } catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
     async createOne(doc: D | Partial<D>): Promise<I_Return<D>> {
         try {
             const result = await this.model.create(doc);

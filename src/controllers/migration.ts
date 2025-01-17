@@ -97,6 +97,21 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
+    async count(
+        filter: T_Filter<D> = {},
+    ): Promise<{ success: boolean; message: string; result?: number }> {
+        try {
+            const result = await this.collection.countDocuments(filter);
+            return {
+                success: true,
+                message: `Count retrieved successfully`,
+                result,
+            };
+        } catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
     async updateOne(
         filter: T_Filter<D>,
         update: Partial<D>,
