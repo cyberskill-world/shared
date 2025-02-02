@@ -69,6 +69,11 @@
             "import": "./dist/controllers/index.js",
             "require": "./dist/controllers/index.cjs"
         },
+        "./hooks": {
+            "types": "./dist/hooks/index.d.ts",
+            "import": "./dist/hooks/index.js",
+            "require": "./dist/hooks/index.cjs"
+        },
         "./assets/styles/reset.css": "./dist/assets/styles/reset.css",
         "./typescript": {
             "types": "./dist/typescript/index.d.ts",
