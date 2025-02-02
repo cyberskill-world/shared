@@ -1,26 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { localStorage } from '../utils/index.js';
+import type { Serializer } from '../typescript/index.js';
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
+import { serializer as defaultSerializer, localStorage } from '../utils/index.js';
+
+export function useLocalStorage<T>(
+    key: string,
+    initialValue: T,
+    serializer: Serializer<T> = defaultSerializer,
+) {
     const [storedValue, setStoredValue] = useState<T>(initialValue);
     const [isLoaded, setIsLoaded] = useState(false);
+
+    const setValue = useCallback(async (value: T | ((val: T) => T)) => {
+        const valueToStore = value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+    }, [storedValue]);
 
     useEffect(() => {
         let isMounted = true;
 
         const loadValue = async () => {
-            const value = await localStorage.get<T>(key);
+            try {
+                const serializedValue = await localStorage.get<string>(key);
 
-            if (!isMounted)
-                return;
+                if (!isMounted) {
+                    return;
+                }
 
-            if (value !== null) {
-                setStoredValue(value);
+                if (serializedValue !== null) {
+                    const parsedValue = serializer.deserialize(serializedValue);
+                    setStoredValue(parsedValue);
+                }
+                else {
+                    const initialSerialized = serializer.serialize(initialValue);
+                    await localStorage.set(key, initialSerialized);
+                    setStoredValue(initialValue);
+                }
             }
-            else {
-                await localStorage.set(key, initialValue);
-                setStoredValue(initialValue);
+            catch (error) {
+                console.error('Error loading value:', error);
+
+                if (isMounted) {
+                    setStoredValue(initialValue);
+                }
             }
             setIsLoaded(true);
         };
@@ -31,18 +54,25 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
             isMounted = false;
             setIsLoaded(false);
         };
-    }, [key, initialValue]);
+    }, [key, initialValue, serializer]);
 
     useEffect(() => {
-        if (!isLoaded)
+        if (!isLoaded) {
             return;
+        }
 
         const saveValue = async () => {
-            await localStorage.set(key, storedValue);
+            try {
+                const serializedValue = serializer.serialize(storedValue);
+                await localStorage.set(key, serializedValue);
+            }
+            catch (error) {
+                console.error('Error saving value:', error);
+            }
         };
 
         saveValue();
-    }, [storedValue, key, isLoaded]);
+    }, [storedValue, key, serializer, isLoaded]);
 
-    return [storedValue, setStoredValue] as const;
+    return [storedValue, setValue] as const;
 }

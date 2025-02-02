@@ -231,3 +231,12 @@ export interface I_UpdateOptionsExtended extends Omit<QueryOptions, 'session'> {
 export interface I_DeleteOptionsExtended extends Omit<QueryOptions, 'session'> {
     session?: ClientSession;
 }
+
+export interface I_SlugifyOptions {
+    replacement?: string;
+    remove?: RegExp;
+    lower?: boolean;
+    strict?: boolean;
+    locale?: string;
+    trim?: boolean;
+}

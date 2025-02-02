@@ -1,9 +1,16 @@
 import type mongooseRaw from 'mongoose';
 
+import cryptoJS from 'crypto-js';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
+import slugifyRaw from 'slugify';
 import { v4 as uuidv4 } from 'uuid';
 
+import type {
+    I_SlugifyOptions,
+    T_FilterQuery,
+    T_GenerateSlugQueryResponse,
+} from '../typescript/index.js';
 import type {
     C_Document,
     I_ExtendedModel,
@@ -14,6 +21,8 @@ import type {
     T_MongoosePlugin,
     T_MongooseShema,
 } from '../typescript/mongoose.js';
+
+export { aggregatePaginate, mongoosePaginate };
 
 /**
  * Apply plugins to a schema.
@@ -133,4 +142,32 @@ export function generateModel<D extends Partial<C_Document>>({
     return mongoose.model<D>(name, generatedSchema) as I_ExtendedModel<D>;
 }
 
-export { aggregatePaginate, mongoosePaginate };
+// Initialize slugify with fallback handling
+const slugify = slugifyRaw.default || slugifyRaw;
+
+// Generate a slug from a string with optional settings
+export function generateSlug(str = '', options?: I_SlugifyOptions): string {
+    const { lower = true, locale = 'vi', ...rest } = options || {};
+    return slugify(str, { lower, locale, ...rest });
+}
+
+// Generate a short ID from a UUID using SHA256
+export function generateShortId(uuid: string, length = 4): string {
+    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
+}
+
+// Generate a query object for slug uniqueness validation
+export function generateSlugQuery<D>(
+    slug: string,
+    filters: T_FilterQuery<D> = {},
+    id?: string,
+): T_GenerateSlugQueryResponse<D> {
+    return {
+        ...filters,
+        ...(id && { id: { $ne: id } }), // Exclude the current document by ID
+        $or: [
+            { slug },
+            { slugHistory: slug },
+        ],
+    };
+}
