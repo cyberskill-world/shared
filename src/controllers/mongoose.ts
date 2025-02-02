@@ -1,7 +1,6 @@
 import { Document } from 'mongoose';
 
-import { RESPONSE_STATUS } from '../constants/response-status.js';
-import {
+import type {
     C_Document,
     I_DeleteOptionsExtended,
     I_ExtendedModel,
@@ -21,6 +20,8 @@ import {
     T_UpdateQuery,
     T_UpdateResult,
 } from '../typescript/index.js';
+
+import { RESPONSE_STATUS } from '../constants/response-status.js';
 import {
     generateShortId,
     generateSlug,
@@ -138,7 +139,8 @@ export class MongooseController<D extends Partial<C_Document>> {
             const result = await this.model.countDocuments(filter);
 
             return { success: true, result };
-        } catch (error) {
+        }
+        catch (error) {
             return {
                 success: false,
                 message: (error as Error).message,

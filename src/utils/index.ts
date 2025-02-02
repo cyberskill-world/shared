@@ -1,7 +1,7 @@
 import cryptoJS from 'crypto-js';
 import slugifyRaw from 'slugify';
 
-import {
+import type {
     I_SlugifyOptions,
     T_Config,
     T_FilterQuery,

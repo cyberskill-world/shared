@@ -1,4 +1,4 @@
-import {
+import type {
     C_Collection,
     C_Db,
     C_Document,
@@ -107,7 +107,8 @@ export class MigrationController<D extends Partial<C_Document>> {
                 message: `Count retrieved successfully`,
                 result,
             };
-        } catch (error) {
+        }
+        catch (error) {
             return { success: false, message: (error as Error).message };
         }
     }

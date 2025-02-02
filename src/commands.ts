@@ -14,11 +14,14 @@ import ora from 'ora';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
+import type {
+    I_ErrorEntry,
+    I_EslintError,
+} from './typescript/command.js';
+
 import {
     E_ErrorType,
     E_SpinnerMessage,
-    I_ErrorEntry,
-    I_EslintError,
 } from './typescript/command.js';
 
 const __filename = fileURLToPath(import.meta.url);

@@ -1,6 +1,7 @@
 import antfu from '@antfu/eslint-config';
 
-import { T_Config } from '../typescript/index.js';
+import type { T_Config } from '../typescript/index.js';
+
 import { deepMerge } from '../utils/index.js';
 
 export default {

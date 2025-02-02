@@ -8,10 +8,10 @@ export default [
         rules: {
             'no-console': 'warn',
             'no-debugger': 'warn',
-            'ts/consistent-type-imports': 'off',
-            'ts/consistent-type-exports': 'off',
+            'no-alert': 'warn',
+            'ts/consistent-type-exports': 'warn',
             'perfectionist/sort-imports': ['error', {
-                internalPattern: ['^#.*'],
+                internalPattern: ['^#.*', '^@/.*'],
             }],
         },
     },

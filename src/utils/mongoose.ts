@@ -1,9 +1,10 @@
-import mongooseRaw from 'mongoose';
+import type mongooseRaw from 'mongoose';
+
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { v4 as uuidv4 } from 'uuid';
 
-import {
+import type {
     C_Document,
     I_ExtendedModel,
     I_GenerateModelOptions,

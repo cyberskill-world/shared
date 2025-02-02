@@ -1,6 +1,4 @@
-import {
-    Collection,
-    Db,
+import type {
     DeleteResult,
     Filter,
     InsertManyResult,
@@ -9,14 +7,12 @@ import {
     UpdateResult,
     WithId,
 } from 'mongodb';
-import mongoose, {
+import type {
     AggregatePaginateModel,
     AggregatePaginateResult,
     ClientSession,
-    Document,
     FilterQuery,
     InsertManyOptions,
-    Model,
     PaginateModel,
     PaginateOptions,
     PaginateResult,
@@ -29,6 +25,16 @@ import mongoose, {
     Schema,
     SchemaDefinition,
     UpdateQuery,
+} from 'mongoose';
+import type mongoose from 'mongoose';
+
+import {
+    Collection,
+    Db,
+} from 'mongodb';
+import {
+    Document,
+    Model,
 } from 'mongoose';
 
 // Class Definitions
