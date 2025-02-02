@@ -1,18 +1,18 @@
 {
     "name": "cyberskill",
+    "type": "module",
     "version": "2025.2.0",
     "description": "CyberSkill Shared",
+    "author": "Stephen Cheng",
+    "license": "MIT",
     "homepage": "https://github.com/cyberskill-world/shared#readme",
-    "bugs": {
-        "url": "https://github.com/cyberskill-world/shared/issues"
-    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/cyberskill-world/shared.git"
     },
-    "license": "MIT",
-    "author": "Stephen Cheng",
-    "type": "module",
+    "bugs": {
+        "url": "https://github.com/cyberskill-world/shared/issues"
+    },
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",

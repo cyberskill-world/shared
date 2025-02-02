@@ -9,7 +9,6 @@ export default [
             'no-console': 'warn',
             'no-debugger': 'warn',
             'no-alert': 'warn',
-            'ts/consistent-type-exports': 'warn',
             'perfectionist/sort-imports': ['error', {
                 internalPattern: ['^#.*', '^@/.*'],
             }],
