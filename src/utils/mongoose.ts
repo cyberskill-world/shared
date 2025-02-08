@@ -7,20 +7,18 @@ import slugifyRaw from 'slugify';
 import { v4 as uuidv4 } from 'uuid';
 
 import type {
-    I_SlugifyOptions,
-    T_FilterQuery,
-    T_GenerateSlugQueryResponse,
-} from '../typescript/index.js';
-import type {
     C_Document,
     I_ExtendedModel,
     I_GenerateModelOptions,
     I_GenerateSchemaOptions,
     I_GenericDocument,
     I_MongooseModelMiddleware,
+    I_SlugifyOptions,
+    T_FilterQuery,
+    T_GenerateSlugQueryResponse,
     T_MongoosePlugin,
     T_MongooseShema,
-} from '../typescript/mongoose.js';
+} from '../typescript/index.js';
 
 export { aggregatePaginate, mongoosePaginate };
 

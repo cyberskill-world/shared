@@ -1,11 +1,11 @@
 import antfu from '@antfu/eslint-config';
 
-import type { T_Config } from '../typescript/index.js';
+import type { I_Config } from '../typescript/index.js';
 
 import { deepMerge } from '../utils/index.js';
 
 export default {
-    merge: (type = 'eslint', ...configs: T_Config[]) => {
+    merge: (type = 'eslint', ...configs: I_Config[]) => {
         const mergeConfigs = () => deepMerge(...configs);
 
         if (type === 'eslint') {

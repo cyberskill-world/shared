@@ -6,9 +6,7 @@ import fetch from 'node-fetch';
 import { exec } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { dirname } from 'node:path';
 import process from 'node:process';
-import { fileURLToPath } from 'node:url';
 import * as util from 'node:util';
 import ora from 'ora';
 import { hideBin } from 'yargs/helpers';
@@ -19,13 +17,12 @@ import type {
     I_EslintError,
 } from './typescript/command.js';
 
+import { DIRNAME } from './constants/index.js';
 import {
     E_ErrorType,
     E_SpinnerMessage,
 } from './typescript/command.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const { blue, red, yellow, green, gray, white, bold } = chalk;
 const execPromise = util.promisify(exec);
 
@@ -297,7 +294,7 @@ async function performCommitlint(): Promise<void> {
     logProcessStep(`Starting commitlint process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.CommitLint, async () => {
         errorList.length = 0;
-        const configPath = path.resolve(__dirname, './configs/commitlint/commitlint.base.js');
+        const configPath = path.resolve(DIRNAME, './configs/commitlint/commitlint.base.js');
         const command = `npx --no -- commitlint --edit ${config.GIT_COMMIT_MSG} --config ${configPath}`;
         await executeCommand(command, `Commitlint processing...`);
         displayResults();
@@ -410,6 +407,24 @@ async function performReset(): Promise<void> {
     });
 }
 
+async function performTestUnit(): Promise<void> {
+    const configPath = path.resolve(DIRNAME,'./configs/vitest/react/unit.js');
+
+    logProcessStep(`Starting unit tests for ${config.INIT_CWD}`, '🚀');
+    await runWithSpinner(E_SpinnerMessage.UnitTest, async () => {
+        await executeCommand(`npx vitest --config ${configPath}`, 'Running unit tests...');
+    });
+}
+
+async function performTestE2E(): Promise<void> {
+    const configPath = path.resolve(DIRNAME,'./configs/vitest/react/e2e.js');
+
+    logProcessStep(`Starting e2e tests for ${config.INIT_CWD}`, '🚀');
+    await runWithSpinner(E_SpinnerMessage.E2ETest, async () => {
+        await executeCommand(`npx vitest --config ${configPath}`, 'Running e2e tests...');
+    });
+}
+
 yargs(hideBin(process.argv))
     .command('lint', 'Run linting checks', performLintCheck)
     .command('lint:fix', 'Fix linting and formatting issues', performLintFix)
@@ -422,5 +437,7 @@ yargs(hideBin(process.argv))
     .command('commitlint', 'Run commitlint with given configuration', performCommitlint)
     .command('setup', 'Run setup with given configuration', performSetup)
     .command('reset', 'Reset dependencies and install', performReset)
+    .command('test:unit', 'Run unit tests', performTestUnit)
+    .command('test:e2e', 'Run e2e tests', performTestE2E)
     .help()
     .parse();

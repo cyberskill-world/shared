@@ -1,5 +1,5 @@
 import type {
-    T_Config,
+    I_Config,
 } from '../typescript/index.js';
 
 export * from './localStorage.js';
@@ -9,8 +9,8 @@ export * from './serializer.js';
 export * from './validate.js';
 
 // Utility to deeply merge configurations
-export function deepMerge(...configs: (T_Config | T_Config[])[]): T_Config {
-    const merge = (target: T_Config, source: T_Config): T_Config => {
+export function deepMerge(...configs: (I_Config | I_Config[])[]): I_Config {
+    const merge = (target: I_Config, source: I_Config): I_Config => {
         Object.keys(source).forEach((key) => {
             const sourceValue = source[key];
             const targetValue = target[key];

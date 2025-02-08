@@ -5,6 +5,8 @@ export enum E_SpinnerMessage {
     CommitLint = 'Running commitlint...',
     Setup = 'Setting up...',
     Reset = 'Resetting...',
+    UnitTest = 'Running unit tests...',
+    E2ETest = 'Running end-to-end tests...',
     Success = ' completed successfully!',
     Fail = ' failed.',
 }

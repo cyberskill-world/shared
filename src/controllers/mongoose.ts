@@ -21,7 +21,7 @@ import type {
     T_UpdateResult,
 } from '../typescript/index.js';
 
-import { RESPONSE_STATUS } from '../constants/response-status.js';
+import { RESPONSE_STATUS } from '../constants/index.js';
 import {
     generateShortId,
     generateSlug,

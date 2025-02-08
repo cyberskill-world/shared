@@ -24,6 +24,8 @@
         "skipLibCheck": true
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "node_modules/mongoose-paginate-v2/index.d.ts",
+        "node_modules/mongoose-aggregate-paginate-v2/index.d.ts"
     ]
 }
