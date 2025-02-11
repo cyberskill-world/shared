@@ -4,9 +4,9 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient as createGraphqlWebSocketClient } from 'graphql-ws';
 
-import type { T_ApolloOptions, T_Children } from '../../../../../typescript/index.js';
+import type { I_ApolloOptions, T_Children } from '../../../../../typescript/index.js';
 
-function createClient({ uri, cache = new InMemoryCache(), ...options }: T_ApolloOptions) {
+function createClient({ uri, cache = new InMemoryCache(), ...options }: I_ApolloOptions) {
     const errorLink = onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message: description, locations, path }) => {
@@ -61,6 +61,6 @@ function createClient({ uri, cache = new InMemoryCache(), ...options }: T_Apollo
     });
 }
 
-export function ApolloProvider({ options, children }: { options: T_ApolloOptions; children: T_Children }) {
+export function ApolloProvider({ options, children }: { options: I_ApolloOptions; children: T_Children }) {
     return <ApolloClientReactProvider client={createClient(options)}>{children}</ApolloClientReactProvider>;
 }

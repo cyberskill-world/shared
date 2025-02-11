@@ -3,7 +3,7 @@ import type { JSX, ReactElement, ReactNode } from 'react';
 
 export type T_Children = ReactNode | ReactNode[] | ReactElement | JSX.Element | null;
 
-export type T_ApolloOptions = ApolloClientOptions<unknown> & {
+export interface I_ApolloOptions extends Omit<ApolloClientOptions<unknown>, 'cache'> {
     cache?: ApolloCache<unknown>;
     url?: string;
 };
