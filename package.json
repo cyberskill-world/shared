@@ -101,14 +101,14 @@
             "require": "./dist/commands/index.cjs"
         },
         "./vendors/graphql/codegen": {
-            "types": "./vendors/graphql/codegen.d.ts",
-            "import": "./vendors/graphql/codegen.js",
-            "require": "./vendors/graphql/codegen.cjs"
+            "types": "./dist/vendors/graphql/codegen.d.ts",
+            "import": "./dist/vendors/graphql/codegen.js",
+            "require": "./dist/vendors/graphql/codegen.cjs"
         },
         "./vendors/graphql/apollo/client/react": {
-            "types": "./vendors/graphql/apollo/client/react/index.d.ts",
-            "import": "./vendors/graphql/apollo/client/react/index.js",
-            "require": "./vendors/graphql/apollo/client/react/index.cjs"
+            "types": "./dist/vendors/graphql/apollo/client/react/index.d.ts",
+            "import": "./dist/vendors/graphql/apollo/client/react/index.js",
+            "require": "./dist/vendors/graphql/apollo/client/react/index.cjs"
         }
     },
     "main": "./dist/index.cjs",
@@ -157,7 +157,7 @@
         "chalk": "5.4.1",
         "crypto-js": "4.2.0",
         "dotenv-cli": "8.0.0",
-        "eslint": "9.20.0",
+        "eslint": "9.20.1",
         "eslint-config-next": "15.1.7",
         "eslint-plugin-format": "1.0.1",
         "eslint-plugin-react-hooks": "5.1.0",

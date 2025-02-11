@@ -6,7 +6,7 @@ import { createClient as createGraphqlWebSocketClient } from 'graphql-ws';
 
 import type { T_ApolloOptions, T_Children } from '../../../../../typescript/index.js';
 
-function createClient({ uri, url, cache, ...options }: T_ApolloOptions) {
+function createClient({ uri, cache = new InMemoryCache(), ...options }: T_ApolloOptions) {
     const errorLink = onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message: description, locations, path }) => {
@@ -24,20 +24,24 @@ function createClient({ uri, url, cache, ...options }: T_ApolloOptions) {
         credentials: 'include',
     });
 
-    const wsLink = new GraphQLWsLink(
-        createGraphqlWebSocketClient({
-            url,
-        }),
-    );
+    const wsLink = options.url
+        ? new GraphQLWsLink(
+            createGraphqlWebSocketClient({
+                url: options.url,
+            }),
+        )
+        : null;
 
-    const splitLink = split(
-        ({ query }) => {
-            const { kind, operation } = getMainDefinition(query) as any;
-            return kind === 'OperationDefinition' && operation === 'subscription';
-        },
-        wsLink,
-        httpLink,
-    );
+    const splitLink = wsLink
+        ? split(
+                ({ query }) => {
+                    const { kind, operation } = getMainDefinition(query) as any;
+                    return kind === 'OperationDefinition' && operation === 'subscription';
+                },
+                wsLink,
+                httpLink,
+            )
+        : null;
 
     const cleanTypeName = new ApolloLink((operation, forward) => {
         if (operation.variables) {
@@ -45,16 +49,14 @@ function createClient({ uri, url, cache, ...options }: T_ApolloOptions) {
             operation.variables = JSON.parse(JSON.stringify(operation.variables), omitTypename);
         }
 
-        return forward(operation).map((data) => {
-            return data;
-        });
+        return forward(operation);
     });
 
-    const link = ApolloLink.from([cleanTypeName, errorLink, splitLink]);
+    const links = [cleanTypeName, errorLink, splitLink || httpLink].filter(Boolean);
 
     return new ApolloClient({
-        cache: cache ?? new InMemoryCache(),
-        link,
+        cache,
+        link: ApolloLink.from(links),
         ...options,
     });
 }
