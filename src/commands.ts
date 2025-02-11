@@ -408,7 +408,7 @@ async function performReset(): Promise<void> {
 }
 
 async function performTestUnit(): Promise<void> {
-    const configPath = path.resolve(DIRNAME,'./configs/vitest/react/unit.js');
+    const configPath = path.resolve(DIRNAME, './configs/vitest/react/unit.js');
 
     logProcessStep(`Starting unit tests for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.UnitTest, async () => {
@@ -417,7 +417,7 @@ async function performTestUnit(): Promise<void> {
 }
 
 async function performTestE2E(): Promise<void> {
-    const configPath = path.resolve(DIRNAME,'./configs/vitest/react/e2e.js');
+    const configPath = path.resolve(DIRNAME, './configs/vitest/react/e2e.js');
 
     logProcessStep(`Starting e2e tests for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.E2ETest, async () => {
