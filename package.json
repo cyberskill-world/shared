@@ -54,10 +54,20 @@
             "import": "./dist/configs/eslint/eslint.nodejs.js",
             "require": "./dist/configs/eslint/eslint.nodejs.cjs"
         },
-        "./configs/eslint/vite": {
-            "types": "./dist/configs/eslint/eslint.vite.d.ts",
-            "import": "./dist/configs/eslint/eslint.vite.js",
-            "require": "./dist/configs/eslint/eslint.vite.cjs"
+        "./configs/eslint/vite-react": {
+            "types": "./dist/configs/eslint/vite-react.d.ts",
+            "import": "./dist/configs/eslint/vite-react.js",
+            "require": "./dist/configs/eslint/vite-react.cjs"
+        },
+        "./configs/graphql": {
+            "types": "./dist/configs/graphql/index.d.ts",
+            "import": "./dist/configs/graphql/index.js",
+            "require": "./dist/configs/graphql/index.cjs"
+        },
+        "./configs/i18n/react": {
+            "types": "./dist/configs/i18n/react/index.d.ts",
+            "import": "./dist/configs/i18n/react/index.js",
+            "require": "./dist/configs/i18n/react/index.cjs"
         },
         "./configs/vitest/react/e2e": {
             "types": "./dist/configs/vitest/react/e2e.d.ts",
@@ -83,6 +93,11 @@
             "types": "./dist/hooks/index.d.ts",
             "import": "./dist/hooks/index.js",
             "require": "./dist/hooks/index.cjs"
+        },
+        "./providers/react": {
+            "types": "./dist/providers/react/index.d.ts",
+            "import": "./dist/providers/react/index.js",
+            "require": "./dist/providers/react/index.cjs"
         },
         "./assets/styles/reset.css": "./dist/assets/styles/reset.css",
         "./typescript": {
@@ -146,7 +161,7 @@
         "@testing-library/react": "16.2.0",
         "@types/crypto-js": "4.2.2",
         "@types/mongoose-aggregate-paginate-v2": "1.0.12",
-        "@types/react": "19.0.8",
+        "@types/react": "19.0.9",
         "@types/react-dom": "19.0.3",
         "@types/uuid": "10.0.0",
         "@types/yargs": "17.0.33",
@@ -164,6 +179,7 @@
         "eslint-plugin-react-refresh": "0.4.19",
         "graphql": "16.10.0",
         "graphql-ws": "6.0.4",
+        "i18next": "24.2.2",
         "jsdom": "26.0.0",
         "lint-staged": "15.4.3",
         "localforage": "1.10.0",
@@ -175,6 +191,7 @@
         "playwright": "1.50.1",
         "react": "19.0.0",
         "react-dom": "19.0.0",
+        "react-i18next": "15.4.0",
         "release-it": "18.1.2",
         "rimraf": "6.0.1",
         "simple-git-hooks": "2.11.1",

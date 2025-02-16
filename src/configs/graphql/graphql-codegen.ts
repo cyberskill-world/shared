@@ -2,7 +2,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 
 import type { I_GraphqlCodegenConfig } from '../../typescript/index.js';
 
-export function createConfig({ uri, from, to }: I_GraphqlCodegenConfig): CodegenConfig {
+export function createGraphqlCodegenConfig({ uri, from, to }: I_GraphqlCodegenConfig): CodegenConfig {
     return {
         schema: uri,
         documents: [from],
