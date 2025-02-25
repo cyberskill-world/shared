@@ -140,12 +140,12 @@
         "dist"
     ],
     "scripts": {
-        "build": "npx rimraf dist && env NODE_ENV=production tsup",
-        "dev": "npx rimraf dist && tsup --watch",
+        "build": "tsup",
+        "dev": "tsup --watch",
         "lint": "npx tsx src/commands.ts lint",
         "lint:fix": "npx tsx src/commands.ts lint:fix",
         "lint:inspect": "npx @eslint/config-inspector",
-        "release": "npm run build && dotenv semantic-release",
+        "release": "semantic-release",
         "reset": "npx tsx src/commands.ts reset",
         "setup": "npx tsx src/commands.ts setup"
     },
@@ -174,7 +174,6 @@
         "chalk": "5.4.1",
         "classnames": "2.5.1",
         "crypto-js": "4.2.0",
-        "dotenv-cli": "8.0.0",
         "eslint": "9.21.0",
         "eslint-config-next": "15.1.7",
         "eslint-plugin-format": "1.0.1",
@@ -209,6 +208,15 @@
         "yargs": "17.7.2"
     },
     "devDependencies": {
+        "@semantic-release/changelog": "6.0.3",
+        "@semantic-release/commit-analyzer": "13.0.1",
+        "@semantic-release/git": "10.0.1",
+        "@semantic-release/github": "11.0.1",
+        "@semantic-release/npm": "12.0.1",
+        "@semantic-release/release-notes-generator": "14.0.3",
         "semantic-release": "24.2.3"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
