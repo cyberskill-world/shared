@@ -1,1 +1,0 @@
-import t from"i18next";import{initReactI18next as e}from"react-i18next";function i(i){return t.use(e).init(i)}export{i as createI18NextConfig};
