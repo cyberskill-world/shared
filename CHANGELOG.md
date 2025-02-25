@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/cyberskill-world/shared/compare/v1.0.1...v1.0.2) (2025-02-25)
+
+
+### Bug Fixes
+
+* build entry ([f2066e4](https://github.com/cyberskill-world/shared/commit/f2066e474aac39de4c24b4b893d1ba37f4514a03))
+
 ## [1.0.1](https://github.com/cyberskill-world/shared/compare/v1.0.0...v1.0.1) (2025-02-25)
 
 
