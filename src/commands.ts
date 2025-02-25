@@ -34,6 +34,7 @@ const config = {
     GIT_HOOK_PATH: `${process.env.INIT_CWD || process.cwd()}/.git/hooks`,
     GIT_COMMIT_MSG: `${process.env.INIT_CWD || process.cwd()}/.git/COMMIT_EDITMSG`,
     SIMPLE_GIT_HOOKS_PATH: `${process.env.INIT_CWD || process.cwd()}/.simple-git-hooks.json`,
+    PACKAGE_NAME: '@cyberskill/shared',
 };
 
 const errorList: I_ErrorEntry[] = [];
@@ -323,7 +324,7 @@ async function performSetup(): Promise<void> {
 
         const getLatestCyberskillVersion = async (): Promise<string> => {
             const response = await fetch(
-                'https://registry.npmjs.org/cyberskill/latest',
+                `https://registry.npmjs.org/${config.PACKAGE_NAME}/latest`,
             );
             const data = (await response.json()) as { version: string };
 
@@ -334,7 +335,7 @@ async function performSetup(): Promise<void> {
             const latestVersion = await getLatestCyberskillVersion();
 
             try {
-                const cyberskillPackageJsonPath = `${config.INIT_CWD}/node_modules/cyberskill/package.json`;
+                const cyberskillPackageJsonPath = `${config.INIT_CWD}/node_modules/${config.PACKAGE_NAME}/package.json`;
                 const { version: installedVersion } = JSON.parse(
                     fs.readFileSync(cyberskillPackageJsonPath, 'utf-8'),
                 );
@@ -353,7 +354,7 @@ async function performSetup(): Promise<void> {
             );
             packageJson.dependencies = {
                 ...packageJson.dependencies,
-                cyberskill: latestVersion,
+                [config.PACKAGE_NAME]: latestVersion,
             };
             fs.writeFileSync(
                 packageJsonPath,
@@ -371,7 +372,7 @@ async function performSetup(): Promise<void> {
             fs.readFileSync(packageJsonPath, 'utf-8'),
         );
 
-        if (packageJson.name === 'cyberskill') {
+        if (packageJson.name === config.PACKAGE_NAME) {
             logProcessStep(
                 `Cyberskill is the current project. No setup needed.`,
                 '✅',

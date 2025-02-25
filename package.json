@@ -1,7 +1,7 @@
 {
     "name": "@cyberskill/shared",
     "type": "module",
-    "version": "2025.2.0",
+    "version": "2025.2.1",
     "description": "CyberSkill Shared",
     "author": "Stephen Cheng",
     "license": "MIT",
@@ -134,7 +134,7 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "bin": {
-        "cyberskill": "./dist/commands.js"
+        "cyberskill": "dist/commands.js"
     },
     "files": [
         "dist"
