@@ -2,12 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig(({ watch, ...rest }) => {
     return {
-        entry: [
-            'src/index.ts',
-            'src/**/*.{ts,tsx}',
-            'src/**/*.css',
-            'src/**/*.scss',
-        ],
+        entry: ['src/**/*.{js,ts,jsx,tsx,css,scss}'],
         loader: {
             '.css': 'copy',
             '.scss': 'copy',
