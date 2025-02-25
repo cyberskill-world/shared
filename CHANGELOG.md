@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/cyberskill-world/shared/compare/v1.0.0...v1.0.1) (2025-02-25)
+
+
+### Bug Fixes
+
+* remove dist from release.config.js ([66b4a9c](https://github.com/cyberskill-world/shared/commit/66b4a9c97c3b1fcecb6f769006db76e2a0928330))
+
 # 1.0.0 (2025-02-25)
 
 
