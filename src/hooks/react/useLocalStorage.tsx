@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { Serializer } from '../typescript/index.js';
+import type { Serializer } from '../../typescript/index.js';
 
-import { serializer as defaultSerializer, localStorage } from '../utils/index.js';
+import { serializer as defaultSerializer, localStorage } from '../../utils/index.js';
 
 export function useLocalStorage<T>(
     key: string,

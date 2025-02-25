@@ -1,8 +1,13 @@
+import { sassPlugin } from 'esbuild-sass-plugin';
 import { defineConfig } from 'tsup';
 
 export default defineConfig((options) => {
     return {
-        entry: ['src/index.ts', 'src/**/*.ts?(x)'],
+        entry: [
+            'src/index.ts',
+            'src/**/*.{ts,tsx}',
+            'src/**/*.{css,scss,sass}',
+        ],
         outDir: 'dist',
         format: ['cjs', 'esm'],
         target: 'es5',
@@ -13,5 +18,8 @@ export default defineConfig((options) => {
         clean: true,
         dts: true,
         shims: true,
+        esbuildPlugins: [
+            sassPlugin(),
+        ],
     };
 });

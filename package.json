@@ -19,6 +19,11 @@
             "import": "./dist/index.js",
             "require": "./dist/index.cjs"
         },
+        "./components/react": {
+            "types": "./dist/components/react/index.d.ts",
+            "import": "./dist/components/react/index.js",
+            "require": "./dist/components/react/index.cjs"
+        },
         "./configs": {
             "types": "./dist/configs/index.d.ts",
             "import": "./dist/configs/index.js",
@@ -84,15 +89,20 @@
             "import": "./dist/constants/index.js",
             "require": "./dist/constants/index.cjs"
         },
+        "./contexts/react": {
+            "types": "./dist/contexts/react/index.d.ts",
+            "import": "./dist/contexts/react/index.js",
+            "require": "./dist/contexts/react/index.cjs"
+        },
         "./controllers": {
             "types": "./dist/controllers/index.d.ts",
             "import": "./dist/controllers/index.js",
             "require": "./dist/controllers/index.cjs"
         },
-        "./hooks": {
-            "types": "./dist/hooks/index.d.ts",
-            "import": "./dist/hooks/index.js",
-            "require": "./dist/hooks/index.cjs"
+        "./hooks/react": {
+            "types": "./dist/hooks/react/index.d.ts",
+            "import": "./dist/hooks/react/index.js",
+            "require": "./dist/hooks/react/index.cjs"
         },
         "./providers/react": {
             "types": "./dist/providers/react/index.d.ts",
@@ -118,11 +128,6 @@
             "types": "./dist/vendors/graphql/codegen.d.ts",
             "import": "./dist/vendors/graphql/codegen.js",
             "require": "./dist/vendors/graphql/codegen.cjs"
-        },
-        "./vendors/graphql/apollo/client/react": {
-            "types": "./dist/vendors/graphql/apollo/client/react/index.d.ts",
-            "import": "./dist/vendors/graphql/apollo/client/react/index.js",
-            "require": "./dist/vendors/graphql/apollo/client/react/index.cjs"
         }
     },
     "main": "./dist/index.cjs",
@@ -169,8 +174,10 @@
         "auto-changelog": "2.5.0",
         "boxen": "8.0.1",
         "chalk": "5.4.1",
+        "classnames": "2.5.1",
         "crypto-js": "4.2.0",
         "dotenv-cli": "8.0.0",
+        "esbuild-sass-plugin": "3.3.1",
         "eslint": "9.21.0",
         "eslint-config-next": "15.1.7",
         "eslint-plugin-format": "1.0.1",
@@ -193,6 +200,7 @@
         "react-i18next": "15.4.1",
         "release-it": "18.1.2",
         "rimraf": "6.0.1",
+        "sass": "1.85.1",
         "simple-git-hooks": "2.11.1",
         "slugify": "1.6.6",
         "tsup": "8.3.6",

@@ -13,3 +13,10 @@ export interface I_GraphqlCodegenConfig {
     from: string;
     to: string;
 }
+
+export interface I_LoadingContext {
+    isLoading: boolean;
+    isGlobalLoading: boolean;
+    showLoading: (global?: boolean) => void;
+    hideLoading: () => void;
+}
