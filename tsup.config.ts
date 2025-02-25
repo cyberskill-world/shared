@@ -1,25 +1,28 @@
-import { sassPlugin } from 'esbuild-sass-plugin';
 import { defineConfig } from 'tsup';
 
-export default defineConfig((options) => {
+export default defineConfig(({ watch, ...rest }) => {
     return {
         entry: [
             'src/index.ts',
             'src/**/*.{ts,tsx}',
-            'src/**/*.{css,scss,sass}',
+            'src/**/*.css',
+            'src/**/*.scss',
         ],
+        loader: {
+            '.css': 'copy',
+            '.scss': 'copy',
+        },
         outDir: 'dist',
         format: ['cjs', 'esm'],
         target: 'es5',
-        external: ['react', 'react/jsx-runtime'],
-        sourcemap: !!options.watch,
-        minify: !options.watch,
+        external: ['react', 'react-dom', 'react/jsx-runtime'],
+        sourcemap: !!watch,
+        minify: !watch,
         splitting: false,
         clean: true,
         dts: true,
         shims: true,
-        esbuildPlugins: [
-            sassPlugin(),
-        ],
+        injectStyle: true,
+        ...rest,
     };
 });

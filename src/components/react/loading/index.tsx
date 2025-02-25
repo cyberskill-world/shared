@@ -1,7 +1,5 @@
 import cn from 'classnames';
 
-// eslint-disable-next-line ts/ban-ts-comment
-// @ts-ignore
 import styles from './loading.module.scss';
 
 export interface I_LoadingProps {
