@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/cyberskill-world/shared/compare/v1.0.2...v1.1.0) (2025-03-04)
+
+
+### Features
+
+* update libs ([c133fb0](https://github.com/cyberskill-world/shared/commit/c133fb0e3be65ef06e3233ca6050dcb3be2fe17d))
+
 ## [1.0.2](https://github.com/cyberskill-world/shared/compare/v1.0.1...v1.0.2) (2025-02-25)
 
 
