@@ -9,6 +9,13 @@ export function createGraphqlCodegenConfig({ uri, from, to }: I_GraphqlCodegenCo
         generates: {
             [to]: {
                 plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+                config: {
+                    withComponent: true,
+                    withHOC: true,
+                    withHooks: true,
+                    withMutationFn: true,
+                    withRefetchFn: true,
+                },
             },
         },
         hooks: { afterAllFileWrite: ['npx --yes cyberskill lint:fix'] },
