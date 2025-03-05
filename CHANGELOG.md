@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/cyberskill-world/shared/compare/v1.1.0...v1.2.0) (2025-03-05)
+
+
+### Features
+
+* add optional options for createGraphqlCodegenConfig ([fea5d11](https://github.com/cyberskill-world/shared/commit/fea5d116515d8b33b3dc9c33132ef06beef2c887))
+
 # [1.1.0](https://github.com/cyberskill-world/shared/compare/v1.0.2...v1.1.0) (2025-03-04)
 
 
