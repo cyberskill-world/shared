@@ -304,17 +304,41 @@ async function performCommitlint(): Promise<void> {
 
 async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
     if (fs.existsSync(config.HUSKY_PATH)) {
-        await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`, 'Removing husky hooks...');
+        await executeCommand(
+            `npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`,
+            'Removing husky hooks...',
+        );
     }
+
     fs.writeFileSync(
         config.SIMPLE_GIT_HOOKS_PATH,
-        JSON.stringify({
-            'pre-commit': 'npx --yes cyberskill lint-staged',
-            'commit-msg': 'npx --yes cyberskill commitlint',
-            ...(enablePrepush && { 'pre-push': 'npm run build && git add -f dist' }),
-        }, null, 4),
+        JSON.stringify(
+            {
+                'pre-commit': 'npx --yes cyberskill lint-staged',
+                'commit-msg': 'npx --yes cyberskill commitlint',
+                ...(enablePrepush && {
+                    'pre-push': `
+                        echo "🚀 Running build before push..."
+                        npm run build
+                        echo "✅ Build complete. Adding dist files..."
+                        git add -f dist
+                        
+                        # ✅ Check for changes before committing
+                        if ! git diff --cached --exit-code > /dev/null; then
+                            echo "🚀 Changes detected – ready to push!"
+                        else
+                            echo "✅ No changes to commit."
+                        fi
+                    `.trim(),
+                }),
+            },
+            null,
+            4,
+        ),
     );
+
     await executeCommand(`npx simple-git-hooks`, 'Setting up git hooks...');
+
     fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
 }
 
