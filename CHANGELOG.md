@@ -1,3 +1,8 @@
+## 1.7.0 (2025-03-11)
+
+* feat: add storage for node ([33b6626](https://github.com/cyberskill-world/shared/commit/33b6626))
+* chore: dts single mode ([9972bcf](https://github.com/cyberskill-world/shared/commit/9972bcf))
+
 ## <small>1.6.1 (2025-03-11)</small>
 
 * fix: correct release.yml ([a104a6b](https://github.com/cyberskill-world/shared/commit/a104a6b))
