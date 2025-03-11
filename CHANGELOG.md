@@ -1,3 +1,7 @@
+## 1.15.0 (2025-03-11)
+
+* feat: fix lint error ([288fada](https://github.com/cyberskill-world/shared/commit/288fada))
+
 ## 1.14.0 (2025-03-11)
 
 * feat: refactor config paths ([9288e07](https://github.com/cyberskill-world/shared/commit/9288e07))
