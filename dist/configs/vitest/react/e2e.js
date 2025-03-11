@@ -1,1 +1,0 @@
-import e from"@vitejs/plugin-react-swc";import{defineConfig as r}from"vitest/config";var i=function(i){return r({plugins:[e()],test:{include:["**/*.test.e2e.?(c|m)[jt]s?(x)"],browser:{enabled:!0,provider:"playwright",instances:[{browser:"chromium"},{browser:"firefox"},{browser:"webkit"}]}},resolve:{alias:i}})};export{i as default};

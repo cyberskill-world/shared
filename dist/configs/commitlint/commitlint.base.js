@@ -1,1 +1,0 @@
-var e={extends:["@commitlint/config-conventional"]};export{e as default};

@@ -1,1 +1,0 @@
-import{dirname as r}from"node:path";import{fileURLToPath as a}from"node:url";var o=a(import.meta.url),m=r(o);export{m as DIRNAME};
