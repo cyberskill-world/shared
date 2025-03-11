@@ -28,12 +28,28 @@
             "require": "./dist/configs/index.cjs"
         },
         "./configs/commitlint": {
-            "import": "./dist/configs/commitlint/commitlint.base.js",
-            "require": "./dist/configs/commitlint/commitlint.base.cjs"
+            "import": "./dist/configs/commitlint/base.js",
+            "require": "./dist/configs/commitlint/base.cjs"
         },
         "./configs/eslint": {
-            "import": "./dist/configs/eslint/index.js",
-            "require": "./dist/configs/eslint/index.cjs"
+            "import": "./dist/configs/eslint/base.js",
+            "require": "./dist/configs/eslint/base.cjs"
+        },
+        "./configs/eslint/nestjs": {
+            "import": "./dist/configs/eslint/nestjs.js",
+            "require": "./dist/configs/eslint/nestjs.cjs"
+        },
+        "./configs/eslint/nextjs": {
+            "import": "./dist/configs/eslint/nextjs.js",
+            "require": "./dist/configs/eslint/nextjs.cjs"
+        },
+        "./configs/eslint/nodejs": {
+            "import": "./dist/configs/eslint/nodejs.js",
+            "require": "./dist/configs/eslint/nodejs.cjs"
+        },
+        "./configs/eslint/vite-react": {
+            "import": "./dist/configs/eslint/vite-react.js",
+            "require": "./dist/configs/eslint/vite-react.cjs"
         },
         "./configs/graphql": {
             "import": "./dist/configs/graphql/index.js",
@@ -42,6 +58,10 @@
         "./configs/i18n/react": {
             "import": "./dist/configs/i18n/react/index.js",
             "require": "./dist/configs/i18n/react/index.cjs"
+        },
+        "./configs/lint-staged": {
+            "import": "./dist/configs/lint-staged/base.js",
+            "require": "./dist/configs/lint-staged/base.cjs"
         },
         "./configs/vitest/react/e2e": {
             "import": "./dist/configs/vitest/react/e2e.js",

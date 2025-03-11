@@ -39,7 +39,7 @@ export default {
             );
         }
 
-        if (type === 'commitlint') {
+        if (type === 'commitlint' || type === 'lint-staged') {
             return mergeConfigs();
         }
 

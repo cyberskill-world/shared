@@ -16,9 +16,9 @@ import { executeCommand, logProcessStep } from './utils/command.js';
 import { getLatestPackageVersion, isCurrentProject } from './utils/npm-package.js';
 
 const config = {
-    FILE_EXTENSIONS: `**/*.{ts,tsx,js,jsx,json,css,scss,less}`,
     INIT_CWD: process.env.INIT_CWD || process.cwd(),
-    TSCONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
+    TS_CONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
+    LINT_STAGED_CONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/lint-staged.config.js`,
     HUSKY_PATH: `${process.env.INIT_CWD || process.cwd()}/.husky`,
     GIT_HOOK_PATH: `${process.env.INIT_CWD || process.cwd()}/.git/hooks`,
     GIT_COMMIT_MSG: `${process.env.INIT_CWD || process.cwd()}/.git/COMMIT_EDITMSG`,
@@ -27,9 +27,9 @@ const config = {
 };
 
 async function runTypescript(): Promise<void> {
-    if (fs.existsSync(config.TSCONFIG_PATH)) {
+    if (fs.existsSync(config.TS_CONFIG_PATH)) {
         await executeCommand(
-            `npx tsc -p ${config.TSCONFIG_PATH} --noEmit`,
+            `npx tsc -p ${config.TS_CONFIG_PATH} --noEmit`,
             'TypeScript checking...',
         );
     }
@@ -44,7 +44,7 @@ async function runEslint(fix = false): Promise<void> {
 }
 
 async function runLintStaged(): Promise<void> {
-    const command = `npx lint-staged`;
+    const command = `npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`;
     await executeCommand(command, `Lint-staged processing...`);
 }
 
