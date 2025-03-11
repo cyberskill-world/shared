@@ -1,3 +1,7 @@
+## 1.16.0 (2025-03-11)
+
+* feat: remove commitlint config ([58a2168](https://github.com/cyberskill-world/shared/commit/58a2168))
+
 ## 1.15.0 (2025-03-11)
 
 * feat: fix lint error ([288fada](https://github.com/cyberskill-world/shared/commit/288fada))
