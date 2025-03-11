@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/cyberskill-world/shared/compare/v1.4.0...v1.4.1) (2025-03-11)
+
+
+### Bug Fixes
+
+* release config ([7cba35f](https://github.com/cyberskill-world/shared/commit/7cba35f5166d236bcfe988d24d12a65cd239098d))
+
 # [1.3.0](https://github.com/cyberskill-world/shared/compare/v1.2.0...v1.3.0) (2025-03-11)
 
 
