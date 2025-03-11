@@ -302,7 +302,7 @@ async function performCommitlint(): Promise<void> {
     });
 }
 
-async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
+async function setupGitHook(): Promise<void> {
     if (fs.existsSync(config.HUSKY_PATH)) {
         await executeCommand(
             `npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`,
@@ -310,44 +310,20 @@ async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
         );
     }
 
-    // ✅ Write simple-git-hooks config
+    // ✅ Create a simple-git-hooks config
     fs.writeFileSync(
         config.SIMPLE_GIT_HOOKS_PATH,
         JSON.stringify(
             {
-                'pre-commit': 'npx --yes cyberskill lint-staged',
+                // ✅ Build and lint before commit
+                'pre-commit': `
+                    echo "🚀 Running build before commit..."
+                    npm run build || (echo "❌ Build failed – aborting commit." && exit 1)
+
+                    echo "✅ Build successful – running lint..."
+                    npx --yes cyberskill lint-staged || (echo "❌ Lint failed – aborting commit." && exit 1)
+                `,
                 'commit-msg': 'npx --yes cyberskill commitlint',
-                ...(enablePrepush && {
-                    'pre-push': `
-                        # ✅ Prevent loop caused by semantic-release commit
-                        if git log -1 --pretty=%B | grep -q '\\[skip ci\\]'; then
-                            echo "🚀 Skipping pre-push hook (semantic-release commit)"
-                            exit 0
-                        fi
-
-                        echo "🚀 Running build before push..."
-                        npm run build
-                        echo "✅ Build complete. Adding dist files..."
-                        git add -f dist
-                        
-                        # ✅ Check for changes before committing
-                        if ! git diff --cached --exit-code > /dev/null; then
-                            echo "🚀 Changes detected – committing changes..."
-                            git commit -m "chore: include build output [skip ci]"
-                            echo "✅ Build changes committed!"
-                        else
-                            echo "✅ No changes to commit."
-                        fi
-
-                        # ✅ Push only if the commit was created by a user (NOT semantic-release)
-                        if ! git log -1 --pretty=%B | grep -q '\\[skip ci\\]'; then
-                            echo "🚀 Pushing changes..."
-                            git push
-                        else
-                            echo "✅ Skipping push (semantic-release commit)"
-                        fi
-                    `.trim(),
-                }),
             },
             null,
             4,
@@ -357,7 +333,7 @@ async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
     // ✅ Install the hooks using simple-git-hooks
     await executeCommand(`npx simple-git-hooks`, 'Setting up git hooks...');
 
-    // ✅ Remove the temp config file
+    // ✅ Clean up temporary config file
     fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
 }
 
@@ -447,7 +423,7 @@ async function performSetup(): Promise<void> {
             }
         }
 
-        setupGitHook(shouldNotUpdate);
+        setupGitHook();
     });
 }
 
@@ -460,7 +436,7 @@ async function performReset(): Promise<void> {
         );
         await executeCommand('npm i -f', 'Installing all dependencies...');
 
-        setupGitHook(isCyberSkillProject());
+        setupGitHook();
     });
 }
 

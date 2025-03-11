@@ -7,6 +7,7 @@ on:
 
 jobs:
   release:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +21,7 @@ jobs:
         with:
           node-version: '22.14.0'
           registry-url: 'https://registry.npmjs.org'
-          cache: 'npm' # Caches node_modules using package-lock.json
+          cache: 'npm' # ✅ Caches node_modules using package-lock.json
 
       # ✅ Restore cached build to avoid rebuilding
       - name: Restore build cache
@@ -50,9 +51,16 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}" >> $GITHUB_ENV
 
-      # ✅ Install dependencies (always)
+      # ✅ Install dependencies (only if needed)
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -d "node_modules" ]; then
+            echo "✅ node_modules found – running npm install"
+            npm install
+          else
+            echo "🚀 No node_modules found – running npm ci"
+            npm ci
+          fi
 
       # ✅ Clean up dist folder before building
       - name: Clean dist folder

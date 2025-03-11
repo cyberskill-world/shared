@@ -1,0 +1,1 @@
+import{useContext as r}from"react";import{createContext as e}from"react";var o=e(void 0);function t(){var e=r(o);if(!e)throw new Error("useLoading must be used within a LoadingProvider");return e}export{t as useLoading};
