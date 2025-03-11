@@ -1,3 +1,11 @@
+## <small>1.6.1 (2025-03-11)</small>
+
+* fix: correct release.yml ([a104a6b](https://github.com/cyberskill-world/shared/commit/a104a6b))
+* fix: release.yml ([06c8054](https://github.com/cyberskill-world/shared/commit/06c8054))
+* chore: optimize release ([30b54b4](https://github.com/cyberskill-world/shared/commit/30b54b4))
+* chore: refactor command.ts ([1eb3d82](https://github.com/cyberskill-world/shared/commit/1eb3d82))
+* chore: release ([be51f6c](https://github.com/cyberskill-world/shared/commit/be51f6c))
+
 ## 1.6.0 (2025-03-11)
 
 * chore: clean up release dependencies ([2bc9918](https://github.com/cyberskill-world/shared/commit/2bc9918))
