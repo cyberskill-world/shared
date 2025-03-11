@@ -1,3 +1,7 @@
+## 1.13.0 (2025-03-11)
+
+* feat: fix lint-staged config ([e981335](https://github.com/cyberskill-world/shared/commit/e981335))
+
 ## 1.12.0 (2025-03-11)
 
 * feat: add lint-staged config path ([6dd79f2](https://github.com/cyberskill-world/shared/commit/6dd79f2))
