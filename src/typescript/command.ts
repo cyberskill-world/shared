@@ -34,3 +34,11 @@ export interface I_EslintError {
         ruleId: string;
     }>;
 }
+
+
+export interface I_SpinnerOptions {
+    successMessage?: string;
+    failureMessage?: string;
+    errorList?: unknown[];
+    exitOnError?: boolean;
+}

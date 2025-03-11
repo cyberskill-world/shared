@@ -22,16 +22,16 @@ jobs:
           node-version: '22.14.0'
           registry-url: 'https://registry.npmjs.org'
 
-      # ✅ Cache npm dependencies + plugins cache
-      - name: Cache npm dependencies
+      # ✅ Cache npm dependencies + installed plugins
+      - name: Cache npm dependencies and node_modules
         uses: actions/cache@v4
         with:
           path: |
             ~/.npm
             node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-release-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-npm-
+            ${{ runner.os }}-release-
 
       # ✅ Configure npm authentication (for semantic-release and npm publish)
       - name: Configure npm authentication
@@ -39,13 +39,7 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}" >> $GITHUB_ENV
 
-      # ✅ Install main dependencies using npm ci (faster than install)
-      - name: Install main dependencies
-        env:
-          NODE_ENV: production
-        run: npm ci
-
-      # ✅ Install semantic-release + plugins (with cache support)
+      # ✅ Install semantic-release + plugins (cache will pick up if available)
       - name: Install release dependencies
         run: |
           npm install --no-save \

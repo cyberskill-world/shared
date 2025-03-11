@@ -4,9 +4,14 @@ import type {
     I_Config,
 } from '../typescript/index.js';
 
-export * from './localStorage.js';
+export * from './command-error.js';
+export * from './command-log.js';
+export * from './command-spinner.js';
+export * from './command.js';
+export * from './local-storage.js';
 export * from './log.js';
 export * from './mongoose.js';
+export * from './npm-package.js';
 export * from './serializer.js';
 export * from './validate.js';
 
