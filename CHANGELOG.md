@@ -1,3 +1,7 @@
+## 1.14.0 (2025-03-11)
+
+* feat: refactor config paths ([9288e07](https://github.com/cyberskill-world/shared/commit/9288e07))
+
 ## 1.13.0 (2025-03-11)
 
 * feat: fix lint-staged config ([e981335](https://github.com/cyberskill-world/shared/commit/e981335))
