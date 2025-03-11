@@ -1,3 +1,8 @@
+## 1.6.0 (2025-03-11)
+
+* chore: clean up release dependencies ([2bc9918](https://github.com/cyberskill-world/shared/commit/2bc9918))
+* feat: release ([5af8ed4](https://github.com/cyberskill-world/shared/commit/5af8ed4))
+
 ## [1.5.1](https://github.com/cyberskill-world/shared/compare/v1.5.0...v1.5.1) (2025-03-11)
 
 
