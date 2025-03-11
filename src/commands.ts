@@ -15,16 +15,17 @@ import { runWithSpinner } from './utils/command-spinner.js';
 import { executeCommand, logProcessStep } from './utils/command.js';
 import { getLatestPackageVersion, isCurrentProject } from './utils/npm-package.js';
 
+const INIT_CWD = process.env.INIT_CWD || process.cwd();
+
 const config = {
-    INIT_CWD: process.env.INIT_CWD || process.cwd(),
-    TS_CONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
-    HUSKY_PATH: `${process.env.INIT_CWD || process.cwd()}/.husky`,
-    GIT_HOOK_PATH: `${process.env.INIT_CWD || process.cwd()}/.git/hooks`,
-    GIT_COMMIT_MSG: `${process.env.INIT_CWD || process.cwd()}/.git/COMMIT_EDITMSG`,
-    SIMPLE_GIT_HOOKS_PATH: `${process.env.INIT_CWD || process.cwd()}/.simple-git-hooks.json`,
+    INIT_CWD,
+    TS_CONFIG_PATH: `${INIT_CWD}/tsconfig.json`,
+    HUSKY_PATH: `${INIT_CWD}/.husky`,
+    GIT_HOOK_PATH: `${INIT_CWD}/.git/hooks`,
+    GIT_COMMIT_MSG: `${INIT_CWD}/.git/COMMIT_EDITMSG`,
+    SIMPLE_GIT_HOOKS_PATH: `${INIT_CWD}/.simple-git-hooks.json`,
     PACKAGE_NAME: '@cyberskill/shared',
 };
-
 async function runTypescript(): Promise<void> {
     if (fs.existsSync(config.TS_CONFIG_PATH)) {
         await executeCommand(
