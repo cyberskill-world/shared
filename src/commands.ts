@@ -310,6 +310,7 @@ async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
         );
     }
 
+    // ✅ Write simple-git-hooks config
     fs.writeFileSync(
         config.SIMPLE_GIT_HOOKS_PATH,
         JSON.stringify(
@@ -318,6 +319,12 @@ async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
                 'commit-msg': 'npx --yes cyberskill commitlint',
                 ...(enablePrepush && {
                     'pre-push': `
+                        # ✅ Prevent loop caused by semantic-release commit
+                        if git log -1 --pretty=%B | grep -q '\\[skip ci\\]'; then
+                            echo "🚀 Skipping pre-push hook (semantic-release commit)"
+                            exit 0
+                        fi
+
                         echo "🚀 Running build before push..."
                         npm run build
                         echo "✅ Build complete. Adding dist files..."
@@ -325,9 +332,19 @@ async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
                         
                         # ✅ Check for changes before committing
                         if ! git diff --cached --exit-code > /dev/null; then
-                            echo "🚀 Changes detected – ready to push!"
+                            echo "🚀 Changes detected – committing changes..."
+                            git commit -m "chore: include build output [skip ci]"
+                            echo "✅ Build changes committed!"
                         else
                             echo "✅ No changes to commit."
+                        fi
+
+                        # ✅ Push only if the commit was created by a user (NOT semantic-release)
+                        if ! git log -1 --pretty=%B | grep -q '\\[skip ci\\]'; then
+                            echo "🚀 Pushing changes..."
+                            git push
+                        else
+                            echo "✅ Skipping push (semantic-release commit)"
                         fi
                     `.trim(),
                 }),
@@ -337,8 +354,10 @@ async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
         ),
     );
 
+    // ✅ Install the hooks using simple-git-hooks
     await executeCommand(`npx simple-git-hooks`, 'Setting up git hooks...');
 
+    // ✅ Remove the temp config file
     fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
 }
 
