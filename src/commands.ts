@@ -18,7 +18,6 @@ import { getLatestPackageVersion, isCurrentProject } from './utils/npm-package.j
 const config = {
     INIT_CWD: process.env.INIT_CWD || process.cwd(),
     TS_CONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/tsconfig.json`,
-    LINT_STAGED_CONFIG_PATH: `${process.env.INIT_CWD || process.cwd()}/lint-staged.config.js`,
     HUSKY_PATH: `${process.env.INIT_CWD || process.cwd()}/.husky`,
     GIT_HOOK_PATH: `${process.env.INIT_CWD || process.cwd()}/.git/hooks`,
     GIT_COMMIT_MSG: `${process.env.INIT_CWD || process.cwd()}/.git/COMMIT_EDITMSG`,
@@ -44,7 +43,9 @@ async function runEslint(fix = false): Promise<void> {
 }
 
 async function runLintStaged(): Promise<void> {
-    const command = `npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`;
+    const configPath = path.resolve(DIRNAME, './configs/lint-staged/base.js');
+
+    const command = `npx lint-staged --config ${configPath}`;
     await executeCommand(command, `Lint-staged processing...`);
 }
 
@@ -85,7 +86,7 @@ async function performCommitlint(): Promise<void> {
     logProcessStep(`Starting commitlint process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.CommitLint, async () => {
         (await getStoredErrorLists()).length = 0;
-        const configPath = path.resolve(DIRNAME, './configs/commitlint/commitlint.base.js');
+        const configPath = path.resolve(DIRNAME, './configs/commitlint/base.js');
         const command = `npx --no -- commitlint --edit ${config.GIT_COMMIT_MSG} --config ${configPath}`;
         await executeCommand(command, `Commitlint processing...`);
         displayResults();
