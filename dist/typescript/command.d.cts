@@ -31,5 +31,11 @@ interface I_EslintError {
         ruleId: string;
     }>;
 }
+interface I_SpinnerOptions {
+    successMessage?: string;
+    failureMessage?: string;
+    errorList?: unknown[];
+    exitOnError?: boolean;
+}
 
-export { E_ErrorType, E_SpinnerMessage, type I_ErrorEntry, type I_EslintError };
+export { E_ErrorType, E_SpinnerMessage, type I_ErrorEntry, type I_EslintError, type I_SpinnerOptions };

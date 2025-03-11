@@ -15,46 +15,49 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ Set up Node.js with cache for npm and node_modules
+      # ✅ Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.14.0'
           registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
 
-      # ✅ Cache npm dependencies + installed plugins
+      # ✅ Cache npm dependencies and node_modules
       - name: Cache npm dependencies and node_modules
+        id: cache-npm
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.npm
-            node_modules
-          key: ${{ runner.os }}-release-${{ hashFiles('package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-release-
+            ${{ runner.os }}-npm-
 
-      # ✅ Configure npm authentication (for semantic-release and npm publish)
+      # ✅ Configure npm authentication
       - name: Configure npm authentication
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}" >> $GITHUB_ENV
 
-      # ✅ Install semantic-release + plugins (cache will pick up if available)
+      # ✅ Cache release dependencies separately
+      - name: Cache release dependencies
+        id: cache-release-deps
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: release-deps-${{ hashFiles('release-dependencies.txt') }}
+          restore-keys: |
+            release-deps-
+
+      # ✅ Install release dependencies only (skip full install)
       - name: Install release dependencies
         run: |
-          npm install --no-save \
-            semantic-release@latest \
-            @semantic-release/commit-analyzer@latest \
-            @semantic-release/release-notes-generator@latest \
-            @semantic-release/changelog@latest \
-            @semantic-release/git@latest \
-            @semantic-release/github@latest \
-            @semantic-release/npm@latest
+          xargs -n 1 npm install --no-save < release-dependencies.txt
 
-      # ✅ Run semantic-release to handle versioning, changelog, and publishing
+      # ✅ Release
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+        run: npm run release
