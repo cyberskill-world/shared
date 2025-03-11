@@ -1,3 +1,7 @@
+## 1.12.0 (2025-03-11)
+
+* feat: add lint-staged config path ([6dd79f2](https://github.com/cyberskill-world/shared/commit/6dd79f2))
+
 ## 1.11.0 (2025-03-11)
 
 * feat: add specific folder for storage ([d94986a](https://github.com/cyberskill-world/shared/commit/d94986a))
