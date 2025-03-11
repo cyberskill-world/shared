@@ -48,8 +48,9 @@ function logResults(entries: I_ErrorEntry[], color: typeof yellow | typeof red, 
 }
 
 export async function displayResults() {
-    const errors = (await getStoredErrorLists()).filter(e => e.type === E_ErrorType.Error);
-    const warnings = (await getStoredErrorLists()).filter(e => e.type === E_ErrorType.Warning);
+    const allResult = await getStoredErrorLists();
+    const errors = allResult.filter(e => e.type === E_ErrorType.Error);
+    const warnings = allResult.filter(e => e.type === E_ErrorType.Warning);
 
     if (!errors.length && !warnings.length) {
         console.log(boxAround(bold(green('✔ NO ISSUE FOUND!')), green));

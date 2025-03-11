@@ -3,15 +3,15 @@ import type { I_ErrorEntry } from '../typescript/command.js';
 import { storage } from './storage.js';
 
 const ERROR_LIST_KEY = (timestamp: number) => `error_list:${timestamp}`;
-const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 /**
  * Save the entire error list to storage.
  * @param errorList Array of I_ErrorEntry objects.
  */
 export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void> {
-    if (!errorList.length)
+    if (!errorList.length) {
         return;
+    }
 
     const timestamp = Date.now();
     const key = ERROR_LIST_KEY(timestamp);
@@ -42,6 +42,7 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
 
         for (const key of errorKeys) {
             const entry = await storage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
+
             if (entry) {
                 allErrors.push(...entry.errors);
             }
@@ -55,26 +56,17 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
     }
 }
 
-/**
- * Clear expired error lists from storage.
- */
-export async function clearExpiredErrorLists(): Promise<void> {
+export async function clearAllErrorLists(): Promise<void> {
     try {
         const keys = await storage.keys();
-        const now = Date.now();
+        const errorKeys = keys.filter(key => key.startsWith('error_list:'));
 
-        for (const key of keys) {
-            if (key.startsWith('error_list:')) {
-                const entry = await storage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
-
-                if (entry && now - entry.timestamp > CACHE_EXPIRATION_MS) {
-                    await storage.remove(key);
-                    console.log(`🗑️ Removed expired error list: ${key}`);
-                }
-            }
+        for (const key of errorKeys) {
+            await storage.remove(key);
+            console.log(`🗑️ Removed error list: ${key}`);
         }
     }
     catch (error) {
-        console.error(`❌ Failed to clear expired error lists: ${(error as Error).message}`);
+        console.error(`❌ Failed to clear error lists: ${(error as Error).message}`);
     }
 }

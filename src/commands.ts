@@ -9,7 +9,7 @@ import { DIRNAME } from './constants/index.js';
 import {
     E_SpinnerMessage,
 } from './typescript/command.js';
-import { getStoredErrorLists } from './utils/command-error.js';
+import { clearAllErrorLists } from './utils/command-error.js';
 import { displayResults } from './utils/command-log.js';
 import { runWithSpinner } from './utils/command-spinner.js';
 import { executeCommand, logProcessStep } from './utils/command.js';
@@ -26,6 +26,7 @@ const config = {
     SIMPLE_GIT_HOOKS_PATH: `${INIT_CWD}/.simple-git-hooks.json`,
     PACKAGE_NAME: '@cyberskill/shared',
 };
+
 async function runTypescript(): Promise<void> {
     if (fs.existsSync(config.TS_CONFIG_PATH)) {
         await executeCommand(
@@ -53,7 +54,7 @@ async function runLintStaged(): Promise<void> {
 async function performLintCheck(): Promise<void> {
     logProcessStep(`Starting lint check for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.LintCheck, async () => {
-        (await getStoredErrorLists()).length = 0;
+        await clearAllErrorLists();
         await Promise.all([runTypescript(), runEslint()]);
         displayResults();
     });
@@ -77,7 +78,7 @@ async function performLintStaged(): Promise<void> {
         '🚀',
     );
     await runWithSpinner(E_SpinnerMessage.LintStaged, async () => {
-        (await getStoredErrorLists()).length = 0;
+        await clearAllErrorLists();
         await Promise.all([runTypescript(), runLintStaged()]);
         displayResults();
     });
@@ -86,7 +87,7 @@ async function performLintStaged(): Promise<void> {
 async function performCommitlint(): Promise<void> {
     logProcessStep(`Starting commitlint process for ${config.INIT_CWD}`, '🚀');
     await runWithSpinner(E_SpinnerMessage.CommitLint, async () => {
-        (await getStoredErrorLists()).length = 0;
+        await clearAllErrorLists();
         const configPath = path.resolve(DIRNAME, './configs/commitlint/base.js');
         const command = `npx --no -- commitlint --edit ${config.GIT_COMMIT_MSG} --config ${configPath}`;
         await executeCommand(command, `Commitlint processing...`);

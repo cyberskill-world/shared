@@ -7,8 +7,6 @@ export enum E_SpinnerMessage {
     Reset = 'Resetting...',
     UnitTest = 'Running unit tests...',
     E2ETest = 'Running end-to-end tests...',
-    Success = ' completed successfully!',
-    Fail = ' failed.',
 }
 
 export enum E_ErrorType {
@@ -34,7 +32,6 @@ export interface I_EslintError {
         ruleId: string;
     }>;
 }
-
 
 export interface I_SpinnerOptions {
     successMessage?: string;

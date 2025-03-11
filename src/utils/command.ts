@@ -16,8 +16,6 @@ import { saveErrorListToStorage } from './command-error.js';
 const execPromise = util.promisify(exec);
 const { gray, white } = chalk;
 
-const errorList: I_ErrorEntry[] = [];
-
 export function logProcessStep(message: string, icon: string = ''): void {
     const timestamp = new Date().toLocaleString();
     console.log(`${icon} [${timestamp}] ${white(message)}`);
@@ -31,6 +29,8 @@ function parseTextErrors(output: string): void {
 
     const unmatchedLines: string[] = [];
     let lastFilePath = '';
+
+    const errorList: I_ErrorEntry[] = [];
 
     output.split('\n').forEach((line) => {
         if (line.startsWith('/')) {
@@ -78,6 +78,10 @@ function parseTextErrors(output: string): void {
         }
     });
 
+    if (errorList.length > 0) {
+        saveErrorListToStorage(errorList);
+    }
+
     if (unmatchedLines.length > 0) {
         console.log(gray('Unmatched lines:'));
         unmatchedLines.forEach(line => console.info(line));
@@ -87,6 +91,7 @@ function parseTextErrors(output: string): void {
 function parseCommandOutput(output: string): void {
     try {
         const results: I_EslintError[] = JSON.parse(output);
+        const errorList: I_ErrorEntry[] = [];
 
         results.forEach(({ filePath, messages }) => {
             messages.forEach(({ severity, line, column, ruleId, message }) => {
@@ -102,8 +107,13 @@ function parseCommandOutput(output: string): void {
                 });
             });
         });
+
+        if (errorList.length > 0) {
+            saveErrorListToStorage(errorList);
+        }
     }
     catch {
+        console.log('output', output);
         parseTextErrors(output);
     }
 }
@@ -124,14 +134,19 @@ export async function executeCommand(command: string, description: string, parse
             maxBuffer: 1024 * 1024 * 100,
             signal: controller.signal,
         });
-        [stdout, stderr].forEach(output => output && parser(output));
 
-        // ✅ Save whole errorList directly
-        if (errorList.length) {
-            await saveErrorListToStorage(errorList);
-        }
+        [stdout, stderr].forEach(output => output && parser(output));
     }
     catch (error) {
-        console.error(`Command failed: ${(error as Error).message}`);
+        const { stdout, stderr, message } = error as {
+            stdout?: string;
+            stderr?: string;
+            message: string;
+        };
+        [stdout, stderr].forEach(output => output && parser(output));
+
+        if (!stderr && !stdout) {
+            console.error(`Command failed: ${message}`);
+        }
     }
 }
