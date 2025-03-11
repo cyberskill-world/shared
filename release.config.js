@@ -5,25 +5,24 @@
 export default {
     branches: ['main'],
     plugins: [
-        '@semantic-release/commit-analyzer', // ✅ Analyze commits for version bumping
-        '@semantic-release/release-notes-generator', // ✅ Generate clean release notes
-        '@semantic-release/changelog', // ✅ Update CHANGELOG.md
+        '@semantic-release/commit-analyzer',
+        '@semantic-release/release-notes-generator',
+        '@semantic-release/changelog',
         [
             '@semantic-release/npm',
             {
-                npmPublish: true, // ✅ Ensure npm publish works
-                tarballDir: 'dist', // ✅ Include dist in the npm package
-                pkgRoot: '.', // ✅ Package root is project root
+                npmPublish: true,
+                pkgRoot: '.',
             },
         ],
-        '@semantic-release/github', // ✅ Create GitHub release
+        '@semantic-release/github',
         [
             '@semantic-release/git',
             {
                 assets: [
-                    'package.json', // ✅ Include version bump in package.json
-                    'CHANGELOG.md', // ✅ Include changelog updates
-                    'dist/**/*', // ✅ Include ALL files in dist/ in the release commit
+                    'package.json',
+                    'CHANGELOG.md',
+                    'dist/**/*',
                 ],
                 message:
                     '🚀 chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
@@ -31,11 +30,11 @@ export default {
         ],
     ],
     github: {
-        labels: ['release'], // ✅ Add a "release" label to GitHub release
-        releaseName: '🚀 Release ${nextRelease.version}', // ✅ Clean release name
+        labels: ['release'],
+        releaseName: '🚀 Release ${nextRelease.version}',
     },
     generateNotes: {
-        preset: 'conventionalcommits', // ✅ Use conventional commits for structured notes
+        preset: 'conventionalcommits',
         presetConfig: {
             types: [
                 { type: 'feat', section: '✨ Features', hidden: false },
@@ -48,5 +47,5 @@ export default {
             ],
         },
     },
-    npmPublish: true, // ✅ Ensure npm publish is enabled
+    npmPublish: true,
 };

@@ -145,7 +145,6 @@
         "lint": "npx tsx src/commands.ts lint",
         "lint:fix": "npx tsx src/commands.ts lint:fix",
         "lint:inspect": "npx @eslint/config-inspector",
-        "release": "semantic-release",
         "reset": "npx tsx src/commands.ts reset",
         "setup": "npx tsx src/commands.ts setup"
     },

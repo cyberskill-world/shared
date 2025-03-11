@@ -15,12 +15,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ Set up Node.js (use cache for faster install)
+      # ✅ Set up Node.js with cache for npm and node_modules
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.14.0'
           registry-url: 'https://registry.npmjs.org'
+
+      # ✅ Cache npm dependencies + plugins cache
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
 
       # ✅ Configure npm authentication (for semantic-release and npm publish)
       - name: Configure npm authentication
@@ -28,16 +39,23 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}" >> $GITHUB_ENV
 
-      # ✅ Install ONLY semantic-release and necessary plugins (minimal install)
+      # ✅ Install main dependencies using npm ci (faster than install)
+      - name: Install main dependencies
+        env:
+          NODE_ENV: production
+        run: npm ci
+
+      # ✅ Install semantic-release + plugins (with cache support)
       - name: Install release dependencies
         run: |
-          npm install --no-save semantic-release \
-            @semantic-release/commit-analyzer \
-            @semantic-release/release-notes-generator \
-            @semantic-release/changelog \
-            @semantic-release/git \
-            @semantic-release/github \
-            @semantic-release/npm
+          npm install --no-save \
+            semantic-release@latest \
+            @semantic-release/commit-analyzer@latest \
+            @semantic-release/release-notes-generator@latest \
+            @semantic-release/changelog@latest \
+            @semantic-release/git@latest \
+            @semantic-release/github@latest \
+            @semantic-release/npm@latest
 
       # ✅ Run semantic-release to handle versioning, changelog, and publishing
       - name: Release
