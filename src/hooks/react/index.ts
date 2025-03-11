@@ -1,2 +1,2 @@
-export * from './useLoading.js';
-export * from './useLocalStorage.js';
+export * from './use-loading.js';
+export * from './use-storage.js';

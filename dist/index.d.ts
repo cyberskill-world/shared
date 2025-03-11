@@ -249,7 +249,7 @@ interface I_LoadingContext {
     hideLoading: () => void;
 }
 
-interface Serializer$1<T> {
+interface I_Serializer<T> {
     serialize: (value: T) => string;
     deserialize: (value: string) => T;
 }
@@ -581,7 +581,7 @@ declare class MongooseController<D extends Partial<C_Document>> {
 
 declare function useLoading(): I_LoadingContext;
 
-declare function useStorage<T>(key: string, initialValue: T, serializer?: Serializer$1<T>): readonly [T, (value: T | ((val: T) => T)) => Promise<void>];
+declare function useStorage<T>(key: string, initialValue: T, serializer?: I_Serializer<T>): readonly [T, (value: T | ((val: T) => T)) => void];
 
 declare function ApolloProvider({ options, children }: {
     options: I_ApolloOptions;
@@ -665,11 +665,7 @@ declare function isPackageOutdated(packageName: string, forceRefresh?: boolean):
 declare function updatePackage(packageName: string): Promise<void>;
 declare function isCurrentProject(INIT_CWD: string, PACKAGE_NAME: string): boolean;
 
-interface Serializer<T> {
-    serialize: (value: T) => string;
-    deserialize: (value: string) => T;
-}
-declare const serializer: Serializer<any>;
+declare const serializer: I_Serializer<any>;
 
 declare const storage: {
     /**
@@ -755,4 +751,4 @@ declare function isJson(str: string): boolean;
 declare function regexSearchMapper(str: string): string;
 declare const removeAccent: (str: string) => string;
 
-export { ApolloProvider, C_Collection, C_Db, C_Document, C_Model, DIRNAME, E_ErrorType, E_SpinnerMessage, type I_ApolloOptions, type I_Config, type I_DeleteOptionsExtended, type I_ErrorEntry, type I_EslintError, type I_ExtendedModel, type I_GenerateModelOptions, type I_GenerateSchemaOptions, type I_GenericDocument, type I_GraphqlCodegenConfig, type I_HookNextFunction, type I_Input_CreateMany, type I_Input_CreateOne, type I_Input_DeleteMany, type I_Input_DeleteOne, type I_Input_FindAll, type I_Input_FindOne, type I_Input_FindPaging, type I_Input_FindPagingAggregate, type I_Input_UpdateMany, type I_Input_UpdateOne, type I_LoadingContext, type I_LoadingProps, type I_MongooseModelMiddleware, type I_MongooseOptions, type I_Return, type I_ReturnFailure, type I_ReturnSuccess, type I_SlugifyOptions, type I_SpinnerOptions, type I_UpdateOptionsExtended, Loading, LoadingContext, LoadingProvider, MigrationController, MongooseController, RESPONSE_STATUS, type Serializer$1 as Serializer, type T_AggregatePaginateResult, type T_Children, type T_DeleteResult, type T_Filter, type T_FilterQuery, type T_GenerateSlugQueryResponse, type T_Input_MongooseSchema, type T_Input_Populate, type T_InsertManyOptions, type T_InsertManyResult, type T_InsertOneResult, type T_MiddlewareContext, type T_MongooseModelMiddlewareFunction, type T_MongoosePlugin, type T_MongooseShema, type T_OptionalUnlessRequiredId, type T_PaginateOptions, type T_PaginateOptionsWithPopulate, type T_PaginateResult, type T_PipelineStage, type T_PopulateOption, type T_PopulateOptions, type T_ProjectionType, type T_QueryOptions, type T_ThrowResponseArgs, type T_UpdateQuery, type T_UpdateResult, type T_WithId, clearExpiredErrorLists, deepMerge, displayResults, executeCommand, generateModel, generateSchema, generateShortId, generateSlug, generateSlugQuery, getLatestPackageVersion, getStoredErrorLists, isCurrentProject, isJson, isPackageOutdated, logProcessStep, regexSearchMapper, removeAccent, runWithSpinner, saveErrorListToStorage, serializer, storage, throwResponse, updatePackage, useLoading, useStorage, validate };
+export { ApolloProvider, C_Collection, C_Db, C_Document, C_Model, DIRNAME, E_ErrorType, E_SpinnerMessage, type I_ApolloOptions, type I_Config, type I_DeleteOptionsExtended, type I_ErrorEntry, type I_EslintError, type I_ExtendedModel, type I_GenerateModelOptions, type I_GenerateSchemaOptions, type I_GenericDocument, type I_GraphqlCodegenConfig, type I_HookNextFunction, type I_Input_CreateMany, type I_Input_CreateOne, type I_Input_DeleteMany, type I_Input_DeleteOne, type I_Input_FindAll, type I_Input_FindOne, type I_Input_FindPaging, type I_Input_FindPagingAggregate, type I_Input_UpdateMany, type I_Input_UpdateOne, type I_LoadingContext, type I_LoadingProps, type I_MongooseModelMiddleware, type I_MongooseOptions, type I_Return, type I_ReturnFailure, type I_ReturnSuccess, type I_Serializer, type I_SlugifyOptions, type I_SpinnerOptions, type I_UpdateOptionsExtended, Loading, LoadingContext, LoadingProvider, MigrationController, MongooseController, RESPONSE_STATUS, type T_AggregatePaginateResult, type T_Children, type T_DeleteResult, type T_Filter, type T_FilterQuery, type T_GenerateSlugQueryResponse, type T_Input_MongooseSchema, type T_Input_Populate, type T_InsertManyOptions, type T_InsertManyResult, type T_InsertOneResult, type T_MiddlewareContext, type T_MongooseModelMiddlewareFunction, type T_MongoosePlugin, type T_MongooseShema, type T_OptionalUnlessRequiredId, type T_PaginateOptions, type T_PaginateOptionsWithPopulate, type T_PaginateResult, type T_PipelineStage, type T_PopulateOption, type T_PopulateOptions, type T_ProjectionType, type T_QueryOptions, type T_ThrowResponseArgs, type T_UpdateQuery, type T_UpdateResult, type T_WithId, clearExpiredErrorLists, deepMerge, displayResults, executeCommand, generateModel, generateSchema, generateShortId, generateSlug, generateSlugQuery, getLatestPackageVersion, getStoredErrorLists, isCurrentProject, isJson, isPackageOutdated, logProcessStep, regexSearchMapper, removeAccent, runWithSpinner, saveErrorListToStorage, serializer, storage, throwResponse, updatePackage, useLoading, useStorage, validate };

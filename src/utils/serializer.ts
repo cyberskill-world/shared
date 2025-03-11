@@ -1,9 +1,6 @@
-interface Serializer<T> {
-    serialize: (value: T) => string;
-    deserialize: (value: string) => T;
-}
+import type { I_Serializer } from '../typescript/serializer.js';
 
-export const serializer: Serializer<any> = {
+export const serializer: I_Serializer<any> = {
     serialize: value => JSON.stringify(value, (_, v) => {
         if (v instanceof Date) {
             return { __type: 'Date', value: v.toISOString() };

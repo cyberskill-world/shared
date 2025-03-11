@@ -48,13 +48,13 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
         const latestVersion = data.version;
 
         // ✅ Store version in cache
-        await localStorage.set(versionCacheKey, {
+        await storage.set(versionCacheKey, {
             version: latestVersion,
             timestamp: Date.now(),
         });
 
         // ✅ Store metadata in cache
-        await localStorage.set(metadataCacheKey, {
+        await storage.set(metadataCacheKey, {
             etag: response.headers.get('ETag') || undefined,
             lastModified: response.headers.get('Last-Modified') || undefined,
         });
