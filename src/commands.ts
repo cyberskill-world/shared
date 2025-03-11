@@ -44,7 +44,7 @@ async function runEslint(fix = false): Promise<void> {
 }
 
 async function runLintStaged(): Promise<void> {
-    const command = `npx lint-staged -- "*": "eslint --fix"`;
+    const command = `npx lint-staged`;
     await executeCommand(command, `Lint-staged processing...`);
 }
 

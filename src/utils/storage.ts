@@ -3,15 +3,17 @@ import nodePersist from 'node-persist';
 
 const isBrowser = typeof window !== 'undefined';
 
-if (!isBrowser) {
-    nodePersist.init({
-        dir: './.node-storage',
-        stringify: JSON.stringify,
-        parse: JSON.parse,
-        encoding: 'utf8',
-        logging: false,
-        forgiveParseErrors: true,
-    });
+async function initNodePersist() {
+    if (!isBrowser && !nodePersist.defaultInstance) {
+        await nodePersist.init({
+            dir: './.node-storage',
+            stringify: JSON.stringify,
+            parse: JSON.parse,
+            encoding: 'utf8',
+            logging: false,
+            forgiveParseErrors: true,
+        });
+    }
 }
 
 export const storage = {
@@ -26,12 +28,13 @@ export const storage = {
                 return await localForage.getItem<T>(key);
             }
             else {
+                await initNodePersist();
                 const result = await nodePersist.getItem(key);
-                return result !== undefined ? (result as T) : null;
+                return result ?? null;
             }
         }
         catch (error) {
-            console.error(`Error getting key "${key}":`, error);
+            console.error(`❌ [Storage:get] Error getting key "${key}":`, error);
             return null;
         }
     },
@@ -48,11 +51,12 @@ export const storage = {
                 await localForage.setItem(key, value);
             }
             else {
+                await initNodePersist();
                 await nodePersist.setItem(key, value);
             }
         }
         catch (error) {
-            console.error(`Error setting key "${key}":`, error);
+            console.error(`❌ [Storage:set] Error setting key "${key}":`, error);
         }
     },
 
@@ -67,29 +71,12 @@ export const storage = {
                 await localForage.removeItem(key);
             }
             else {
+                await initNodePersist();
                 await nodePersist.removeItem(key);
             }
         }
         catch (error) {
-            console.error(`Error removing key "${key}":`, error);
-        }
-    },
-
-    /**
-     * Clear all keys and values in the storage.
-     * @returns A promise that resolves once the storage is cleared.
-     */
-    async clear(): Promise<void> {
-        try {
-            if (isBrowser) {
-                await localForage.clear();
-            }
-            else {
-                await nodePersist.clear();
-            }
-        }
-        catch (error) {
-            console.error('Error clearing storage:', error);
+            console.error(`❌ [Storage:remove] Error removing key "${key}":`, error);
         }
     },
 
@@ -103,12 +90,85 @@ export const storage = {
                 return await localForage.keys();
             }
             else {
-                return await nodePersist.keys();
+                await initNodePersist();
+                const keys = await nodePersist.keys();
+                return keys || [];
             }
         }
         catch (error) {
-            console.error('Error getting keys:', error);
+            console.error(`❌ [Storage:keys] Error getting keys:`, error);
             return [];
+        }
+    },
+
+    /**
+     * Get all values in the storage.
+     * @returns A promise that resolves to an array of all values.
+     */
+    async values<T = unknown>(): Promise<T[]> {
+        try {
+            if (isBrowser) {
+                const keys = await localForage.keys();
+                const values = await Promise.all(keys.map(key => localForage.getItem<T>(key)));
+                return values.filter(value => value !== null) as T[];
+            }
+            else {
+                await initNodePersist();
+                const values = await nodePersist.values();
+                return values as T[];
+            }
+        }
+        catch (error) {
+            console.error(`❌ [Storage:values] Error getting values:`, error);
+            return [];
+        }
+    },
+
+    /**
+     * Get all entries in the storage as [key, value] tuples.
+     * @returns A promise that resolves to an array of entries.
+     */
+    async entries<T = unknown>(): Promise<[string, T][]> {
+        try {
+            if (isBrowser) {
+                const keys = await localForage.keys();
+                const entries = await Promise.all(
+                    keys.map(async (key) => {
+                        const value = await localForage.getItem<T>(key);
+                        return value !== null ? [key, value] : null;
+                    }),
+                );
+                return entries.filter(entry => entry !== null) as [string, T][];
+            }
+            else {
+                await initNodePersist();
+                const keys = await nodePersist.keys();
+                const values = await nodePersist.values();
+                return keys.map((key, index) => [key, values[index]]) as [string, T][];
+            }
+        }
+        catch (error) {
+            console.error(`❌ [Storage:entries] Error getting entries:`, error);
+            return [];
+        }
+    },
+
+    /**
+     * Clear all keys and values in the storage.
+     * @returns A promise that resolves once the storage is cleared.
+     */
+    async clear(): Promise<void> {
+        try {
+            if (isBrowser) {
+                await localForage.clear();
+            }
+            else {
+                await initNodePersist();
+                await nodePersist.clear();
+            }
+        }
+        catch (error) {
+            console.error(`❌ [Storage:clear] Error clearing storage:`, error);
         }
     },
 
@@ -122,39 +182,14 @@ export const storage = {
                 return await localForage.length();
             }
             else {
+                await initNodePersist();
                 const keys = await nodePersist.keys();
                 return keys.length;
             }
         }
         catch (error) {
-            console.error('Error getting storage length:', error);
+            console.error(`❌ [Storage:length] Error getting storage length:`, error);
             return 0;
-        }
-    },
-
-    /**
-     * Iterate over all key-value pairs in the storage.
-     * @param iteratee A callback function that receives the value, key, and iteration number.
-     * @returns A promise that resolves once iteration is complete.
-     */
-    async iterate<T = unknown>(
-        iteratee: (value: T, key: string, iterationNumber: number) => void,
-    ): Promise<void> {
-        try {
-            if (isBrowser) {
-                await localForage.iterate(iteratee);
-            }
-            else {
-                const keys = await nodePersist.keys();
-                for (let i = 0; i < keys.length; i++) {
-                    const key = keys[i];
-                    const value = await nodePersist.getItem(key);
-                    iteratee(value, key, i);
-                }
-            }
-        }
-        catch (error) {
-            console.error('Error iterating storage:', error);
         }
     },
 };
