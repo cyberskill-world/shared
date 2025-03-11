@@ -1,3 +1,7 @@
+## 1.11.0 (2025-03-11)
+
+* feat: add specific folder for storage ([d94986a](https://github.com/cyberskill-world/shared/commit/d94986a))
+
 ## 1.10.0 (2025-03-11)
 
 * feat: remove build from pre-commit hook ([bb0da7f](https://github.com/cyberskill-world/shared/commit/bb0da7f))
