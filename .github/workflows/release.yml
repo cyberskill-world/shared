@@ -15,78 +15,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ✅ Set up Node.js with cache
+      # ✅ Set up Node.js (use cache for faster install)
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22.14.0'
           registry-url: 'https://registry.npmjs.org'
-          cache: 'npm' # ✅ Caches node_modules using package-lock.json
 
-      # ✅ Restore cached build to avoid rebuilding
-      - name: Restore build cache
-        id: cache-build
-        uses: actions/cache@v4
-        with:
-          path: ./dist
-          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*.{ts,tsx,js,jsx}') }}
-          restore-keys: |
-            ${{ runner.os }}-build-
-
-      # ✅ Check if build already exists
-      - name: Check for existing build
-        id: check-dist
-        run: |
-          if [ -d "./dist" ]; then
-            echo "Build already exists ✅"
-            echo "BUILD_EXISTS=true" >> $GITHUB_ENV
-          else
-            echo "No existing build, need to build 🚀"
-            echo "BUILD_EXISTS=false" >> $GITHUB_ENV
-          fi
-
-      # ✅ Configure npm authentication
+      # ✅ Configure npm authentication (for semantic-release and npm publish)
       - name: Configure npm authentication
         run: |
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}" >> $GITHUB_ENV
 
-      # ✅ Install dependencies (only if needed)
-      - name: Install dependencies
+      # ✅ Install ONLY semantic-release and necessary plugins (minimal install)
+      - name: Install release dependencies
         run: |
-          if [ -d "node_modules" ]; then
-            echo "✅ node_modules found – running npm install"
-            npm install
-          else
-            echo "🚀 No node_modules found – running npm ci"
-            npm ci
-          fi
+          npm install --no-save semantic-release \
+            @semantic-release/commit-analyzer \
+            @semantic-release/release-notes-generator \
+            @semantic-release/changelog \
+            @semantic-release/git \
+            @semantic-release/github \
+            @semantic-release/npm
 
-      # ✅ Clean up dist folder before building
-      - name: Clean dist folder
-        if: env.BUILD_EXISTS != 'true'
-        run: npx rimraf dist
-
-      # ✅ Build only if needed
-      - name: Build
-        if: env.BUILD_EXISTS != 'true'
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
-        run: npm run build
-
-      # ✅ Release (only if build succeeded)
+      # ✅ Run semantic-release to handle versioning, changelog, and publishing
       - name: Release
-        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm run release
-
-      # ✅ Save build cache (if new build happened)
-      - name: Save build cache
-        if: env.BUILD_EXISTS != 'true'
-        uses: actions/cache@v4
-        with:
-          path: ./dist
-          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*.{ts,tsx,js,jsx}') }}
+        run: npx semantic-release
