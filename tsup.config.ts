@@ -15,7 +15,10 @@ export default defineConfig(({ watch, ...rest }) => {
         minify: !watch,
         splitting: false,
         clean: true,
-        dts: true,
+        dts: {
+            entry: 'src/index.ts',
+            declarationMode: 'single',
+        },
         shims: true,
         injectStyle: true,
         ...rest,

@@ -20,112 +20,70 @@
             "require": "./dist/index.cjs"
         },
         "./components/react": {
-            "types": "./dist/components/react/index.d.ts",
             "import": "./dist/components/react/index.js",
             "require": "./dist/components/react/index.cjs"
         },
         "./configs": {
-            "types": "./dist/configs/index.d.ts",
             "import": "./dist/configs/index.js",
             "require": "./dist/configs/index.cjs"
         },
         "./configs/commitlint": {
-            "types": "./dist/configs/commitlint/commitlint.base.d.ts",
             "import": "./dist/configs/commitlint/commitlint.base.js",
             "require": "./dist/configs/commitlint/commitlint.base.cjs"
         },
         "./configs/eslint": {
-            "types": "./dist/configs/eslint/eslint.base.d.ts",
-            "import": "./dist/configs/eslint/eslint.base.js",
-            "require": "./dist/configs/eslint/eslint.base.cjs"
-        },
-        "./configs/eslint/cra": {
-            "types": "./dist/configs/eslint/eslint.cra.d.ts",
-            "import": "./dist/configs/eslint/eslint.cra.js",
-            "require": "./dist/configs/eslint/eslint.cra.cjs"
-        },
-        "./configs/eslint/nestjs": {
-            "types": "./dist/configs/eslint/eslint.nestjs.d.ts",
-            "import": "./dist/configs/eslint/eslint.nestjs.js",
-            "require": "./dist/configs/eslint/eslint.nestjs.cjs"
-        },
-        "./configs/eslint/nextjs": {
-            "types": "./dist/configs/eslint/eslint.nextjs.d.ts",
-            "import": "./dist/configs/eslint/eslint.nextjs.js",
-            "require": "./dist/configs/eslint/eslint.nextjs.cjs"
-        },
-        "./configs/eslint/nodejs": {
-            "types": "./dist/configs/eslint/eslint.nodejs.d.ts",
-            "import": "./dist/configs/eslint/eslint.nodejs.js",
-            "require": "./dist/configs/eslint/eslint.nodejs.cjs"
-        },
-        "./configs/eslint/vite-react": {
-            "types": "./dist/configs/eslint/vite-react.d.ts",
-            "import": "./dist/configs/eslint/vite-react.js",
-            "require": "./dist/configs/eslint/vite-react.cjs"
+            "import": "./dist/configs/eslint/index.js",
+            "require": "./dist/configs/eslint/index.cjs"
         },
         "./configs/graphql": {
-            "types": "./dist/configs/graphql/index.d.ts",
             "import": "./dist/configs/graphql/index.js",
             "require": "./dist/configs/graphql/index.cjs"
         },
         "./configs/i18n/react": {
-            "types": "./dist/configs/i18n/react/index.d.ts",
             "import": "./dist/configs/i18n/react/index.js",
             "require": "./dist/configs/i18n/react/index.cjs"
         },
         "./configs/vitest/react/e2e": {
-            "types": "./dist/configs/vitest/react/e2e.d.ts",
             "import": "./dist/configs/vitest/react/e2e.js",
             "require": "./dist/configs/vitest/react/e2e.cjs"
         },
         "./configs/vitest/react/unit": {
-            "types": "./dist/configs/vitest/react/unit.d.ts",
             "import": "./dist/configs/vitest/react/unit.js",
             "require": "./dist/configs/vitest/react/unit.cjs"
         },
         "./constants": {
-            "types": "./dist/constants/index.d.ts",
             "import": "./dist/constants/index.js",
             "require": "./dist/constants/index.cjs"
         },
         "./contexts/react": {
-            "types": "./dist/contexts/react/index.d.ts",
             "import": "./dist/contexts/react/index.js",
             "require": "./dist/contexts/react/index.cjs"
         },
         "./controllers": {
-            "types": "./dist/controllers/index.d.ts",
             "import": "./dist/controllers/index.js",
             "require": "./dist/controllers/index.cjs"
         },
         "./hooks/react": {
-            "types": "./dist/hooks/react/index.d.ts",
             "import": "./dist/hooks/react/index.js",
             "require": "./dist/hooks/react/index.cjs"
         },
         "./providers/react": {
-            "types": "./dist/providers/react/index.d.ts",
             "import": "./dist/providers/react/index.js",
             "require": "./dist/providers/react/index.cjs"
         },
         "./typescript": {
-            "types": "./dist/typescript/index.d.ts",
             "import": "./dist/typescript/index.js",
             "require": "./dist/typescript/index.cjs"
         },
         "./utils": {
-            "types": "./dist/utils/index.d.ts",
             "import": "./dist/utils/index.js",
             "require": "./dist/utils/index.cjs"
         },
         "./commands": {
-            "types": "./dist/commands/index.d.ts",
             "import": "./dist/commands/index.js",
             "require": "./dist/commands/index.cjs"
         },
         "./vendors/graphql/codegen": {
-            "types": "./dist/vendors/graphql/codegen.d.ts",
             "import": "./dist/vendors/graphql/codegen.js",
             "require": "./dist/vendors/graphql/codegen.cjs"
         }
