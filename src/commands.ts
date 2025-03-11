@@ -302,7 +302,7 @@ async function performCommitlint(): Promise<void> {
     });
 }
 
-async function setupGitHook(): Promise<void> {
+async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
     if (fs.existsSync(config.HUSKY_PATH)) {
         await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`, 'Removing husky hooks...');
     }
@@ -311,10 +311,21 @@ async function setupGitHook(): Promise<void> {
         JSON.stringify({
             'pre-commit': 'npx --yes cyberskill lint-staged',
             'commit-msg': 'npx --yes cyberskill commitlint',
+            ...(enablePrepush && { 'pre-push': 'npm run build && git add dist' }),
         }, null, 4),
     );
     await executeCommand(`npx simple-git-hooks`, 'Setting up git hooks...');
     fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
+}
+
+function isCyberSkillProject(): boolean {
+    const packageJsonPath = `${config.INIT_CWD}/package.json`;
+
+    const packageJson = JSON.parse(
+        fs.readFileSync(packageJsonPath, 'utf-8'),
+    );
+
+    return packageJson.name === config.PACKAGE_NAME;
 }
 
 async function performSetup(): Promise<void> {
@@ -372,7 +383,9 @@ async function performSetup(): Promise<void> {
             fs.readFileSync(packageJsonPath, 'utf-8'),
         );
 
-        if (packageJson.name === config.PACKAGE_NAME) {
+        const shouldNotUpdate = isCyberSkillProject();
+
+        if (shouldNotUpdate) {
             logProcessStep(
                 `Cyberskill is the current project. No setup needed.`,
                 '✅',
@@ -391,7 +404,7 @@ async function performSetup(): Promise<void> {
             }
         }
 
-        setupGitHook();
+        setupGitHook(shouldNotUpdate);
     });
 }
 
@@ -404,7 +417,7 @@ async function performReset(): Promise<void> {
         );
         await executeCommand('npm i -f', 'Installing all dependencies...');
 
-        setupGitHook();
+        setupGitHook(isCyberSkillProject());
     });
 }
 

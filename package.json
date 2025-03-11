@@ -134,7 +134,7 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "bin": {
-        "cyberskill": "dist/commands.js"
+        "cyberskill": "./dist/commands.js"
     },
     "files": [
         "dist"
@@ -219,6 +219,7 @@
         "semantic-release": "24.2.3"
     },
     "publishConfig": {
-        "access": "public"
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
     }
 }
