@@ -100,19 +100,28 @@ async function setupGitHook(): Promise<void> {
         );
     }
 
+    const isCurrent = isCurrentProject(config.INIT_CWD, config.PACKAGE_NAME);
+
+    let preCommitCommand = `
+        echo "✅ Running lint..."
+        npx --yes cyberskill lint-staged || (echo "❌ Lint failed – aborting commit." && exit 1)
+    `;
+
+    if (isCurrent) {
+        preCommitCommand = `
+            echo "🚀 Running build before commit..."
+            npm run build || (echo "❌ Build failed – aborting commit." && exit 1)
+            
+            ${preCommitCommand.trim()}
+        `;
+    }
+
     // ✅ Create a simple-git-hooks config
     fs.writeFileSync(
         config.SIMPLE_GIT_HOOKS_PATH,
         JSON.stringify(
             {
-                // ✅ Build and lint before commit
-                'pre-commit': `
-                    echo "🚀 Running build before commit..."
-                    npm run build || (echo "❌ Build failed – aborting commit." && exit 1)
-
-                    echo "✅ Build successful – running lint..."
-                    npx --yes cyberskill lint-staged || (echo "❌ Lint failed – aborting commit." && exit 1)
-                `,
+                'pre-commit': preCommitCommand.trim(),
                 'commit-msg': 'npx --yes cyberskill commitlint',
             },
             null,
