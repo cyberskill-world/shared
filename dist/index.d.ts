@@ -668,49 +668,13 @@ declare function isCurrentProject(INIT_CWD: string, PACKAGE_NAME: string): boole
 declare const serializer: I_Serializer<any>;
 
 declare const storage: {
-    /**
-     * Get the value of a key.
-     * @param key The key to retrieve.
-     * @returns A promise that resolves to the value associated with the key, or `null` if the key doesn't exist.
-     */
     get<T = unknown>(key: string): Promise<T | null>;
-    /**
-     * Set the value for a key.
-     * @param key The key to set.
-     * @param value The value to store.
-     * @returns A promise that resolves once the value is stored.
-     */
     set<T = unknown>(key: string, value: T): Promise<void>;
-    /**
-     * Remove the value associated with a key.
-     * @param key The key to remove.
-     * @returns A promise that resolves once the key is removed.
-     */
     remove(key: string): Promise<void>;
-    /**
-     * Get all keys in the storage.
-     * @returns A promise that resolves to an array of all keys.
-     */
     keys(): Promise<string[]>;
-    /**
-     * Get all values in the storage.
-     * @returns A promise that resolves to an array of all values.
-     */
     values<T = unknown>(): Promise<T[]>;
-    /**
-     * Get all entries in the storage as [key, value] tuples.
-     * @returns A promise that resolves to an array of entries.
-     */
     entries<T = unknown>(): Promise<[string, T][]>;
-    /**
-     * Clear all keys and values in the storage.
-     * @returns A promise that resolves once the storage is cleared.
-     */
     clear(): Promise<void>;
-    /**
-     * Get the number of items in the storage.
-     * @returns A promise that resolves to the number of keys stored.
-     */
     length(): Promise<number>;
 };
 

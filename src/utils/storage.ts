@@ -1,12 +1,20 @@
 import localForage from 'localforage';
 import nodePersist from 'node-persist';
+import os from 'node:os';
+import path from 'node:path';
+import process from 'node:process';
 
 const isBrowser = typeof window !== 'undefined';
+
+// ✅ Use global storage location for node-persist
+const storageDir
+    = process.env.CYBERSKILL_STORAGE_DIR
+        || path.join(os.homedir(), '.cyberskill-storage');
 
 async function initNodePersist() {
     if (!isBrowser && !nodePersist.defaultInstance) {
         await nodePersist.init({
-            dir: './.node-storage',
+            dir: storageDir, // ✅ Global storage path
             stringify: JSON.stringify,
             parse: JSON.parse,
             encoding: 'utf8',
@@ -17,11 +25,6 @@ async function initNodePersist() {
 }
 
 export const storage = {
-    /**
-     * Get the value of a key.
-     * @param key The key to retrieve.
-     * @returns A promise that resolves to the value associated with the key, or `null` if the key doesn't exist.
-     */
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
             if (isBrowser) {
@@ -30,21 +33,17 @@ export const storage = {
             else {
                 await initNodePersist();
                 const result = await nodePersist.getItem(key);
+
                 return result ?? null;
             }
         }
         catch (error) {
             console.error(`❌ [Storage:get] Error getting key "${key}":`, error);
+
             return null;
         }
     },
 
-    /**
-     * Set the value for a key.
-     * @param key The key to set.
-     * @param value The value to store.
-     * @returns A promise that resolves once the value is stored.
-     */
     async set<T = unknown>(key: string, value: T): Promise<void> {
         try {
             if (isBrowser) {
@@ -60,11 +59,6 @@ export const storage = {
         }
     },
 
-    /**
-     * Remove the value associated with a key.
-     * @param key The key to remove.
-     * @returns A promise that resolves once the key is removed.
-     */
     async remove(key: string): Promise<void> {
         try {
             if (isBrowser) {
@@ -80,10 +74,6 @@ export const storage = {
         }
     },
 
-    /**
-     * Get all keys in the storage.
-     * @returns A promise that resolves to an array of all keys.
-     */
     async keys(): Promise<string[]> {
         try {
             if (isBrowser) {
@@ -92,6 +82,7 @@ export const storage = {
             else {
                 await initNodePersist();
                 const keys = await nodePersist.keys();
+
                 return keys || [];
             }
         }
@@ -101,20 +92,18 @@ export const storage = {
         }
     },
 
-    /**
-     * Get all values in the storage.
-     * @returns A promise that resolves to an array of all values.
-     */
     async values<T = unknown>(): Promise<T[]> {
         try {
             if (isBrowser) {
                 const keys = await localForage.keys();
                 const values = await Promise.all(keys.map(key => localForage.getItem<T>(key)));
+
                 return values.filter(value => value !== null) as T[];
             }
             else {
                 await initNodePersist();
                 const values = await nodePersist.values();
+
                 return values as T[];
             }
         }
@@ -124,10 +113,6 @@ export const storage = {
         }
     },
 
-    /**
-     * Get all entries in the storage as [key, value] tuples.
-     * @returns A promise that resolves to an array of entries.
-     */
     async entries<T = unknown>(): Promise<[string, T][]> {
         try {
             if (isBrowser) {
@@ -135,15 +120,18 @@ export const storage = {
                 const entries = await Promise.all(
                     keys.map(async (key) => {
                         const value = await localForage.getItem<T>(key);
+
                         return value !== null ? [key, value] : null;
                     }),
                 );
+
                 return entries.filter(entry => entry !== null) as [string, T][];
             }
             else {
                 await initNodePersist();
                 const keys = await nodePersist.keys();
                 const values = await nodePersist.values();
+
                 return keys.map((key, index) => [key, values[index]]) as [string, T][];
             }
         }
@@ -153,10 +141,6 @@ export const storage = {
         }
     },
 
-    /**
-     * Clear all keys and values in the storage.
-     * @returns A promise that resolves once the storage is cleared.
-     */
     async clear(): Promise<void> {
         try {
             if (isBrowser) {
@@ -172,10 +156,6 @@ export const storage = {
         }
     },
 
-    /**
-     * Get the number of items in the storage.
-     * @returns A promise that resolves to the number of keys stored.
-     */
     async length(): Promise<number> {
         try {
             if (isBrowser) {
@@ -184,11 +164,13 @@ export const storage = {
             else {
                 await initNodePersist();
                 const keys = await nodePersist.keys();
+
                 return keys.length;
             }
         }
         catch (error) {
             console.error(`❌ [Storage:length] Error getting storage length:`, error);
+
             return 0;
         }
     },
