@@ -1,3 +1,7 @@
+## 1.9.0 (2025-03-11)
+
+* feat: add storage for node ([d2eea83](https://github.com/cyberskill-world/shared/commit/d2eea83))
+
 ## 1.8.0 (2025-03-11)
 
 * feat: add storage for node ([ed64a5e](https://github.com/cyberskill-world/shared/commit/ed64a5e))
