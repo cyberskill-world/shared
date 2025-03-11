@@ -13,8 +13,13 @@ export function useLocalStorage<T>(
     const [isLoaded, setIsLoaded] = useState(false);
 
     const setValue = useCallback(async (value: T | ((val: T) => T)) => {
-        const valueToStore = value instanceof Function ? value(storedValue) : value;
-        setStoredValue(valueToStore);
+        if (typeof value === 'function') {
+            const valueToStore = (value as (val: T) => T)(storedValue);
+            setStoredValue(valueToStore);
+        }
+        else {
+            setStoredValue(value);
+        }
     }, [storedValue]);
 
     useEffect(() => {
