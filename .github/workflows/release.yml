@@ -33,28 +33,33 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      # ✅ Configure npm authentication
-      - name: Configure npm authentication
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          echo "NODE_AUTH_TOKEN=${{ secrets.NPM_TOKEN }}" >> $GITHUB_ENV
-
-      # ✅ Cache release dependencies separately
+      # ✅ Cache release dependencies
       - name: Cache release dependencies
         id: cache-release-deps
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: release-deps-${{ hashFiles('release-dependencies.txt') }}
+          key: release-deps-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            release-deps-
+            release-deps-${{ runner.os }}-
 
-      # ✅ Install release dependencies only (skip full install)
-      - name: Install release dependencies
+      # ✅ Configure npm authentication (cleaner)
+      - name: Configure npm authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
+      # ✅ Install release dependencies only if cache is not hit
+      - name: Install semantic-release manually
+        if: steps.cache-release-deps.outputs.cache-hit != 'true'
         run: |
-          xargs -n 1 npm install --no-save < release-dependencies.txt
+          npm install --no-save semantic-release@24.2.3 \
+            @semantic-release/changelog@6.0.2 \
+            @semantic-release/git@10.0.1 \
+            @semantic-release/github@11.0.1 \
+            @semantic-release/npm@12.0.1 \
+            @semantic-release/commit-analyzer@13.0.1 \
+            @semantic-release/release-notes-generator@14.0.3
 
-      # ✅ Release
+      # ✅ Run Semantic Release
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
