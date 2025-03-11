@@ -1,3 +1,11 @@
+## [1.5.1](https://github.com/cyberskill-world/shared/compare/v1.5.0...v1.5.1) (2025-03-11)
+
+
+### Bug Fixes
+
+* release ([92fccbd](https://github.com/cyberskill-world/shared/commit/92fccbdc14c102b0c5355667b011c1cd3ef99436))
+* release ([399b671](https://github.com/cyberskill-world/shared/commit/399b6717020b4929b22f2e19e315db5d2a950000))
+
 # [1.5.0](https://github.com/cyberskill-world/shared/compare/v1.4.2...v1.5.0) (2025-03-11)
 
 
