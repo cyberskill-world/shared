@@ -13,7 +13,7 @@ import { getStoredErrorLists } from './utils/command-error.js';
 import { displayResults } from './utils/command-log.js';
 import { runWithSpinner } from './utils/command-spinner.js';
 import { executeCommand, logProcessStep } from './utils/command.js';
-import { getLatestPackageVersion } from './utils/npm-package.js';
+import { getLatestPackageVersion, isCurrentProject } from './utils/npm-package.js';
 
 const config = {
     FILE_EXTENSIONS: `**/*.{ts,tsx,js,jsx,json,css,scss,less}`,
@@ -127,16 +127,6 @@ async function setupGitHook(): Promise<void> {
     fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
 }
 
-function isCyberSkillProject(): boolean {
-    const packageJsonPath = `${config.INIT_CWD}/package.json`;
-
-    const packageJson = JSON.parse(
-        fs.readFileSync(packageJsonPath, 'utf-8'),
-    );
-
-    return packageJson.name === config.PACKAGE_NAME;
-}
-
 async function performSetup(): Promise<void> {
     logProcessStep(`Starting setup process for ${config.INIT_CWD}`, '🚀');
 
@@ -188,7 +178,7 @@ async function performSetup(): Promise<void> {
         try {
             const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
-            if (isCyberSkillProject()) {
+            if (isCurrentProject(config.INIT_CWD, config.PACKAGE_NAME)) {
                 logProcessStep(`Cyberskill is the current project. No setup needed.`, '✅');
                 return;
             }

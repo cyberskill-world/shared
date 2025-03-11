@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { Serializer } from '../../typescript/index.js';
 
-import { serializer as defaultSerializer, localStorage } from '../../utils/index.js';
+import { serializer as defaultSerializer, storage } from '../../utils/index.js';
 
-export function useLocalStorage<T>(
+export function useStorage<T>(
     key: string,
     initialValue: T,
     serializer: Serializer<T> = defaultSerializer,
@@ -27,7 +27,7 @@ export function useLocalStorage<T>(
 
         const loadValue = async () => {
             try {
-                const serializedValue = await localStorage.get<string>(key);
+                const serializedValue = await storage.get<string>(key);
 
                 if (!isMounted) {
                     return;
@@ -39,7 +39,7 @@ export function useLocalStorage<T>(
                 }
                 else {
                     const initialSerialized = serializer.serialize(initialValue);
-                    await localStorage.set(key, initialSerialized);
+                    await storage.set(key, initialSerialized);
                     setStoredValue(initialValue);
                 }
             }
@@ -69,7 +69,7 @@ export function useLocalStorage<T>(
         const saveValue = async () => {
             try {
                 const serializedValue = serializer.serialize(storedValue);
-                await localStorage.set(key, serializedValue);
+                await storage.set(key, serializedValue);
             }
             catch (error) {
                 console.error('Error saving value:', error);

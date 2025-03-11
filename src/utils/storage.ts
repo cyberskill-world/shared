@@ -1,6 +1,20 @@
 import localForage from 'localforage';
+import nodePersist from 'node-persist';
 
-export const localStorage = {
+const isBrowser = typeof window !== 'undefined';
+
+if (!isBrowser) {
+    nodePersist.init({
+        dir: './.node-storage',
+        stringify: JSON.stringify,
+        parse: JSON.parse,
+        encoding: 'utf8',
+        logging: false,
+        forgiveParseErrors: true,
+    });
+}
+
+export const storage = {
     /**
      * Get the value of a key.
      * @param key The key to retrieve.
@@ -8,27 +22,40 @@ export const localStorage = {
      */
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
-            return await localForage.getItem<T>(key);
+            if (isBrowser) {
+                return await localForage.getItem<T>(key);
+            }
+            else {
+                const result = await nodePersist.getItem(key);
+                return result !== undefined ? (result as T) : null;
+            }
         }
         catch (error) {
             console.error(`Error getting key "${key}":`, error);
             return null;
         }
     },
+
     /**
      * Set the value for a key.
      * @param key The key to set.
-     * @param value The value to store. Can be any serializable type.
+     * @param value The value to store.
      * @returns A promise that resolves once the value is stored.
      */
     async set<T = unknown>(key: string, value: T): Promise<void> {
         try {
-            await localForage.setItem(key, value);
+            if (isBrowser) {
+                await localForage.setItem(key, value);
+            }
+            else {
+                await nodePersist.setItem(key, value);
+            }
         }
         catch (error) {
             console.error(`Error setting key "${key}":`, error);
         }
     },
+
     /**
      * Remove the value associated with a key.
      * @param key The key to remove.
@@ -36,45 +63,48 @@ export const localStorage = {
      */
     async remove(key: string): Promise<void> {
         try {
-            await localForage.removeItem(key);
+            if (isBrowser) {
+                await localForage.removeItem(key);
+            }
+            else {
+                await nodePersist.removeItem(key);
+            }
         }
         catch (error) {
             console.error(`Error removing key "${key}":`, error);
         }
     },
+
     /**
      * Clear all keys and values in the storage.
      * @returns A promise that resolves once the storage is cleared.
      */
     async clear(): Promise<void> {
         try {
-            await localForage.clear();
+            if (isBrowser) {
+                await localForage.clear();
+            }
+            else {
+                await nodePersist.clear();
+            }
         }
         catch (error) {
             console.error('Error clearing storage:', error);
         }
     },
-    /**
-     * Get the name of the key at a specific index.
-     * @param index The index of the key.
-     * @returns A promise that resolves to the key name or `null` if the index is out of bounds.
-     */
-    async key(index: number): Promise<string | null> {
-        try {
-            return await localForage.key(index);
-        }
-        catch (error) {
-            console.error(`Error getting key at index ${index}:`, error);
-            return null;
-        }
-    },
+
     /**
      * Get all keys in the storage.
      * @returns A promise that resolves to an array of all keys.
      */
     async keys(): Promise<string[]> {
         try {
-            return await localForage.keys();
+            if (isBrowser) {
+                return await localForage.keys();
+            }
+            else {
+                return await nodePersist.keys();
+            }
         }
         catch (error) {
             console.error('Error getting keys:', error);
@@ -88,15 +118,22 @@ export const localStorage = {
      */
     async length(): Promise<number> {
         try {
-            return await localForage.length();
+            if (isBrowser) {
+                return await localForage.length();
+            }
+            else {
+                const keys = await nodePersist.keys();
+                return keys.length;
+            }
         }
         catch (error) {
             console.error('Error getting storage length:', error);
             return 0;
         }
     },
+
     /**
-     * Iterates over all key-value pairs in the storage.
+     * Iterate over all key-value pairs in the storage.
      * @param iteratee A callback function that receives the value, key, and iteration number.
      * @returns A promise that resolves once iteration is complete.
      */
@@ -104,7 +141,17 @@ export const localStorage = {
         iteratee: (value: T, key: string, iterationNumber: number) => void,
     ): Promise<void> {
         try {
-            await localForage.iterate(iteratee);
+            if (isBrowser) {
+                await localForage.iterate(iteratee);
+            }
+            else {
+                const keys = await nodePersist.keys();
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    const value = await nodePersist.getItem(key);
+                    iteratee(value, key, i);
+                }
+            }
         }
         catch (error) {
             console.error('Error iterating storage:', error);

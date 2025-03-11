@@ -1,12 +1,12 @@
 import type { I_ErrorEntry } from '../typescript/command.js';
 
-import { localStorage } from './local-storage.js';
+import { storage } from './storage.js';
 
 const ERROR_LIST_KEY = (timestamp: number) => `error_list:${timestamp}`;
 const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 /**
- * Save the entire error list to local storage.
+ * Save the entire error list to storage.
  * @param errorList Array of I_ErrorEntry objects.
  */
 export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void> {
@@ -17,7 +17,7 @@ export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise
     const key = ERROR_LIST_KEY(timestamp);
 
     try {
-        await localStorage.set(key, {
+        await storage.set(key, {
             errors: errorList,
             timestamp,
         });
@@ -35,13 +35,13 @@ export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise
  */
 export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
     try {
-        const keys = await localStorage.keys();
+        const keys = await storage.keys();
         const errorKeys = keys.filter(key => key.startsWith('error_list:'));
 
         const allErrors: I_ErrorEntry[] = [];
 
         for (const key of errorKeys) {
-            const entry = await localStorage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
+            const entry = await storage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
             if (entry) {
                 allErrors.push(...entry.errors);
             }
@@ -60,15 +60,15 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
  */
 export async function clearExpiredErrorLists(): Promise<void> {
     try {
-        const keys = await localStorage.keys();
+        const keys = await storage.keys();
         const now = Date.now();
 
         for (const key of keys) {
             if (key.startsWith('error_list:')) {
-                const entry = await localStorage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
+                const entry = await storage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
 
                 if (entry && now - entry.timestamp > CACHE_EXPIRATION_MS) {
-                    await localStorage.remove(key);
+                    await storage.remove(key);
                     console.log(`🗑️ Removed expired error list: ${key}`);
                 }
             }

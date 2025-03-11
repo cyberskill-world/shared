@@ -4,7 +4,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 import { executeCommand } from './command.js';
-import { localStorage } from './local-storage.js';
+import { storage } from './storage.js';
 
 const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -13,8 +13,8 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
     const metadataCacheKey = `npm_metadata:${packageName}`;
 
     // ✅ Try to get from cache
-    const cached = await localStorage.get<{ version: string; timestamp: number }>(versionCacheKey);
-    const metadata = await localStorage.get<{ etag?: string; lastModified?: string }>(metadataCacheKey);
+    const cached = await storage.get<{ version: string; timestamp: number }>(versionCacheKey);
+    const metadata = await storage.get<{ etag?: string; lastModified?: string }>(metadataCacheKey);
 
     const isCacheValid = cached && Date.now() - cached.timestamp < CACHE_EXPIRATION_MS;
 
@@ -140,5 +140,28 @@ export async function updatePackage(packageName: string): Promise<void> {
     catch (error) {
         console.error(`Failed to update ${packageName}: ${(error as Error).message}`);
         throw error;
+    }
+}
+
+export function isCurrentProject(
+    INIT_CWD: string,
+    PACKAGE_NAME: string,
+): boolean {
+    try {
+        const packageJsonPath = path.join(INIT_CWD, 'package.json');
+
+        if (!fs.existsSync(packageJsonPath)) {
+            return false;
+        }
+
+        const packageJson = JSON.parse(
+            fs.readFileSync(packageJsonPath, 'utf-8'),
+        );
+
+        return packageJson.name === PACKAGE_NAME;
+    }
+    catch (error) {
+        console.error(`Error reading package.json: ${(error as Error).message}`);
+        return false;
     }
 }
