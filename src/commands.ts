@@ -311,7 +311,7 @@ async function setupGitHook(enablePrepush: boolean = false): Promise<void> {
         JSON.stringify({
             'pre-commit': 'npx --yes cyberskill lint-staged',
             'commit-msg': 'npx --yes cyberskill commitlint',
-            ...(enablePrepush && { 'pre-push': 'npm run build && git add dist' }),
+            ...(enablePrepush && { 'pre-push': 'npm run build && git add -f dist' }),
         }, null, 4),
     );
     await executeCommand(`npx simple-git-hooks`, 'Setting up git hooks...');
