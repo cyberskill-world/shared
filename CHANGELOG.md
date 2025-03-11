@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/cyberskill-world/shared/compare/v1.4.2...v1.5.0) (2025-03-11)
+
+
+### Features
+
+* add semantic-release release workflow ([ab54a98](https://github.com/cyberskill-world/shared/commit/ab54a9844852a96d11f21017e36209c7cc337c37))
+
 ## [1.4.2](https://github.com/cyberskill-world/shared/compare/v1.4.1...v1.4.2) (2025-03-11)
 
 
