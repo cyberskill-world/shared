@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/cyberskill-world/shared/compare/v1.4.1...v1.4.2) (2025-03-11)
+
+
+### Bug Fixes
+
+* correct git hook prepush ([69dee8e](https://github.com/cyberskill-world/shared/commit/69dee8ef7704a1f26671b61b7c194da326bbff85))
+
 ## [1.4.1](https://github.com/cyberskill-world/shared/compare/v1.4.0...v1.4.1) (2025-03-11)
 
 
