@@ -1,3 +1,7 @@
+## 1.17.0 (2025-03-12)
+
+* feat: fix git hooks ([be4c684](https://github.com/cyberskill-world/shared/commit/be4c684))
+
 ## 1.16.0 (2025-03-11)
 
 * feat: remove commitlint config ([58a2168](https://github.com/cyberskill-world/shared/commit/58a2168))
