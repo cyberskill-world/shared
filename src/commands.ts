@@ -13,7 +13,7 @@ import { clearAllErrorLists } from './utils/command-error.js';
 import { displayResults } from './utils/command-log.js';
 import { runWithSpinner } from './utils/command-spinner.js';
 import { executeCommand, logProcessStep } from './utils/command.js';
-import { getLatestPackageVersion, isCurrentProject } from './utils/npm-package.js';
+import { isCurrentProject, isPackageOutdated, updatePackage } from './utils/npm-package.js';
 
 const INIT_CWD = process.env.INIT_CWD || process.cwd();
 
@@ -105,26 +105,11 @@ async function setupGitHook(): Promise<void> {
 
     const isCurrent = isCurrentProject(config.INIT_CWD, config.PACKAGE_NAME);
 
-    let preCommitCommand = `
-        echo "✅ Running lint..."
-        npx --yes cyberskill lint-staged || (echo "❌ Lint failed – aborting commit." && exit 1)
-    `;
-
-    if (isCurrent) {
-        preCommitCommand = `
-            echo "🚀 Running build before commit..."
-            npm run build || (echo "❌ Build failed – aborting commit." && exit 1)
-            
-            ${preCommitCommand.trim()}
-        `;
-    }
-
-    // ✅ Create a simple-git-hooks config
     fs.writeFileSync(
         config.SIMPLE_GIT_HOOKS_PATH,
         JSON.stringify(
             {
-                'pre-commit': preCommitCommand.trim(),
+                'pre-commit': `${isCurrent ? `npm run build && ` : ''}npx --yes cyberskill lint-staged`,
                 'commit-msg': 'npx --yes cyberskill commitlint',
             },
             null,
@@ -132,11 +117,16 @@ async function setupGitHook(): Promise<void> {
         ),
     );
 
-    // ✅ Install the hooks using simple-git-hooks
     await executeCommand(`npx simple-git-hooks`, 'Setting up git hooks...');
 
-    // ✅ Clean up temporary config file
-    fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
+    if (fs.existsSync(config.SIMPLE_GIT_HOOKS_PATH)) {
+        try {
+            fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
+        }
+        catch (error) {
+            console.error('Failed to unlink git hooks config:', error);
+        }
+    }
 }
 
 async function performSetup(): Promise<void> {
@@ -145,73 +135,32 @@ async function performSetup(): Promise<void> {
     await runWithSpinner(E_SpinnerMessage.Setup, async () => {
         const packageJsonPath = path.join(config.INIT_CWD, 'package.json');
 
-        const isCyberskillOutdated = async (): Promise<boolean> => {
-            try {
-                const installedPackagePath = path.join(
-                    config.INIT_CWD,
-                    'node_modules',
-                    config.PACKAGE_NAME,
-                    'package.json',
-                );
-
-                const installedVersion = JSON.parse(fs.readFileSync(installedPackagePath, 'utf-8')).version;
-
-                // ✅ Try to force refresh for Cyberskill
-                const latestVersion = await getLatestPackageVersion(config.PACKAGE_NAME, true);
-
-                return installedVersion !== latestVersion;
-            }
-            catch {
-                return true; // If package is missing or read fails, assume outdated.
-            }
-        };
-
-        const updateCyberskill = async (): Promise<void> => {
-            try {
-                const latestVersion = await getLatestPackageVersion(config.PACKAGE_NAME, true);
-                const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-
-                packageJson.dependencies = {
-                    ...packageJson.dependencies,
-                    [config.PACKAGE_NAME]: latestVersion,
-                };
-
-                fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-
-                await executeCommand('npm i -f', 'Installing all dependencies with updated Cyberskill...');
-                await executeCommand('npm run lint:fix', 'Fixing lint issues...');
-            }
-            catch (error) {
-                console.error(`Failed to update Cyberskill: ${(error as Error).message}`);
-                throw error;
-            }
-        };
-
         try {
             const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
 
-            if (isCurrentProject(config.INIT_CWD, config.PACKAGE_NAME)) {
-                logProcessStep(`Cyberskill is the current project. No setup needed.`, '✅');
-                return;
-            }
-
-            if (
-                !packageJson.dependencies?.[config.PACKAGE_NAME]
-                || (await isCyberskillOutdated())
-            ) {
-                logProcessStep(`Cyberskill is missing or outdated. Updating...`);
-                await updateCyberskill();
+            if (!isCurrentProject(config.INIT_CWD, config.PACKAGE_NAME)) {
+                if (
+                    !packageJson.dependencies?.[config.PACKAGE_NAME]
+                    || (await isPackageOutdated(config.PACKAGE_NAME))
+                ) {
+                    logProcessStep(`Cyberskill is missing or outdated. Updating...`);
+                    await updatePackage(config.PACKAGE_NAME);
+                }
+                else {
+                    logProcessStep(`Cyberskill is up to date`, '✅');
+                }
             }
             else {
-                logProcessStep(`Cyberskill is up to date`, '✅');
+                logProcessStep(`Cyberskill is the current project. No setup needed.`, '✅');
             }
         }
         catch (error) {
             console.error(`Error reading package.json: ${(error as Error).message}`);
             throw error;
         }
-
-        setupGitHook();
+        finally {
+            await setupGitHook();
+        }
     });
 }
 

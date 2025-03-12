@@ -3,6 +3,7 @@ declare enum E_SpinnerMessage {
     LintFix = "Fixing issues...",
     LintStaged = "Running lint-staged...",
     CommitLint = "Running commitlint...",
+    GitHook = "Setting up git hook...",
     Setup = "Setting up...",
     Reset = "Resetting...",
     UnitTest = "Running unit tests...",
@@ -29,11 +30,5 @@ interface I_EslintError {
         ruleId: string;
     }>;
 }
-interface I_SpinnerOptions {
-    successMessage?: string;
-    failureMessage?: string;
-    errorList?: unknown[];
-    exitOnError?: boolean;
-}
 
-export { E_ErrorType, E_SpinnerMessage, type I_ErrorEntry, type I_EslintError, type I_SpinnerOptions };
+export { E_ErrorType, E_SpinnerMessage, type I_ErrorEntry, type I_EslintError };

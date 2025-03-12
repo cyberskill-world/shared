@@ -3,6 +3,7 @@ export enum E_SpinnerMessage {
     LintFix = 'Fixing issues...',
     LintStaged = 'Running lint-staged...',
     CommitLint = 'Running commitlint...',
+    GitHook = 'Setting up git hook...',
     Setup = 'Setting up...',
     Reset = 'Resetting...',
     UnitTest = 'Running unit tests...',
@@ -31,11 +32,4 @@ export interface I_EslintError {
         message: string;
         ruleId: string;
     }>;
-}
-
-export interface I_SpinnerOptions {
-    successMessage?: string;
-    failureMessage?: string;
-    errorList?: unknown[];
-    exitOnError?: boolean;
 }
