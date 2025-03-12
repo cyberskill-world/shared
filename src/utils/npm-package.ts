@@ -20,15 +20,18 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
 
     if (!forceRefresh && isCacheValid) {
         console.log(`Using cached version for ${packageName}: ${cached.version}`);
+
         return cached.version;
     }
 
     // ✅ Prepare conditional headers
     const headers: Record<string, string> = {};
-    if (metadata?.etag)
+    if (metadata?.etag) {
         headers['If-None-Match'] = metadata.etag;
-    if (metadata?.lastModified)
+    }
+    if (metadata?.lastModified) {
         headers['If-Modified-Since'] = metadata.lastModified;
+    }
 
     try {
         console.log(`Fetching latest version for ${packageName}...`);
@@ -37,6 +40,7 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
 
         if (response.status === 304 && cached) {
             console.log(`Cache is still valid for ${packageName}: ${cached.version}`);
+
             return cached.version;
         }
 
@@ -69,6 +73,7 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
         // ✅ Fallback to cache if network request fails
         if (cached) {
             console.warn(`Falling back to cached version for ${packageName}: ${cached.version}`);
+
             return cached.version;
         }
 
@@ -96,6 +101,7 @@ export async function isPackageOutdated(packageName: string, forceRefresh = true
 
         if (!fs.existsSync(installedPackagePath)) {
             console.log(`${packageName} is not installed.`);
+
             return true; // ✅ If not installed, treat it as outdated.
         }
 
@@ -109,6 +115,7 @@ export async function isPackageOutdated(packageName: string, forceRefresh = true
     }
     catch (error) {
         console.warn(`Failed to check version for ${packageName}: ${(error as Error).message}`);
+
         return true; // ✅ Assume outdated if version check fails.
     }
 }
@@ -162,6 +169,7 @@ export function isCurrentProject(
     }
     catch (error) {
         console.error(`Error reading package.json: ${(error as Error).message}`);
+
         return false;
     }
 }

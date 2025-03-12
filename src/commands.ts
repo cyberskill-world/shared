@@ -153,13 +153,11 @@ async function performSetup(): Promise<void> {
             else {
                 logProcessStep(`Cyberskill is the current project. No setup needed.`, '✅');
             }
+            await setupGitHook();
         }
         catch (error) {
             console.error(`Error reading package.json: ${(error as Error).message}`);
             throw error;
-        }
-        finally {
-            await setupGitHook();
         }
     });
 }
