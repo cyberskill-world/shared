@@ -1,3 +1,7 @@
+## 1.18.0 (2025-03-12)
+
+* feat: remove setupGitHook ([d7f1147](https://github.com/cyberskill-world/shared/commit/d7f1147))
+
 ## 1.17.0 (2025-03-12)
 
 * feat: fix git hooks ([be4c684](https://github.com/cyberskill-world/shared/commit/be4c684))
