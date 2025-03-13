@@ -1,3 +1,7 @@
+## 1.19.0 (2025-03-13)
+
+* feat: optimize commands ([5ff90e1](https://github.com/cyberskill-world/shared/commit/5ff90e1))
+
 ## 1.18.0 (2025-03-12)
 
 * feat: remove setupGitHook ([d7f1147](https://github.com/cyberskill-world/shared/commit/d7f1147))
