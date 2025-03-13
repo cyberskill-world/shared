@@ -23,11 +23,14 @@ export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise
             timestamp,
         });
 
-        const logPath = await storage.getLogLink(key);
+        // ✅ Ensure this line is displayed last
+        setTimeout(async () => {
+            const logPath = await storage.getLogLink(key);
 
-        if (logPath) {
-            log.info(`Open the error list manually: ${logPath}`);
-        }
+            if (logPath) {
+                log.info(`📂 Open the error list manually: ${logPath}`);
+            }
+        }, 10); // Small delay to ensure it's last in the output
     }
     catch (error) {
         log.error(`Failed to save errors: ${(error as Error).message}`);
@@ -44,7 +47,6 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
 
         if (!Array.isArray(keys)) {
             log.warning(`Invalid response from storage.keys(): ${keys}`);
-
             return [];
         }
 
@@ -54,15 +56,15 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
 
         for (const key of errorKeys) {
             const entry = await storage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
-            if (entry)
+            if (entry) {
                 allErrors.push(...entry.errors);
+            }
         }
 
         return allErrors;
     }
     catch (error) {
         log.error(`Failed to retrieve stored errors: ${(error as Error).message}`);
-
         return [];
     }
 }
@@ -84,7 +86,6 @@ export async function clearAllErrorLists(): Promise<void> {
 
         for (const key of errorKeys) {
             await storage.remove(key);
-            log.success(`Removed error list: ${key}`);
         }
     }
     catch (error) {

@@ -12,7 +12,8 @@ const execPromise = util.promisify(exec);
 
 const DEBUG = process.env.DEBUG === 'true';
 
-const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(\S+)\s+(\S+)$/;
+// eslint-disable-next-line regexp/no-super-linear-backtracking
+const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/;
 const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
 // eslint-disable-next-line regexp/no-super-linear-backtracking
 const commitlintRegex = /^✖\s+(.*?)\s+\[(.*?)\]$/;

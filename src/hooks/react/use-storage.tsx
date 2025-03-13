@@ -58,8 +58,9 @@ export function useStorage<T>(
 
     // ✅ Save value to storage when it changes
     useEffect(() => {
-        if (!isLoaded)
+        if (!isLoaded) {
             return;
+        }
 
         const saveValue = async () => {
             try {

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import boxen from 'boxen';
 import chalk from 'chalk';
 
