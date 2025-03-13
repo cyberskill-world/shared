@@ -1,3 +1,7 @@
+## 1.20.0 (2025-03-13)
+
+* feat: update libs ([bb91eca](https://github.com/cyberskill-world/shared/commit/bb91eca))
+
 ## 1.19.0 (2025-03-13)
 
 * feat: optimize commands ([5ff90e1](https://github.com/cyberskill-world/shared/commit/5ff90e1))
