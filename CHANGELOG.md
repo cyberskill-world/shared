@@ -1,3 +1,7 @@
+## 1.21.0 (2025-03-13)
+
+* feat: command log ([9088438](https://github.com/cyberskill-world/shared/commit/9088438))
+
 ## 1.20.0 (2025-03-13)
 
 * feat: update libs ([bb91eca](https://github.com/cyberskill-world/shared/commit/bb91eca))
