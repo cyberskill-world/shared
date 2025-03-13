@@ -6,7 +6,6 @@ import process from 'node:process';
 
 const isBrowser = typeof window !== 'undefined';
 
-// ✅ Use global storage location for node-persist
 const storageDir
     = process.env.CYBERSKILL_STORAGE_DIR
         || path.join(os.homedir(), '.cyberskill-storage');
@@ -14,7 +13,7 @@ const storageDir
 async function initNodePersist() {
     if (!isBrowser && !nodePersist.defaultInstance) {
         await nodePersist.init({
-            dir: storageDir, // ✅ Global storage path
+            dir: storageDir,
             stringify: JSON.stringify,
             parse: JSON.parse,
             encoding: 'utf8',
@@ -33,13 +32,11 @@ export const storage = {
             else {
                 await initNodePersist();
                 const result = await nodePersist.getItem(key);
-
                 return result ?? null;
             }
         }
         catch (error) {
             console.error(`❌ [Storage:get] Error getting key "${key}":`, error);
-
             return null;
         }
     },
@@ -77,13 +74,19 @@ export const storage = {
     async keys(): Promise<string[]> {
         try {
             if (isBrowser) {
-                return await localForage.keys();
+                const keys = await localForage.keys();
+                return keys ?? [];
             }
             else {
                 await initNodePersist();
                 const keys = await nodePersist.keys();
 
-                return keys || [];
+                if (!Array.isArray(keys)) {
+                    console.warn(`⚠️ [Storage:keys] Invalid keys response:`, keys);
+                    return [];
+                }
+
+                return keys;
             }
         }
         catch (error) {
@@ -92,86 +95,19 @@ export const storage = {
         }
     },
 
-    async values<T = unknown>(): Promise<T[]> {
+    /**
+     * ✅ Get log path for the key
+     * - Logs only the storage path and key (no direct opening)
+     */
+    async getLogLink(key: string): Promise<string | null> {
         try {
-            if (isBrowser) {
-                const keys = await localForage.keys();
-                const values = await Promise.all(keys.map(key => localForage.getItem<T>(key)));
-
-                return values.filter(value => value !== null) as T[];
-            }
-            else {
-                await initNodePersist();
-                const values = await nodePersist.values();
-
-                return values as T[];
-            }
+            const storagePath = storageDir;
+            return `${storagePath} (key: ${key})`;
         }
         catch (error) {
-            console.error(`❌ [Storage:values] Error getting values:`, error);
-            return [];
+            console.error(`❌ [Storage:getLogLink] Error getting log link:`, error);
+            return null;
         }
     },
 
-    async entries<T = unknown>(): Promise<[string, T][]> {
-        try {
-            if (isBrowser) {
-                const keys = await localForage.keys();
-                const entries = await Promise.all(
-                    keys.map(async (key) => {
-                        const value = await localForage.getItem<T>(key);
-
-                        return value !== null ? [key, value] : null;
-                    }),
-                );
-
-                return entries.filter(entry => entry !== null) as [string, T][];
-            }
-            else {
-                await initNodePersist();
-                const keys = await nodePersist.keys();
-                const values = await nodePersist.values();
-
-                return keys.map((key, index) => [key, values[index]]) as [string, T][];
-            }
-        }
-        catch (error) {
-            console.error(`❌ [Storage:entries] Error getting entries:`, error);
-            return [];
-        }
-    },
-
-    async clear(): Promise<void> {
-        try {
-            if (isBrowser) {
-                await localForage.clear();
-            }
-            else {
-                await initNodePersist();
-                await nodePersist.clear();
-            }
-        }
-        catch (error) {
-            console.error(`❌ [Storage:clear] Error clearing storage:`, error);
-        }
-    },
-
-    async length(): Promise<number> {
-        try {
-            if (isBrowser) {
-                return await localForage.length();
-            }
-            else {
-                await initNodePersist();
-                const keys = await nodePersist.keys();
-
-                return keys.length;
-            }
-        }
-        catch (error) {
-            console.error(`❌ [Storage:length] Error getting storage length:`, error);
-
-            return 0;
-        }
-    },
 };

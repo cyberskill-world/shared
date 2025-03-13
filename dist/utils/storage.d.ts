@@ -3,10 +3,11 @@ declare const storage: {
     set<T = unknown>(key: string, value: T): Promise<void>;
     remove(key: string): Promise<void>;
     keys(): Promise<string[]>;
-    values<T = unknown>(): Promise<T[]>;
-    entries<T = unknown>(): Promise<[string, T][]>;
-    clear(): Promise<void>;
-    length(): Promise<number>;
+    /**
+     * ✅ Get log path for the key
+     * - Logs only the storage path and key (no direct opening)
+     */
+    getLogLink(key: string): Promise<string | null>;
 };
 
 export { storage };

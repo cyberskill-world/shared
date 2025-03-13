@@ -1,8 +1,7 @@
 import { I_Config } from '../typescript/config.cjs';
 export { clearAllErrorLists, getStoredErrorLists, saveErrorListToStorage } from './command-error.cjs';
-export { displayResults } from './command-log.cjs';
-export { runWithSpinner } from './command-spinner.cjs';
-export { executeCommand, logProcessStep } from './command.cjs';
+export { log } from './command-log.cjs';
+export { executeCommand } from './command.cjs';
 export { throwResponse } from './log.cjs';
 export { generateModel, generateSchema, generateShortId, generateSlug, generateSlugQuery } from './mongoose.cjs';
 export { getLatestPackageVersion, isCurrentProject, isPackageOutdated, updatePackage } from './npm-package.cjs';
@@ -12,6 +11,7 @@ export { validate } from './validate.cjs';
 export { default as aggregatePaginate } from 'mongoose-aggregate-paginate-v2';
 export { default as mongoosePaginate } from 'mongoose-paginate-v2';
 import '../typescript/command.cjs';
+import 'chalk';
 import '../typescript/log.cjs';
 import '../typescript/mongoose.cjs';
 import 'mongodb';

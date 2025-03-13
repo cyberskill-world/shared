@@ -1,1 +1,1 @@
-import{dirname as r}from"node:path";import{fileURLToPath as a}from"node:url";var o=a(import.meta.url),m=r(o);export{m as DIRNAME};
+import{dirname as o}from"node:path";import r from"node:process";import{fileURLToPath as a}from"node:url";var e=a(import.meta.url),m=o(e),t=r.env.INIT_CWD||r.cwd();export{m as PROJECT_ROOT,t as WORKING_DIRECTORY};

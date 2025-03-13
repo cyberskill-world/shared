@@ -6,7 +6,6 @@ import type {
 
 export * from './command-error.js';
 export * from './command-log.js';
-export * from './command-spinner.js';
 export * from './command.js';
 export * from './log.js';
 export * from './mongoose.js';

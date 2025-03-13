@@ -10,6 +10,9 @@ declare function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void
  * @returns An array of stored error objects.
  */
 declare function getStoredErrorLists(): Promise<I_ErrorEntry[]>;
+/**
+ * Clear all stored error lists.
+ */
 declare function clearAllErrorLists(): Promise<void>;
 
 export { clearAllErrorLists, getStoredErrorLists, saveErrorListToStorage };
