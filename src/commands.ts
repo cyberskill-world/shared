@@ -152,7 +152,7 @@ yargs(hideBin(process.argv))
     .command('reset', 'Reset project dependencies', async () => {
         log.step(null, null, 'Starting project reset');
         await executeCommand(`npx rimraf ${WORKING_DIRECTORY}/node_modules ${WORKING_DIRECTORY}/package-lock.json`);
-        await executeCommand('npm install');
+        await executeCommand('npm i -f');
         await setupGitHook();
     })
     .command('test:unit', 'Run unit tests', testUnit)
