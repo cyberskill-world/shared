@@ -10,19 +10,17 @@ import { E_ErrorType } from './typescript/command.js';
 import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists } from './utils/command.js';
 import { fileExists } from './utils/fs.js';
 import { isCurrentProject, isPackageOutdated, updatePackage } from './utils/npm-package.js';
-
-function createConfigPath(relativePath: string) {
-    return path.resolve(WORKING_DIRECTORY, relativePath);
-}
+import { storageDir } from './utils/storage.js';
 
 const config = {
-    TS_CONFIG_PATH: createConfigPath('tsconfig.json'),
-    HUSKY_PATH: createConfigPath('.husky'),
-    GIT_HOOK_PATH: createConfigPath('.git/hooks'),
-    GIT_COMMIT_MSG: createConfigPath('.git/COMMIT_EDITMSG'),
-    SIMPLE_GIT_HOOKS_PATH: createConfigPath('.simple-git-hooks.json'),
-    PACKAGE_JSON_PATH: createConfigPath('package.json'),
-    PACKAGE_LOCK_PATH: createConfigPath('package-lock.json'),
+    TS_CONFIG_PATH: path.resolve(WORKING_DIRECTORY, 'tsconfig.json'),
+    HUSKY_PATH: path.resolve(WORKING_DIRECTORY, '.husky'),
+    GIT_HOOK_PATH: path.resolve(WORKING_DIRECTORY, '.git/hooks'),
+    GIT_COMMIT_MSG: path.resolve(WORKING_DIRECTORY, '.git/COMMIT_EDITMSG'),
+    SIMPLE_GIT_HOOKS_PATH: path.resolve(storageDir, '.simple-git-hooks.json'),
+
+    PACKAGE_JSON_PATH: path.resolve(WORKING_DIRECTORY, 'package.json'),
+    PACKAGE_LOCK_PATH: path.resolve(WORKING_DIRECTORY, 'package-lock.json'),
     PACKAGE_NAME: '@cyberskill/shared',
 
     LINT_STAGED_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/lint-staged/base.js'),
@@ -158,9 +156,12 @@ async function setupGitHook() {
         await executeCommand(`git config core.hooksPath ${config.GIT_HOOK_PATH}`);
     }
 
-    fs.writeFileSync(config.SIMPLE_GIT_HOOKS_PATH, JSON.stringify(config.HOOKS_CONFIG, null, 4));
+    fs.writeFileSync(
+        config.SIMPLE_GIT_HOOKS_PATH,
+        JSON.stringify(config.HOOKS_CONFIG, null, 4),
+    );
+
     await executeCommand(`npx simple-git-hooks`);
-    fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
 
     commandLog.success('✅ Git hooks configured successfully.');
 }

@@ -6,7 +6,7 @@ import process from 'node:process';
 
 const isBrowser = typeof window !== 'undefined';
 
-const storageDir
+export const storageDir
     = process.env.CYBERSKILL_STORAGE_DIR
         || path.join(os.homedir(), '.cyberskill-storage');
 
@@ -40,7 +40,6 @@ export const storage = {
             return null;
         }
     },
-
     async set<T = unknown>(key: string, value: T): Promise<void> {
         try {
             if (isBrowser) {
@@ -55,7 +54,6 @@ export const storage = {
             console.error(`❌ [Storage:set] Error setting key "${key}":`, error);
         }
     },
-
     async remove(key: string): Promise<void> {
         try {
             if (isBrowser) {
@@ -70,7 +68,6 @@ export const storage = {
             console.error(`❌ [Storage:remove] Error removing key "${key}":`, error);
         }
     },
-
     async keys(): Promise<string[]> {
         try {
             if (isBrowser) {
@@ -94,11 +91,6 @@ export const storage = {
             return [];
         }
     },
-
-    /**
-     * ✅ Get log path for the key
-     * - Logs only the storage path and key (no direct opening)
-     */
     async getLogLink(key: string): Promise<string | null> {
         try {
             const storagePath = storageDir;

@@ -25,7 +25,7 @@ export { default as mongoosePaginate } from 'mongoose-paginate-v2';
 export { generateModel, generateSchema, generateShortId, generateSlug, generateSlugQuery, getMongoGenericFields } from './utils/mongoose.js';
 export { getLatestPackageVersion, isCurrentProject, isPackageOutdated, updatePackage } from './utils/npm-package.js';
 export { serializer } from './utils/serializer.js';
-export { storage } from './utils/storage.js';
+export { storage, storageDir } from './utils/storage.js';
 export { validate } from './utils/validate.js';
 import 'react/jsx-runtime';
 import 'mongodb';
