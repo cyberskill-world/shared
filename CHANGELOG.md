@@ -1,3 +1,7 @@
+## 1.24.0 (2025-03-15)
+
+* feat: correct setupGitHook ([806f7a4](https://github.com/cyberskill-world/shared/commit/806f7a4))
+
 ## 1.23.0 (2025-03-15)
 
 * feat: correct githook ([698a752](https://github.com/cyberskill-world/shared/commit/698a752))
