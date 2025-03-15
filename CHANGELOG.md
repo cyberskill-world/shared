@@ -1,3 +1,7 @@
+## 1.23.0 (2025-03-15)
+
+* feat: correct githook ([698a752](https://github.com/cyberskill-world/shared/commit/698a752))
+
 ## 1.22.0 (2025-03-15)
 
 * feat: add date-fns ([f278222](https://github.com/cyberskill-world/shared/commit/f278222))
