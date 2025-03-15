@@ -6,7 +6,7 @@ import process from 'node:process';
 
 const isBrowser = typeof window !== 'undefined';
 
-export const storageDir
+const storageDir
     = process.env.CYBERSKILL_STORAGE_DIR
         || path.join(os.homedir(), '.cyberskill-storage');
 

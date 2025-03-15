@@ -6,7 +6,7 @@ export { throwResponse } from './log.cjs';
 export { generateModel, generateSchema, generateShortId, generateSlug, generateSlugQuery, getMongoGenericFields } from './mongoose.cjs';
 export { getLatestPackageVersion, isCurrentProject, isPackageOutdated, updatePackage } from './npm-package.cjs';
 export { serializer } from './serializer.cjs';
-export { storage, storageDir } from './storage.cjs';
+export { storage } from './storage.cjs';
 export { validate } from './validate.cjs';
 export { default as aggregatePaginate } from 'mongoose-aggregate-paginate-v2';
 export { default as mongoosePaginate } from 'mongoose-paginate-v2';

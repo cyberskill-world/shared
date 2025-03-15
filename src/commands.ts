@@ -10,14 +10,13 @@ import { E_ErrorType } from './typescript/command.js';
 import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists } from './utils/command.js';
 import { fileExists } from './utils/fs.js';
 import { isCurrentProject, isPackageOutdated, updatePackage } from './utils/npm-package.js';
-import { storageDir } from './utils/storage.js';
 
 const config = {
     TS_CONFIG_PATH: path.resolve(WORKING_DIRECTORY, 'tsconfig.json'),
     HUSKY_PATH: path.resolve(WORKING_DIRECTORY, '.husky'),
     GIT_HOOK_PATH: path.resolve(WORKING_DIRECTORY, '.git/hooks'),
     GIT_COMMIT_MSG: path.resolve(WORKING_DIRECTORY, '.git/COMMIT_EDITMSG'),
-    SIMPLE_GIT_HOOKS_PATH: path.resolve(storageDir, '.simple-git-hooks.json'),
+    SIMPLE_GIT_HOOKS_PATH: path.resolve(WORKING_DIRECTORY, '.simple-git-hooks.json'),
 
     PACKAGE_JSON_PATH: path.resolve(WORKING_DIRECTORY, 'package.json'),
     PACKAGE_LOCK_PATH: path.resolve(WORKING_DIRECTORY, 'package-lock.json'),
@@ -161,9 +160,27 @@ async function setupGitHook() {
         JSON.stringify(config.HOOKS_CONFIG, null, 4),
     );
 
+    const gitignorePath = path.resolve('.gitignore');
+
+    if (fileExists(gitignorePath)) {
+        const gitignore = fs.readFileSync(gitignorePath, 'utf8').split('\n');
+
+        if (!gitignore.includes('.simple-git-hooks.json')) {
+            fs.appendFileSync(gitignorePath, '\n# Ignore simple-git-hooks config\n.simple-git-hooks.json\n');
+            commandLog.info('✅ Added .simple-git-hooks.json to .gitignore');
+        }
+        else {
+            commandLog.info('✅ .simple-git-hooks.json is already ignored in .gitignore');
+        }
+    }
+    else {
+        fs.writeFileSync(gitignorePath, '# Ignore simple-git-hooks config\n.simple-git-hooks.json\n');
+        commandLog.info('✅ Created .gitignore and added .simple-git-hooks.json');
+    }
+
     await executeCommand(`npx simple-git-hooks`);
 
-    commandLog.success('✅ Git hooks configured successfully.');
+    commandLog.success(`✅ Git hooks configured successfully.`);
 }
 
 // ✅ Install Dependencies with Retry Strategy

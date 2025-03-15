@@ -1,4 +1,3 @@
-declare const storageDir: string;
 declare const storage: {
     get<T = unknown>(key: string): Promise<T | null>;
     set<T = unknown>(key: string, value: T): Promise<void>;
@@ -7,4 +6,4 @@ declare const storage: {
     getLogLink(key: string): Promise<string | null>;
 };
 
-export { storage, storageDir };
+export { storage };
