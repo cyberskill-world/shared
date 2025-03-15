@@ -45,7 +45,7 @@ function createClient({ uri, cache = new InMemoryCache(), ...options }: I_Apollo
 
     const cleanTypeName = new ApolloLink((operation, forward) => {
         if (operation.variables) {
-            const omitTypename = (key: any, value: any) => (key === '__typename' ? undefined : value);
+            const omitTypename = (key: string, value: unknown) => (key === '__typename' ? undefined : value);
             operation.variables = JSON.parse(JSON.stringify(operation.variables), omitTypename);
         }
 

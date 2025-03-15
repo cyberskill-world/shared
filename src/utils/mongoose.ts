@@ -18,7 +18,9 @@ import type {
     T_GenerateSlugQueryResponse,
     T_MongoosePlugin,
     T_MongooseShema,
-} from '../typescript/index.js';
+} from '../typescript/mongoose.js';
+
+import { getMongoDateTime } from './datetime.js';
 
 export { aggregatePaginate, mongoosePaginate };
 
@@ -162,10 +164,19 @@ export function generateSlugQuery<D>(
 ): T_GenerateSlugQueryResponse<D> {
     return {
         ...filters,
-        ...(id && { id: { $ne: id } }), // Exclude the current document by ID
+        ...(id && { id: { $ne: id } }),
         $or: [
             { slug },
             { slugHistory: slug },
         ],
+    };
+}
+
+export function getMongoGenericFields() {
+    return {
+        id: uuidv4(),
+        isDel: false,
+        createdAt: getMongoDateTime(),
+        updatedAt: getMongoDateTime(),
     };
 }

@@ -1,2 +1,2 @@
-export * from './migration.js';
+export * from './mongo-migration.js';
 export * from './mongoose.js';

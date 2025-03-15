@@ -1,28 +1,172 @@
+import type { ChalkInstance } from 'chalk';
+
+import boxen from 'boxen';
+import chalk from 'chalk';
 import { exec } from 'node:child_process';
 import process from 'node:process';
 import * as util from 'node:util';
 
-import type { I_ErrorEntry, I_EslintError } from '../typescript/command.js';
+import type { I_BoxedLogOptions, I_ErrorEntry, I_EslintError } from '../typescript/command.js';
 
 import { E_ErrorType } from '../typescript/command.js';
-import { saveErrorListToStorage } from './command-error.js';
-import { log } from './command-log.js';
-
-const execPromise = util.promisify(exec);
+import { storage } from './storage.js';
 
 const DEBUG = process.env.DEBUG === 'true';
 
-// eslint-disable-next-line regexp/no-super-linear-backtracking
-const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/;
-const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
-// eslint-disable-next-line regexp/no-super-linear-backtracking
-const commitlintRegex = /^✖\s+(.*?)\s+\[(.*?)\]$/;
+const execPromise = util.promisify(exec);
 
-// ✅ Unified Error Parser
+const { gray, blue } = chalk;
+
+const getTimeStamp = () => gray(`[${new Date().toLocaleTimeString()}]`);
+
+function chalkKeyword(color: string): ChalkInstance {
+    const chalkColor = chalk[color as keyof typeof chalk];
+    return typeof chalkColor === 'function' ? (chalkColor as ChalkInstance) : chalk.green;
+}
+
+function printLog(type: string, color: string, icon: string, message: string) {
+    const chalkColor = chalkKeyword(color);
+    console.log(`${getTimeStamp()} ${chalkColor(`${icon} ${type}`)} ${message}`);
+}
+
+function printBoxedLog<T extends string | I_ErrorEntry[]>(
+    title: string,
+    content: T,
+    {
+        color = 'green',
+        padding = 1,
+        margin = 1,
+        borderStyle = 'round',
+        titleColor = 'bold',
+    }: I_BoxedLogOptions = {},
+) {
+    const chalkColor = chalkKeyword(color);
+    const chalkTitleColor = chalkKeyword(titleColor);
+
+    if (typeof content === 'string') {
+        console.log(
+            boxen(chalkTitleColor(chalkColor(`${title}\n${content}`)), {
+                padding,
+                margin,
+                borderStyle,
+                borderColor: color,
+            }),
+        );
+        return;
+    }
+
+    if (Array.isArray(content) && content.length) {
+        content.forEach(({ file, position, rule, message }) => {
+            console.log(
+                `${getTimeStamp()} ${chalkColor('File:')} ${blue(
+                    `${file}${position ? `:${position}` : ''}`,
+                )}`,
+            );
+
+            if (rule)
+                console.log(`   ${chalkColor('Rule:')} ${chalkColor(rule)}`);
+            console.log(`   ${chalkColor('Message:')} ${chalkColor(message)}`);
+        });
+
+        console.log(
+            boxen(chalkTitleColor(chalkColor(`${title}: ${content.length}`)), {
+                padding,
+                margin,
+                borderStyle,
+                borderColor: color,
+            }),
+        );
+
+        console.log(gray('─'.repeat(40)));
+    }
+}
+
+export const commandLog = {
+    success: (message: string) => printLog('SUCCESS', 'green', '✔', message),
+    error: (message: string) => printLog('ERROR', 'red', '✖', message),
+    warning: (message: string) => printLog('WARNING', 'yellow', '⚠', message),
+    info: (message: string) => printLog('INFO', 'blue', 'ℹ', message),
+    printBoxedLog,
+};
+
+const getErrorListKey = (timestamp: number) => `error_list:${timestamp}`;
+
+export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void> {
+    if (errorList.length === 0) {
+        return;
+    }
+
+    const timestamp = Date.now();
+    const key = getErrorListKey(timestamp);
+
+    try {
+        await storage.set(key, {
+            errors: errorList,
+            timestamp,
+        });
+
+        setTimeout(async () => {
+            const logPath = await storage.getLogLink(key);
+
+            if (logPath) {
+                commandLog.info(`📂 Open the error list manually: ${logPath}`);
+            }
+        }, 10);
+    }
+    catch (error) {
+        commandLog.error(`Failed to save errors: ${(error as Error).message}`);
+    }
+}
+
+export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
+    try {
+        const keys = await storage.keys();
+
+        const errorKeys = Array.isArray(keys)
+            ? keys.filter(key => key?.startsWith?.('error_list:'))
+            : [];
+
+        const allErrors = await Promise.all(
+            errorKeys.map(async (key) => {
+                const entry = await storage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
+
+                return entry?.errors || [];
+            }),
+        );
+
+        return allErrors.flat();
+    }
+    catch (error) {
+        commandLog.error(`Failed to retrieve stored errors: ${(error as Error).message}`);
+
+        return [];
+    }
+}
+
+export async function clearAllErrorLists(): Promise<void> {
+    try {
+        const keys = await storage.keys();
+
+        const errorKeys = Array.isArray(keys)
+            ? keys.filter(key => key?.startsWith?.('error_list:'))
+            : [];
+
+        await Promise.all(errorKeys.map(key => storage.remove(key)));
+    }
+    catch (error) {
+        commandLog.error(`Failed to clear error lists: ${(error as Error).message}`);
+    }
+}
+
 function parseTextErrors(output: string): void {
     const errorList: I_ErrorEntry[] = [];
     const unmatchedLines: string[] = [];
     let lastFilePath = '';
+    // eslint-disable-next-line regexp/no-super-linear-backtracking
+    const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/;
+    const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
+    // eslint-disable-next-line regexp/no-super-linear-backtracking
+    const commitlintRegex = /^✖\s+(.*?)\s+\[(.*?)\]$/;
 
     output.split('\n').forEach((line) => {
         if (line.startsWith('/')) {
@@ -37,7 +181,7 @@ function parseTextErrors(output: string): void {
                 errorList.push({
                     file: lastFilePath,
                     position: `${eslintMatch[1]}:${eslintMatch[2]}`,
-                    type: eslintMatch[3] === 'error' ? E_ErrorType.Error : E_ErrorType.Warning,
+                    type: eslintMatch[3] === E_ErrorType.Error ? E_ErrorType.Error : E_ErrorType.Warning,
                     message: eslintMatch[4].trim(),
                     rule: eslintMatch[5].trim(),
                 });
@@ -46,7 +190,7 @@ function parseTextErrors(output: string): void {
                 errorList.push({
                     file: tsMatch[1],
                     position: `${tsMatch[2]}:${tsMatch[3]}`,
-                    type: tsMatch[4] === 'error' ? E_ErrorType.Error : E_ErrorType.Warning,
+                    type: tsMatch[4] === E_ErrorType.Error ? E_ErrorType.Error : E_ErrorType.Warning,
                     message: tsMatch[5].trim(),
                 });
             }
@@ -69,13 +213,12 @@ function parseTextErrors(output: string): void {
     }
 
     if (unmatchedLines.length && DEBUG) {
-        log.warning(`Unmatched lines:`);
+        commandLog.warning(`Unmatched lines:`);
         // eslint-disable-next-line no-console
         unmatchedLines.forEach(line => console.log(`  ${line}`));
     }
 }
 
-// ✅ JSON-based Error Parser
 function parseCommandOutput(output: string): void {
     try {
         const results: I_EslintError[] = JSON.parse(output);
@@ -102,19 +245,18 @@ function parseCommandOutput(output: string): void {
     }
 }
 
-// ✅ Unified Command Execution
 export async function executeCommand(command: string, parser = parseCommandOutput): Promise<void> {
     const controller = new AbortController();
 
     process.on('SIGINT', () => {
-        log.warning('Process interrupted. Terminating...');
+        commandLog.warning('Process interrupted. Terminating...');
         controller.abort();
         process.exit();
     });
 
     try {
         const { stdout, stderr } = await execPromise(command, {
-            maxBuffer: 1024 * 1024 * 100, // Increased buffer size for large output
+            maxBuffer: 1024 * 1024 * 100,
             signal: controller.signal,
         });
 
@@ -130,7 +272,7 @@ export async function executeCommand(command: string, parser = parseCommandOutpu
         [stdout, stderr].forEach(output => output && parser(output));
 
         if (!stderr && !stdout) {
-            log.error(`Command failed: ${message}`);
+            commandLog.error(`Command failed: ${message}`);
         }
     }
 }

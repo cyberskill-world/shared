@@ -30,5 +30,11 @@ declare function generateModel<D extends Partial<C_Document>>({ mongoose, name, 
 declare function generateSlug(str?: string, options?: I_SlugifyOptions): string;
 declare function generateShortId(uuid: string, length?: number): string;
 declare function generateSlugQuery<D>(slug: string, filters?: T_FilterQuery<D>, id?: string): T_GenerateSlugQueryResponse<D>;
+declare function getMongoGenericFields(): {
+    id: string;
+    isDel: boolean;
+    createdAt: string;
+    updatedAt: string;
+};
 
-export { generateModel, generateSchema, generateShortId, generateSlug, generateSlugQuery };
+export { generateModel, generateSchema, generateShortId, generateSlug, generateSlugQuery, getMongoGenericFields };

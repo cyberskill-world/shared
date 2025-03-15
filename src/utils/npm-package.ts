@@ -3,8 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { WORKING_DIRECTORY } from '../constants/dirname.js';
-import { log } from './command-log.js';
-import { executeCommand } from './command.js';
+import { commandLog, executeCommand } from './command.js';
 import { storage } from './storage.js';
 
 const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -30,7 +29,7 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
     const isCacheValid = cached && Date.now() - cached.timestamp < CACHE_EXPIRATION_MS;
 
     if (!forceRefresh && isCacheValid) {
-        log.info(`Using cached version for ${packageName}: ${cached.version}`);
+        commandLog.info(`Using cached version for ${packageName}: ${cached.version}`);
 
         return cached.version;
     }
@@ -43,12 +42,12 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
         headers['If-Modified-Since'] = metadata.lastModified;
 
     try {
-        log.info(`Fetching latest version for ${packageName}...`);
+        commandLog.info(`Fetching latest version for ${packageName}...`);
 
         const response = await fetch(`https://registry.npmjs.org/${packageName}/latest`, { headers });
 
         if (response.status === 304 && cached) {
-            log.info(`Cache is still valid for ${packageName}: ${cached.version}`);
+            commandLog.info(`Cache is still valid for ${packageName}: ${cached.version}`);
 
             return cached.version;
         }
@@ -71,15 +70,15 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
             lastModified: response.headers.get('Last-Modified') || undefined,
         });
 
-        log.success(`Cached latest version for ${packageName}: ${latestVersion}`);
+        commandLog.success(`Cached latest version for ${packageName}: ${latestVersion}`);
 
         return latestVersion;
     }
     catch (error) {
-        log.error(`Error fetching latest version for ${packageName}: ${(error as Error).message}`);
+        commandLog.error(`Error fetching latest version for ${packageName}: ${(error as Error).message}`);
 
         if (cached) {
-            log.warning(`Falling back to cached version for ${packageName}: ${cached.version}`);
+            commandLog.warning(`Falling back to cached version for ${packageName}: ${cached.version}`);
             return cached.version;
         }
 
@@ -95,7 +94,7 @@ export async function isPackageOutdated(packageName: string, forceRefresh = true
         const installedPackagePath = getPackageJsonPath(packageName);
 
         if (!fs.existsSync(installedPackagePath)) {
-            log.info(`${packageName} is not installed.`);
+            commandLog.info(`${packageName} is not installed.`);
 
             return true; // ✅ If not installed, treat as outdated
         }
@@ -103,13 +102,13 @@ export async function isPackageOutdated(packageName: string, forceRefresh = true
         const installedVersion = JSON.parse(fs.readFileSync(installedPackagePath, 'utf-8')).version;
         const latestVersion = await getLatestPackageVersion(packageName, forceRefresh);
 
-        log.info(`Installed version of ${packageName}: ${installedVersion}`);
-        log.info(`Latest version of ${packageName}: ${latestVersion}`);
+        commandLog.info(`Installed version of ${packageName}: ${installedVersion}`);
+        commandLog.info(`Latest version of ${packageName}: ${latestVersion}`);
 
         return installedVersion !== latestVersion;
     }
     catch (error) {
-        log.warning(`Failed to check version for ${packageName}: ${(error as Error).message}`);
+        commandLog.warning(`Failed to check version for ${packageName}: ${(error as Error).message}`);
 
         return true; // ✅ Assume outdated if version check fails
     }
@@ -124,7 +123,7 @@ export async function updatePackage(packageName: string): Promise<void> {
         const packageJsonPath = getPackageJsonPath();
 
         if (!fs.existsSync(packageJsonPath)) {
-            log.error(`package.json not found. Cannot update ${packageName}`);
+            commandLog.error(`package.json not found. Cannot update ${packageName}`);
 
             return;
         }
@@ -138,15 +137,15 @@ export async function updatePackage(packageName: string): Promise<void> {
 
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-        log.info(`Updated ${packageName} to version ${latestVersion}`);
+        commandLog.info(`Updated ${packageName} to version ${latestVersion}`);
 
         await executeCommand('npm i -f');
         await executeCommand('npm run lint:fix');
 
-        log.success(`${packageName} updated successfully.`);
+        commandLog.success(`${packageName} updated successfully.`);
     }
     catch (error) {
-        log.error(`Failed to update ${packageName}: ${(error as Error).message}`);
+        commandLog.error(`Failed to update ${packageName}: ${(error as Error).message}`);
         throw error;
     }
 }
@@ -167,7 +166,7 @@ export function isCurrentProject(WORKING_DIRECTORY: string, PACKAGE_NAME: string
         return packageJson.name === PACKAGE_NAME;
     }
     catch (error) {
-        log.error(`Error reading package.json: ${(error as Error).message}`);
+        commandLog.error(`Error reading package.json: ${(error as Error).message}`);
 
         return false;
     }

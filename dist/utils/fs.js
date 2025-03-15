@@ -1,0 +1,1 @@
+import*as s from"node:fs";var o=function(o){return s.existsSync(o)};export{o as fileExists};

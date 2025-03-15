@@ -1,1 +1,1 @@
-var n=function(n){return n.LintCheck="Running lint checks...",n.LintFix="Fixing issues...",n.LintStaged="Running lint-staged...",n.CommitLint="Running commitlint...",n.GitHook="Setting up git hook...",n.Setup="Setting up...",n.Reset="Resetting...",n.UnitTest="Running unit tests...",n.E2ETest="Running end-to-end tests...",n}(n||{}),t=function(n){return n.Error="error",n.Warning="warning",n}(t||{});export{t as E_ErrorType,n as E_SpinnerMessage};
+var r=function(r){return r.Error="error",r.Warning="warning",r}(r||{});export{r as E_ErrorType};

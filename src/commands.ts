@@ -5,164 +5,208 @@ import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
-import { PROJECT_ROOT, WORKING_DIRECTORY } from './constants/index.js';
-import { clearAllErrorLists } from './utils/command-error.js';
-import { log } from './utils/command-log.js';
-import { executeCommand } from './utils/command.js';
+import { PROJECT_ROOT, WORKING_DIRECTORY } from './constants/dirname.js';
+import { E_ErrorType } from './typescript/command.js';
+import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists } from './utils/command.js';
+import { fileExists } from './utils/fs.js';
 import { isCurrentProject, isPackageOutdated, updatePackage } from './utils/npm-package.js';
 
+function createConfigPath(relativePath: string) {
+    return path.resolve(WORKING_DIRECTORY, relativePath);
+}
+
 const config = {
-    TS_CONFIG_PATH: path.join(WORKING_DIRECTORY, 'tsconfig.json'),
-    HUSKY_PATH: path.join(WORKING_DIRECTORY, '.husky'),
-    GIT_HOOK_PATH: path.join(WORKING_DIRECTORY, '.git', 'hooks'),
-    GIT_COMMIT_MSG: path.join(WORKING_DIRECTORY, '.git', 'COMMIT_EDITMSG'),
-    SIMPLE_GIT_HOOKS_PATH: path.join(WORKING_DIRECTORY, '.simple-git-hooks.json'),
+    TS_CONFIG_PATH: createConfigPath('tsconfig.json'),
+    HUSKY_PATH: createConfigPath('.husky'),
+    GIT_HOOK_PATH: createConfigPath('.git/hooks'),
+    GIT_COMMIT_MSG: createConfigPath('.git/COMMIT_EDITMSG'),
+    SIMPLE_GIT_HOOKS_PATH: createConfigPath('.simple-git-hooks.json'),
+    PACKAGE_JSON_PATH: createConfigPath('package.json'),
+    PACKAGE_LOCK_PATH: createConfigPath('package-lock.json'),
     PACKAGE_NAME: '@cyberskill/shared',
 
     LINT_STAGED_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/lint-staged/base.js'),
     COMMITLINT_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/commitlint/base.js'),
     UNIT_TEST_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/vitest/react/unit.js'),
     E2E_TEST_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/vitest/react/e2e.js'),
+
+    HOOKS_CONFIG: {
+        'pre-commit': `npx --yes cyberskill lint-staged`,
+        'commit-msg': `npx --yes cyberskill commitlint`,
+    },
 };
 
-// ✅ Utility to check if file exists
-const fileExists = (filePath: string): boolean => fs.existsSync(filePath);
-
-// ✅ Dynamic Step Counter
-let currentStep = 0;
-let totalSteps = 1;
-
-function resetSteps(stepCount: number) {
-    totalSteps = Math.max(1, stepCount); // Ensure minimum 1 step
-    currentStep = 0;
-}
-
-function nextStep(description: string) {
-    currentStep = Math.min(currentStep + 1, totalSteps);
-    log.step(currentStep, totalSteps, description);
+// ✅ Unified Execute Command with Logging
+async function runCommand(description: string, command: string) {
+    commandLog.info(`➡️  ${description}...`);
+    await executeCommand(command);
+    commandLog.success(`✅ ${description} completed.`);
 }
 
 // ✅ TypeScript Check
-async function checkTypescript(): Promise<void> {
-    nextStep('Starting TypeScript check');
+async function checkTypescript() {
     if (fileExists(config.TS_CONFIG_PATH)) {
-        await executeCommand(`npx tsc -p ${config.TS_CONFIG_PATH} --noEmit`);
+        await runCommand('Running TypeScript check', `npx tsc -p ${config.TS_CONFIG_PATH} --noEmit`);
     }
     else {
-        log.warning('tsconfig.json file not found. Skipping TypeScript check.');
+        commandLog.warning('⚠️  TypeScript config not found. Skipping TypeScript check.');
     }
 }
 
 // ✅ ESLint Check
-async function checkEslint(fix = false): Promise<void> {
-    nextStep(`Starting ESLint ${fix ? 'fix' : 'check'}`);
-    const command = `npx eslint ${WORKING_DIRECTORY}${fix ? ' --fix' : ''}`;
-    await executeCommand(command);
+async function checkEslint(fix = false) {
+    await runCommand(
+        `Running ESLint ${fix ? '(with fix)' : '(without fix)'}`,
+        `npx eslint ${WORKING_DIRECTORY}${fix ? ' --fix' : ''}`,
+    );
 }
 
 // ✅ Lint Staged Files
-async function runLintStaged(): Promise<void> {
-    resetSteps(1);
-    nextStep('Starting lint-staged process');
-    await executeCommand(`npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
+async function lintStaged() {
+    if (isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
+        commandLog.info(`➡️  @cyberskill/shared detected. Building before lint-staged...`);
+
+        try {
+            await runCommand('Building @cyberskill/shared', 'npm run build');
+            await executeCommand('git add dist');
+            commandLog.success('✅ Built and staged @cyberskill/shared');
+        }
+        catch (error) {
+            commandLog.error(`❌ Failed to build and stage @cyberskill/shared: ${(error as Error).message}`);
+            throw error;
+        }
+    }
+
+    await runCommand('Running lint-staged', `npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
 }
 
 // ✅ Lint Inspect
-async function inspectLint(): Promise<void> {
-    resetSteps(1);
-    nextStep('Inspecting lint rules');
-    await executeCommand(`npx @eslint/config-inspector`);
+async function inspectLint() {
+    await runCommand('Inspecting ESLint rules', 'npx @eslint/config-inspector');
 }
 
 // ✅ Full Lint Check
-async function lintCheck(): Promise<void> {
-    resetSteps(2);
+async function lintCheck() {
     await clearAllErrorLists();
-    await checkTypescript();
-    await checkEslint();
-    await log.displayResults();
+    await Promise.all([checkTypescript(), checkEslint()]);
+    const allResults = await getStoredErrorLists();
+    const errors = allResults.filter(e => e.type === E_ErrorType.Error);
+    const warnings = allResults.filter(e => e.type === E_ErrorType.Warning);
+
+    if (!errors.length && !warnings.length) {
+        commandLog.printBoxedLog('✔ NO ISSUES FOUND', '', {
+            color: 'green',
+        });
+    }
+    else {
+        commandLog.printBoxedLog('⚠ Warnings', warnings, {
+            color: 'yellow',
+        });
+        commandLog.printBoxedLog('✖ Errors', errors, {
+            color: 'red',
+        });
+    }
+    commandLog.success('✅ Lint check completed.');
 }
 
 // ✅ Commit Lint
-async function commitLint(): Promise<void> {
-    nextStep('Running commit lint');
-    await executeCommand(`npx --no -- commitlint --edit ${config.GIT_COMMIT_MSG} --config ${config.COMMITLINT_CONFIG_PATH}`);
-}
-
-// ✅ Setup Git Hooks
-async function setupGitHook(): Promise<void> {
-    resetSteps(2);
-    nextStep('Setting up Git hooks');
-
-    if (fileExists(config.HUSKY_PATH)) {
-        await executeCommand(
-            `npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH} && git config core.hooksPath ${config.GIT_HOOK_PATH}`,
-        );
-    }
-
-    const isCurrent = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME);
-
-    const hooksConfig = {
-        'pre-commit': isCurrent
-            ? `bash -c "npm run build && npx --yes cyberskill lint-staged"`
-            : 'npx --yes cyberskill lint-staged',
-        'commit-msg': 'npx --yes cyberskill commitlint',
-    };
-
-    fs.writeFileSync(config.SIMPLE_GIT_HOOKS_PATH, JSON.stringify(hooksConfig, null, 4));
-    await executeCommand(`npx simple-git-hooks`);
-    log.success('Git hooks configured successfully.');
-    fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
+async function commitLint() {
+    await runCommand('Running commit lint', `npx commitlint --edit ${config.GIT_COMMIT_MSG} --config ${config.COMMITLINT_CONFIG_PATH}`);
 }
 
 // ✅ Setup Project
-async function setupProject(): Promise<void> {
-    resetSteps(2);
-    nextStep('Starting project setup');
-    const packageJsonPath = path.join(WORKING_DIRECTORY, 'package.json');
+async function setup() {
+    commandLog.info('➡️  Starting project setup...');
+
+    if (!fileExists(config.PACKAGE_JSON_PATH)) {
+        commandLog.error('❌ package.json not found. Aborting setup.');
+        return;
+    }
 
     try {
-        if (!fileExists(packageJsonPath)) {
-            log.error('package.json not found. Setup aborted.');
+        const packageJson = JSON.parse(fs.readFileSync(config.PACKAGE_JSON_PATH, 'utf-8'));
 
-            return;
-        }
+        const isUpToDate
+            = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)
+                || (packageJson.dependencies?.[config.PACKAGE_NAME]
+                    && !(await isPackageOutdated(config.PACKAGE_NAME)));
 
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
-
-        if (!isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
-            if (!packageJson.dependencies?.[config.PACKAGE_NAME] || (await isPackageOutdated(config.PACKAGE_NAME))) {
-                log.info('Updating Cyberskill package...');
-                await updatePackage(config.PACKAGE_NAME);
-            }
-            else {
-                log.success('Cyberskill is up to date.');
-            }
+        if (isUpToDate) {
+            commandLog.success('✅ Cyberskill package is already up to date.');
         }
         else {
-            log.success('Cyberskill is already installed.');
+            commandLog.info('📦 Updating Cyberskill package...');
+            await updatePackage(config.PACKAGE_NAME);
+            commandLog.success('✅ Cyberskill package updated successfully.');
         }
 
         await setupGitHook();
+        commandLog.success('✅ Project setup completed.');
     }
     catch (error) {
-        log.error(`Error reading package.json: ${(error as Error).message}`);
+        commandLog.error(`❌ Failed to setup project: ${(error as Error).message}`);
         throw error;
     }
 }
 
-// ✅ Test Unit
-async function testUnit(): Promise<void> {
-    resetSteps(1);
-    nextStep('Running unit tests');
-    await executeCommand(`npx vitest --config ${config.UNIT_TEST_CONFIG_PATH}`);
+// ✅ Setup Git Hooks
+async function setupGitHook() {
+    commandLog.info('➡️  Setting up Git hooks...');
+
+    if (fileExists(config.HUSKY_PATH)) {
+        await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH}`);
+        await executeCommand(`git config core.hooksPath ${config.GIT_HOOK_PATH}`);
+    }
+
+    fs.writeFileSync(config.SIMPLE_GIT_HOOKS_PATH, JSON.stringify(config.HOOKS_CONFIG, null, 4));
+    await executeCommand(`npx simple-git-hooks`);
+    fs.unlinkSync(config.SIMPLE_GIT_HOOKS_PATH);
+
+    commandLog.success('✅ Git hooks configured successfully.');
 }
 
-// ✅ Test E2E
-async function testE2E(): Promise<void> {
-    resetSteps(1);
-    nextStep('Running e2e tests');
-    await executeCommand(`npx vitest --config ${config.E2E_TEST_CONFIG_PATH}`);
+// ✅ Install Dependencies with Retry Strategy
+async function installDependencies() {
+    const strategies = [
+        { command: 'npm install', message: 'Standard installation' },
+        { command: 'npm install --legacy-peer-deps', message: 'Attempting installation with --legacy-peer-deps' },
+        { command: 'npm install --force', message: 'Attempting forced installation' },
+    ];
+
+    for (const { command, message } of strategies) {
+        try {
+            commandLog.info(`➡️  ${message}...`);
+            await executeCommand(command);
+            commandLog.success(`✅ Dependencies installed using: ${command}`);
+            return;
+        }
+        catch (error) {
+            commandLog.warning(`⚠️  Failed with: ${command}`);
+            commandLog.error(`❌ Error: ${(error as Error).message}`);
+        }
+    }
+
+    throw new Error('❌ Failed to install dependencies after multiple attempts.');
+}
+
+// ✅ Reset Project
+async function reset() {
+    await runCommand(
+        'Resetting project',
+        `npx rimraf ${WORKING_DIRECTORY}/node_modules ${config.PACKAGE_LOCK_PATH}`,
+    );
+    await installDependencies();
+    await setupGitHook();
+}
+
+// ✅ Run Unit Tests
+async function testUnit() {
+    await runCommand('Running unit tests', `npx vitest --config ${config.UNIT_TEST_CONFIG_PATH}`);
+}
+
+// ✅ Run E2E Tests
+async function testE2E() {
+    await runCommand('Running E2E tests', `npx vitest --config ${config.E2E_TEST_CONFIG_PATH}`);
 }
 
 // ✅ Register Commands
@@ -170,16 +214,10 @@ yargs(hideBin(process.argv))
     .command('lint', 'Run linting checks', lintCheck)
     .command('lint:fix', 'Fix linting issues', () => checkEslint(true))
     .command('lint:inspect', 'Inspect linting rules', inspectLint)
-    .command('lint-staged', 'Run lint-staged', runLintStaged)
+    .command('lint-staged', 'Run lint-staged', lintStaged)
     .command('commitlint', 'Run commitlint', commitLint)
-    .command('setup', 'Run project setup', setupProject)
-    .command('reset', 'Reset project dependencies', async () => {
-        resetSteps(1);
-        nextStep('Starting project reset');
-        await executeCommand(`npx rimraf ${WORKING_DIRECTORY}/node_modules ${WORKING_DIRECTORY}/package-lock.json`);
-        await executeCommand('npm i -f');
-        await setupGitHook();
-    })
+    .command('setup', 'Run project setup', setup)
+    .command('reset', 'Reset project dependencies', reset)
     .command('test:unit', 'Run unit tests', testUnit)
     .command('test:e2e', 'Run e2e tests', testE2E)
     .help()
