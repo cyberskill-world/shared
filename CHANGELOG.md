@@ -1,3 +1,7 @@
+## 1.25.0 (2025-03-16)
+
+* feat: add simple-git-hooks ([8d70539](https://github.com/cyberskill-world/shared/commit/8d70539))
+
 ## 1.24.0 (2025-03-15)
 
 * feat: correct setupGitHook ([806f7a4](https://github.com/cyberskill-world/shared/commit/806f7a4))
