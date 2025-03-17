@@ -1,2 +1,2 @@
-export * from './dirname.js';
+export * from './path.js';
 export * from './response-status.js';

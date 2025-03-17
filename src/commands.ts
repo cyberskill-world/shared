@@ -5,7 +5,7 @@ import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
-import { PROJECT_ROOT, WORKING_DIRECTORY } from './constants/dirname.js';
+import { PROJECT_ROOT, WORKING_DIRECTORY } from './constants/path.js';
 import { E_ErrorType } from './typescript/command.js';
 import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists } from './utils/command.js';
 import { fileExists } from './utils/fs.js';
@@ -35,7 +35,7 @@ const config = {
 
 // ✅ Unified Execute Command with Logging
 async function runCommand(description: string, command: string) {
-    commandLog.info(`➡️  ${description}...`);
+    commandLog.info(`${description}...`);
     await executeCommand(command);
     commandLog.success(`${description} completed.`);
 }
@@ -61,7 +61,7 @@ async function checkEslint(fix = false) {
 // ✅ Lint Staged Files
 async function lintStaged() {
     if (isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
-        commandLog.info(`➡️  @cyberskill/shared detected. Building before lint-staged...`);
+        commandLog.info(`@cyberskill/shared detected. Building before lint-staged...`);
 
         try {
             await runCommand('Building @cyberskill/shared', 'npm run build');
@@ -113,7 +113,7 @@ async function commitLint() {
 
 // ✅ Setup Project
 async function setup() {
-    commandLog.info('➡️  Starting project setup...');
+    commandLog.info('Starting project setup...');
 
     if (!fileExists(config.PACKAGE_JSON_PATH)) {
         commandLog.error('package.json not found. Aborting setup.');
