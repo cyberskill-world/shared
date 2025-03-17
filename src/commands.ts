@@ -37,7 +37,7 @@ const config = {
 async function runCommand(description: string, command: string) {
     commandLog.info(`➡️  ${description}...`);
     await executeCommand(command);
-    commandLog.success(`✅ ${description} completed.`);
+    commandLog.success(`${description} completed.`);
 }
 
 // ✅ TypeScript Check
@@ -46,7 +46,7 @@ async function checkTypescript() {
         await runCommand('Running TypeScript check', `npx tsc -p ${config.TS_CONFIG_PATH} --noEmit`);
     }
     else {
-        commandLog.warning('⚠️  TypeScript config not found. Skipping TypeScript check.');
+        commandLog.warning('TypeScript config not found. Skipping TypeScript check.');
     }
 }
 
@@ -66,10 +66,10 @@ async function lintStaged() {
         try {
             await runCommand('Building @cyberskill/shared', 'npm run build');
             await executeCommand('git add dist');
-            commandLog.success('✅ Built and staged @cyberskill/shared');
+            commandLog.success('Built and staged @cyberskill/shared');
         }
         catch (error) {
-            commandLog.error(`❌ Failed to build and stage @cyberskill/shared: ${(error as Error).message}`);
+            commandLog.error(`Failed to build and stage @cyberskill/shared: ${(error as Error).message}`);
             throw error;
         }
     }
@@ -103,7 +103,7 @@ async function lintCheck() {
             color: 'red',
         });
     }
-    commandLog.success('✅ Lint check completed.');
+    commandLog.success('Lint check completed.');
 }
 
 // ✅ Commit Lint
@@ -116,7 +116,7 @@ async function setup() {
     commandLog.info('➡️  Starting project setup...');
 
     if (!fileExists(config.PACKAGE_JSON_PATH)) {
-        commandLog.error('❌ package.json not found. Aborting setup.');
+        commandLog.error('package.json not found. Aborting setup.');
         return;
     }
 
@@ -129,26 +129,26 @@ async function setup() {
                     && !(await isPackageOutdated(config.PACKAGE_NAME)));
 
         if (isUpToDate) {
-            commandLog.success('✅ Cyberskill package is already up to date.');
+            commandLog.success('Cyberskill package is already up to date.');
         }
         else {
             commandLog.info('📦 Updating Cyberskill package...');
             await updatePackage(config.PACKAGE_NAME);
-            commandLog.success('✅ Cyberskill package updated successfully.');
+            commandLog.success('Cyberskill package updated successfully.');
         }
 
         await setupGitHook();
-        commandLog.success('✅ Project setup completed.');
+        commandLog.success('Project setup completed.');
     }
     catch (error) {
-        commandLog.error(`❌ Failed to setup project: ${(error as Error).message}`);
+        commandLog.error(`Failed to setup project: ${(error as Error).message}`);
         throw error;
     }
 }
 
 // ✅ Setup Git Hooks
 async function setupGitHook() {
-    commandLog.info('➡️  Setting up Git hooks...');
+    commandLog.info('Setting up Git hooks...');
 
     if (fileExists(config.HUSKY_PATH)) {
         await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH}`);
@@ -167,20 +167,20 @@ async function setupGitHook() {
 
         if (!gitignore.includes('.simple-git-hooks.json')) {
             fs.appendFileSync(gitignorePath, '\n# Ignore simple-git-hooks config\n.simple-git-hooks.json\n');
-            commandLog.info('✅ Added .simple-git-hooks.json to .gitignore');
+            commandLog.info('Added .simple-git-hooks.json to .gitignore');
         }
         else {
-            commandLog.info('✅ .simple-git-hooks.json is already ignored in .gitignore');
+            commandLog.info('.simple-git-hooks.json is already ignored in .gitignore');
         }
     }
     else {
         fs.writeFileSync(gitignorePath, '# Ignore simple-git-hooks config\n.simple-git-hooks.json\n');
-        commandLog.info('✅ Created .gitignore and added .simple-git-hooks.json');
+        commandLog.info('Created .gitignore and added .simple-git-hooks.json');
     }
 
     await executeCommand(`npx simple-git-hooks`);
 
-    commandLog.success(`✅ Git hooks configured successfully.`);
+    commandLog.success(`Git hooks configured successfully.`);
 }
 
 // ✅ Install Dependencies with Retry Strategy
@@ -193,18 +193,18 @@ async function installDependencies() {
 
     for (const { command, message } of strategies) {
         try {
-            commandLog.info(`➡️  ${message}...`);
+            commandLog.info(`${message}...`);
             await executeCommand(command);
-            commandLog.success(`✅ Dependencies installed using: ${command}`);
+            commandLog.success(`Dependencies installed using: ${command}`);
             return;
         }
         catch (error) {
-            commandLog.warning(`⚠️  Failed with: ${command}`);
-            commandLog.error(`❌ Error: ${(error as Error).message}`);
+            commandLog.warning(`Failed with: ${command}`);
+            commandLog.error(`Error: ${(error as Error).message}`);
         }
     }
 
-    throw new Error('❌ Failed to install dependencies after multiple attempts.');
+    throw new Error('Failed to install dependencies after multiple attempts.');
 }
 
 // ✅ Reset Project
