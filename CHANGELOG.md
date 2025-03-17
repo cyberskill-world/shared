@@ -1,3 +1,7 @@
+## 1.27.0 (2025-03-17)
+
+* feat: rename dirname to path ([d918219](https://github.com/cyberskill-world/shared/commit/d918219))
+
 ## 1.26.0 (2025-03-17)
 
 * feat: remove unecessary icons ([90882c4](https://github.com/cyberskill-world/shared/commit/90882c4))
