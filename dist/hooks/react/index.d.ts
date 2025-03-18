@@ -4,6 +4,7 @@ export { useStorage } from './use-storage.js';
 export { useTranslations as useTranslateNextIntl } from 'next-intl';
 import '../../typescript/react.js';
 import '@apollo/client';
+import '@apollo/experimental-nextjs-app-support';
 import 'react';
 import '../../typescript/next-intl.js';
 import 'date-fns';

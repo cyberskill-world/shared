@@ -4,6 +4,7 @@ export { NextIntlProvider } from './next-intl.cjs';
 import 'react/jsx-runtime';
 import '../../typescript/react.cjs';
 import '@apollo/client';
+import '@apollo/experimental-nextjs-app-support';
 import 'react';
 import '../../typescript/next-intl.cjs';
 import 'date-fns';

@@ -1,6 +1,7 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { T_Children } from '../../typescript/react.cjs';
 import '@apollo/client';
+import '@apollo/experimental-nextjs-app-support';
 import 'react';
 
 declare function LoadingProvider({ children }: {

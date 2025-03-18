@@ -5,6 +5,7 @@ import { T_Children } from '../../typescript/react.js';
 import 'date-fns';
 import 'next-intl';
 import '@apollo/client';
+import '@apollo/experimental-nextjs-app-support';
 
 declare function withNextIntl<T extends {
     children: T_Children;

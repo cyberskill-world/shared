@@ -4,6 +4,7 @@ import { T_Children } from '../../typescript/react.cjs';
 import 'date-fns';
 import 'next-intl';
 import '@apollo/client';
+import '@apollo/experimental-nextjs-app-support';
 import 'react';
 
 declare function NextIntlProvider({ children, languages, messages, }: {

@@ -6,3 +6,4 @@ import 'date-fns';
 import 'next-intl';
 import '../../typescript/react.js';
 import '@apollo/client';
+import '@apollo/experimental-nextjs-app-support';
