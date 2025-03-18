@@ -1,3 +1,7 @@
+## 1.29.0 (2025-03-18)
+
+* feat: modify ApolloProvider to adapt nextjs ([8563751](https://github.com/cyberskill-world/shared/commit/8563751))
+
 ## 1.28.0 (2025-03-18)
 
 * feat: add NextIntlProvider ([e935e20](https://github.com/cyberskill-world/shared/commit/e935e20))
