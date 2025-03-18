@@ -1,3 +1,7 @@
+## 1.28.0 (2025-03-18)
+
+* feat: add NextIntlProvider ([e935e20](https://github.com/cyberskill-world/shared/commit/e935e20))
+
 ## 1.27.0 (2025-03-17)
 
 * feat: rename dirname to path ([d918219](https://github.com/cyberskill-world/shared/commit/d918219))
