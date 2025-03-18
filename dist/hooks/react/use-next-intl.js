@@ -1,0 +1,1 @@
+import{useContext as t}from"react";import{createContext as e}from"react";var r=e(void 0);import{useTranslations as n}from"next-intl";function a(){var e=t(r);if(!e)throw new Error("useNextIntl must be used within a NextIntlProvider");return e}export{a as useNextIntl,n as useTranslateNextIntl};

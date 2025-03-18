@@ -1,6 +1,10 @@
 export { useLoading } from './use-loading.js';
+export { useNextIntl } from './use-next-intl.js';
 export { useStorage } from './use-storage.js';
+export { useTranslations as useTranslateNextIntl } from 'next-intl';
 import '../../typescript/react.js';
 import '@apollo/client';
 import 'react';
+import '../../typescript/next-intl.js';
+import 'date-fns';
 import '../../typescript/serializer.js';

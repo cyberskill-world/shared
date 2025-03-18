@@ -2,9 +2,12 @@ export { E_ErrorType, I_BoxedLogOptions, I_ErrorEntry, I_EslintError } from './c
 export { I_Config } from './config.cjs';
 export { T_ThrowResponseArgs } from './log.cjs';
 export { C_Collection, C_Db, C_Document, C_Model, I_DeleteOptionsExtended, I_ExtendedModel, I_GenerateModelOptions, I_GenerateSchemaOptions, I_GenericDocument, I_HookNextFunction, I_Input_CreateMany, I_Input_CreateOne, I_Input_DeleteMany, I_Input_DeleteOne, I_Input_FindAll, I_Input_FindOne, I_Input_FindPaging, I_Input_FindPagingAggregate, I_Input_UpdateMany, I_Input_UpdateOne, I_MongooseModelMiddleware, I_MongooseOptions, I_Return, I_ReturnFailure, I_ReturnSuccess, I_SlugifyOptions, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_GenerateSlugQueryResponse, T_Input_MongooseSchema, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MiddlewareContext, T_MongooseModelMiddlewareFunction, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptions, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOption, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongoose.cjs';
+export { I_NextIntlContextType, I_NextIntlLanguage, T_NextIntlMessageList } from './next-intl.cjs';
 export { I_ApolloOptions, I_GraphqlCodegenConfig, I_LoadingContext, T_Children } from './react.cjs';
 export { I_Serializer } from './serializer.cjs';
 import 'mongodb';
 import 'mongoose';
+import 'date-fns';
+import 'next-intl';
 import '@apollo/client';
 import 'react';

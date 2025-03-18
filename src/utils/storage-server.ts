@@ -1,17 +1,14 @@
-import localForage from 'localforage';
 import nodePersist from 'node-persist';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 
-const isBrowser = typeof window !== 'undefined';
-
-const storageDir
+export const storageDir
     = process.env.CYBERSKILL_STORAGE_DIR
         || path.join(os.homedir(), '.cyberskill-storage');
 
-async function initNodePersist() {
-    if (!isBrowser && !nodePersist.defaultInstance) {
+export async function initNodePersist() {
+    if (!nodePersist.defaultInstance) {
         await nodePersist.init({
             dir: storageDir,
             stringify: JSON.stringify,
@@ -23,17 +20,12 @@ async function initNodePersist() {
     }
 }
 
-export const storage = {
+export const storageServer = {
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
-            if (isBrowser) {
-                return await localForage.getItem<T>(key);
-            }
-            else {
-                await initNodePersist();
-                const result = await nodePersist.getItem(key);
-                return result ?? null;
-            }
+            await initNodePersist();
+            const result = await nodePersist.getItem(key);
+            return result ?? null;
         }
         catch (error) {
             console.error(`❌ [Storage:get] Error getting key "${key}":`, error);
@@ -42,13 +34,8 @@ export const storage = {
     },
     async set<T = unknown>(key: string, value: T): Promise<void> {
         try {
-            if (isBrowser) {
-                await localForage.setItem(key, value);
-            }
-            else {
-                await initNodePersist();
-                await nodePersist.setItem(key, value);
-            }
+            await initNodePersist();
+            await nodePersist.setItem(key, value);
         }
         catch (error) {
             console.error(`❌ [Storage:set] Error setting key "${key}":`, error);
@@ -56,13 +43,8 @@ export const storage = {
     },
     async remove(key: string): Promise<void> {
         try {
-            if (isBrowser) {
-                await localForage.removeItem(key);
-            }
-            else {
-                await initNodePersist();
-                await nodePersist.removeItem(key);
-            }
+            await initNodePersist();
+            await nodePersist.removeItem(key);
         }
         catch (error) {
             console.error(`❌ [Storage:remove] Error removing key "${key}":`, error);
@@ -70,21 +52,15 @@ export const storage = {
     },
     async keys(): Promise<string[]> {
         try {
-            if (isBrowser) {
-                const keys = await localForage.keys();
-                return keys ?? [];
-            }
-            else {
-                await initNodePersist();
-                const keys = await nodePersist.keys();
+            await initNodePersist();
+            const keys = await nodePersist.keys();
 
-                if (!Array.isArray(keys)) {
-                    console.warn(`⚠️ [Storage:keys] Invalid keys response:`, keys);
-                    return [];
-                }
-
-                return keys;
+            if (!Array.isArray(keys)) {
+                console.warn(`⚠️ [Storage:keys] Invalid keys response:`, keys);
+                return [];
             }
+
+            return keys;
         }
         catch (error) {
             console.error(`❌ [Storage:keys] Error getting keys:`, error);

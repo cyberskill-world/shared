@@ -1,2 +1,2 @@
-export { createI18NextConfig } from './i18next.cjs';
+export { initI18Next } from './i18next.cjs';
 import 'i18next';

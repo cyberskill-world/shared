@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { I_Serializer } from '../../typescript/serializer.js';
 
-import { storage } from '../../utils/index.js';
 import { serializer as defaultSerializer } from '../../utils/serializer.js';
+import { storageClient } from '../../utils/storage-client.js';
 
 export function useStorage<T>(
     key: string,
@@ -19,7 +19,7 @@ export function useStorage<T>(
 
         const loadValue = async () => {
             try {
-                const value = await storage.get<string>(key);
+                const value = await storageClient.get<string>(key);
 
                 if (isMounted) {
                     if (value !== null) {
@@ -30,7 +30,7 @@ export function useStorage<T>(
                     else {
                         // ✅ If no stored value, store initial value using serializer
                         const serialized = serializer.serialize(initialValue);
-                        await storage.set(key, serialized);
+                        await storageClient.set(key, serialized);
                         setStoredValue(initialValue);
                     }
                 }
@@ -66,7 +66,7 @@ export function useStorage<T>(
             try {
                 // ✅ Use custom serializer when saving
                 const serialized = serializer.serialize(storedValue);
-                await storage.set(key, serialized);
+                await storageClient.set(key, serialized);
             }
             catch (error) {
                 console.error(`Error saving value for key "${key}":`, error);

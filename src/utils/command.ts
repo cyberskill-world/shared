@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { ChalkInstance } from 'chalk';
 
 import boxen from 'boxen';
@@ -9,7 +10,7 @@ import * as util from 'node:util';
 import type { I_BoxedLogOptions, I_ErrorEntry, I_EslintError } from '../typescript/command.js';
 
 import { E_ErrorType } from '../typescript/command.js';
-import { storage } from './storage.js';
+import { storageServer } from './storage-server.js';
 
 const DEBUG = process.env.DEBUG === 'true';
 
@@ -100,13 +101,13 @@ export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise
     const key = getErrorListKey(timestamp);
 
     try {
-        await storage.set(key, {
+        await storageServer.set(key, {
             errors: errorList,
             timestamp,
         });
 
         setTimeout(async () => {
-            const logPath = await storage.getLogLink(key);
+            const logPath = await storageServer.getLogLink(key);
 
             if (logPath) {
                 commandLog.info(`📂 Open the error list manually: ${logPath}`);
@@ -120,7 +121,7 @@ export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise
 
 export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
     try {
-        const keys = await storage.keys();
+        const keys = await storageServer.keys();
 
         const errorKeys = Array.isArray(keys)
             ? keys.filter(key => key?.startsWith?.('error_list:'))
@@ -128,7 +129,7 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
 
         const allErrors = await Promise.all(
             errorKeys.map(async (key) => {
-                const entry = await storage.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
+                const entry = await storageServer.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
 
                 return entry?.errors || [];
             }),
@@ -145,13 +146,13 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
 
 export async function clearAllErrorLists(): Promise<void> {
     try {
-        const keys = await storage.keys();
+        const keys = await storageServer.keys();
 
         const errorKeys = Array.isArray(keys)
             ? keys.filter(key => key?.startsWith?.('error_list:'))
             : [];
 
-        await Promise.all(errorKeys.map(key => storage.remove(key)));
+        await Promise.all(errorKeys.map(key => storageServer.remove(key)));
     }
     catch (error) {
         commandLog.error(`Failed to clear error lists: ${(error as Error).message}`);
@@ -214,7 +215,6 @@ function parseTextErrors(output: string): void {
 
     if (unmatchedLines.length && DEBUG) {
         commandLog.warning(`Unmatched lines:`);
-        // eslint-disable-next-line no-console
         unmatchedLines.forEach(line => console.log(`  ${line}`));
     }
 }

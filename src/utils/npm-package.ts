@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { WORKING_DIRECTORY } from '../constants/path.js';
 import { commandLog, executeCommand } from './command.js';
-import { storage } from './storage.js';
+import { storageServer } from './storage-server.js';
 
 const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
@@ -23,8 +23,8 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
     const metadataCacheKey = `npm_metadata:${packageName}`;
 
     // ✅ Try to get cached version
-    const cached = await storage.get<{ version: string; timestamp: number }>(versionCacheKey);
-    const metadata = await storage.get<{ etag?: string; lastModified?: string }>(metadataCacheKey);
+    const cached = await storageServer.get<{ version: string; timestamp: number }>(versionCacheKey);
+    const metadata = await storageServer.get<{ etag?: string; lastModified?: string }>(metadataCacheKey);
 
     const isCacheValid = cached && Date.now() - cached.timestamp < CACHE_EXPIRATION_MS;
 
@@ -60,12 +60,12 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
         const latestVersion = data.version;
 
         // ✅ Store version and metadata in cache
-        await storage.set(versionCacheKey, {
+        await storageServer.set(versionCacheKey, {
             version: latestVersion,
             timestamp: Date.now(),
         });
 
-        await storage.set(metadataCacheKey, {
+        await storageServer.set(metadataCacheKey, {
             etag: response.headers.get('ETag') || undefined,
             lastModified: response.headers.get('Last-Modified') || undefined,
         });

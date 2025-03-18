@@ -1,6 +1,10 @@
 export { ApolloProvider } from './apollo-client.js';
 export { LoadingProvider } from './loading.js';
+export { NextIntlProvider } from './next-intl.js';
 import 'react/jsx-runtime';
 import '../../typescript/react.js';
 import '@apollo/client';
 import 'react';
+import '../../typescript/next-intl.js';
+import 'date-fns';
+import 'next-intl';
