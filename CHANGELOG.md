@@ -1,3 +1,7 @@
+## 1.30.0 (2025-03-21)
+
+* feat: refactor ([5169b10](https://github.com/cyberskill-world/shared/commit/5169b10))
+
 ## 1.29.0 (2025-03-18)
 
 * feat: modify ApolloProvider to adapt nextjs ([8563751](https://github.com/cyberskill-world/shared/commit/8563751))
