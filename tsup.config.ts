@@ -17,7 +17,7 @@ export default defineConfig(({ watch, ...rest }) => {
         clean: true,
         dts: true,
         shims: true,
-        injectStyle: true,
+        injectStyle: false,
         ...rest,
     };
 });

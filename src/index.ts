@@ -3,6 +3,7 @@ export * from './configs/index.js';
 export * from './constants/index.js';
 export * from './contexts/react/index.js';
 export * from './controllers/index.js';
+export * from './hocs/react/index.js';
 export * from './hooks/react/index.js';
 export * from './providers/react/index.js';
 export * from './typescript/index.js';

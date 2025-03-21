@@ -1,9 +1,9 @@
-import type { AliasOptions } from 'vite';
+import type { UserConfig } from 'vite';
 
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vitest/config';
 
-export default (alias: AliasOptions) => defineConfig({
+export default (options: UserConfig) => defineConfig({
     plugins: [react()],
     test: {
         include: ['**/*.test.e2e.?(c|m)[jt]s?(x)'],
@@ -17,7 +17,5 @@ export default (alias: AliasOptions) => defineConfig({
             ],
         },
     },
-    resolve: {
-        alias,
-    },
+    ...options,
 });

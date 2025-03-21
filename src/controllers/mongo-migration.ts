@@ -9,9 +9,9 @@ import type {
     T_OptionalUnlessRequiredId,
     T_UpdateResult,
     T_WithId,
-} from '../typescript/index.js';
+} from '../typescript/mongoose.js';
 
-import { getMongoGenericFields } from '../utils/index.js';
+import { getMongoGenericFields } from '../utils/mongoose.js';
 
 export class MigrationController<D extends Partial<C_Document>> {
     private collection: C_Collection<D>;
@@ -20,7 +20,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         this.collection = db.collection<D>(collectionName);
     }
 
-    // ✅ Create One Document
     async createOne(document: D): Promise<{
         success: boolean;
         message: string;
@@ -45,7 +44,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Create Many Documents
     async createMany(documents: D[]): Promise<{
         success: boolean;
         message: string;
@@ -76,7 +74,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Find One Document
     async findOne(filter: T_Filter<D>): Promise<{
         success: boolean;
         message: string;
@@ -95,7 +92,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Find All Documents
     async findAll(
         filter: T_Filter<D> = {},
     ): Promise<{ success: boolean; message: string; result?: T_WithId<D>[] }> {
@@ -113,7 +109,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Count Documents
     async count(
         filter: T_Filter<D> = {},
     ): Promise<{ success: boolean; message: string; result?: number }> {
@@ -131,7 +126,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Update One Document
     async updateOne(
         filter: T_Filter<D>,
         update: Partial<D>,
@@ -158,7 +152,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Update Many Documents
     async updateMany(
         filter: T_Filter<D>,
         update: Partial<D>,
@@ -185,7 +178,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Delete One Document
     async deleteOne(
         filter: T_Filter<D>,
     ): Promise<{ success: boolean; message: string; result?: T_DeleteResult }> {
@@ -209,7 +201,6 @@ export class MigrationController<D extends Partial<C_Document>> {
         }
     }
 
-    // ✅ Delete Many Documents
     async deleteMany(
         filter: T_Filter<D>,
     ): Promise<{ success: boolean; message: string; result?: T_DeleteResult }> {

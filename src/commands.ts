@@ -33,14 +33,12 @@ const config = {
     },
 };
 
-// ✅ Unified Execute Command with Logging
 async function runCommand(description: string, command: string) {
     commandLog.info(`${description}...`);
     await executeCommand(command);
     commandLog.success(`${description} completed.`);
 }
 
-// ✅ TypeScript Check
 async function checkTypescript() {
     if (fileExists(config.TS_CONFIG_PATH)) {
         await runCommand('Running TypeScript check', `npx tsc -p ${config.TS_CONFIG_PATH} --noEmit`);
@@ -50,7 +48,6 @@ async function checkTypescript() {
     }
 }
 
-// ✅ ESLint Check
 async function checkEslint(fix = false) {
     await runCommand(
         `Running ESLint ${fix ? '(with fix)' : '(without fix)'}`,
@@ -58,7 +55,6 @@ async function checkEslint(fix = false) {
     );
 }
 
-// ✅ Lint Staged Files
 async function lintStaged() {
     if (isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
         commandLog.info(`@cyberskill/shared detected. Building before lint-staged...`);
@@ -77,12 +73,10 @@ async function lintStaged() {
     await runCommand('Running lint-staged', `npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
 }
 
-// ✅ Lint Inspect
 async function inspectLint() {
     await runCommand('Inspecting ESLint rules', 'npx @eslint/config-inspector');
 }
 
-// ✅ Full Lint Check
 async function lintCheck() {
     await clearAllErrorLists();
     await Promise.all([checkTypescript(), checkEslint()]);
@@ -106,12 +100,10 @@ async function lintCheck() {
     commandLog.success('Lint check completed.');
 }
 
-// ✅ Commit Lint
 async function commitLint() {
     await runCommand('Running commit lint', `npx commitlint --edit ${config.GIT_COMMIT_MSG} --config ${config.COMMITLINT_CONFIG_PATH}`);
 }
 
-// ✅ Setup Project
 async function setup() {
     commandLog.info('Starting project setup...');
 
@@ -125,8 +117,8 @@ async function setup() {
 
         const isUpToDate
             = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)
-                || (packageJson.dependencies?.[config.PACKAGE_NAME]
-                    && !(await isPackageOutdated(config.PACKAGE_NAME)));
+            || (packageJson.dependencies?.[config.PACKAGE_NAME]
+                && !(await isPackageOutdated(config.PACKAGE_NAME)));
 
         if (isUpToDate) {
             commandLog.success('Cyberskill package is already up to date.');
@@ -146,7 +138,6 @@ async function setup() {
     }
 }
 
-// ✅ Setup Git Hooks
 async function setupGitHook() {
     commandLog.info('Setting up Git hooks...');
 
@@ -183,7 +174,6 @@ async function setupGitHook() {
     commandLog.success(`Git hooks configured successfully.`);
 }
 
-// ✅ Install Dependencies with Retry Strategy
 async function installDependencies() {
     const strategies = [
         { command: 'npm install', message: 'Standard installation' },
@@ -207,7 +197,6 @@ async function installDependencies() {
     throw new Error('Failed to install dependencies after multiple attempts.');
 }
 
-// ✅ Reset Project
 async function reset() {
     await runCommand(
         'Resetting project',
@@ -217,17 +206,18 @@ async function reset() {
     await setupGitHook();
 }
 
-// ✅ Run Unit Tests
+async function inspect() {
+    await runCommand('Inspecting project dependencies', 'npx node-modules-inspector');
+}
+
 async function testUnit() {
     await runCommand('Running unit tests', `npx vitest --config ${config.UNIT_TEST_CONFIG_PATH}`);
 }
 
-// ✅ Run E2E Tests
 async function testE2E() {
     await runCommand('Running E2E tests', `npx vitest --config ${config.E2E_TEST_CONFIG_PATH}`);
 }
 
-// ✅ Register Commands
 yargs(hideBin(process.argv))
     .command('lint', 'Run linting checks', lintCheck)
     .command('lint:fix', 'Fix linting issues', () => checkEslint(true))
@@ -236,6 +226,7 @@ yargs(hideBin(process.argv))
     .command('commitlint', 'Run commitlint', commitLint)
     .command('setup', 'Run project setup', setup)
     .command('reset', 'Reset project dependencies', reset)
+    .command('inspect', 'Inspect project dependencies', inspect)
     .command('test:unit', 'Run unit tests', testUnit)
     .command('test:e2e', 'Run e2e tests', testE2E)
     .help()

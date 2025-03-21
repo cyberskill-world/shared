@@ -37,19 +37,13 @@ import {
     Model,
 } from 'mongoose';
 
-// Class Definitions
-
 export class C_Model extends Model { }
 export class C_Db extends Db { }
 export class C_Document extends Document { }
 
-// Define Collection with Partial Documents
-
 export class C_Collection<
     D extends Partial<C_Document>,
 > extends Collection<D> { }
-
-// Interfaces
 
 export interface I_GenericDocument extends Partial<C_Document> {
     id?: string;
@@ -118,7 +112,6 @@ export interface I_ExtendedModel<D extends Partial<C_Document>>
     extends Model<D>, PaginateModel<D>,
     AggregatePaginateModel<D> { }
 
-// eslint-disable-next-line ts/no-empty-object-type
 export interface I_ReturnSuccess<D, E = {}> {
     success: true;
     result: D & E;
@@ -132,10 +125,7 @@ export interface I_ReturnFailure {
     code: number | string;
 }
 
-// eslint-disable-next-line ts/no-empty-object-type
 export type I_Return<D = void, E = {}> = I_ReturnSuccess<D, E> | I_ReturnFailure;
-
-// MongoDB and Mongoose Type Aliases
 
 export type T_Filter<D> = Filter<D>;
 export type T_InsertOneResult<D> = InsertOneResult<D>;
@@ -169,8 +159,6 @@ export interface T_PaginateOptionsWithPopulate
 export type T_GenerateSlugQueryResponse<D> = T_FilterQuery<D> & {
     $or: Array<{ slug: string } | { slugHistory: string }>;
 } & { id?: { $ne: string } };
-
-// Input Interfaces
 
 export interface I_Input_FindOne<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;

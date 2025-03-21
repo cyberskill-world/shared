@@ -1,18 +1,23 @@
-import type {
-    I_Config,
-} from '../typescript/config.js';
+import type { I_Config } from '../typescript/config.js';
 
-// Utility to deeply merge configurations
 export function deepMerge(...configs: (I_Config | I_Config[])[]): I_Config {
-    const merge = (target: I_Config, source: I_Config): I_Config => {
+    const merge = (target: Partial<I_Config>, source: I_Config): I_Config => {
+        const result = { ...target };
+
         Object.keys(source).forEach((key) => {
+            if (!Object.hasOwnProperty.call(source, key)) {
+                return;
+            }
+
             const sourceValue = source[key];
-            const targetValue = target[key];
+            const targetValue = result[key];
 
             if (Array.isArray(sourceValue)) {
-                // Merge arrays and remove duplicates
-                target[key] = [
-                    ...new Set([...(Array.isArray(targetValue) ? targetValue : []), ...sourceValue]),
+                result[key] = [
+                    ...new Set([
+                        ...(Array.isArray(targetValue) ? targetValue : []),
+                        ...sourceValue,
+                    ]),
                 ];
             }
             else if (
@@ -20,24 +25,22 @@ export function deepMerge(...configs: (I_Config | I_Config[])[]): I_Config {
                 && sourceValue !== null
                 && !Array.isArray(sourceValue)
             ) {
-                // Recursively merge objects
-                target[key] = merge(
-                    typeof targetValue === 'object' && !Array.isArray(targetValue)
+                result[key] = merge(
+                    typeof targetValue === 'object' && targetValue !== null && !Array.isArray(targetValue)
                         ? targetValue
                         : {},
                     sourceValue,
                 );
             }
             else {
-                // Overwrite with primitive values
-                target[key] = sourceValue;
+                result[key] = sourceValue;
             }
         });
-        return target;
+
+        return result as I_Config;
     };
 
-    // Flatten configs and merge them
     return configs
         .flatMap(config => (Array.isArray(config) ? config : [config]))
-        .reduce((acc, config) => merge(acc, config), {});
+        .reduce((acc, config) => merge(acc, config), {} as I_Config);
 }

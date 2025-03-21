@@ -1,4 +1,5 @@
 export { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists, saveErrorListToStorage } from './command.cjs';
+export { isJson, regexSearchMapper, removeAccent } from './common.cjs';
 export { deepMerge } from './config.cjs';
 export { getMongoDateTime } from './datetime.cjs';
 export { fileExists } from './fs.cjs';
@@ -18,9 +19,3 @@ import '../typescript/mongoose.cjs';
 import 'mongodb';
 import 'mongoose';
 import '../typescript/serializer.cjs';
-
-declare function isJson(str: string): boolean;
-declare function regexSearchMapper(str: string): string;
-declare const removeAccent: (str: string) => string;
-
-export { isJson, regexSearchMapper, removeAccent };

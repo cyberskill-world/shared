@@ -24,22 +24,12 @@ import { getMongoDateTime } from './datetime.js';
 
 export { aggregatePaginate, mongoosePaginate };
 
-/**
- * Apply plugins to a schema.
- * @param schema - The schema to enhance.
- * @param plugins - List of plugins to apply.
- */
 function applyPlugins<D>(schema: T_MongooseShema<D>, plugins: Array<T_MongoosePlugin | false>) {
     plugins
         .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
         .forEach(plugin => schema.plugin(plugin));
 }
 
-/**
- * Apply middlewares to a schema.
- * @param schema - The schema to enhance.
- * @param middlewares - Middleware functions to add.
- */
 function applyMiddlewares<D>(
     schema: T_MongooseShema<D>,
     middlewares: I_MongooseModelMiddleware[],
@@ -49,11 +39,6 @@ function applyMiddlewares<D>(
     );
 }
 
-/**
- * Create a generic schema with common fields like `id` and `isDel`.
- * @param mongoose - The mongoose instance.
- * @returns Schema object.
- */
 function createGenericSchema(mongoose: typeof mongooseRaw) {
     return new mongoose.Schema<I_GenericDocument>(
         {
@@ -64,15 +49,6 @@ function createGenericSchema(mongoose: typeof mongooseRaw) {
     );
 }
 
-/**
- * Generate a mongoose schema with optional virtuals and generic fields.
- * @param options - Schema generation options.
- * @param options.mongoose - The mongoose instance.
- * @param options.schema - The schema definition.
- * @param options.virtuals - List of virtual fields.
- * @param options.standalone - Whether to include generic fields.
- * @returns Enhanced schema.
- */
 export function generateSchema<D extends Partial<C_Document>>({
     mongoose,
     schema,
@@ -81,14 +57,12 @@ export function generateSchema<D extends Partial<C_Document>>({
 }: I_GenerateSchemaOptions<D>): T_MongooseShema<D> {
     const generatedSchema = new mongoose.Schema<D>(schema, { strict: true });
 
-    // Add virtuals if provided
     virtuals.forEach(({ name, options, get }) => {
         const virtualInstance = generatedSchema.virtual(name as string, options);
         if (get)
             virtualInstance.get(get);
     });
 
-    // Include generic schema if standalone is false
     if (!standalone) {
         generatedSchema.add(createGenericSchema(mongoose));
     }
@@ -96,18 +70,6 @@ export function generateSchema<D extends Partial<C_Document>>({
     return generatedSchema;
 }
 
-/**
- * Generate a mongoose model with optional pagination, aggregation, and middleware.
- * @param options - Model generation options.
- * @param options.mongoose - The mongoose instance.
- * @param options.name - The name of the model.
- * @param options.schema - The schema definition.
- * @param options.pagination - Whether to enable pagination plugin.
- * @param options.aggregate - Whether to enable aggregate pagination plugin.
- * @param options.virtuals - List of virtual fields.
- * @param options.middlewares - Middleware functions to add.
- * @returns Mongoose model.
- */
 export function generateModel<D extends Partial<C_Document>>({
     mongoose,
     name,
@@ -121,42 +83,33 @@ export function generateModel<D extends Partial<C_Document>>({
         throw new Error('Model name is required.');
     }
 
-    // Return existing model if already defined
     if (mongoose.models[name]) {
         return mongoose.models[name] as I_ExtendedModel<D>;
     }
 
-    // Create schema with optional enhancements
     const generatedSchema = generateSchema({ mongoose, schema, virtuals });
 
-    // Apply plugins if enabled
     applyPlugins<D>(generatedSchema, [
         pagination && mongoosePaginate,
         aggregate && aggregatePaginate,
     ]);
 
-    // Apply middlewares
     applyMiddlewares<D>(generatedSchema, middlewares);
 
-    // Create and return the model
     return mongoose.model<D>(name, generatedSchema) as I_ExtendedModel<D>;
 }
 
-// Initialize slugify with fallback handling
 const slugify = slugifyRaw.default || slugifyRaw;
 
-// Generate a slug from a string with optional settings
 export function generateSlug(str = '', options?: I_SlugifyOptions): string {
     const { lower = true, locale = 'vi', ...rest } = options || {};
     return slugify(str, { lower, locale, ...rest });
 }
 
-// Generate a short ID from a UUID using SHA256
 export function generateShortId(uuid: string, length = 4): string {
     return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
 }
 
-// Generate a query object for slug uniqueness validation
 export function generateSlugQuery<D>(
     slug: string,
     filters: T_FilterQuery<D> = {},

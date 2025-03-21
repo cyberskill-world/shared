@@ -1,6 +1,5 @@
-import * as vite from 'vite';
-import { AliasOptions } from 'vite';
+import { UserConfig } from 'vite';
 
-declare const _default: (alias: AliasOptions) => vite.UserConfig;
+declare const _default: (options: UserConfig) => UserConfig;
 
 export { _default as default };

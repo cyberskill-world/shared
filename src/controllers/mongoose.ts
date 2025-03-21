@@ -19,14 +19,14 @@ import type {
     T_QueryOptions,
     T_UpdateQuery,
     T_UpdateResult,
-} from '../typescript/index.js';
+} from '../typescript/mongoose.js';
 
-import { RESPONSE_STATUS } from '../constants/index.js';
+import { RESPONSE_STATUS } from '../constants/response-status.js';
 import {
     generateShortId,
     generateSlug,
     generateSlugQuery,
-} from '../utils/index.js';
+} from '../utils/mongoose.js';
 
 export class MongooseController<D extends Partial<C_Document>> {
     constructor(private model: I_ExtendedModel<D>) { }
@@ -330,9 +330,7 @@ export class MongooseController<D extends Partial<C_Document>> {
         filters: T_FilterQuery<D> = {},
     ): Promise<I_Return<string>> {
         try {
-            // eslint-disable-next-line ts/ban-ts-comment
-            // @ts-ignore
-            const slug = generateSlug(fields[fieldName]);
+            const slug = generateSlug(fields[fieldName as keyof D] as string);
 
             let existingDoc = await this.model.findOne(
                 generateSlugQuery<D>(slug, filters, fields.id),

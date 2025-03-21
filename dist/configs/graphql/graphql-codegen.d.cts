@@ -1,8 +1,5 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
-import { I_GraphqlCodegenConfig } from '../../typescript/react.cjs';
-import '@apollo/client';
-import '@apollo/experimental-nextjs-app-support';
-import 'react';
+import { I_GraphqlCodegenConfig } from '../../typescript/graphql-codegen.cjs';
 
 declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, }: I_GraphqlCodegenConfig): CodegenConfig;
 

@@ -8,12 +8,11 @@ import { storageClient } from '../../utils/storage-client.js';
 export function useStorage<T>(
     key: string,
     initialValue: T,
-    serializer: I_Serializer<T> = defaultSerializer, // ✅ Accept custom serializer
+    serializer: I_Serializer<T> = defaultSerializer as I_Serializer<T>,
 ) {
     const [storedValue, setStoredValue] = useState<T>(initialValue);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // ✅ Load initial value from storage
     useEffect(() => {
         let isMounted = true;
 
@@ -23,12 +22,10 @@ export function useStorage<T>(
 
                 if (isMounted) {
                     if (value !== null) {
-                        // ✅ Use custom serializer if provided
                         const parsedValue = serializer.deserialize(value);
                         setStoredValue(parsedValue);
                     }
                     else {
-                        // ✅ If no stored value, store initial value using serializer
                         const serialized = serializer.serialize(initialValue);
                         await storageClient.set(key, serialized);
                         setStoredValue(initialValue);
@@ -54,9 +51,8 @@ export function useStorage<T>(
             isMounted = false;
             setIsLoaded(false);
         };
-    }, [key, initialValue, serializer]); // ✅ Include serializer in dependency array
+    }, [key, initialValue, serializer]);
 
-    // ✅ Save value to storage when it changes
     useEffect(() => {
         if (!isLoaded) {
             return;
@@ -64,7 +60,6 @@ export function useStorage<T>(
 
         const saveValue = async () => {
             try {
-                // ✅ Use custom serializer when saving
                 const serialized = serializer.serialize(storedValue);
                 await storageClient.set(key, serialized);
             }
@@ -76,7 +71,6 @@ export function useStorage<T>(
         saveValue();
     }, [storedValue, key, serializer, isLoaded]);
 
-    // ✅ Set value with functional update support
     const setValue = useCallback(
         (value: T | ((val: T) => T)) => {
             setStoredValue(prev =>

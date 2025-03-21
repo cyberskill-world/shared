@@ -1,17 +1,21 @@
-import { ApolloClient, ApolloProvider as ApolloClientReactProvider, ApolloLink, HttpLink, InMemoryCache, split } from '@apollo/client';
+import type { ComponentType } from 'react';
+
+import {
+    ApolloClient,
+    ApolloLink,
+    ApolloProvider as ApolloProviderDefault,
+    HttpLink,
+    InMemoryCache,
+    split,
+} from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
-import {
-    ApolloClient as ApolloClientNextJS,
-    ApolloNextAppProvider as ApolloProviderNextJS,
-    InMemoryCache as InMemoryCacheNextJS,
-} from '@apollo/experimental-nextjs-app-support';
 import { createClient as createGraphqlWebSocketClient } from 'graphql-ws';
 
-import type { I_ApolloOptions, I_ApolloOptionsNextJS, T_Children } from '../../typescript/index.js';
+import type { I_ApolloOptions, I_ApolloProviderProps } from '../../typescript/apollo.js';
 
-function createLinks(options: I_ApolloOptions) {
+function createLinks(options?: I_ApolloOptions) {
     const errorLink = onError(({ graphQLErrors, networkError }) => {
         graphQLErrors?.forEach(({ message, locations, path }) =>
             console.error(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`),
@@ -22,11 +26,11 @@ function createLinks(options: I_ApolloOptions) {
     });
 
     const httpLink = new HttpLink({
-        uri: options.uri,
+        uri: options?.uri,
         credentials: 'include',
     });
 
-    const wsLink = options.wsUrl
+    const wsLink = options?.wsUrl
         ? new GraphQLWsLink(
             createGraphqlWebSocketClient({
                 url: options.wsUrl,
@@ -37,8 +41,15 @@ function createLinks(options: I_ApolloOptions) {
     const splitLink = wsLink
         ? split(
                 ({ query }) => {
-                    const { kind, operation } = getMainDefinition(query) as any;
-                    return kind === 'OperationDefinition' && operation === 'subscription';
+                    const mainDefinition = getMainDefinition(query);
+
+                    if (mainDefinition.kind === 'OperationDefinition') {
+                        const { operation } = mainDefinition;
+
+                        return operation === 'subscription';
+                    }
+
+                    return false;
                 },
                 wsLink,
                 httpLink,
@@ -64,32 +75,38 @@ function createLinks(options: I_ApolloOptions) {
     };
 }
 
-function createClient(options: I_ApolloOptions) {
-    const { uri, wsUrl, cache = new InMemoryCache(), ...rest } = options;
-    const { cleanTypeName, errorLink, splitLink } = createLinks({ uri, wsUrl, ...options });
+export function ApolloProvider({
+    isNextJS,
+    options,
+    children,
+    client: CustomClient,
+    provider: CustomProvider,
+    cache: CustomCache,
+}: I_ApolloProviderProps) {
+    const Client = CustomClient ?? ApolloClient;
 
-    return new ApolloClient({
-        cache,
-        link: ApolloLink.from([cleanTypeName, errorLink, splitLink].filter(Boolean)),
-        ...rest,
-    });
-}
-
-function createClientNextJS(options: I_ApolloOptionsNextJS) {
-    const { uri, wsUrl, cache = new InMemoryCacheNextJS(), ...rest } = options;
-    const { cleanTypeName, errorLink, splitLink } = createLinks({ uri, wsUrl, ...options });
-
-    return new ApolloClientNextJS({
-        cache,
-        link: ApolloLink.from([cleanTypeName, errorLink, splitLink].filter(Boolean)),
-        ...rest,
-    });
-}
-
-export function ApolloProvider({ isNextJS = false, options, children }: { isNextJS: boolean; options: I_ApolloOptionsNextJS; children: T_Children }) {
-    if (isNextJS) {
-        return <ApolloProviderNextJS makeClient={() => createClientNextJS(options)}>{children}</ApolloProviderNextJS>;
+    if (typeof Client !== 'function') {
+        throw new TypeError('Invalid ApolloClient provided. Ensure CustomClient is a class.');
     }
 
-    return <ApolloClientReactProvider client={createClient(options)}>{children}</ApolloClientReactProvider>;
+    const Provider = (CustomProvider || ApolloProviderDefault) as ComponentType<I_ApolloProviderProps>;
+    const Cache = CustomCache || InMemoryCache;
+
+    const { cleanTypeName, errorLink, splitLink } = createLinks(options);
+
+    const client = new Client({
+        cache: Cache instanceof InMemoryCache ? Cache : new InMemoryCache(),
+        link: ApolloLink.from([cleanTypeName, errorLink, splitLink].filter(Boolean)),
+        ...options,
+    });
+
+    if (isNextJS) {
+        return (
+            <Provider makeClient={() => client}>
+                {children}
+            </Provider>
+        );
+    }
+
+    return <Provider client={client}>{children}</Provider>;
 }
