@@ -112,7 +112,7 @@ export interface I_ExtendedModel<D extends Partial<C_Document>>
     extends Model<D>, PaginateModel<D>,
     AggregatePaginateModel<D> { }
 
-export interface I_ReturnSuccess<D, E = {}> {
+export interface I_ReturnSuccess<D, E = unknown> {
     success: true;
     result: D & E;
     message?: string;
@@ -125,7 +125,7 @@ export interface I_ReturnFailure {
     code: number | string;
 }
 
-export type I_Return<D = void, E = {}> = I_ReturnSuccess<D, E> | I_ReturnFailure;
+export type I_Return<D = void, E = unknown> = I_ReturnSuccess<D, E> | I_ReturnFailure;
 
 export type T_Filter<D> = Filter<D>;
 export type T_InsertOneResult<D> = InsertOneResult<D>;

@@ -117,8 +117,8 @@ async function setup() {
 
         const isUpToDate
             = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)
-            || (packageJson.dependencies?.[config.PACKAGE_NAME]
-                && !(await isPackageOutdated(config.PACKAGE_NAME)));
+                || (packageJson.dependencies?.[config.PACKAGE_NAME]
+                    && !(await isPackageOutdated(config.PACKAGE_NAME)));
 
         if (isUpToDate) {
             commandLog.success('Cyberskill package is already up to date.');

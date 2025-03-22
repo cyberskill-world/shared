@@ -59,7 +59,7 @@ interface I_GenerateModelOptions<D extends Partial<C_Document>> extends I_Mongoo
 }
 interface I_ExtendedModel<D extends Partial<C_Document>> extends Model<D>, PaginateModel<D>, AggregatePaginateModel<D> {
 }
-interface I_ReturnSuccess<D, E = {}> {
+interface I_ReturnSuccess<D, E = unknown> {
     success: true;
     result: D & E;
     message?: string;
@@ -70,7 +70,7 @@ interface I_ReturnFailure {
     message: string;
     code: number | string;
 }
-type I_Return<D = void, E = {}> = I_ReturnSuccess<D, E> | I_ReturnFailure;
+type I_Return<D = void, E = unknown> = I_ReturnSuccess<D, E> | I_ReturnFailure;
 type T_Filter<D> = Filter<D>;
 type T_InsertOneResult<D> = InsertOneResult<D>;
 type T_InsertManyResult<D> = InsertManyResult<D>;
