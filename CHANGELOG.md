@@ -1,3 +1,7 @@
+## 1.34.0 (2025-03-23)
+
+* feat: add options to getMongoGenericFields ([54af3ac](https://github.com/cyberskill-world/shared/commit/54af3ac))
+
 ## 1.33.0 (2025-03-23)
 
 * feat: move throwError to utils-nodejs ([5f55b3b](https://github.com/cyberskill-world/shared/commit/5f55b3b))
