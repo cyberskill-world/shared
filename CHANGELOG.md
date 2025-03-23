@@ -1,3 +1,7 @@
+## 1.33.0 (2025-03-23)
+
+* feat: move throwError to utils-nodejs ([5f55b3b](https://github.com/cyberskill-world/shared/commit/5f55b3b))
+
 ## 1.32.0 (2025-03-23)
 
 * feat: restructure ([1a84a7b](https://github.com/cyberskill-world/shared/commit/1a84a7b))
