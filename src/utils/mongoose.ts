@@ -125,14 +125,16 @@ export function generateSlugQuery<D>(
     };
 }
 
-export function getMongoGenericFields({
+export function getMongoGenericFields<T extends 'date' | 'string'>({
     isNew = true,
-    returnType = 'string',
-}: {
-    isNew?: boolean;
-    returnType?: 'date' | 'string';
-} = {}) {
-    const now = returnType === 'string' ? getMongoDateTime() : new Date();
+    returnDateAs = 'string' as T,
+}: { isNew?: boolean; returnDateAs?: T } = {}): {
+        id?: string;
+        isDel: boolean;
+        createdAt: T extends 'string' ? string : Date;
+        updatedAt: T extends 'string' ? string : Date;
+    } {
+    const now = (returnDateAs === 'string' ? getMongoDateTime() : new Date()) as T extends 'string' ? string : Date;
 
     return {
         ...(isNew && { id: uuidv4() }),
