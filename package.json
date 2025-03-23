@@ -19,11 +19,6 @@
             "import": "./dist/index.js",
             "require": "./dist/index.cjs"
         },
-        "./components/react": {
-            "types": "./dist/components/react/index.d.ts",
-            "import": "./dist/components/react/index.js",
-            "require": "./dist/components/react/index.cjs"
-        },
         "./configs": {
             "types": "./dist/configs/index.d.ts",
             "import": "./dist/configs/index.js",
@@ -89,30 +84,35 @@
             "import": "./dist/constants/index.js",
             "require": "./dist/constants/index.cjs"
         },
-        "./contexts/react": {
-            "types": "./dist/contexts/react/index.d.ts",
-            "import": "./dist/contexts/react/index.js",
-            "require": "./dist/contexts/react/index.cjs"
+        "./nodejs/mongo": {
+            "types": "./dist/nodejs/mongo.d.ts",
+            "import": "./dist/nodejs/mongo.js",
+            "require": "./dist/nodejs/mongo.cjs"
         },
-        "./controllers": {
-            "types": "./dist/controllers/index.d.ts",
-            "import": "./dist/controllers/index.js",
-            "require": "./dist/controllers/index.cjs"
+        "./nodejs/mongoose": {
+            "types": "./dist/nodejs/mongoose.d.ts",
+            "import": "./dist/nodejs/mongoose.js",
+            "require": "./dist/nodejs/mongoose.cjs"
         },
-        "./hocs/react": {
-            "types": "./dist/hocs/react/index.d.ts",
-            "import": "./dist/hocs/react/index.js",
-            "require": "./dist/hocs/react/index.cjs"
+        "./react/apollo-client": {
+            "types": "./dist/react/apollo-client.d.ts",
+            "import": "./dist/react/apollo-client.js",
+            "require": "./dist/react/apollo-client.cjs"
         },
-        "./hooks/react": {
-            "types": "./dist/hooks/react/index.d.ts",
-            "import": "./dist/hooks/react/index.js",
-            "require": "./dist/hooks/react/index.cjs"
+        "./react/loading": {
+            "types": "./dist/react/loading.d.ts",
+            "import": "./dist/react/loading.js",
+            "require": "./dist/react/loading.cjs"
         },
-        "./providers/react": {
-            "types": "./dist/providers/react/index.d.ts",
-            "import": "./dist/providers/react/index.js",
-            "require": "./dist/providers/react/index.cjs"
+        "./react/next-intl": {
+            "types": "./dist/react/next-intl.d.ts",
+            "import": "./dist/react/next-intl.js",
+            "require": "./dist/react/next-intl.cjs"
+        },
+        "./react/storage": {
+            "types": "./dist/react/storage.d.ts",
+            "import": "./dist/react/storage.js",
+            "require": "./dist/react/storage.cjs"
         },
         "./styles/reset.css": {
             "import": "./dist/styles/reset.css",
@@ -127,6 +127,11 @@
             "types": "./dist/utils/index.d.ts",
             "import": "./dist/utils/index.js",
             "require": "./dist/utils/index.cjs"
+        },
+        "./utils-nodejs": {
+            "types": "./dist/utils/index-nodejs.d.ts",
+            "import": "./dist/utils/index-nodejs.js",
+            "require": "./dist/utils/index-nodejs.cjs"
         },
         "./commands": {
             "types": "./dist/commands/index.d.ts",
@@ -160,7 +165,7 @@
         "inspect": "npx tsx src/commands.ts inspect"
     },
     "dependencies": {
-        "@antfu/eslint-config": "4.10.2",
+        "@antfu/eslint-config": "4.11.0",
         "@apollo/client": "3.13.5",
         "@commitlint/cli": "19.8.0",
         "@commitlint/config-conventional": "19.8.0",
@@ -170,7 +175,7 @@
         "@graphql-codegen/client-preset": "4.7.0",
         "@graphql-codegen/typescript-react-apollo": "4.3.2",
         "@next/eslint-plugin-next": "15.2.3",
-        "@swc/core": "1.11.11",
+        "@swc/core": "1.11.12",
         "@testing-library/jest-dom": "6.6.3",
         "@testing-library/react": "16.2.0",
         "@types/crypto-js": "4.2.2",
@@ -204,7 +209,7 @@
         "mongoose-paginate-v2": "1.9.0",
         "next-intl": "4.0.2",
         "node-fetch": "3.3.2",
-        "node-modules-inspector": "0.5.7",
+        "node-modules-inspector": "0.6.0",
         "node-persist": "4.0.4",
         "ora": "8.2.0",
         "playwright": "1.51.1",
