@@ -1,3 +1,7 @@
+## 1.35.0 (2025-03-23)
+
+* feat: add typscript for getMongoGenericFields ([dec181b](https://github.com/cyberskill-world/shared/commit/dec181b))
+
 ## 1.34.0 (2025-03-23)
 
 * feat: add options to getMongoGenericFields ([54af3ac](https://github.com/cyberskill-world/shared/commit/54af3ac))
