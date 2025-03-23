@@ -125,9 +125,9 @@ export function generateSlugQuery<D>(
     };
 }
 
-export function getMongoGenericFields() {
+export function getMongoGenericFields({ isNew = true }: { isNew?: boolean }) {
     return {
-        id: uuidv4(),
+        ...(isNew && { id: uuidv4() }),
         isDel: false,
         createdAt: getMongoDateTime(),
         updatedAt: getMongoDateTime(),
