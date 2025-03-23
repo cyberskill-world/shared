@@ -125,11 +125,19 @@ export function generateSlugQuery<D>(
     };
 }
 
-export function getMongoGenericFields({ isNew = true }: { isNew?: boolean }) {
+export function getMongoGenericFields({
+    isNew = true,
+    returnType = 'string',
+}: {
+    isNew?: boolean;
+    returnType?: 'date' | 'string';
+} = {}) {
+    const now = returnType === 'string' ? getMongoDateTime() : new Date();
+
     return {
         ...(isNew && { id: uuidv4() }),
         isDel: false,
-        createdAt: getMongoDateTime(),
-        updatedAt: getMongoDateTime(),
+        createdAt: now,
+        updatedAt: now,
     };
 }
