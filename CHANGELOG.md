@@ -1,3 +1,7 @@
+## 1.32.0 (2025-03-23)
+
+* feat: restructure ([1a84a7b](https://github.com/cyberskill-world/shared/commit/1a84a7b))
+
 ## 1.31.0 (2025-03-22)
 
 * feat: give readme a new style ([3c01a10](https://github.com/cyberskill-world/shared/commit/3c01a10))
