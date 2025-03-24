@@ -9,9 +9,9 @@ import type {
     T_OptionalUnlessRequiredId,
     T_UpdateResult,
     T_WithId,
-} from '../typescript/mongoose.js';
+} from '#typescript/mongoose.js';
 
-import { getMongoGenericFields } from '../utils/mongoose.js';
+import { getMongoGenericFields } from '#utils/mongoose.js';
 
 export class MongoController<D extends Partial<C_Document>> {
     private collection: C_Collection<D>;

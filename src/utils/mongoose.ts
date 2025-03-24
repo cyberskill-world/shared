@@ -18,7 +18,7 @@ import type {
     T_GenerateSlugQueryResponse,
     T_MongoosePlugin,
     T_MongooseShema,
-} from '../typescript/mongoose.js';
+} from '#typescript/mongoose.js';
 
 import { getMongoDateTime } from './datetime.js';
 

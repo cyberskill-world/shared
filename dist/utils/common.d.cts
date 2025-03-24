@@ -1,5 +1,3 @@
-declare function isJson(str: string): boolean;
-declare function regexSearchMapper(str: string): string;
-declare function removeAccent(str: string): string;
-
-export { isJson, regexSearchMapper, removeAccent };
+export { isJson_alias_1 as isJson } from '../_tsup-dts-rollup.cjs';
+export { regexSearchMapper_alias_1 as regexSearchMapper } from '../_tsup-dts-rollup.cjs';
+export { removeAccent_alias_1 as removeAccent } from '../_tsup-dts-rollup.cjs';

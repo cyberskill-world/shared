@@ -1,5 +1,1 @@
-import { UserConfig } from 'vite';
-
-declare const _default: (options: UserConfig) => UserConfig;
-
-export { _default as default };
+export { default_alias_9 as default } from '../../../_tsup-dts-rollup.js';

@@ -1,4 +1,4 @@
-import type { I_Serializer } from '../typescript/serializer.js';
+import type { I_Serializer } from '#typescript/serializer.js';
 
 export const serializer: I_Serializer<unknown> = {
     serialize: (value: unknown) => JSON.stringify(value, (_, v) => {

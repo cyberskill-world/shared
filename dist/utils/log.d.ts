@@ -1,5 +1,1 @@
-import { T_ThrowResponseArgs } from '../typescript/log.js';
-
-declare function throwResponse({ message, status, type, }: T_ThrowResponseArgs): never;
-
-export { throwResponse };
+export { throwResponse_alias_2 as throwResponse } from '../_tsup-dts-rollup.js';

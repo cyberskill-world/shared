@@ -2,7 +2,8 @@ import fetch from 'node-fetch';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { WORKING_DIRECTORY } from '../constants/path.js';
+import { WORKING_DIRECTORY } from '#constants/path.js';
+
 import { commandLog, executeCommand } from './command.js';
 import { storageServer } from './storage-server.js';
 

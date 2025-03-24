@@ -1,8 +1,1 @@
-interface I_LoadingProps {
-    full?: boolean;
-    block?: boolean;
-    className?: string;
-    message?: string;
-}
-
-export type { I_LoadingProps };
+export { I_LoadingProps_alias_2 as I_LoadingProps } from '../_tsup-dts-rollup.cjs';

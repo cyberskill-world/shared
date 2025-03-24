@@ -7,9 +7,10 @@ import { exec } from 'node:child_process';
 import process from 'node:process';
 import * as util from 'node:util';
 
-import type { I_BoxedLogOptions, I_ErrorEntry, I_EslintError } from '../typescript/command.js';
+import type { I_BoxedLogOptions, I_ErrorEntry, I_EslintError } from '#typescript/command.js';
 
-import { E_ErrorType } from '../typescript/command.js';
+import { E_ErrorType } from '#typescript/command.js';
+
 import { storageServer } from './storage-server.js';
 
 const DEBUG = process.env.DEBUG === 'true';

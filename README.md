@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./src/public/favicon/favicon-96x96.png" width="96" height="96" alt="CyberSkill Logo">
+  <img src="https://res.cloudinary.com/cyberskill/image/upload/v1742786793/cyberskill/favicon/favicon-96x96.png" width="96" height="96" alt="CyberSkill Logo">
 </p>
 
 <h1 align="center">🚀 CyberSkill Shared</h1>
@@ -12,16 +12,16 @@
 
 <p align="center">
   <a href="https://npmjs.com/package/@cyberskill/shared">
-    <img src="https://img.shields.io/npm/v/@cyberskill/shared?style=for-the-badge&color=blue" alt="npm version">
+    <img src="https://img.shields.io/npm/v/@cyberskill/shared" alt="npm version">
   </a>
   <a href="https://npmjs.com/package/@cyberskill/shared">
-    <img src="https://img.shields.io/npm/dm/@cyberskill/shared?style=for-the-badge&color=brightgreen" alt="npm downloads">
+    <img src="https://img.shields.io/npm/dm/@cyberskill/shared" alt="npm downloads">
   </a>
   <a href="https://www.jsdocs.io/package/@cyberskill/shared">
-    <img src="https://img.shields.io/badge/jsDocs.io-reference-blue?style=for-the-badge" alt="JSDocs">
+    <img src="https://img.shields.io/badge/jsDocs.io-reference-blue" alt="JSDocs">
   </a>
   <a href="https://github.com/cyberskill-world/shared/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge" alt="License">
+    <img src="https://img.shields.io/badge/license-MIT-blue" alt="License">
   </a>
 </p>
 
@@ -72,19 +72,15 @@ yarn add @cyberskill/shared
 
 ```plaintext
 src/
-├── components/     → Reusable UI components (buttons, modals, etc.)
 ├── configs/        → App configuration files
 ├── constants/      → Static values used across the app
-├── contexts/       → React context providers
-├── controllers/    → Business logic controllers
-├── hocs/           → Higher Order Components (HOCs)
-├── hooks/          → Custom hooks
-├── providers/      → State management and third-party providers
+├── nodejs/         → NodeJS modules
 ├── public/         → Static assets (images, fonts, etc.)
+├── react/          → ReactJS modules
 ├── styles/         → Global and component-specific styles
 ├── typescript/     → TypeScript types and interfaces
 ├── utils/          → Utility functions and helpers
-├── commands.ts     → CLI commands and setup logic
+├── cli.ts          → CLI commands and setup logic
 └── index.ts        → Entry point for the app
 ```
 

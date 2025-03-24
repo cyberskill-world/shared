@@ -1,5 +1,1 @@
-declare const _default: {
-    '*': string[];
-};
-
-export { _default as default };
+export { default_alias_7 as default } from '../../_tsup-dts-rollup.js';

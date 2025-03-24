@@ -1,2 +1,1 @@
-export { initI18Next } from './i18next.cjs';
-import 'i18next';
+export { initI18Next_alias_1 as initI18Next } from '../../../_tsup-dts-rollup.cjs';

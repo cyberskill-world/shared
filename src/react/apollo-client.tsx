@@ -13,7 +13,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient as createGraphqlWebSocketClient } from 'graphql-ws';
 
-import type { I_ApolloOptions, I_ApolloProviderProps } from '../typescript/apollo.js';
+import type { I_ApolloOptions, I_ApolloProviderProps } from '#typescript/apollo.js';
 
 function createLinks(options?: I_ApolloOptions) {
     const errorLink = onError(({ graphQLErrors, networkError }) => {

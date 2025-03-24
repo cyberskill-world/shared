@@ -1,6 +1,4 @@
-declare function getLatestPackageVersion(packageName: string, forceRefresh?: boolean): Promise<string>;
-declare function isPackageOutdated(packageName: string, forceRefresh?: boolean): Promise<boolean>;
-declare function updatePackage(packageName: string): Promise<void>;
-declare function isCurrentProject(WORKING_DIRECTORY: string, PACKAGE_NAME: string): boolean;
-
-export { getLatestPackageVersion, isCurrentProject, isPackageOutdated, updatePackage };
+export { getLatestPackageVersion_alias_2 as getLatestPackageVersion } from '../_tsup-dts-rollup.cjs';
+export { isPackageOutdated_alias_2 as isPackageOutdated } from '../_tsup-dts-rollup.cjs';
+export { updatePackage_alias_2 as updatePackage } from '../_tsup-dts-rollup.cjs';
+export { isCurrentProject_alias_2 as isCurrentProject } from '../_tsup-dts-rollup.cjs';

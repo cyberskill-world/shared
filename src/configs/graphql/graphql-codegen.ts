@@ -1,6 +1,6 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
-import type { I_GraphqlCodegenConfig } from '../../typescript/graphql-codegen.js';
+import type { I_GraphqlCodegenConfig } from '#typescript/graphql-codegen.js';
 
 export function createGraphqlCodegenConfig({
     uri,

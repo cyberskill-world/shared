@@ -7,9 +7,36 @@
             "DOM",
             "DOM.Iterable"
         ],
+        "baseUrl": ".",
         "rootDir": "src",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
+        "paths": {
+            "#config/*": [
+                "./src/config/*"
+            ],
+            "#constants/*": [
+                "./src/constants/*"
+            ],
+            "#nodejs/*": [
+                "./src/nodejs/*"
+            ],
+            "#public/*": [
+                "./src/public/*"
+            ],
+            "#react/*": [
+                "./src/react/*"
+            ],
+            "#styles/*": [
+                "./src/styles/*"
+            ],
+            "#typescript/*": [
+                "./src/typescript/*"
+            ],
+            "#utils/*": [
+                "./src/utils/*"
+            ]
+        },
         "allowJs": true,
         "checkJs": false,
         "strict": true,

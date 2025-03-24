@@ -15,7 +15,7 @@ export default defineConfig(({ watch, ...rest }) => {
         minify: !watch,
         splitting: false,
         clean: true,
-        dts: true,
+        experimentalDts: true,
         shims: true,
         injectStyle: false,
         ...rest,

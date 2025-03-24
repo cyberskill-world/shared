@@ -1,4 +1,4 @@
-import type { I_Config } from '../typescript/config.js';
+import type { I_Config } from '#typescript/config.js';
 
 export function deepMerge(...configs: (I_Config | I_Config[])[]): I_Config {
     const merge = (target: Partial<I_Config>, source: I_Config): I_Config => {

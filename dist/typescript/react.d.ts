@@ -1,11 +1,2 @@
-import { ReactNode, ReactElement, JSX } from 'react';
-
-type T_Children = ReactNode | ReactNode[] | ReactElement | JSX.Element | null;
-interface I_LoadingContext {
-    isLoading: boolean;
-    isGlobalLoading: boolean;
-    showLoading: (global?: boolean) => void;
-    hideLoading: () => void;
-}
-
-export type { I_LoadingContext, T_Children };
+export { T_Children_alias_2 as T_Children } from '../_tsup-dts-rollup.js';
+export { I_LoadingContext_alias_2 as I_LoadingContext } from '../_tsup-dts-rollup.js';

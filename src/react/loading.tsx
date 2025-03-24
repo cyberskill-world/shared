@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import { createContext, use, useCallback, useMemo, useState } from 'react';
 
-import type { I_LoadingProps } from '../typescript/loading.js';
-import type { I_LoadingContext, T_Children } from '../typescript/react.js';
+import type { I_LoadingProps } from '#typescript/loading.js';
+import type { I_LoadingContext, T_Children } from '#typescript/react.js';
 
 import styles from './loading.module.scss';
 

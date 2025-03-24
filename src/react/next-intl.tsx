@@ -3,8 +3,8 @@ import type { ComponentType } from 'react';
 import { NextIntlClientProvider, useTranslations } from 'next-intl';
 import { createContext, use, useMemo } from 'react';
 
-import type { I_NextIntlContextType, I_NextIntlLanguage, T_NextIntlMessageList } from '../typescript/next-intl.js';
-import type { T_Children } from '../typescript/react.js';
+import type { I_NextIntlContextType, I_NextIntlLanguage, T_NextIntlMessageList } from '#typescript/next-intl.js';
+import type { T_Children } from '#typescript/react.js';
 
 import { useStorage } from './storage.js';
 

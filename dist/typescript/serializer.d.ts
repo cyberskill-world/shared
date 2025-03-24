@@ -1,6 +1,1 @@
-interface I_Serializer<T> {
-    serialize: (value: T) => string;
-    deserialize: (value: string) => T;
-}
-
-export type { I_Serializer };
+export { I_Serializer_alias_2 as I_Serializer } from '../_tsup-dts-rollup.js';

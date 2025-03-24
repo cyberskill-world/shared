@@ -1,3 +1,1 @@
-declare const fileExists: (filePath: string) => boolean;
-
-export { fileExists };
+export { fileExists_alias_1 as fileExists } from '../_tsup-dts-rollup.js';

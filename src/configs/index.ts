@@ -1,8 +1,8 @@
 import antfu from '@antfu/eslint-config';
 
-import type { I_Config } from '../typescript/config.js';
+import type { I_Config } from '#typescript/config.js';
 
-import { deepMerge } from '../utils/config.js';
+import { deepMerge } from '#utils/config.js';
 
 export default {
     merge: (type: string = 'eslint', ...configs: I_Config[]) => {

@@ -1,3 +1,1 @@
-declare function getMongoDateTime(): string;
-
-export { getMongoDateTime };
+export { getMongoDateTime_alias_1 as getMongoDateTime } from '../_tsup-dts-rollup.js';

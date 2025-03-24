@@ -132,23 +132,13 @@
             "types": "./dist/utils/index-nodejs.d.ts",
             "import": "./dist/utils/index-nodejs.js",
             "require": "./dist/utils/index-nodejs.cjs"
-        },
-        "./commands": {
-            "types": "./dist/commands/index.d.ts",
-            "import": "./dist/commands/index.js",
-            "require": "./dist/commands/index.cjs"
-        },
-        "./vendors/graphql/codegen": {
-            "types": "./dist/vendors/graphql/codegen.d.ts",
-            "import": "./dist/vendors/graphql/codegen.js",
-            "require": "./dist/vendors/graphql/codegen.cjs"
         }
     },
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "bin": {
-        "cyberskill": "./dist/commands.js"
+        "cyberskill": "./dist/cli.js"
     },
     "files": [
         "dist",
@@ -157,12 +147,12 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
-        "lint": "npx tsx src/commands.ts lint",
-        "lint:fix": "npx tsx src/commands.ts lint:fix",
+        "lint": "npx tsx src/cli.ts lint",
+        "lint:fix": "npx tsx src/cli.ts lint:fix",
         "lint:inspect": "npx @eslint/config-inspector",
-        "reset": "npx tsx src/commands.ts reset",
-        "setup": "npx tsx src/commands.ts setup",
-        "inspect": "npx tsx src/commands.ts inspect"
+        "reset": "npx tsx src/cli.ts reset",
+        "setup": "npx tsx src/cli.ts setup",
+        "inspect": "npx tsx src/cli.ts inspect"
     },
     "dependencies": {
         "@antfu/eslint-config": "4.11.0",
@@ -174,8 +164,9 @@
         "@graphql-codegen/cli": "5.0.5",
         "@graphql-codegen/client-preset": "4.7.0",
         "@graphql-codegen/typescript-react-apollo": "4.3.2",
+        "@microsoft/api-extractor": "7.52.1",
         "@next/eslint-plugin-next": "15.2.3",
-        "@swc/core": "1.11.12",
+        "@swc/core": "1.11.13",
         "@testing-library/jest-dom": "6.6.3",
         "@testing-library/react": "16.2.0",
         "@types/crypto-js": "4.2.2",
@@ -204,6 +195,7 @@
         "jsdom": "26.0.0",
         "lint-staged": "15.5.0",
         "localforage": "1.10.0",
+        "modern-normalize": "3.0.1",
         "mongoose": "8.12.2",
         "mongoose-aggregate-paginate-v2": "1.1.4",
         "mongoose-paginate-v2": "1.9.0",

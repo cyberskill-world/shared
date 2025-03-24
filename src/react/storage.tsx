@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { I_Serializer } from '../typescript/serializer.js';
+import type { I_Serializer } from '#typescript/serializer.js';
 
-import { serializer as defaultSerializer } from '../utils/serializer.js';
-import { storageClient } from '../utils/storage-client.js';
+import { serializer as defaultSerializer } from '#utils/serializer.js';
+import { storageClient } from '#utils/storage-client.js';
 
 export function useStorage<T>(
     key: string,

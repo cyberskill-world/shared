@@ -1,3 +1,1 @@
-export { createGraphqlCodegenConfig } from './graphql-codegen.cjs';
-import '@graphql-codegen/cli';
-import '../../typescript/graphql-codegen.cjs';
+export { createGraphqlCodegenConfig_alias_1 as createGraphqlCodegenConfig } from '../../_tsup-dts-rollup.cjs';

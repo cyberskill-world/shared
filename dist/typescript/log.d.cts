@@ -1,10 +1,1 @@
-interface T_ThrowResponseArgs {
-    message?: string;
-    status?: {
-        CODE: string | number;
-        MESSAGE: string;
-    };
-    type?: 'graphql' | 'rest';
-}
-
-export type { T_ThrowResponseArgs };
+export { T_ThrowResponseArgs_alias_2 as T_ThrowResponseArgs } from '../_tsup-dts-rollup.cjs';
