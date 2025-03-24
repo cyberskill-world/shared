@@ -25,8 +25,6 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
     const isCacheValid = cached && Date.now() - cached.timestamp < CACHE_EXPIRATION_MS;
 
     if (!forceRefresh && isCacheValid) {
-        commandLog.info(`Using cached version for ${packageName}: ${cached.version}`);
-
         return cached.version;
     }
 
@@ -40,13 +38,9 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
     }
 
     try {
-        commandLog.info(`Fetching latest version for ${packageName}...`);
-
         const response = await fetch(`https://registry.npmjs.org/${packageName}/latest`, { headers });
 
         if (response.status === 304 && cached) {
-            commandLog.info(`Cache is still valid for ${packageName}: ${cached.version}`);
-
             return cached.version;
         }
 
@@ -66,8 +60,6 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
             etag: response.headers.get('ETag') || undefined,
             lastModified: response.headers.get('Last-Modified') || undefined,
         });
-
-        commandLog.success(`Cached latest version for ${packageName}: ${latestVersion}`);
 
         return latestVersion;
     }

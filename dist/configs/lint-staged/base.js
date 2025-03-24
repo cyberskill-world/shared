@@ -1,1 +1,1 @@
-var a={"*":["eslint --fix"]};export{a as default};
+var e={"*":["npx --yes cyberskill lint:fix"]};export{e as default};

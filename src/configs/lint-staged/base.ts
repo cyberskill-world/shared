@@ -1,3 +1,3 @@
 export default {
-    '*': ['eslint --fix'],
+    '*': ['npx --yes cyberskill lint:fix'],
 };

@@ -55,31 +55,7 @@ async function checkEslint(fix = false) {
     );
 }
 
-async function lintStaged() {
-    if (isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
-        commandLog.info(`@cyberskill/shared detected. Building before lint-staged...`);
-
-        try {
-            await runCommand('Building @cyberskill/shared', 'npm run build');
-            await executeCommand('git add dist');
-            commandLog.success('Built and staged @cyberskill/shared');
-        }
-        catch (error) {
-            commandLog.error(`Failed to build and stage @cyberskill/shared: ${(error as Error).message}`);
-            throw error;
-        }
-    }
-
-    await runCommand('Running lint-staged', `npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
-}
-
-async function inspectLint() {
-    await runCommand('Inspecting ESLint rules', 'npx @eslint/config-inspector');
-}
-
-async function lintCheck() {
-    await clearAllErrorLists();
-    await Promise.all([checkTypescript(), checkEslint()]);
+async function showCheckResult() {
     const allResults = await getStoredErrorLists();
     const errors = allResults.filter(e => e.type === E_ErrorType.Error);
     const warnings = allResults.filter(e => e.type === E_ErrorType.Warning);
@@ -97,11 +73,45 @@ async function lintCheck() {
             color: 'red',
         });
     }
-    commandLog.success('Lint check completed.');
+}
+
+async function lintStaged() {
+    if (isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
+        try {
+            await runCommand('Building @cyberskill/shared', 'npm run build');
+            await executeCommand('git add dist');
+            commandLog.success('Built and staged @cyberskill/shared');
+        }
+        catch (error) {
+            commandLog.error(`Failed to build and stage @cyberskill/shared: ${(error as Error).message}`);
+            throw error;
+        }
+    }
+
+    await runCommand('Running lint-staged', `npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
+    showCheckResult();
+}
+
+async function inspectLint() {
+    await runCommand('Inspecting ESLint rules', 'npx @eslint/config-inspector');
+}
+
+async function lintCheck() {
+    await clearAllErrorLists();
+    await Promise.all([checkTypescript(), checkEslint()]);
+
+    showCheckResult();
+}
+
+async function lintFix() {
+    await clearAllErrorLists();
+    await Promise.all([checkTypescript(), checkEslint(true)]);
+    showCheckResult();
 }
 
 async function commitLint() {
     await runCommand('Running commit lint', `npx commitlint --edit ${config.GIT_COMMIT_MSG} --config ${config.COMMITLINT_CONFIG_PATH}`);
+    showCheckResult();
 }
 
 async function setup() {
@@ -220,7 +230,7 @@ async function testE2E() {
 
 yargs(hideBin(process.argv))
     .command('lint', 'Run linting checks', lintCheck)
-    .command('lint:fix', 'Fix linting issues', () => checkEslint(true))
+    .command('lint:fix', 'Fix linting issues', lintFix)
     .command('lint:inspect', 'Inspect linting rules', inspectLint)
     .command('lint-staged', 'Run lint-staged', lintStaged)
     .command('commitlint', 'Run commitlint', commitLint)
