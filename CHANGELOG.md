@@ -1,3 +1,7 @@
+## 1.37.0 (2025-03-24)
+
+* feat: merge mongoose utils into mongoose module ([e9bfd68](https://github.com/cyberskill-world/shared/commit/e9bfd68))
+
 ## 1.36.0 (2025-03-24)
 
 * feat: change to absolute imports ([5016935](https://github.com/cyberskill-world/shared/commit/5016935))
