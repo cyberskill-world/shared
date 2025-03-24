@@ -6325,7 +6325,7 @@ declare interface I_MongooseOptions<D extends Partial<C_Document>> {
     mongoose: typeof mongoose;
     virtuals?: {
         name: keyof D | string;
-        options?: I_VirtualOptions;
+        options?: I_VirtualOptions_2;
         get?: (this: D) => void;
     }[];
 }
@@ -6337,7 +6337,7 @@ declare interface I_MongooseOptions_2<D extends Partial<C_Document_2>> {
     mongoose: typeof mongoose;
     virtuals?: {
         name: keyof D | string;
-        options?: I_VirtualOptions_2;
+        options?: I_VirtualOptions;
         get?: (this: D) => void;
     }[];
 }

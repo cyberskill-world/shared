@@ -1,3 +1,6 @@
+import { format } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
+
 import type {
     C_Collection,
     C_Db,
@@ -11,7 +14,30 @@ import type {
     T_WithId,
 } from '#typescript/mongoose.js';
 
-import { getMongoGenericFields } from '#utils/mongoose.js';
+export function getMongoDateTime(): string {
+    const now = new Date();
+
+    return format(now, 'yyyy-MM-dd HH:mm:ss.SSS');
+}
+
+export function getMongoGenericFields<T extends 'date' | 'string'>({
+    isNew = true,
+    returnDateAs = 'string' as T,
+}: { isNew?: boolean; returnDateAs?: T } = {}): {
+        id?: string;
+        isDel: boolean;
+        createdAt: T extends 'string' ? string : Date;
+        updatedAt: T extends 'string' ? string : Date;
+    } {
+    const now = (returnDateAs === 'string' ? getMongoDateTime() : new Date()) as T extends 'string' ? string : Date;
+
+    return {
+        ...(isNew && { id: uuidv4() }),
+        isDel: false,
+        createdAt: now,
+        updatedAt: now,
+    };
+}
 
 export class MongoController<D extends Partial<C_Document>> {
     private collection: C_Collection<D>;

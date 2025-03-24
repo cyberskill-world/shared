@@ -5,14 +5,6 @@ export { executeCommand_alias_2 as executeCommand } from '../_tsup-dts-rollup.cj
 export { commandLog_alias_2 as commandLog } from '../_tsup-dts-rollup.cjs';
 export { fileExists_alias_2 as fileExists } from '../_tsup-dts-rollup.cjs';
 export { throwResponse_alias_1 as throwResponse } from '../_tsup-dts-rollup.cjs';
-export { generateSchema_alias_1 as generateSchema } from '../_tsup-dts-rollup.cjs';
-export { generateModel_alias_1 as generateModel } from '../_tsup-dts-rollup.cjs';
-export { generateSlug_alias_1 as generateSlug } from '../_tsup-dts-rollup.cjs';
-export { generateShortId_alias_1 as generateShortId } from '../_tsup-dts-rollup.cjs';
-export { generateSlugQuery_alias_1 as generateSlugQuery } from '../_tsup-dts-rollup.cjs';
-export { getMongoGenericFields_alias_1 as getMongoGenericFields } from '../_tsup-dts-rollup.cjs';
-export { aggregatePaginate_alias_1 as aggregatePaginate } from '../_tsup-dts-rollup.cjs';
-export { mongoosePaginate_alias_1 as mongoosePaginate } from '../_tsup-dts-rollup.cjs';
 export { getLatestPackageVersion_alias_1 as getLatestPackageVersion } from '../_tsup-dts-rollup.cjs';
 export { isPackageOutdated_alias_1 as isPackageOutdated } from '../_tsup-dts-rollup.cjs';
 export { updatePackage_alias_1 as updatePackage } from '../_tsup-dts-rollup.cjs';

@@ -1,1 +1,0 @@
-import{format as t}from"date-fns";function e(){return t(new Date,"yyyy-MM-dd HH:mm:ss.SSS")}export{e as getMongoDateTime};
