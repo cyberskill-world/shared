@@ -1,3 +1,7 @@
+## 1.36.0 (2025-03-24)
+
+* feat: change to absolute imports ([5016935](https://github.com/cyberskill-world/shared/commit/5016935))
+
 ## 1.35.0 (2025-03-23)
 
 * feat: add typscript for getMongoGenericFields ([dec181b](https://github.com/cyberskill-world/shared/commit/dec181b))
