@@ -85,7 +85,7 @@ export type T_Input_MongooseSchema<T> = SchemaDefinition<T>;
 export type T_MongoosePlugin = (schema: Schema, options?: Record<string, unknown>) => void;
 
 export interface I_GenericDocument extends Partial<C_Document> {
-    id?: string;
+    id: string;
     isDel: boolean;
     createdAt: string | Date;
     updatedAt: string | Date;

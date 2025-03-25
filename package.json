@@ -164,7 +164,7 @@
         "@graphql-codegen/cli": "5.0.5",
         "@graphql-codegen/client-preset": "4.7.0",
         "@graphql-codegen/typescript-react-apollo": "4.3.2",
-        "@microsoft/api-extractor": "7.52.1",
+        "@microsoft/api-extractor": "7.52.2",
         "@next/eslint-plugin-next": "15.2.4",
         "@swc/core": "1.11.13",
         "@testing-library/jest-dom": "6.6.3",

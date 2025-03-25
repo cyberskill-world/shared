@@ -13,13 +13,12 @@ export function getMongoDateTime(now = new Date()): string {
 }
 
 export function createMongoGenericFields({
-    isNew = true,
     returnDateAs = 'string',
-}: { isNew?: boolean; returnDateAs?: 'string' | 'date' } = {}): I_GenericDocument {
+}: { returnDateAs?: 'string' | 'date' } = {}): I_GenericDocument {
     const now = returnDateAs === 'string' ? getMongoDateTime() : new Date();
 
     return {
-        ...(isNew ? {} : { id: uuidv4() }),
+        id: uuidv4(),
         isDel: false,
         createdAt: now,
         updatedAt: now,

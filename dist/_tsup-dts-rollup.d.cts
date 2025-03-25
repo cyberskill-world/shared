@@ -129,8 +129,7 @@ export { createModel }
 export { createModel as createModel_alias_1 }
 export { createModel as createModel_alias_2 }
 
-declare function createMongoGenericFields({ isNew, returnDateAs, }?: {
-    isNew?: boolean;
+declare function createMongoGenericFields({ returnDateAs, }?: {
     returnDateAs?: 'string' | 'date';
 }): I_GenericDocument_2;
 export { createMongoGenericFields }
@@ -6147,7 +6146,7 @@ extends Model<T>, PaginateModel<T>,
 AggregatePaginateModel<T> { }
 
 declare interface I_GenericDocument extends Partial<C_Document> {
-    id?: string;
+    id: string;
     isDel: boolean;
     createdAt: string | Date;
     updatedAt: string | Date;
@@ -6157,7 +6156,7 @@ export { I_GenericDocument as I_GenericDocument_alias_1 }
 export { I_GenericDocument as I_GenericDocument_alias_2 }
 
 declare interface I_GenericDocument_2 extends Partial<C_Document_2> {
-    id?: string;
+    id: string;
     isDel: boolean;
     createdAt: string | Date;
     updatedAt: string | Date;
