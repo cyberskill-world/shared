@@ -119,16 +119,18 @@ export interface I_CreateSchemaOptions<T extends Partial<C_Document>>
     standalone?: boolean;
 }
 
-export type T_MongooseModelMiddlewareMethod = string | RegExp;
+export type T_MongooseMiddlewareMethod = string | RegExp;
 
-export type T_MongooseModelMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_PreSaveMiddlewareFunction<T>;
+export type T_MongooseMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_PreSaveMiddlewareFunction<T>;
 
-export type T_MongooseModelMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
+export type T_MongooseMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
+
+export type T_MongooseHookNextFunction = (error?: Error) => void;
 
 export interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
-    method: T_MongooseModelMiddlewareMethod;
-    pre?: T_MongooseModelMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
-    post?: T_MongooseModelMiddlewarePostFunction<T>;
+    method: T_MongooseMiddlewareMethod;
+    pre?: T_MongooseMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
+    post?: T_MongooseMiddlewarePostFunction<T>;
 }
 
 export interface I_CreateModelOptions<T extends Partial<C_Document>>

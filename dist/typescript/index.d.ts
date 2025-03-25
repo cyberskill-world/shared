@@ -49,9 +49,10 @@ export { T_MongoosePlugin_alias_1 as T_MongoosePlugin } from '../_tsup-dts-rollu
 export { I_GenericDocument_alias_1 as I_GenericDocument } from '../_tsup-dts-rollup.js';
 export { I_MongooseOptions_alias_1 as I_MongooseOptions } from '../_tsup-dts-rollup.js';
 export { I_CreateSchemaOptions_alias_1 as I_CreateSchemaOptions } from '../_tsup-dts-rollup.js';
-export { T_MongooseModelMiddlewareMethod_alias_1 as T_MongooseModelMiddlewareMethod } from '../_tsup-dts-rollup.js';
-export { T_MongooseModelMiddlewarePreFunction_alias_1 as T_MongooseModelMiddlewarePreFunction } from '../_tsup-dts-rollup.js';
-export { T_MongooseModelMiddlewarePostFunction_alias_1 as T_MongooseModelMiddlewarePostFunction } from '../_tsup-dts-rollup.js';
+export { T_MongooseMiddlewareMethod_alias_1 as T_MongooseMiddlewareMethod } from '../_tsup-dts-rollup.js';
+export { T_MongooseMiddlewarePreFunction_alias_1 as T_MongooseMiddlewarePreFunction } from '../_tsup-dts-rollup.js';
+export { T_MongooseMiddlewarePostFunction_alias_1 as T_MongooseMiddlewarePostFunction } from '../_tsup-dts-rollup.js';
+export { T_MongooseHookNextFunction_alias_1 as T_MongooseHookNextFunction } from '../_tsup-dts-rollup.js';
 export { I_MongooseModelMiddleware_alias_1 as I_MongooseModelMiddleware } from '../_tsup-dts-rollup.js';
 export { I_CreateModelOptions_alias_1 as I_CreateModelOptions } from '../_tsup-dts-rollup.js';
 export { T_Input_Populate_alias_1 as T_Input_Populate } from '../_tsup-dts-rollup.js';

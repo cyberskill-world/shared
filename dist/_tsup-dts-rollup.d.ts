@@ -6305,18 +6305,18 @@ declare interface I_LoadingProps_2 {
 }
 
 declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
-    method: T_MongooseModelMiddlewareMethod;
-    pre?: T_MongooseModelMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
-    post?: T_MongooseModelMiddlewarePostFunction<T>;
+    method: T_MongooseMiddlewareMethod;
+    pre?: T_MongooseMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
+    post?: T_MongooseMiddlewarePostFunction<T>;
 }
 export { I_MongooseModelMiddleware }
 export { I_MongooseModelMiddleware as I_MongooseModelMiddleware_alias_1 }
 export { I_MongooseModelMiddleware as I_MongooseModelMiddleware_alias_2 }
 
 declare interface I_MongooseModelMiddleware_2<T extends Partial<C_Document_2>> {
-    method: T_MongooseModelMiddlewareMethod_2;
-    pre?: T_MongooseModelMiddlewarePreFunction_2<T & T_QueryWithHelpers_2<T>>;
-    post?: T_MongooseModelMiddlewarePostFunction_2<T>;
+    method: T_MongooseMiddlewareMethod_2;
+    pre?: T_MongooseMiddlewarePreFunction_2<T & T_QueryWithHelpers_2<T>>;
+    post?: T_MongooseMiddlewarePostFunction_2<T>;
 }
 
 declare interface I_MongooseOptions<T extends Partial<C_Document>> {
@@ -7043,26 +7043,31 @@ export { T_InsertOneResult as T_InsertOneResult_alias_2 }
 
 declare type T_InsertOneResult_2<T> = InsertOneResult<T>;
 
-declare type T_MongooseModelMiddlewareMethod = string | RegExp;
-export { T_MongooseModelMiddlewareMethod }
-export { T_MongooseModelMiddlewareMethod as T_MongooseModelMiddlewareMethod_alias_1 }
-export { T_MongooseModelMiddlewareMethod as T_MongooseModelMiddlewareMethod_alias_2 }
+declare type T_MongooseHookNextFunction = (error?: Error) => void;
+export { T_MongooseHookNextFunction }
+export { T_MongooseHookNextFunction as T_MongooseHookNextFunction_alias_1 }
+export { T_MongooseHookNextFunction as T_MongooseHookNextFunction_alias_2 }
 
-declare type T_MongooseModelMiddlewareMethod_2 = string | RegExp;
+declare type T_MongooseMiddlewareMethod = string | RegExp;
+export { T_MongooseMiddlewareMethod }
+export { T_MongooseMiddlewareMethod as T_MongooseMiddlewareMethod_alias_1 }
+export { T_MongooseMiddlewareMethod as T_MongooseMiddlewareMethod_alias_2 }
 
-declare type T_MongooseModelMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
-export { T_MongooseModelMiddlewarePostFunction }
-export { T_MongooseModelMiddlewarePostFunction as T_MongooseModelMiddlewarePostFunction_alias_1 }
-export { T_MongooseModelMiddlewarePostFunction as T_MongooseModelMiddlewarePostFunction_alias_2 }
+declare type T_MongooseMiddlewareMethod_2 = string | RegExp;
 
-declare type T_MongooseModelMiddlewarePostFunction_2<T> = T_PostMiddlewareFunction_2<T> & T_ErrorHandlingMiddlewareFunction_2<T> & T_ErrorHandlingMiddlewareWithOption_2<T>;
+declare type T_MongooseMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
+export { T_MongooseMiddlewarePostFunction }
+export { T_MongooseMiddlewarePostFunction as T_MongooseMiddlewarePostFunction_alias_1 }
+export { T_MongooseMiddlewarePostFunction as T_MongooseMiddlewarePostFunction_alias_2 }
 
-declare type T_MongooseModelMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_PreSaveMiddlewareFunction<T>;
-export { T_MongooseModelMiddlewarePreFunction }
-export { T_MongooseModelMiddlewarePreFunction as T_MongooseModelMiddlewarePreFunction_alias_1 }
-export { T_MongooseModelMiddlewarePreFunction as T_MongooseModelMiddlewarePreFunction_alias_2 }
+declare type T_MongooseMiddlewarePostFunction_2<T> = T_PostMiddlewareFunction_2<T> & T_ErrorHandlingMiddlewareFunction_2<T> & T_ErrorHandlingMiddlewareWithOption_2<T>;
 
-declare type T_MongooseModelMiddlewarePreFunction_2<T> = T_PreMiddlewareFunction_2<T> & T_PreSaveMiddlewareFunction_2<T>;
+declare type T_MongooseMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_PreSaveMiddlewareFunction<T>;
+export { T_MongooseMiddlewarePreFunction }
+export { T_MongooseMiddlewarePreFunction as T_MongooseMiddlewarePreFunction_alias_1 }
+export { T_MongooseMiddlewarePreFunction as T_MongooseMiddlewarePreFunction_alias_2 }
+
+declare type T_MongooseMiddlewarePreFunction_2<T> = T_PreMiddlewareFunction_2<T> & T_PreSaveMiddlewareFunction_2<T>;
 
 declare type T_MongoosePlugin = (schema: Schema, options?: Record<string, unknown>) => void;
 export { T_MongoosePlugin }
