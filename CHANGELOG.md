@@ -1,3 +1,7 @@
+## 1.42.0 (2025-03-25)
+
+* feat: add typscript for createMongoGenericFields ([fff265e](https://github.com/cyberskill-world/shared/commit/fff265e))
+
 ## 1.41.0 (2025-03-25)
 
 * feat: add T_MongooseHookNextFunction ([2b00716](https://github.com/cyberskill-world/shared/commit/2b00716))
