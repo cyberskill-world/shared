@@ -1,3 +1,7 @@
+## 1.39.0 (2025-03-25)
+
+* feat: enhance mongoose middlewares, make generateSlug work with multi language ([c6d269e](https://github.com/cyberskill-world/shared/commit/c6d269e))
+
 ## 1.38.0 (2025-03-24)
 
 * feat: enhance cli logic ([5b99a22](https://github.com/cyberskill-world/shared/commit/5b99a22))
