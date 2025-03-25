@@ -1,3 +1,7 @@
+## 1.41.0 (2025-03-25)
+
+* feat: add T_MongooseHookNextFunction ([2b00716](https://github.com/cyberskill-world/shared/commit/2b00716))
+
 ## 1.40.0 (2025-03-25)
 
 * feat: move slug and shortId to separated string module ([b0e4df1](https://github.com/cyberskill-world/shared/commit/b0e4df1))
