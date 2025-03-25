@@ -1,27 +1,24 @@
 import type mongooseRaw from 'mongoose';
 
-import cryptoJS from 'crypto-js';
 import { Document } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
-import slugifyRaw from 'slugify';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { I_Return } from '#typescript/api-response.js';
 import type { T_DeleteResult, T_UpdateResult } from '#typescript/mongo.js';
 import type {
     C_Document,
+    I_CreateModelOptions,
+    I_CreateSchemaOptions,
     I_DeleteOptionsExtended,
     I_ExtendedModel,
-    I_GenerateModelOptions,
-    I_GenerateSchemaOptions,
     I_GenericDocument,
     I_MongooseModelMiddleware,
-    I_SlugifyOptions,
     I_UpdateOptionsExtended,
     T_AggregatePaginateResult,
+    T_CreateSlugQueryResponse,
     T_FilterQuery,
-    T_GenerateSlugQueryResponse,
     T_Input_Populate,
     T_InsertManyOptions,
     T_MongoosePlugin,
@@ -36,6 +33,7 @@ import type {
 } from '#typescript/mongoose.js';
 
 import { RESPONSE_STATUS } from '#constants/response-status.js';
+import { generateShortId, generateSlug } from '#utils/string.js';
 
 export { aggregatePaginate, mongoosePaginate };
 
@@ -70,28 +68,28 @@ function createGenericSchema(mongoose: typeof mongooseRaw) {
     );
 }
 
-export function generateSchema<T extends Partial<C_Document>>({
+export function createSchema<T extends Partial<C_Document>>({
     mongoose,
     schema,
     virtuals = [],
     standalone = false,
-}: I_GenerateSchemaOptions<T>): T_MongooseShema<T> {
-    const generatedSchema = new mongoose.Schema<T>(schema, { strict: true });
+}: I_CreateSchemaOptions<T>): T_MongooseShema<T> {
+    const createdSchema = new mongoose.Schema<T>(schema, { strict: true });
 
     virtuals.forEach(({ name, options, get }) => {
-        const virtualInstance = generatedSchema.virtual(name as string, options);
+        const virtualInstance = createdSchema.virtual(name as string, options);
         if (get)
             virtualInstance.get(get);
     });
 
     if (!standalone) {
-        generatedSchema.add(createGenericSchema(mongoose));
+        createdSchema.add(createGenericSchema(mongoose));
     }
 
-    return generatedSchema;
+    return createdSchema;
 }
 
-export function generateModel<T extends Partial<C_Document>>({
+export function createModel<T extends Partial<C_Document>>({
     mongoose,
     name,
     schema,
@@ -99,7 +97,7 @@ export function generateModel<T extends Partial<C_Document>>({
     aggregate = false,
     virtuals = [],
     middlewares = [],
-}: I_GenerateModelOptions<T>): I_ExtendedModel<T> {
+}: I_CreateModelOptions<T>): I_ExtendedModel<T> {
     if (!name) {
         throw new Error('Model name is required.');
     }
@@ -108,34 +106,23 @@ export function generateModel<T extends Partial<C_Document>>({
         return mongoose.models[name] as I_ExtendedModel<T>;
     }
 
-    const generatedSchema = generateSchema({ mongoose, schema, virtuals });
+    const createdSchema = createSchema({ mongoose, schema, virtuals });
 
-    applyPlugins<T>(generatedSchema, [
+    applyPlugins<T>(createdSchema, [
         pagination && mongoosePaginate,
         aggregate && aggregatePaginate,
     ]);
 
-    applyMiddlewares<T>(generatedSchema, middlewares);
+    applyMiddlewares<T>(createdSchema, middlewares);
 
-    return mongoose.model<T>(name, generatedSchema) as I_ExtendedModel<T>;
+    return mongoose.model<T>(name, createdSchema) as I_ExtendedModel<T>;
 }
 
-const slugify = slugifyRaw.default || slugifyRaw;
-
-export function generateSlug(str = '', options?: I_SlugifyOptions): string {
-    const { lower = true, locale = 'vi', ...rest } = options || {};
-    return slugify(str, { lower, locale, ...rest });
-}
-
-export function generateShortId(uuid: string, length = 4): string {
-    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
-}
-
-export function generateSlugQuery<T>(
+export function createSlugQuery<T>(
     slug: string,
     filters: T_FilterQuery<T> = {},
     id?: string,
-): T_GenerateSlugQueryResponse<T> {
+): T_CreateSlugQueryResponse<T> {
     return {
         ...filters,
         ...(id && { id: { $ne: id } }),
@@ -417,7 +404,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
-    async generateShortId(id: string, length = 4): Promise<I_Return<string>> {
+    async createShortId(id: string, length = 4): Promise<I_Return<string>> {
         const maxRetries = 10;
         const existingShortIds = new Set();
 
@@ -437,12 +424,12 @@ export class MongooseController<T extends Partial<C_Document>> {
 
         return {
             success: false,
-            message: 'Failed to generate a unique shortId',
+            message: 'Failed to create a unique shortId',
             code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
         };
     }
 
-    async generateSlug(
+    async createSlug(
         fieldName: string,
         fields: T,
         filters: T_FilterQuery<T> = {},
@@ -450,9 +437,9 @@ export class MongooseController<T extends Partial<C_Document>> {
         try {
             const fieldValue = fields[fieldName as keyof T];
 
-            const generateUniqueSlug = async (slug: string): Promise<string> => {
+            const createUniqueSlug = async (slug: string): Promise<string> => {
                 let existingDoc = await this.model.findOne(
-                    generateSlugQuery<T>(slug, filters, fields.id),
+                    createSlugQuery<T>(slug, filters, fields.id),
                 );
 
                 if (!existingDoc)
@@ -464,7 +451,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 do {
                     uniqueSlug = `${slug}-${suffix}`;
                     existingDoc = await this.model.findOne(
-                        generateSlugQuery<T>(uniqueSlug, filters, fields.id),
+                        createSlugQuery<T>(uniqueSlug, filters, fields.id),
                     );
                     suffix++;
                 } while (existingDoc);
@@ -477,14 +464,14 @@ export class MongooseController<T extends Partial<C_Document>> {
 
                 for (const lang in fieldValue) {
                     const slug = generateSlug(fieldValue[lang] as string);
-                    slugResults[lang] = await generateUniqueSlug(slug);
+                    slugResults[lang] = await createUniqueSlug(slug);
                 }
 
                 return { success: true, result: slugResults };
             }
             else {
                 const slug = generateSlug(fieldValue as string);
-                const uniqueSlug = await generateUniqueSlug(slug);
+                const uniqueSlug = await createUniqueSlug(slug);
 
                 return { success: true, result: uniqueSlug };
             }
@@ -492,7 +479,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         catch (error) {
             return {
                 success: false,
-                message: `Failed to generate a unique slug: ${(error as Error).message}`,
+                message: `Failed to create a unique slug: ${(error as Error).message}`,
                 code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }

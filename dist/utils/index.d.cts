@@ -4,4 +4,6 @@ export { removeAccent_alias_2 as removeAccent } from '../_tsup-dts-rollup.cjs';
 export { deepMerge_alias_2 as deepMerge } from '../_tsup-dts-rollup.cjs';
 export { serializer_alias_1 as serializer } from '../_tsup-dts-rollup.cjs';
 export { storageClient_alias_1 as storageClient } from '../_tsup-dts-rollup.cjs';
+export { generateSlug_alias_1 as generateSlug } from '../_tsup-dts-rollup.cjs';
+export { generateShortId_alias_1 as generateShortId } from '../_tsup-dts-rollup.cjs';
 export { validate_alias_1 as validate } from '../_tsup-dts-rollup.cjs';

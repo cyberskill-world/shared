@@ -113,7 +113,7 @@ export interface I_MongooseOptions<T extends Partial<C_Document>> {
     }[];
 }
 
-export interface I_GenerateSchemaOptions<T extends Partial<C_Document>>
+export interface I_CreateSchemaOptions<T extends Partial<C_Document>>
     extends I_MongooseOptions<T> {
     schema: T_Input_MongooseSchema<T>;
     standalone?: boolean;
@@ -131,7 +131,7 @@ export interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     post?: T_MongooseModelMiddlewarePostFunction<T>;
 }
 
-export interface I_GenerateModelOptions<T extends Partial<C_Document>>
+export interface I_CreateModelOptions<T extends Partial<C_Document>>
     extends I_MongooseOptions<T> {
     schema: T_Input_MongooseSchema<T>;
     name: string;
@@ -146,7 +146,7 @@ export interface T_PaginateOptionsWithPopulate
     extends T_PaginateOptions,
     T_PopulateOption { }
 
-export type T_GenerateSlugQueryResponse<T> = T_FilterQuery<T> & {
+export type T_CreateSlugQueryResponse<T> = T_FilterQuery<T> & {
     $or: Array<{ slug: string } | { slugHistory: string }>;
 } & { id?: { $ne: string } };
 
@@ -208,13 +208,4 @@ export interface I_Input_DeleteOne<T> {
 export interface I_Input_DeleteMany<T> {
     filter: T_FilterQuery<T>;
     options?: I_DeleteOptionsExtended;
-}
-
-export interface I_SlugifyOptions {
-    replacement?: string;
-    remove?: RegExp;
-    lower?: boolean;
-    strict?: boolean;
-    locale?: string;
-    trim?: boolean;
 }

@@ -124,6 +124,11 @@ declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, with
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
 
+declare function createModel<T extends Partial<C_Document_2>>({ mongoose, name, schema, pagination, aggregate, virtuals, middlewares, }: I_CreateModelOptions_2<T>): I_ExtendedModel_2<T>;
+export { createModel }
+export { createModel as createModel_alias_1 }
+export { createModel as createModel_alias_2 }
+
 declare function createMongoGenericFields({ isNew, returnDateAs, }?: {
     isNew?: boolean;
     returnDateAs?: 'string' | 'date';
@@ -131,6 +136,16 @@ declare function createMongoGenericFields({ isNew, returnDateAs, }?: {
 export { createMongoGenericFields }
 export { createMongoGenericFields as createMongoGenericFields_alias_1 }
 export { createMongoGenericFields as createMongoGenericFields_alias_2 }
+
+declare function createSchema<T extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_CreateSchemaOptions_2<T>): T_MongooseShema_2<T>;
+export { createSchema }
+export { createSchema as createSchema_alias_1 }
+export { createSchema as createSchema_alias_2 }
+
+declare function createSlugQuery<T>(slug: string, filters?: T_FilterQuery_2<T>, id?: string): T_CreateSlugQueryResponse_2<T>;
+export { createSlugQuery }
+export { createSlugQuery as createSlugQuery_alias_1 }
+export { createSlugQuery as createSlugQuery_alias_2 }
 
 declare function deepMerge(...configs: (I_Config_2 | I_Config_2[])[]): I_Config_2;
 export { deepMerge }
@@ -5950,16 +5965,6 @@ export { fileExists }
 export { fileExists as fileExists_alias_1 }
 export { fileExists as fileExists_alias_2 }
 
-declare function generateModel<T extends Partial<C_Document_2>>({ mongoose, name, schema, pagination, aggregate, virtuals, middlewares, }: I_GenerateModelOptions_2<T>): I_ExtendedModel_2<T>;
-export { generateModel }
-export { generateModel as generateModel_alias_1 }
-export { generateModel as generateModel_alias_2 }
-
-declare function generateSchema<T extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_GenerateSchemaOptions_2<T>): T_MongooseShema_2<T>;
-export { generateSchema }
-export { generateSchema as generateSchema_alias_1 }
-export { generateSchema as generateSchema_alias_2 }
-
 declare function generateShortId(uuid: string, length?: number): string;
 export { generateShortId }
 export { generateShortId as generateShortId_alias_1 }
@@ -5969,11 +5974,6 @@ declare function generateSlug(str?: string, options?: I_SlugifyOptions_2): strin
 export { generateSlug }
 export { generateSlug as generateSlug_alias_1 }
 export { generateSlug as generateSlug_alias_2 }
-
-declare function generateSlugQuery<T>(slug: string, filters?: T_FilterQuery_2<T>, id?: string): T_GenerateSlugQueryResponse_2<T>;
-export { generateSlugQuery }
-export { generateSlugQuery as generateSlugQuery_alias_1 }
-export { generateSlugQuery as generateSlugQuery_alias_2 }
 
 declare function getLatestPackageVersion(packageName: string, forceRefresh?: boolean): Promise<string>;
 export { getLatestPackageVersion }
@@ -6058,6 +6058,40 @@ declare interface I_Config_2 {
     [key: string]: string | number | boolean | I_Config_2 | I_Config_2[];
 }
 
+declare interface I_CreateModelOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
+    schema: T_Input_MongooseSchema<T>;
+    name: string;
+    aggregate?: boolean;
+    middlewares?: I_MongooseModelMiddleware<T>[];
+    pagination?: boolean;
+}
+export { I_CreateModelOptions }
+export { I_CreateModelOptions as I_CreateModelOptions_alias_1 }
+export { I_CreateModelOptions as I_CreateModelOptions_alias_2 }
+
+declare interface I_CreateModelOptions_2<T extends Partial<C_Document_2>>
+extends I_MongooseOptions_2<T> {
+    schema: T_Input_MongooseSchema_2<T>;
+    name: string;
+    aggregate?: boolean;
+    middlewares?: I_MongooseModelMiddleware_2<T>[];
+    pagination?: boolean;
+}
+
+declare interface I_CreateSchemaOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
+    schema: T_Input_MongooseSchema<T>;
+    standalone?: boolean;
+}
+export { I_CreateSchemaOptions }
+export { I_CreateSchemaOptions as I_CreateSchemaOptions_alias_1 }
+export { I_CreateSchemaOptions as I_CreateSchemaOptions_alias_2 }
+
+declare interface I_CreateSchemaOptions_2<T extends Partial<C_Document_2>>
+extends I_MongooseOptions_2<T> {
+    schema: T_Input_MongooseSchema_2<T>;
+    standalone?: boolean;
+}
+
 declare interface I_DeleteOptionsExtended extends Omit<QueryOptions, 'session'> {
     session?: ClientSession;
 }
@@ -6111,40 +6145,6 @@ export { I_ExtendedModel as I_ExtendedModel_alias_2 }
 declare interface I_ExtendedModel_2<T extends Partial<C_Document_2>>
 extends Model<T>, PaginateModel<T>,
 AggregatePaginateModel<T> { }
-
-declare interface I_GenerateModelOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
-    schema: T_Input_MongooseSchema<T>;
-    name: string;
-    aggregate?: boolean;
-    middlewares?: I_MongooseModelMiddleware<T>[];
-    pagination?: boolean;
-}
-export { I_GenerateModelOptions }
-export { I_GenerateModelOptions as I_GenerateModelOptions_alias_1 }
-export { I_GenerateModelOptions as I_GenerateModelOptions_alias_2 }
-
-declare interface I_GenerateModelOptions_2<T extends Partial<C_Document_2>>
-extends I_MongooseOptions_2<T> {
-    schema: T_Input_MongooseSchema_2<T>;
-    name: string;
-    aggregate?: boolean;
-    middlewares?: I_MongooseModelMiddleware_2<T>[];
-    pagination?: boolean;
-}
-
-declare interface I_GenerateSchemaOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
-    schema: T_Input_MongooseSchema<T>;
-    standalone?: boolean;
-}
-export { I_GenerateSchemaOptions }
-export { I_GenerateSchemaOptions as I_GenerateSchemaOptions_alias_1 }
-export { I_GenerateSchemaOptions as I_GenerateSchemaOptions_alias_2 }
-
-declare interface I_GenerateSchemaOptions_2<T extends Partial<C_Document_2>>
-extends I_MongooseOptions_2<T> {
-    schema: T_Input_MongooseSchema_2<T>;
-    standalone?: boolean;
-}
 
 declare interface I_GenericDocument extends Partial<C_Document> {
     id?: string;
@@ -6603,8 +6603,8 @@ declare class MongooseController<T extends Partial<C_Document_2>> {
     updateMany(filter?: T_FilterQuery_2<T>, update?: T_UpdateQuery_2<T>, options?: I_UpdateOptionsExtended_2): Promise<I_Return_2<T_UpdateResult_2>>;
     deleteOne(filter?: T_FilterQuery_2<T>, options?: I_DeleteOptionsExtended_2): Promise<I_Return_2<T>>;
     deleteMany(filter?: T_FilterQuery_2<T>, options?: I_DeleteOptionsExtended_2): Promise<I_Return_2<T_DeleteResult_2>>;
-    generateShortId(id: string, length?: number): Promise<I_Return_2<string>>;
-    generateSlug(fieldName: string, fields: T, filters?: T_FilterQuery_2<T>): Promise<I_Return_2<string | {
+    createShortId(id: string, length?: number): Promise<I_Return_2<string>>;
+    createSlug(fieldName: string, fields: T, filters?: T_FilterQuery_2<T>): Promise<I_Return_2<string | {
         [key: string]: string;
     }>>;
     aggregate(pipeline: T_PipelineStage_2[]): Promise<I_Return_2<T[]>>;
@@ -6954,6 +6954,25 @@ export { T_Children as T_Children_alias_2 }
 
 declare type T_Children_2 = ReactNode | ReactNode[] | ReactElement | JSX.Element | null;
 
+declare type T_CreateSlugQueryResponse<T> = T_FilterQuery<T> & {
+    $or: Array<{
+        slug: string;
+    } | {
+        slugHistory: string;
+    }>;
+} & {
+    id?: {
+        $ne: string;
+    };
+};
+export { T_CreateSlugQueryResponse }
+export { T_CreateSlugQueryResponse as T_CreateSlugQueryResponse_alias_1 }
+export { T_CreateSlugQueryResponse as T_CreateSlugQueryResponse_alias_2 }
+
+declare type T_CreateSlugQueryResponse_2<T> = T_FilterQuery_2<T> & {
+    $or: Array<{ slug: string } | { slugHistory: string }>;
+} & { id?: { $ne: string } };
+
 declare type T_DeleteResult = DeleteResult;
 export { T_DeleteResult }
 export { T_DeleteResult as T_DeleteResult_alias_1 }
@@ -6988,25 +7007,6 @@ export { T_FilterQuery as T_FilterQuery_alias_1 }
 export { T_FilterQuery as T_FilterQuery_alias_2 }
 
 declare type T_FilterQuery_2<T> = FilterQuery<T>;
-
-declare type T_GenerateSlugQueryResponse<T> = T_FilterQuery<T> & {
-    $or: Array<{
-        slug: string;
-    } | {
-        slugHistory: string;
-    }>;
-} & {
-    id?: {
-        $ne: string;
-    };
-};
-export { T_GenerateSlugQueryResponse }
-export { T_GenerateSlugQueryResponse as T_GenerateSlugQueryResponse_alias_1 }
-export { T_GenerateSlugQueryResponse as T_GenerateSlugQueryResponse_alias_2 }
-
-declare type T_GenerateSlugQueryResponse_2<T> = T_FilterQuery_2<T> & {
-    $or: Array<{ slug: string } | { slugHistory: string }>;
-} & { id?: { $ne: string } };
 
 declare type T_Input_MongooseSchema<T> = SchemaDefinition<T>;
 export { T_Input_MongooseSchema }

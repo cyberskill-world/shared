@@ -10,3 +10,4 @@ export * from './mongoose.js';
 export * from './next-intl.js';
 export * from './react.js';
 export * from './serializer.js';
+export * from './string.js';

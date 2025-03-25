@@ -24,15 +24,15 @@ export { T_Input_MongooseSchema_alias_2 as T_Input_MongooseSchema } from '../_ts
 export { T_MongoosePlugin_alias_2 as T_MongoosePlugin } from '../_tsup-dts-rollup.js';
 export { I_GenericDocument_alias_2 as I_GenericDocument } from '../_tsup-dts-rollup.js';
 export { I_MongooseOptions_alias_2 as I_MongooseOptions } from '../_tsup-dts-rollup.js';
-export { I_GenerateSchemaOptions_alias_2 as I_GenerateSchemaOptions } from '../_tsup-dts-rollup.js';
+export { I_CreateSchemaOptions_alias_2 as I_CreateSchemaOptions } from '../_tsup-dts-rollup.js';
 export { T_MongooseModelMiddlewareMethod_alias_2 as T_MongooseModelMiddlewareMethod } from '../_tsup-dts-rollup.js';
 export { T_MongooseModelMiddlewarePreFunction_alias_2 as T_MongooseModelMiddlewarePreFunction } from '../_tsup-dts-rollup.js';
 export { T_MongooseModelMiddlewarePostFunction_alias_2 as T_MongooseModelMiddlewarePostFunction } from '../_tsup-dts-rollup.js';
 export { I_MongooseModelMiddleware_alias_2 as I_MongooseModelMiddleware } from '../_tsup-dts-rollup.js';
-export { I_GenerateModelOptions_alias_2 as I_GenerateModelOptions } from '../_tsup-dts-rollup.js';
+export { I_CreateModelOptions_alias_2 as I_CreateModelOptions } from '../_tsup-dts-rollup.js';
 export { T_Input_Populate_alias_2 as T_Input_Populate } from '../_tsup-dts-rollup.js';
 export { T_PaginateOptionsWithPopulate_alias_2 as T_PaginateOptionsWithPopulate } from '../_tsup-dts-rollup.js';
-export { T_GenerateSlugQueryResponse_alias_2 as T_GenerateSlugQueryResponse } from '../_tsup-dts-rollup.js';
+export { T_CreateSlugQueryResponse_alias_2 as T_CreateSlugQueryResponse } from '../_tsup-dts-rollup.js';
 export { I_Input_FindOne_alias_2 as I_Input_FindOne } from '../_tsup-dts-rollup.js';
 export { I_Input_FindAll_alias_2 as I_Input_FindAll } from '../_tsup-dts-rollup.js';
 export { I_Input_FindPaging_alias_2 as I_Input_FindPaging } from '../_tsup-dts-rollup.js';
@@ -45,4 +45,3 @@ export { I_Input_UpdateMany_alias_2 as I_Input_UpdateMany } from '../_tsup-dts-r
 export { I_DeleteOptionsExtended_alias_2 as I_DeleteOptionsExtended } from '../_tsup-dts-rollup.js';
 export { I_Input_DeleteOne_alias_2 as I_Input_DeleteOne } from '../_tsup-dts-rollup.js';
 export { I_Input_DeleteMany_alias_2 as I_Input_DeleteMany } from '../_tsup-dts-rollup.js';
-export { I_SlugifyOptions_alias_2 as I_SlugifyOptions } from '../_tsup-dts-rollup.js';
