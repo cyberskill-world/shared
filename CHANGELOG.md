@@ -1,3 +1,7 @@
+## 1.40.0 (2025-03-25)
+
+* feat: move slug and shortId to separated string module ([b0e4df1](https://github.com/cyberskill-world/shared/commit/b0e4df1))
+
 ## 1.39.0 (2025-03-25)
 
 * feat: enhance mongoose middlewares, make generateSlug work with multi language ([c6d269e](https://github.com/cyberskill-world/shared/commit/c6d269e))
