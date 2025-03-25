@@ -1,16 +1,9 @@
 import type {
-    DeleteResult,
-    Filter,
-    InsertManyResult,
-    InsertOneResult,
-    OptionalUnlessRequiredId,
-    UpdateResult,
-    WithId,
-} from 'mongodb';
-import type {
     AggregatePaginateModel,
     AggregatePaginateResult,
     ClientSession,
+    ErrorHandlingMiddlewareFunction,
+    ErrorHandlingMiddlewareWithOption,
     FilterQuery,
     InsertManyOptions,
     PaginateModel,
@@ -19,6 +12,9 @@ import type {
     PipelineStage,
     PopulateOption,
     PopulateOptions,
+    PostMiddlewareFunction,
+    PreMiddlewareFunction,
+    PreSaveMiddlewareFunction,
     ProjectionType,
     QueryOptions,
     QueryWithHelpers,
@@ -30,37 +26,74 @@ import type mongoose from 'mongoose';
 
 import {
     Collection,
-    Db,
 } from 'mongodb';
 import {
     Document,
     Model,
 } from 'mongoose';
 
-export class C_Model extends Model { }
-export class C_Db extends Db { }
 export class C_Document extends Document { }
 
+export class C_Model extends Model { }
+
 export class C_Collection<
-    D extends Partial<C_Document>,
-> extends Collection<D> { }
+    T extends Partial<C_Document>,
+> extends Collection<T> { }
+
+export interface I_ExtendedModel<T extends Partial<C_Document>>
+    extends Model<T>, PaginateModel<T>,
+    AggregatePaginateModel<T> { }
+
+export type T_FilterQuery<T> = FilterQuery<T>;
+
+export type T_ProjectionType<T> = ProjectionType<T>;
+
+export type T_QueryOptions<T> = QueryOptions<T>;
+
+export type T_PaginateOptions = PaginateOptions;
+
+export type T_PopulateOption = PopulateOption;
+
+export type T_PopulateOptions = PopulateOptions;
+
+export type T_PipelineStage = PipelineStage;
+
+export type T_PaginateResult<T> = PaginateResult<T>;
+
+export type T_AggregatePaginateResult<T> = AggregatePaginateResult<T>;
+
+export type T_InsertManyOptions = InsertManyOptions;
+
+export type T_UpdateQuery<T> = UpdateQuery<T>;
+
+export type T_QueryWithHelpers<T> = QueryWithHelpers<T, T>;
+
+export type T_PreMiddlewareFunction<T> = PreMiddlewareFunction<T>;
+
+export type T_PreSaveMiddlewareFunction<T> = PreSaveMiddlewareFunction<T>;
+
+export type T_PostMiddlewareFunction<T> = PostMiddlewareFunction<T>;
+
+export type T_ErrorHandlingMiddlewareFunction<T> = ErrorHandlingMiddlewareFunction<T>;
+
+export type T_ErrorHandlingMiddlewareWithOption<T> = ErrorHandlingMiddlewareWithOption<T>;
+
+export type T_MongooseShema<T> = mongoose.Schema<T>;
+
+export type T_Input_MongooseSchema<T> = SchemaDefinition<T>;
+
+export type T_MongoosePlugin = (schema: Schema, options?: Record<string, unknown>) => void;
 
 export interface I_GenericDocument extends Partial<C_Document> {
     id?: string;
-    isDel?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+    isDel: boolean;
+    createdAt: string | Date;
+    updatedAt: string | Date;
 }
 
 interface I_VirtualNestedOptions {
     [key: string]: I_VirtualNestedOptions | number | string | boolean;
 }
-
-export interface I_HookNextFunction {
-    (error?: Error | null): void;
-}
-
-export type T_MiddlewareContext<T> = T | QueryWithHelpers<T, T>;
 
 interface I_VirtualOptions {
     ref: string;
@@ -71,92 +104,49 @@ interface I_VirtualOptions {
     options?: I_VirtualNestedOptions;
 }
 
-export interface I_MongooseOptions<D extends Partial<C_Document>> {
+export interface I_MongooseOptions<T extends Partial<C_Document>> {
     mongoose: typeof mongoose;
     virtuals?: {
-        name: keyof D | string;
+        name: keyof T | string;
         options?: I_VirtualOptions;
-        get?: (this: D) => void;
+        get?: (this: T) => void;
     }[];
 }
 
-export type T_MongooseShema<D> = mongoose.Schema<D>;
-
-export type T_MongoosePlugin = (schema: Schema, options?: Record<string, unknown>) => void;
-
-export type T_Input_MongooseSchema<D> = SchemaDefinition<D>;
-
-export interface I_GenerateSchemaOptions<D extends Partial<C_Document>>
-    extends I_MongooseOptions<D> {
-    schema: T_Input_MongooseSchema<D>;
+export interface I_GenerateSchemaOptions<T extends Partial<C_Document>>
+    extends I_MongooseOptions<T> {
+    schema: T_Input_MongooseSchema<T>;
     standalone?: boolean;
 }
 
-export type T_MongooseModelMiddlewareFunction = (this: T_MiddlewareContext<C_Document>, next: I_HookNextFunction) => void;
+export type T_MongooseModelMiddlewareMethod = string | RegExp;
 
-export interface I_MongooseModelMiddleware {
-    method: string;
-    fn: T_MongooseModelMiddlewareFunction;
+export type T_MongooseModelMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_PreSaveMiddlewareFunction<T>;
+
+export type T_MongooseModelMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
+
+export interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
+    method: T_MongooseModelMiddlewareMethod;
+    pre?: T_MongooseModelMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
+    post?: T_MongooseModelMiddlewarePostFunction<T>;
 }
 
-export interface I_GenerateModelOptions<D extends Partial<C_Document>>
-    extends I_MongooseOptions<D> {
-    schema: T_Input_MongooseSchema<D>;
+export interface I_GenerateModelOptions<T extends Partial<C_Document>>
+    extends I_MongooseOptions<T> {
+    schema: T_Input_MongooseSchema<T>;
     name: string;
     aggregate?: boolean;
-    middlewares?: I_MongooseModelMiddleware[];
+    middlewares?: I_MongooseModelMiddleware<T>[];
     pagination?: boolean;
 }
 
-export interface I_ExtendedModel<D extends Partial<C_Document>>
-    extends Model<D>, PaginateModel<D>,
-    AggregatePaginateModel<D> { }
-
-export interface I_ReturnSuccess<D, E = unknown> {
-    success: true;
-    result: D & E;
-    message?: string;
-    code?: number | string;
-}
-
-export interface I_ReturnFailure {
-    success: false;
-    message: string;
-    code: number | string;
-}
-
-export type I_Return<D = void, E = unknown> = I_ReturnSuccess<D, E> | I_ReturnFailure;
-
-export type T_Filter<D> = Filter<D>;
-export type T_InsertOneResult<D> = InsertOneResult<D>;
-export type T_InsertManyResult<D> = InsertManyResult<D>;
-export type T_FilterQuery<T> = FilterQuery<T>;
-export type T_ProjectionType<T> = ProjectionType<T>;
-export type T_QueryOptions<T> = QueryOptions<T>;
-export type T_PaginateOptions = PaginateOptions;
-export type T_PopulateOption = PopulateOption;
-export type T_PopulateOptions = PopulateOptions;
-export type T_PipelineStage = PipelineStage;
-export type T_PaginateResult<T> = PaginateResult<T>;
-export type T_AggregatePaginateResult<T> = AggregatePaginateResult<T>;
-export type T_InsertManyOptions = InsertManyOptions;
-export type T_UpdateQuery<T> = UpdateQuery<T>;
-export type T_UpdateResult = UpdateResult;
-export type T_DeleteResult = DeleteResult;
-export type T_WithId<T> = WithId<T>;
-export type T_OptionalUnlessRequiredId<T> = OptionalUnlessRequiredId<T>;
-
-export type T_Input_Populate =
-    | string
-    | string[]
-    | T_PopulateOptions
-    | T_PopulateOptions[];
+export type T_Input_Populate = string | string[] | T_PopulateOptions | T_PopulateOptions[];
 
 export interface T_PaginateOptionsWithPopulate
     extends T_PaginateOptions,
     T_PopulateOption { }
 
-export type T_GenerateSlugQueryResponse<D> = T_FilterQuery<D> & {
+export type T_GenerateSlugQueryResponse<T> = T_FilterQuery<T> & {
     $or: Array<{ slug: string } | { slugHistory: string }>;
 } & { id?: { $ne: string } };
 
@@ -190,6 +180,10 @@ export interface I_Input_CreateMany<T> {
     docs: T[];
 }
 
+export interface I_UpdateOptionsExtended extends Omit<QueryOptions, 'session'> {
+    session?: ClientSession;
+}
+
 export interface I_Input_UpdateOne<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
     update: T_UpdateQuery<T>;
@@ -202,6 +196,10 @@ export interface I_Input_UpdateMany<T> extends T_PopulateOption {
     options?: I_UpdateOptionsExtended;
 }
 
+export interface I_DeleteOptionsExtended extends Omit<QueryOptions, 'session'> {
+    session?: ClientSession;
+}
+
 export interface I_Input_DeleteOne<T> {
     filter: T_FilterQuery<T>;
     options?: I_DeleteOptionsExtended;
@@ -210,14 +208,6 @@ export interface I_Input_DeleteOne<T> {
 export interface I_Input_DeleteMany<T> {
     filter: T_FilterQuery<T>;
     options?: I_DeleteOptionsExtended;
-}
-
-export interface I_UpdateOptionsExtended extends Omit<QueryOptions, 'session'> {
-    session?: ClientSession;
-}
-
-export interface I_DeleteOptionsExtended extends Omit<QueryOptions, 'session'> {
-    session?: ClientSession;
 }
 
 export interface I_SlugifyOptions {

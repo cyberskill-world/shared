@@ -14,6 +14,8 @@ import { Context } from 'react';
 import { Db } from 'mongodb';
 import type { DeleteResult } from 'mongodb';
 import { Document as Document_2 } from 'mongoose';
+import type { ErrorHandlingMiddlewareFunction } from 'mongoose';
+import type { ErrorHandlingMiddlewareWithOption } from 'mongoose';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
 import { FlatConfigComposer } from 'eslint-flat-config-utils';
@@ -34,6 +36,9 @@ import type { PaginateResult } from 'mongoose';
 import type { PipelineStage } from 'mongoose';
 import type { PopulateOption } from 'mongoose';
 import type { PopulateOptions } from 'mongoose';
+import type { PostMiddlewareFunction } from 'mongoose';
+import type { PreMiddlewareFunction } from 'mongoose';
+import type { PreSaveMiddlewareFunction } from 'mongoose';
 import type { ProjectionType } from 'mongoose';
 import type { QueryOptions } from 'mongoose';
 import type { QueryWithHelpers } from 'mongoose';
@@ -71,7 +76,7 @@ export { ApolloProvider }
 export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
 
-declare class C_Collection<D extends Partial<C_Document>> extends Collection<D> {
+declare class C_Collection<T extends Partial<C_Document>> extends Collection<T> {
 }
 export { C_Collection }
 export { C_Collection as C_Collection_alias_1 }
@@ -118,6 +123,14 @@ export { commandLog as commandLog_alias_2 }
 declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, }: I_GraphqlCodegenConfig_2): CodegenConfig;
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
+
+declare function createMongoGenericFields({ isNew, returnDateAs, }?: {
+    isNew?: boolean;
+    returnDateAs?: 'string' | 'date';
+}): I_GenericDocument_2;
+export { createMongoGenericFields }
+export { createMongoGenericFields as createMongoGenericFields_alias_1 }
+export { createMongoGenericFields as createMongoGenericFields_alias_2 }
 
 declare function deepMerge(...configs: (I_Config_2 | I_Config_2[])[]): I_Config_2;
 export { deepMerge }
@@ -5937,12 +5950,12 @@ export { fileExists }
 export { fileExists as fileExists_alias_1 }
 export { fileExists as fileExists_alias_2 }
 
-declare function generateModel<D extends Partial<C_Document_2>>({ mongoose, name, schema, pagination, aggregate, virtuals, middlewares, }: I_GenerateModelOptions_2<D>): I_ExtendedModel_2<D>;
+declare function generateModel<T extends Partial<C_Document_2>>({ mongoose, name, schema, pagination, aggregate, virtuals, middlewares, }: I_GenerateModelOptions_2<T>): I_ExtendedModel_2<T>;
 export { generateModel }
 export { generateModel as generateModel_alias_1 }
 export { generateModel as generateModel_alias_2 }
 
-declare function generateSchema<D extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_GenerateSchemaOptions_2<D>): T_MongooseShema_2<D>;
+declare function generateSchema<T extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_GenerateSchemaOptions_2<T>): T_MongooseShema_2<T>;
 export { generateSchema }
 export { generateSchema as generateSchema_alias_1 }
 export { generateSchema as generateSchema_alias_2 }
@@ -5957,7 +5970,7 @@ export { generateSlug }
 export { generateSlug as generateSlug_alias_1 }
 export { generateSlug as generateSlug_alias_2 }
 
-declare function generateSlugQuery<D>(slug: string, filters?: T_FilterQuery_2<D>, id?: string): T_GenerateSlugQueryResponse_2<D>;
+declare function generateSlugQuery<T>(slug: string, filters?: T_FilterQuery_2<T>, id?: string): T_GenerateSlugQueryResponse_2<T>;
 export { generateSlugQuery }
 export { generateSlugQuery as generateSlugQuery_alias_1 }
 export { generateSlugQuery as generateSlugQuery_alias_2 }
@@ -5967,23 +5980,10 @@ export { getLatestPackageVersion }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
 
-declare function getMongoDateTime(): string;
+declare function getMongoDateTime(now?: Date): string;
 export { getMongoDateTime }
 export { getMongoDateTime as getMongoDateTime_alias_1 }
 export { getMongoDateTime as getMongoDateTime_alias_2 }
-
-declare function getMongoGenericFields<T extends 'date' | 'string'>({ isNew, returnDateAs, }?: {
-    isNew?: boolean;
-    returnDateAs?: T;
-}): {
-    id?: string;
-    isDel: boolean;
-    createdAt: T extends 'string' ? string : Date;
-    updatedAt: T extends 'string' ? string : Date;
-};
-export { getMongoGenericFields }
-export { getMongoGenericFields as getMongoGenericFields_alias_1 }
-export { getMongoGenericFields as getMongoGenericFields_alias_2 }
 
 declare function getStoredErrorLists(): Promise<I_ErrorEntry_2[]>;
 export { getStoredErrorLists }
@@ -6102,59 +6102,66 @@ export { I_EslintError }
 export { I_EslintError as I_EslintError_alias_1 }
 export { I_EslintError as I_EslintError_alias_2 }
 
-declare interface I_ExtendedModel<D extends Partial<C_Document>> extends Model<D>, PaginateModel<D>, AggregatePaginateModel<D> {
+declare interface I_ExtendedModel<T extends Partial<C_Document>> extends Model<T>, PaginateModel<T>, AggregatePaginateModel<T> {
 }
 export { I_ExtendedModel }
 export { I_ExtendedModel as I_ExtendedModel_alias_1 }
 export { I_ExtendedModel as I_ExtendedModel_alias_2 }
 
-declare interface I_ExtendedModel_2<D extends Partial<C_Document_2>>
-extends Model<D>, PaginateModel<D>,
-AggregatePaginateModel<D> { }
+declare interface I_ExtendedModel_2<T extends Partial<C_Document_2>>
+extends Model<T>, PaginateModel<T>,
+AggregatePaginateModel<T> { }
 
-declare interface I_GenerateModelOptions<D extends Partial<C_Document>> extends I_MongooseOptions<D> {
-    schema: T_Input_MongooseSchema<D>;
+declare interface I_GenerateModelOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
+    schema: T_Input_MongooseSchema<T>;
     name: string;
     aggregate?: boolean;
-    middlewares?: I_MongooseModelMiddleware[];
+    middlewares?: I_MongooseModelMiddleware<T>[];
     pagination?: boolean;
 }
 export { I_GenerateModelOptions }
 export { I_GenerateModelOptions as I_GenerateModelOptions_alias_1 }
 export { I_GenerateModelOptions as I_GenerateModelOptions_alias_2 }
 
-declare interface I_GenerateModelOptions_2<D extends Partial<C_Document_2>>
-extends I_MongooseOptions_2<D> {
-    schema: T_Input_MongooseSchema_2<D>;
+declare interface I_GenerateModelOptions_2<T extends Partial<C_Document_2>>
+extends I_MongooseOptions_2<T> {
+    schema: T_Input_MongooseSchema_2<T>;
     name: string;
     aggregate?: boolean;
-    middlewares?: I_MongooseModelMiddleware_2[];
+    middlewares?: I_MongooseModelMiddleware_2<T>[];
     pagination?: boolean;
 }
 
-declare interface I_GenerateSchemaOptions<D extends Partial<C_Document>> extends I_MongooseOptions<D> {
-    schema: T_Input_MongooseSchema<D>;
+declare interface I_GenerateSchemaOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
+    schema: T_Input_MongooseSchema<T>;
     standalone?: boolean;
 }
 export { I_GenerateSchemaOptions }
 export { I_GenerateSchemaOptions as I_GenerateSchemaOptions_alias_1 }
 export { I_GenerateSchemaOptions as I_GenerateSchemaOptions_alias_2 }
 
-declare interface I_GenerateSchemaOptions_2<D extends Partial<C_Document_2>>
-extends I_MongooseOptions_2<D> {
-    schema: T_Input_MongooseSchema_2<D>;
+declare interface I_GenerateSchemaOptions_2<T extends Partial<C_Document_2>>
+extends I_MongooseOptions_2<T> {
+    schema: T_Input_MongooseSchema_2<T>;
     standalone?: boolean;
 }
 
 declare interface I_GenericDocument extends Partial<C_Document> {
     id?: string;
-    isDel?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
+    isDel: boolean;
+    createdAt: string | Date;
+    updatedAt: string | Date;
 }
 export { I_GenericDocument }
 export { I_GenericDocument as I_GenericDocument_alias_1 }
 export { I_GenericDocument as I_GenericDocument_alias_2 }
+
+declare interface I_GenericDocument_2 extends Partial<C_Document_2> {
+    id?: string;
+    isDel: boolean;
+    createdAt: string | Date;
+    updatedAt: string | Date;
+}
 
 declare interface I_GraphqlCodegenConfig {
     uri: string;
@@ -6179,17 +6186,6 @@ declare interface I_GraphqlCodegenConfig_2 {
     withHooks?: boolean;
     withMutationFn?: boolean;
     withRefetchFn?: boolean;
-}
-
-declare interface I_HookNextFunction {
-    (error?: Error | null): void;
-}
-export { I_HookNextFunction }
-export { I_HookNextFunction as I_HookNextFunction_alias_1 }
-export { I_HookNextFunction as I_HookNextFunction_alias_2 }
-
-declare interface I_HookNextFunction_2 {
-    (error?: Error | null): void;
 }
 
 declare interface I_Input_CreateMany<T> {
@@ -6308,37 +6304,39 @@ declare interface I_LoadingProps_2 {
     message?: string;
 }
 
-declare interface I_MongooseModelMiddleware {
-    method: string;
-    fn: T_MongooseModelMiddlewareFunction;
+declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
+    method: T_MongooseModelMiddlewareMethod;
+    pre?: T_MongooseModelMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
+    post?: T_MongooseModelMiddlewarePostFunction<T>;
 }
 export { I_MongooseModelMiddleware }
 export { I_MongooseModelMiddleware as I_MongooseModelMiddleware_alias_1 }
 export { I_MongooseModelMiddleware as I_MongooseModelMiddleware_alias_2 }
 
-declare interface I_MongooseModelMiddleware_2 {
-    method: string;
-    fn: T_MongooseModelMiddlewareFunction_2;
+declare interface I_MongooseModelMiddleware_2<T extends Partial<C_Document_2>> {
+    method: T_MongooseModelMiddlewareMethod_2;
+    pre?: T_MongooseModelMiddlewarePreFunction_2<T & T_QueryWithHelpers_2<T>>;
+    post?: T_MongooseModelMiddlewarePostFunction_2<T>;
 }
 
-declare interface I_MongooseOptions<D extends Partial<C_Document>> {
+declare interface I_MongooseOptions<T extends Partial<C_Document>> {
     mongoose: typeof mongoose;
     virtuals?: {
-        name: keyof D | string;
+        name: keyof T | string;
         options?: I_VirtualOptions_2;
-        get?: (this: D) => void;
+        get?: (this: T) => void;
     }[];
 }
 export { I_MongooseOptions }
 export { I_MongooseOptions as I_MongooseOptions_alias_1 }
 export { I_MongooseOptions as I_MongooseOptions_alias_2 }
 
-declare interface I_MongooseOptions_2<D extends Partial<C_Document_2>> {
+declare interface I_MongooseOptions_2<T extends Partial<C_Document_2>> {
     mongoose: typeof mongoose;
     virtuals?: {
-        name: keyof D | string;
+        name: keyof T | string;
         options?: I_VirtualOptions;
-        get?: (this: D) => void;
+        get?: (this: T) => void;
     }[];
 }
 
@@ -6386,12 +6384,12 @@ declare interface I_NextIntlLanguage_2 {
     timezone: Timezone;
 }
 
-declare type I_Return<D = void, E = unknown> = I_ReturnSuccess<D, E> | I_ReturnFailure;
+declare type I_Return<T = void, E = unknown> = I_ReturnSuccess<T, E> | I_ReturnFailure;
 export { I_Return }
 export { I_Return as I_Return_alias_1 }
 export { I_Return as I_Return_alias_2 }
 
-declare type I_Return_2<D = void, E = unknown> = I_ReturnSuccess_2<D, E> | I_ReturnFailure_2;
+declare type I_Return_2<T = void, E = unknown> = I_ReturnSuccess_2<T, E> | I_ReturnFailure_2;
 
 declare interface I_ReturnFailure {
     success: false;
@@ -6408,9 +6406,9 @@ declare interface I_ReturnFailure_2 {
     code: number | string;
 }
 
-declare interface I_ReturnSuccess<D, E = unknown> {
+declare interface I_ReturnSuccess<T, E = unknown> {
     success: true;
-    result: D & E;
+    result: T & E;
     message?: string;
     code?: number | string;
 }
@@ -6418,9 +6416,9 @@ export { I_ReturnSuccess }
 export { I_ReturnSuccess as I_ReturnSuccess_alias_1 }
 export { I_ReturnSuccess as I_ReturnSuccess_alias_2 }
 
-declare interface I_ReturnSuccess_2<D, E = unknown> {
+declare interface I_ReturnSuccess_2<T, E = unknown> {
     success: true;
-    result: D & E;
+    result: T & E;
     message?: string;
     code?: number | string;
 }
@@ -6590,24 +6588,26 @@ export { MongoController }
 export { MongoController as MongoController_alias_1 }
 export { MongoController as MongoController_alias_2 }
 
-declare class MongooseController<D extends Partial<C_Document_2>> {
+declare class MongooseController<T extends Partial<C_Document_2>> {
     private model;
-    constructor(model: I_ExtendedModel_2<D>);
+    constructor(model: I_ExtendedModel_2<T>);
     private getModelName;
-    findOne(filter?: T_FilterQuery_2<D>, projection?: T_ProjectionType_2<D>, options?: T_QueryOptions_2<D>, populate?: T_Input_Populate_2): Promise<I_Return_2<D>>;
-    findAll(filter?: T_FilterQuery_2<D>, projection?: T_ProjectionType_2<D>, options?: T_QueryOptions_2<D>, populate?: T_Input_Populate_2): Promise<I_Return_2<D[]>>;
-    findPaging(filter?: T_FilterQuery_2<D>, options?: T_PaginateOptionsWithPopulate_2): Promise<I_Return_2<T_PaginateResult_2<D>>>;
-    findPagingAggregate(pipeline: T_PipelineStage_2[], options?: T_PaginateOptionsWithPopulate_2): Promise<I_Return_2<T_AggregatePaginateResult_2<D>>>;
-    count(filter?: T_FilterQuery_2<D>): Promise<I_Return_2<number>>;
-    createOne(doc: D | Partial<D>): Promise<I_Return_2<D>>;
-    createMany(docs: (D | Partial<D>)[], options?: T_InsertManyOptions_2): Promise<I_Return_2<D[]>>;
-    updateOne(filter?: T_FilterQuery_2<D>, update?: T_UpdateQuery_2<D>, options?: I_UpdateOptionsExtended_2): Promise<I_Return_2<D>>;
-    updateMany(filter?: T_FilterQuery_2<D>, update?: T_UpdateQuery_2<D>, options?: I_UpdateOptionsExtended_2): Promise<I_Return_2<T_UpdateResult_2>>;
-    deleteOne(filter?: T_FilterQuery_2<D>, options?: I_DeleteOptionsExtended_2): Promise<I_Return_2<D>>;
-    deleteMany(filter?: T_FilterQuery_2<D>, options?: I_DeleteOptionsExtended_2): Promise<I_Return_2<T_DeleteResult_2>>;
-    generateShortId(id: string): Promise<I_Return_2<string>>;
-    generateSlug(fieldName: string, fields: D, filters?: T_FilterQuery_2<D>): Promise<I_Return_2<string>>;
-    aggregate(pipeline: T_PipelineStage_2[]): Promise<I_Return_2<D[]>>;
+    findOne(filter?: T_FilterQuery_2<T>, projection?: T_ProjectionType_2<T>, options?: T_QueryOptions_2<T>, populate?: T_Input_Populate_2): Promise<I_Return_2<T>>;
+    findAll(filter?: T_FilterQuery_2<T>, projection?: T_ProjectionType_2<T>, options?: T_QueryOptions_2<T>, populate?: T_Input_Populate_2): Promise<I_Return_2<T[]>>;
+    findPaging(filter?: T_FilterQuery_2<T>, options?: T_PaginateOptionsWithPopulate_2): Promise<I_Return_2<T_PaginateResult_2<T>>>;
+    findPagingAggregate(pipeline: T_PipelineStage_2[], options?: T_PaginateOptionsWithPopulate_2): Promise<I_Return_2<T_AggregatePaginateResult_2<T>>>;
+    count(filter?: T_FilterQuery_2<T>): Promise<I_Return_2<number>>;
+    createOne(doc: T | Partial<T>): Promise<I_Return_2<T>>;
+    createMany(docs: (T | Partial<T>)[], options?: T_InsertManyOptions_2): Promise<I_Return_2<T[]>>;
+    updateOne(filter?: T_FilterQuery_2<T>, update?: T_UpdateQuery_2<T>, options?: I_UpdateOptionsExtended_2): Promise<I_Return_2<T>>;
+    updateMany(filter?: T_FilterQuery_2<T>, update?: T_UpdateQuery_2<T>, options?: I_UpdateOptionsExtended_2): Promise<I_Return_2<T_UpdateResult_2>>;
+    deleteOne(filter?: T_FilterQuery_2<T>, options?: I_DeleteOptionsExtended_2): Promise<I_Return_2<T>>;
+    deleteMany(filter?: T_FilterQuery_2<T>, options?: I_DeleteOptionsExtended_2): Promise<I_Return_2<T_DeleteResult_2>>;
+    generateShortId(id: string, length?: number): Promise<I_Return_2<string>>;
+    generateSlug(fieldName: string, fields: T, filters?: T_FilterQuery_2<T>): Promise<I_Return_2<string | {
+        [key: string]: string;
+    }>>;
+    aggregate(pipeline: T_PipelineStage_2[]): Promise<I_Return_2<T[]>>;
 }
 export { MongooseController }
 export { MongooseController as MongooseController_alias_1 }
@@ -6961,12 +6961,26 @@ export { T_DeleteResult as T_DeleteResult_alias_2 }
 
 declare type T_DeleteResult_2 = DeleteResult;
 
-declare type T_Filter<D> = Filter<D>;
+declare type T_ErrorHandlingMiddlewareFunction<T> = ErrorHandlingMiddlewareFunction<T>;
+export { T_ErrorHandlingMiddlewareFunction }
+export { T_ErrorHandlingMiddlewareFunction as T_ErrorHandlingMiddlewareFunction_alias_1 }
+export { T_ErrorHandlingMiddlewareFunction as T_ErrorHandlingMiddlewareFunction_alias_2 }
+
+declare type T_ErrorHandlingMiddlewareFunction_2<T> = ErrorHandlingMiddlewareFunction<T>;
+
+declare type T_ErrorHandlingMiddlewareWithOption<T> = ErrorHandlingMiddlewareWithOption<T>;
+export { T_ErrorHandlingMiddlewareWithOption }
+export { T_ErrorHandlingMiddlewareWithOption as T_ErrorHandlingMiddlewareWithOption_alias_1 }
+export { T_ErrorHandlingMiddlewareWithOption as T_ErrorHandlingMiddlewareWithOption_alias_2 }
+
+declare type T_ErrorHandlingMiddlewareWithOption_2<T> = ErrorHandlingMiddlewareWithOption<T>;
+
+declare type T_Filter<T> = Filter<T>;
 export { T_Filter }
 export { T_Filter as T_Filter_alias_1 }
 export { T_Filter as T_Filter_alias_2 }
 
-declare type T_Filter_2<D> = Filter<D>;
+declare type T_Filter_2<T> = Filter<T>;
 
 declare type T_FilterQuery<T> = FilterQuery<T>;
 export { T_FilterQuery }
@@ -6975,7 +6989,7 @@ export { T_FilterQuery as T_FilterQuery_alias_2 }
 
 declare type T_FilterQuery_2<T> = FilterQuery<T>;
 
-declare type T_GenerateSlugQueryResponse<D> = T_FilterQuery<D> & {
+declare type T_GenerateSlugQueryResponse<T> = T_FilterQuery<T> & {
     $or: Array<{
         slug: string;
     } | {
@@ -6990,27 +7004,23 @@ export { T_GenerateSlugQueryResponse }
 export { T_GenerateSlugQueryResponse as T_GenerateSlugQueryResponse_alias_1 }
 export { T_GenerateSlugQueryResponse as T_GenerateSlugQueryResponse_alias_2 }
 
-declare type T_GenerateSlugQueryResponse_2<D> = T_FilterQuery_2<D> & {
+declare type T_GenerateSlugQueryResponse_2<T> = T_FilterQuery_2<T> & {
     $or: Array<{ slug: string } | { slugHistory: string }>;
 } & { id?: { $ne: string } };
 
-declare type T_Input_MongooseSchema<D> = SchemaDefinition<D>;
+declare type T_Input_MongooseSchema<T> = SchemaDefinition<T>;
 export { T_Input_MongooseSchema }
 export { T_Input_MongooseSchema as T_Input_MongooseSchema_alias_1 }
 export { T_Input_MongooseSchema as T_Input_MongooseSchema_alias_2 }
 
-declare type T_Input_MongooseSchema_2<D> = SchemaDefinition<D>;
+declare type T_Input_MongooseSchema_2<T> = SchemaDefinition<T>;
 
 declare type T_Input_Populate = string | string[] | T_PopulateOptions | T_PopulateOptions[];
 export { T_Input_Populate }
 export { T_Input_Populate as T_Input_Populate_alias_1 }
 export { T_Input_Populate as T_Input_Populate_alias_2 }
 
-declare type T_Input_Populate_2 =
-| string
-| string[]
-| T_PopulateOptions_2
-| T_PopulateOptions_2[];
+declare type T_Input_Populate_2 = string | string[] | T_PopulateOptions_2 | T_PopulateOptions_2[];
 
 declare type T_InsertManyOptions = InsertManyOptions;
 export { T_InsertManyOptions }
@@ -7019,45 +7029,52 @@ export { T_InsertManyOptions as T_InsertManyOptions_alias_2 }
 
 declare type T_InsertManyOptions_2 = InsertManyOptions;
 
-declare type T_InsertManyResult<D> = InsertManyResult<D>;
+declare type T_InsertManyResult<T> = InsertManyResult<T>;
 export { T_InsertManyResult }
 export { T_InsertManyResult as T_InsertManyResult_alias_1 }
 export { T_InsertManyResult as T_InsertManyResult_alias_2 }
 
-declare type T_InsertManyResult_2<D> = InsertManyResult<D>;
+declare type T_InsertManyResult_2<T> = InsertManyResult<T>;
 
-declare type T_InsertOneResult<D> = InsertOneResult<D>;
+declare type T_InsertOneResult<T> = InsertOneResult<T>;
 export { T_InsertOneResult }
 export { T_InsertOneResult as T_InsertOneResult_alias_1 }
 export { T_InsertOneResult as T_InsertOneResult_alias_2 }
 
-declare type T_InsertOneResult_2<D> = InsertOneResult<D>;
+declare type T_InsertOneResult_2<T> = InsertOneResult<T>;
 
-declare type T_MiddlewareContext<T> = T | QueryWithHelpers<T, T>;
-export { T_MiddlewareContext }
-export { T_MiddlewareContext as T_MiddlewareContext_alias_1 }
-export { T_MiddlewareContext as T_MiddlewareContext_alias_2 }
+declare type T_MongooseModelMiddlewareMethod = string | RegExp;
+export { T_MongooseModelMiddlewareMethod }
+export { T_MongooseModelMiddlewareMethod as T_MongooseModelMiddlewareMethod_alias_1 }
+export { T_MongooseModelMiddlewareMethod as T_MongooseModelMiddlewareMethod_alias_2 }
 
-declare type T_MiddlewareContext_2<T> = T | QueryWithHelpers<T, T>;
+declare type T_MongooseModelMiddlewareMethod_2 = string | RegExp;
 
-declare type T_MongooseModelMiddlewareFunction = (this: T_MiddlewareContext<C_Document>, next: I_HookNextFunction) => void;
-export { T_MongooseModelMiddlewareFunction }
-export { T_MongooseModelMiddlewareFunction as T_MongooseModelMiddlewareFunction_alias_1 }
-export { T_MongooseModelMiddlewareFunction as T_MongooseModelMiddlewareFunction_alias_2 }
+declare type T_MongooseModelMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
+export { T_MongooseModelMiddlewarePostFunction }
+export { T_MongooseModelMiddlewarePostFunction as T_MongooseModelMiddlewarePostFunction_alias_1 }
+export { T_MongooseModelMiddlewarePostFunction as T_MongooseModelMiddlewarePostFunction_alias_2 }
 
-declare type T_MongooseModelMiddlewareFunction_2 = (this: T_MiddlewareContext_2<C_Document_2>, next: I_HookNextFunction_2) => void;
+declare type T_MongooseModelMiddlewarePostFunction_2<T> = T_PostMiddlewareFunction_2<T> & T_ErrorHandlingMiddlewareFunction_2<T> & T_ErrorHandlingMiddlewareWithOption_2<T>;
+
+declare type T_MongooseModelMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_PreSaveMiddlewareFunction<T>;
+export { T_MongooseModelMiddlewarePreFunction }
+export { T_MongooseModelMiddlewarePreFunction as T_MongooseModelMiddlewarePreFunction_alias_1 }
+export { T_MongooseModelMiddlewarePreFunction as T_MongooseModelMiddlewarePreFunction_alias_2 }
+
+declare type T_MongooseModelMiddlewarePreFunction_2<T> = T_PreMiddlewareFunction_2<T> & T_PreSaveMiddlewareFunction_2<T>;
 
 declare type T_MongoosePlugin = (schema: Schema, options?: Record<string, unknown>) => void;
 export { T_MongoosePlugin }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_1 }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_2 }
 
-declare type T_MongooseShema<D> = mongoose.Schema<D>;
+declare type T_MongooseShema<T> = mongoose.Schema<T>;
 export { T_MongooseShema }
 export { T_MongooseShema as T_MongooseShema_alias_1 }
 export { T_MongooseShema as T_MongooseShema_alias_2 }
 
-declare type T_MongooseShema_2<D> = mongoose.Schema<D>;
+declare type T_MongooseShema_2<T> = mongoose.Schema<T>;
 
 declare type T_NextIntlMessageList = Record<string, AbstractIntlMessages>;
 export { T_NextIntlMessageList }
@@ -7116,6 +7133,27 @@ export { T_PopulateOptions as T_PopulateOptions_alias_2 }
 
 declare type T_PopulateOptions_2 = PopulateOptions;
 
+declare type T_PostMiddlewareFunction<T> = PostMiddlewareFunction<T>;
+export { T_PostMiddlewareFunction }
+export { T_PostMiddlewareFunction as T_PostMiddlewareFunction_alias_1 }
+export { T_PostMiddlewareFunction as T_PostMiddlewareFunction_alias_2 }
+
+declare type T_PostMiddlewareFunction_2<T> = PostMiddlewareFunction<T>;
+
+declare type T_PreMiddlewareFunction<T> = PreMiddlewareFunction<T>;
+export { T_PreMiddlewareFunction }
+export { T_PreMiddlewareFunction as T_PreMiddlewareFunction_alias_1 }
+export { T_PreMiddlewareFunction as T_PreMiddlewareFunction_alias_2 }
+
+declare type T_PreMiddlewareFunction_2<T> = PreMiddlewareFunction<T>;
+
+declare type T_PreSaveMiddlewareFunction<T> = PreSaveMiddlewareFunction<T>;
+export { T_PreSaveMiddlewareFunction }
+export { T_PreSaveMiddlewareFunction as T_PreSaveMiddlewareFunction_alias_1 }
+export { T_PreSaveMiddlewareFunction as T_PreSaveMiddlewareFunction_alias_2 }
+
+declare type T_PreSaveMiddlewareFunction_2<T> = PreSaveMiddlewareFunction<T>;
+
 declare type T_ProjectionType<T> = ProjectionType<T>;
 export { T_ProjectionType }
 export { T_ProjectionType as T_ProjectionType_alias_1 }
@@ -7129,6 +7167,13 @@ export { T_QueryOptions as T_QueryOptions_alias_1 }
 export { T_QueryOptions as T_QueryOptions_alias_2 }
 
 declare type T_QueryOptions_2<T> = QueryOptions<T>;
+
+declare type T_QueryWithHelpers<T> = QueryWithHelpers<T, T>;
+export { T_QueryWithHelpers }
+export { T_QueryWithHelpers as T_QueryWithHelpers_alias_1 }
+export { T_QueryWithHelpers as T_QueryWithHelpers_alias_2 }
+
+declare type T_QueryWithHelpers_2<T> = QueryWithHelpers<T, T>;
 
 declare interface T_ThrowResponseArgs {
     message?: string;

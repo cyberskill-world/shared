@@ -7,6 +7,8 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import slugifyRaw from 'slugify';
 import { v4 as uuidv4 } from 'uuid';
 
+import type { I_Return } from '#typescript/api-response.js';
+import type { T_DeleteResult, T_UpdateResult } from '#typescript/mongo.js';
 import type {
     C_Document,
     I_DeleteOptionsExtended,
@@ -15,11 +17,9 @@ import type {
     I_GenerateSchemaOptions,
     I_GenericDocument,
     I_MongooseModelMiddleware,
-    I_Return,
     I_SlugifyOptions,
     I_UpdateOptionsExtended,
     T_AggregatePaginateResult,
-    T_DeleteResult,
     T_FilterQuery,
     T_GenerateSlugQueryResponse,
     T_Input_Populate,
@@ -33,24 +33,132 @@ import type {
     T_ProjectionType,
     T_QueryOptions,
     T_UpdateQuery,
-    T_UpdateResult,
 } from '#typescript/mongoose.js';
 
 import { RESPONSE_STATUS } from '#constants/response-status.js';
 
-export class MongooseController<D extends Partial<C_Document>> {
-    constructor(private model: I_ExtendedModel<D>) { }
+export { aggregatePaginate, mongoosePaginate };
+
+function applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) {
+    plugins
+        .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
+        .forEach(plugin => schema.plugin(plugin));
+}
+
+function applyMiddlewares<T extends Partial<C_Document>>(
+    schema: T_MongooseShema<T>,
+    middlewares: I_MongooseModelMiddleware<T>[],
+) {
+    middlewares.forEach(({ method, pre, post }) => {
+        if (method && pre) {
+            schema.pre(method as RegExp, pre);
+        }
+
+        if (method && post) {
+            schema.post(method as RegExp, post);
+        }
+    });
+}
+
+function createGenericSchema(mongoose: typeof mongooseRaw) {
+    return new mongoose.Schema<I_GenericDocument>(
+        {
+            id: { type: String, default: uuidv4, required: true, unique: true },
+            isDel: { type: Boolean, default: false, required: true },
+        },
+        { timestamps: true },
+    );
+}
+
+export function generateSchema<T extends Partial<C_Document>>({
+    mongoose,
+    schema,
+    virtuals = [],
+    standalone = false,
+}: I_GenerateSchemaOptions<T>): T_MongooseShema<T> {
+    const generatedSchema = new mongoose.Schema<T>(schema, { strict: true });
+
+    virtuals.forEach(({ name, options, get }) => {
+        const virtualInstance = generatedSchema.virtual(name as string, options);
+        if (get)
+            virtualInstance.get(get);
+    });
+
+    if (!standalone) {
+        generatedSchema.add(createGenericSchema(mongoose));
+    }
+
+    return generatedSchema;
+}
+
+export function generateModel<T extends Partial<C_Document>>({
+    mongoose,
+    name,
+    schema,
+    pagination = false,
+    aggregate = false,
+    virtuals = [],
+    middlewares = [],
+}: I_GenerateModelOptions<T>): I_ExtendedModel<T> {
+    if (!name) {
+        throw new Error('Model name is required.');
+    }
+
+    if (mongoose.models[name]) {
+        return mongoose.models[name] as I_ExtendedModel<T>;
+    }
+
+    const generatedSchema = generateSchema({ mongoose, schema, virtuals });
+
+    applyPlugins<T>(generatedSchema, [
+        pagination && mongoosePaginate,
+        aggregate && aggregatePaginate,
+    ]);
+
+    applyMiddlewares<T>(generatedSchema, middlewares);
+
+    return mongoose.model<T>(name, generatedSchema) as I_ExtendedModel<T>;
+}
+
+const slugify = slugifyRaw.default || slugifyRaw;
+
+export function generateSlug(str = '', options?: I_SlugifyOptions): string {
+    const { lower = true, locale = 'vi', ...rest } = options || {};
+    return slugify(str, { lower, locale, ...rest });
+}
+
+export function generateShortId(uuid: string, length = 4): string {
+    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
+}
+
+export function generateSlugQuery<T>(
+    slug: string,
+    filters: T_FilterQuery<T> = {},
+    id?: string,
+): T_GenerateSlugQueryResponse<T> {
+    return {
+        ...filters,
+        ...(id && { id: { $ne: id } }),
+        $or: [
+            { slug },
+            { slugHistory: slug },
+        ],
+    };
+}
+
+export class MongooseController<T extends Partial<C_Document>> {
+    constructor(private model: I_ExtendedModel<T>) { }
 
     private getModelName(): string {
         return this.model.modelName;
     }
 
     async findOne(
-        filter: T_FilterQuery<D> = {},
-        projection: T_ProjectionType<D> = {},
-        options: T_QueryOptions<D> = {},
+        filter: T_FilterQuery<T> = {},
+        projection: T_ProjectionType<T> = {},
+        options: T_QueryOptions<T> = {},
         populate?: T_Input_Populate,
-    ): Promise<I_Return<D>> {
+    ): Promise<I_Return<T>> {
         try {
             const query = this.model.findOne(filter, projection, options);
 
@@ -80,11 +188,11 @@ export class MongooseController<D extends Partial<C_Document>> {
     }
 
     async findAll(
-        filter: T_FilterQuery<D> = {},
-        projection: T_ProjectionType<D> = {},
-        options: T_QueryOptions<D> = {},
+        filter: T_FilterQuery<T> = {},
+        projection: T_ProjectionType<T> = {},
+        options: T_QueryOptions<T> = {},
         populate?: T_Input_Populate,
-    ): Promise<I_Return<D[]>> {
+    ): Promise<I_Return<T[]>> {
         try {
             const query = this.model.find(filter, projection, options);
 
@@ -106,9 +214,9 @@ export class MongooseController<D extends Partial<C_Document>> {
     }
 
     async findPaging(
-        filter: T_FilterQuery<D> = {},
+        filter: T_FilterQuery<T> = {},
         options: T_PaginateOptionsWithPopulate = {},
-    ): Promise<I_Return<T_PaginateResult<D>>> {
+    ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
             const result = await this.model.paginate(filter, options);
 
@@ -126,7 +234,7 @@ export class MongooseController<D extends Partial<C_Document>> {
     async findPagingAggregate(
         pipeline: T_PipelineStage[],
         options: T_PaginateOptionsWithPopulate = {},
-    ): Promise<I_Return<T_AggregatePaginateResult<D>>> {
+    ): Promise<I_Return<T_AggregatePaginateResult<T>>> {
         try {
             const result = await this.model.aggregatePaginate(
                 this.model.aggregate(pipeline),
@@ -144,7 +252,7 @@ export class MongooseController<D extends Partial<C_Document>> {
         }
     }
 
-    async count(filter: T_FilterQuery<D> = {}): Promise<I_Return<number>> {
+    async count(filter: T_FilterQuery<T> = {}): Promise<I_Return<number>> {
         try {
             const result = await this.model.countDocuments(filter);
 
@@ -159,7 +267,7 @@ export class MongooseController<D extends Partial<C_Document>> {
         }
     }
 
-    async createOne(doc: D | Partial<D>): Promise<I_Return<D>> {
+    async createOne(doc: T | Partial<T>): Promise<I_Return<T>> {
         try {
             const result = await this.model.create(doc);
 
@@ -175,21 +283,21 @@ export class MongooseController<D extends Partial<C_Document>> {
     }
 
     async createMany(
-        docs: (D | Partial<D>)[],
+        docs: (T | Partial<T>)[],
         options: T_InsertManyOptions = {},
-    ): Promise<I_Return<D[]>> {
+    ): Promise<I_Return<T[]>> {
         try {
             const createdDocuments = await this.model.insertMany(docs, options);
 
             const result = createdDocuments
                 .map((doc) => {
                     if (doc instanceof Document) {
-                        return doc.toObject() as D;
+                        return doc.toObject() as T;
                     }
 
                     return null;
                 })
-                .filter((doc): doc is D => doc !== null);
+                .filter((doc): doc is T => doc !== null);
 
             return { success: true, result };
         }
@@ -203,10 +311,10 @@ export class MongooseController<D extends Partial<C_Document>> {
     }
 
     async updateOne(
-        filter: T_FilterQuery<D> = {},
-        update: T_UpdateQuery<D> = {},
+        filter: T_FilterQuery<T> = {},
+        update: T_UpdateQuery<T> = {},
         options: I_UpdateOptionsExtended = {},
-    ): Promise<I_Return<D>> {
+    ): Promise<I_Return<T>> {
         try {
             const result = await this.model
                 .findOneAndUpdate(filter, update, {
@@ -235,8 +343,8 @@ export class MongooseController<D extends Partial<C_Document>> {
     }
 
     async updateMany(
-        filter: T_FilterQuery<D> = {},
-        update: T_UpdateQuery<D> = {},
+        filter: T_FilterQuery<T> = {},
+        update: T_UpdateQuery<T> = {},
         options: I_UpdateOptionsExtended = {},
     ): Promise<I_Return<T_UpdateResult>> {
         try {
@@ -256,9 +364,9 @@ export class MongooseController<D extends Partial<C_Document>> {
     }
 
     async deleteOne(
-        filter: T_FilterQuery<D> = {},
+        filter: T_FilterQuery<T> = {},
         options: I_DeleteOptionsExtended = {},
-    ): Promise<I_Return<D>> {
+    ): Promise<I_Return<T>> {
         try {
             const result = await this.model
                 .findOneAndDelete(filter, options)
@@ -284,7 +392,7 @@ export class MongooseController<D extends Partial<C_Document>> {
     }
 
     async deleteMany(
-        filter: T_FilterQuery<D> = {},
+        filter: T_FilterQuery<T> = {},
         options: I_DeleteOptionsExtended = {},
     ): Promise<I_Return<T_DeleteResult>> {
         try {
@@ -309,12 +417,12 @@ export class MongooseController<D extends Partial<C_Document>> {
         }
     }
 
-    async generateShortId(id: string): Promise<I_Return<string>> {
+    async generateShortId(id: string, length = 4): Promise<I_Return<string>> {
         const maxRetries = 10;
         const existingShortIds = new Set();
 
         for (let retries = 0; retries < maxRetries; retries++) {
-            const shortId = generateShortId(id, retries + 4);
+            const shortId = generateShortId(id, retries + length);
 
             if (!existingShortIds.has(shortId)) {
                 existingShortIds.add(shortId);
@@ -336,32 +444,50 @@ export class MongooseController<D extends Partial<C_Document>> {
 
     async generateSlug(
         fieldName: string,
-        fields: D,
-        filters: T_FilterQuery<D> = {},
-    ): Promise<I_Return<string>> {
+        fields: T,
+        filters: T_FilterQuery<T> = {},
+    ): Promise<I_Return<string | { [key: string]: string }>> {
         try {
-            const slug = generateSlug(fields[fieldName as keyof D] as string);
+            const fieldValue = fields[fieldName as keyof T];
 
-            let existingDoc = await this.model.findOne(
-                generateSlugQuery<D>(slug, filters, fields.id),
-            );
-
-            if (!existingDoc) {
-                return { success: true, result: slug };
-            }
-
-            let suffix = 1;
-            let uniqueSlug;
-
-            do {
-                uniqueSlug = `${slug}-${suffix}`;
-                existingDoc = await this.model.findOne(
-                    generateSlugQuery<D>(uniqueSlug, filters, fields.id),
+            const generateUniqueSlug = async (slug: string): Promise<string> => {
+                let existingDoc = await this.model.findOne(
+                    generateSlugQuery<T>(slug, filters, fields.id),
                 );
-                suffix++;
-            } while (existingDoc);
 
-            return { success: true, result: uniqueSlug };
+                if (!existingDoc)
+                    return slug;
+
+                let suffix = 1;
+                let uniqueSlug;
+
+                do {
+                    uniqueSlug = `${slug}-${suffix}`;
+                    existingDoc = await this.model.findOne(
+                        generateSlugQuery<T>(uniqueSlug, filters, fields.id),
+                    );
+                    suffix++;
+                } while (existingDoc);
+
+                return uniqueSlug;
+            };
+
+            if (typeof fieldValue === 'object') {
+                const slugResults: { [key: string]: string } = {};
+
+                for (const lang in fieldValue) {
+                    const slug = generateSlug(fieldValue[lang] as string);
+                    slugResults[lang] = await generateUniqueSlug(slug);
+                }
+
+                return { success: true, result: slugResults };
+            }
+            else {
+                const slug = generateSlug(fieldValue as string);
+                const uniqueSlug = await generateUniqueSlug(slug);
+
+                return { success: true, result: uniqueSlug };
+            }
         }
         catch (error) {
             return {
@@ -372,9 +498,9 @@ export class MongooseController<D extends Partial<C_Document>> {
         }
     }
 
-    async aggregate(pipeline: T_PipelineStage[]): Promise<I_Return<D[]>> {
+    async aggregate(pipeline: T_PipelineStage[]): Promise<I_Return<T[]>> {
         try {
-            const result = await this.model.aggregate<D>(pipeline);
+            const result = await this.model.aggregate<T>(pipeline);
 
             return { success: true, result };
         }
@@ -382,107 +508,4 @@ export class MongooseController<D extends Partial<C_Document>> {
             return { success: false, message: (error as Error).message, code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE };
         }
     }
-}
-
-export { aggregatePaginate, mongoosePaginate };
-
-function applyPlugins<D>(schema: T_MongooseShema<D>, plugins: Array<T_MongoosePlugin | false>) {
-    plugins
-        .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
-        .forEach(plugin => schema.plugin(plugin));
-}
-
-function applyMiddlewares<D>(
-    schema: T_MongooseShema<D>,
-    middlewares: I_MongooseModelMiddleware[],
-) {
-    middlewares.forEach(({ method, fn }) =>
-        schema.pre(method as RegExp | 'createCollection', fn),
-    );
-}
-
-function createGenericSchema(mongoose: typeof mongooseRaw) {
-    return new mongoose.Schema<I_GenericDocument>(
-        {
-            id: { type: String, default: uuidv4, required: true, unique: true },
-            isDel: { type: Boolean, default: false, required: true },
-        },
-        { timestamps: true },
-    );
-}
-
-export function generateSchema<D extends Partial<C_Document>>({
-    mongoose,
-    schema,
-    virtuals = [],
-    standalone = false,
-}: I_GenerateSchemaOptions<D>): T_MongooseShema<D> {
-    const generatedSchema = new mongoose.Schema<D>(schema, { strict: true });
-
-    virtuals.forEach(({ name, options, get }) => {
-        const virtualInstance = generatedSchema.virtual(name as string, options);
-        if (get)
-            virtualInstance.get(get);
-    });
-
-    if (!standalone) {
-        generatedSchema.add(createGenericSchema(mongoose));
-    }
-
-    return generatedSchema;
-}
-
-export function generateModel<D extends Partial<C_Document>>({
-    mongoose,
-    name,
-    schema,
-    pagination = false,
-    aggregate = false,
-    virtuals = [],
-    middlewares = [],
-}: I_GenerateModelOptions<D>): I_ExtendedModel<D> {
-    if (!name) {
-        throw new Error('Model name is required.');
-    }
-
-    if (mongoose.models[name]) {
-        return mongoose.models[name] as I_ExtendedModel<D>;
-    }
-
-    const generatedSchema = generateSchema({ mongoose, schema, virtuals });
-
-    applyPlugins<D>(generatedSchema, [
-        pagination && mongoosePaginate,
-        aggregate && aggregatePaginate,
-    ]);
-
-    applyMiddlewares<D>(generatedSchema, middlewares);
-
-    return mongoose.model<D>(name, generatedSchema) as I_ExtendedModel<D>;
-}
-
-const slugify = slugifyRaw.default || slugifyRaw;
-
-export function generateSlug(str = '', options?: I_SlugifyOptions): string {
-    const { lower = true, locale = 'vi', ...rest } = options || {};
-    return slugify(str, { lower, locale, ...rest });
-}
-
-export function generateShortId(uuid: string, length = 4): string {
-    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
-}
-
-export function generateSlugQuery<D>(
-    slug: string,
-    filters: T_FilterQuery<D> = {},
-    id?: string,
-): T_GenerateSlugQueryResponse<D> {
-    return {
-        ...filters,
-        ...(id && { id: { $ne: id } }),
-        $or: [
-            { slug },
-            { slugHistory: slug },
-        ],
-    };
 }

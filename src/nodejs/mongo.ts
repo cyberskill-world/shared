@@ -1,38 +1,25 @@
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
+import type { C_Db, T_DeleteResult, T_Filter, T_InsertManyResult, T_InsertOneResult, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from '#typescript/mongo.js';
 import type {
     C_Collection,
-    C_Db,
     C_Document,
-    T_DeleteResult,
-    T_Filter,
-    T_InsertManyResult,
-    T_InsertOneResult,
-    T_OptionalUnlessRequiredId,
-    T_UpdateResult,
-    T_WithId,
+    I_GenericDocument,
 } from '#typescript/mongoose.js';
 
-export function getMongoDateTime(): string {
-    const now = new Date();
-
+export function getMongoDateTime(now = new Date()): string {
     return format(now, 'yyyy-MM-dd HH:mm:ss.SSS');
 }
 
-export function getMongoGenericFields<T extends 'date' | 'string'>({
+export function createMongoGenericFields({
     isNew = true,
-    returnDateAs = 'string' as T,
-}: { isNew?: boolean; returnDateAs?: T } = {}): {
-        id?: string;
-        isDel: boolean;
-        createdAt: T extends 'string' ? string : Date;
-        updatedAt: T extends 'string' ? string : Date;
-    } {
-    const now = (returnDateAs === 'string' ? getMongoDateTime() : new Date()) as T extends 'string' ? string : Date;
+    returnDateAs = 'string',
+}: { isNew?: boolean; returnDateAs?: 'string' | 'date' } = {}): I_GenericDocument {
+    const now = returnDateAs === 'string' ? getMongoDateTime() : new Date();
 
     return {
-        ...(isNew && { id: uuidv4() }),
+        ...(isNew ? {} : { id: uuidv4() }),
         isDel: false,
         createdAt: now,
         updatedAt: now,
@@ -53,7 +40,7 @@ export class MongoController<D extends Partial<C_Document>> {
     }> {
         try {
             const finalDocument = {
-                ...getMongoGenericFields(),
+                ...createMongoGenericFields(),
                 ...document,
             };
 
@@ -77,7 +64,7 @@ export class MongoController<D extends Partial<C_Document>> {
     }> {
         try {
             const finalDocuments = documents.map(document => ({
-                ...getMongoGenericFields(),
+                ...createMongoGenericFields(),
                 ...document,
             }));
 
