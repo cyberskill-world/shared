@@ -1,3 +1,7 @@
+## 1.44.0 (2025-03-26)
+
+* feat: change useStorage output ([497a195](https://github.com/cyberskill-world/shared/commit/497a195))
+
 ## 1.43.0 (2025-03-26)
 
 * feat: move validate to validateMongooseField ([0ccfc6c](https://github.com/cyberskill-world/shared/commit/0ccfc6c))
