@@ -1,3 +1,7 @@
+## 1.43.0 (2025-03-26)
+
+* feat: move validate to validateMongooseField ([0ccfc6c](https://github.com/cyberskill-world/shared/commit/0ccfc6c))
+
 ## 1.42.0 (2025-03-25)
 
 * feat: add typscript for createMongoGenericFields ([fff265e](https://github.com/cyberskill-world/shared/commit/fff265e))
