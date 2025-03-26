@@ -1,3 +1,7 @@
+## 1.45.0 (2025-03-26)
+
+* feat: combine mongo and mongoose ([f9269d4](https://github.com/cyberskill-world/shared/commit/f9269d4))
+
 ## 1.44.0 (2025-03-26)
 
 * feat: change useStorage output ([497a195](https://github.com/cyberskill-world/shared/commit/497a195))
