@@ -27,7 +27,7 @@ import type { JSX } from 'react';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
 import type { Locale } from 'date-fns';
 import { Model } from 'mongoose';
-import type mongoose from 'mongoose';
+import type { default as mongoose_2 } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import type { OptionalUnlessRequiredId } from 'mongodb';
 import type { PaginateModel } from 'mongoose';
@@ -123,28 +123,6 @@ export { commandLog as commandLog_alias_2 }
 declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, }: I_GraphqlCodegenConfig_2): CodegenConfig;
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
-
-declare function createModel<T extends Partial<C_Document_2>>({ mongoose, name, schema, pagination, aggregate, virtuals, middlewares, }: I_CreateModelOptions_2<T>): I_ExtendedModel_2<T>;
-export { createModel }
-export { createModel as createModel_alias_1 }
-export { createModel as createModel_alias_2 }
-
-declare function createMongoGenericFields({ returnDateAs, }?: {
-    returnDateAs?: 'string' | 'date';
-}): I_GenericDocument_2;
-export { createMongoGenericFields }
-export { createMongoGenericFields as createMongoGenericFields_alias_1 }
-export { createMongoGenericFields as createMongoGenericFields_alias_2 }
-
-declare function createSchema<T extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_CreateSchemaOptions_2<T>): T_MongooseShema_2<T>;
-export { createSchema }
-export { createSchema as createSchema_alias_1 }
-export { createSchema as createSchema_alias_2 }
-
-declare function createSlugQuery<T>(slug: string, filters?: T_FilterQuery_2<T>, id?: string): T_CreateSlugQueryResponse_2<T>;
-export { createSlugQuery }
-export { createSlugQuery as createSlugQuery_alias_1 }
-export { createSlugQuery as createSlugQuery_alias_2 }
 
 declare function deepMerge(...configs: (I_Config_2 | I_Config_2[])[]): I_Config_2;
 export { deepMerge }
@@ -5979,11 +5957,6 @@ export { getLatestPackageVersion }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
 
-declare function getMongoDateTime(now?: Date): string;
-export { getMongoDateTime }
-export { getMongoDateTime as getMongoDateTime_alias_1 }
-export { getMongoDateTime as getMongoDateTime_alias_2 }
-
 declare function getStoredErrorLists(): Promise<I_ErrorEntry_2[]>;
 export { getStoredErrorLists }
 export { getStoredErrorLists as getStoredErrorLists_alias_1 }
@@ -6319,7 +6292,7 @@ declare interface I_MongooseModelMiddleware_2<T extends Partial<C_Document_2>> {
 }
 
 declare interface I_MongooseOptions<T extends Partial<C_Document>> {
-    mongoose: typeof mongoose;
+    mongoose: typeof mongoose_2;
     virtuals?: {
         name: keyof T | string;
         options?: I_VirtualOptions_2;
@@ -6331,7 +6304,7 @@ export { I_MongooseOptions as I_MongooseOptions_alias_1 }
 export { I_MongooseOptions as I_MongooseOptions_alias_2 }
 
 declare interface I_MongooseOptions_2<T extends Partial<C_Document_2>> {
-    mongoose: typeof mongoose;
+    mongoose: typeof mongoose_2;
     virtuals?: {
         name: keyof T | string;
         options?: I_VirtualOptions;
@@ -6534,6 +6507,16 @@ export { LoadingProvider }
 export { LoadingProvider as LoadingProvider_alias_1 }
 export { LoadingProvider as LoadingProvider_alias_2 }
 
+declare const mongo: {
+    getDateTime(now?: Date): string;
+    createGenericFields({ returnDateAs, }?: {
+        returnDateAs?: "string" | "date";
+    }): I_GenericDocument_2;
+};
+export { mongo }
+export { mongo as mongo_alias_1 }
+export { mongo as mongo_alias_2 }
+
 declare class MongoController<D extends Partial<C_Document_2>> {
     private collection;
     constructor(db: C_Db_2, collectionName: string);
@@ -6586,6 +6569,24 @@ declare class MongoController<D extends Partial<C_Document_2>> {
 export { MongoController }
 export { MongoController as MongoController_alias_1 }
 export { MongoController as MongoController_alias_2 }
+
+declare const mongoose: {
+    createSchema<T extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_CreateSchemaOptions_2<T>): T_MongooseShema_2<T>;
+    createModel<T extends Partial<C_Document_2>>({ mongoose: currentMongooseInstance, name, schema, pagination, aggregate, virtuals, middlewares, }: I_CreateModelOptions_2<T>): I_ExtendedModel_2<T>;
+    createSlugQuery<T>(slug: string, filters?: T_FilterQuery_2<T>, id?: string): T_CreateSlugQueryResponse_2<T>;
+    validator: {
+        isEmpty<T>(): (this: T, value: unknown) => Promise<boolean>;
+        isUnique<T extends {
+            constructor: {
+                findOne: (query: Record<string, unknown>) => Promise<unknown>;
+            };
+        }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
+        matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean>;
+    };
+};
+export { mongoose }
+export { mongoose as mongoose_alias_1 }
+export { mongoose as mongoose_alias_2 }
 
 declare class MongooseController<T extends Partial<C_Document_2>> {
     private model;
@@ -7073,12 +7074,12 @@ export { T_MongoosePlugin }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_1 }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_2 }
 
-declare type T_MongooseShema<T> = mongoose.Schema<T>;
+declare type T_MongooseShema<T> = mongoose_2.Schema<T>;
 export { T_MongooseShema }
 export { T_MongooseShema as T_MongooseShema_alias_1 }
 export { T_MongooseShema as T_MongooseShema_alias_2 }
 
-declare type T_MongooseShema_2<T> = mongoose.Schema<T>;
+declare type T_MongooseShema_2<T> = mongoose_2.Schema<T>;
 
 declare type T_NextIntlMessageList = Record<string, AbstractIntlMessages>;
 export { T_NextIntlMessageList }
@@ -7255,19 +7256,12 @@ export { useTranslateNextIntl }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_1 }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_2 }
 
-declare const validateMongooseField: {
+declare const validate: {
     isEmpty(value: unknown): boolean;
-    isEmptyValidator<T>(): (this: T, value: unknown) => Promise<boolean>;
-    isUniqueValidator<T extends {
-        constructor: {
-            findOne: (query: Record<string, unknown>) => Promise<unknown>;
-        };
-    }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
-    matchesRegexValidator(regexArray: RegExp[]): (value: string) => Promise<boolean>;
 };
-export { validateMongooseField }
-export { validateMongooseField as validateMongooseField_alias_1 }
-export { validateMongooseField as validateMongooseField_alias_2 }
+export { validate }
+export { validate as validate_alias_1 }
+export { validate as validate_alias_2 }
 
 declare function withNextIntl<T extends {
     children: T_Children_2;

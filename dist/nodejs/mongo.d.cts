@@ -1,3 +1,6 @@
-export { getMongoDateTime_alias_2 as getMongoDateTime } from '../_tsup-dts-rollup.cjs';
-export { createMongoGenericFields_alias_2 as createMongoGenericFields } from '../_tsup-dts-rollup.cjs';
+export { aggregatePaginate_alias_2 as aggregatePaginate } from '../_tsup-dts-rollup.cjs';
+export { mongoosePaginate_alias_2 as mongoosePaginate } from '../_tsup-dts-rollup.cjs';
+export { mongo_alias_2 as mongo } from '../_tsup-dts-rollup.cjs';
 export { MongoController_alias_2 as MongoController } from '../_tsup-dts-rollup.cjs';
+export { mongoose_alias_2 as mongoose } from '../_tsup-dts-rollup.cjs';
+export { MongooseController_alias_2 as MongooseController } from '../_tsup-dts-rollup.cjs';

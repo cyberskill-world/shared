@@ -6,7 +6,6 @@ export * from './graphql-codegen.js';
 export * from './loading.js';
 export * from './log.js';
 export * from './mongo.js';
-export * from './mongoose.js';
 export * from './next-intl.js';
 export * from './react.js';
 export * from './serializer.js';

@@ -94,11 +94,6 @@
             "import": "./dist/nodejs/mongo.js",
             "require": "./dist/nodejs/mongo.cjs"
         },
-        "./nodejs/mongoose": {
-            "types": "./dist/nodejs/mongoose.d.ts",
-            "import": "./dist/nodejs/mongoose.js",
-            "require": "./dist/nodejs/mongoose.cjs"
-        },
         "./react": {
             "types": "./dist/react/index.d.ts",
             "import": "./dist/react/index.js",
