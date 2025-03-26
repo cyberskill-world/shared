@@ -1,3 +1,7 @@
+## 1.46.0 (2025-03-26)
+
+* feat: merge mongoose into mongo ([19d1896](https://github.com/cyberskill-world/shared/commit/19d1896))
+
 ## 1.45.0 (2025-03-26)
 
 * feat: combine mongo and mongoose ([f9269d4](https://github.com/cyberskill-world/shared/commit/f9269d4))
