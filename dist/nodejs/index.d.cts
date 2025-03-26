@@ -7,3 +7,4 @@ export { createSlugQuery_alias_1 as createSlugQuery } from '../_tsup-dts-rollup.
 export { aggregatePaginate_alias_1 as aggregatePaginate } from '../_tsup-dts-rollup.cjs';
 export { mongoosePaginate_alias_1 as mongoosePaginate } from '../_tsup-dts-rollup.cjs';
 export { MongooseController_alias_1 as MongooseController } from '../_tsup-dts-rollup.cjs';
+export { validateMongooseField_alias_1 as validateMongooseField } from '../_tsup-dts-rollup.cjs';

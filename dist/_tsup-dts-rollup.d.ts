@@ -7251,21 +7251,19 @@ export { useTranslateNextIntl }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_1 }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_2 }
 
-declare const validate: {
-    common: {
-        isEmpty(value: unknown): boolean;
-        isEmptyValidator<T>(): (this: T, value: unknown) => Promise<boolean>;
-        isUniqueValidator<T extends {
-            constructor: {
-                findOne: (query: Record<string, unknown>) => Promise<unknown>;
-            };
-        }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
-        matchesRegexValidator(regexArray: RegExp[]): (value: string) => Promise<boolean>;
-    };
+declare const validateMongooseField: {
+    isEmpty(value: unknown): boolean;
+    isEmptyValidator<T>(): (this: T, value: unknown) => Promise<boolean>;
+    isUniqueValidator<T extends {
+        constructor: {
+            findOne: (query: Record<string, unknown>) => Promise<unknown>;
+        };
+    }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
+    matchesRegexValidator(regexArray: RegExp[]): (value: string) => Promise<boolean>;
 };
-export { validate }
-export { validate as validate_alias_1 }
-export { validate as validate_alias_2 }
+export { validateMongooseField }
+export { validateMongooseField as validateMongooseField_alias_1 }
+export { validateMongooseField as validateMongooseField_alias_2 }
 
 declare function withNextIntl<T extends {
     children: T_Children_2;
