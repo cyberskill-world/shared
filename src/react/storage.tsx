@@ -7,10 +7,10 @@ import { storageClient } from '#utils/storage-client.js';
 
 export function useStorage<T>(
     key: string,
-    initialValue: T,
+    initialValue?: T,
     serializer: I_Serializer<T> = defaultSerializer as I_Serializer<T>,
 ) {
-    const [storedValue, setStoredValue] = useState<T>(initialValue);
+    const [value, setValue] = useState<T | undefined>(initialValue);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
@@ -18,17 +18,20 @@ export function useStorage<T>(
 
         const loadValue = async () => {
             try {
-                const value = await storageClient.get<string>(key);
+                const valueFound = await storageClient.get<string>(key);
 
                 if (isMounted) {
-                    if (value !== null) {
-                        const parsedValue = serializer.deserialize(value);
-                        setStoredValue(parsedValue);
+                    if (valueFound !== null) {
+                        const parsedValue = serializer.deserialize(valueFound);
+                        setValue(parsedValue);
                     }
-                    else {
+                    else if (initialValue !== undefined) {
                         const serialized = serializer.serialize(initialValue);
                         await storageClient.set(key, serialized);
-                        setStoredValue(initialValue);
+                        setValue(initialValue);
+                    }
+                    else {
+                        setValue(undefined);
                     }
                 }
             }
@@ -36,7 +39,7 @@ export function useStorage<T>(
                 console.error(`Error loading value for key "${key}":`, error);
 
                 if (isMounted) {
-                    setStoredValue(initialValue);
+                    setValue(initialValue);
                 }
             }
             finally {
@@ -54,14 +57,15 @@ export function useStorage<T>(
     }, [key, initialValue, serializer]);
 
     useEffect(() => {
-        if (!isLoaded) {
+        if (!isLoaded)
             return;
-        }
 
         const saveValue = async () => {
             try {
-                const serialized = serializer.serialize(storedValue);
-                await storageClient.set(key, serialized);
+                if (value !== undefined) {
+                    const serialized = serializer.serialize(value);
+                    await storageClient.set(key, serialized);
+                }
             }
             catch (error) {
                 console.error(`Error saving value for key "${key}":`, error);
@@ -69,16 +73,26 @@ export function useStorage<T>(
         };
 
         saveValue();
-    }, [storedValue, key, serializer, isLoaded]);
+    }, [value, key, serializer, isLoaded]);
 
-    const setValue = useCallback(
-        (value: T | ((val: T) => T)) => {
-            setStoredValue(prev =>
-                typeof value === 'function' ? (value as (val: T) => T)(prev) : value,
+    const set = useCallback(
+        (newValue: T | ((val: T | undefined) => T)) => {
+            setValue(prev =>
+                typeof newValue === 'function' ? (newValue as (val: T | undefined) => T)(prev) : newValue,
             );
         },
         [],
     );
 
-    return [storedValue, setValue] as const;
+    const remove = useCallback(async () => {
+        try {
+            await storageClient.remove(key);
+            setValue(undefined);
+        }
+        catch (error) {
+            console.error(`Error removing key "${key}":`, error);
+        }
+    }, [key]);
+
+    return { value, set, remove };
 }

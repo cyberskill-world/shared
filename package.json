@@ -84,6 +84,11 @@
             "import": "./dist/constants/index.js",
             "require": "./dist/constants/index.cjs"
         },
+        "./nodejs": {
+            "types": "./dist/nodejs/index.d.ts",
+            "import": "./dist/nodejs/index.js",
+            "require": "./dist/nodejs/index.cjs"
+        },
         "./nodejs/mongo": {
             "types": "./dist/nodejs/mongo.d.ts",
             "import": "./dist/nodejs/mongo.js",
@@ -93,6 +98,11 @@
             "types": "./dist/nodejs/mongoose.d.ts",
             "import": "./dist/nodejs/mongoose.js",
             "require": "./dist/nodejs/mongoose.cjs"
+        },
+        "./react": {
+            "types": "./dist/react/index.d.ts",
+            "import": "./dist/react/index.js",
+            "require": "./dist/react/index.cjs"
         },
         "./react/apollo-client": {
             "types": "./dist/react/apollo-client.d.ts",

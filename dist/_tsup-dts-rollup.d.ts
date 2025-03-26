@@ -6341,7 +6341,7 @@ declare interface I_MongooseOptions_2<T extends Partial<C_Document_2>> {
 
 declare interface I_NextIntlContextType {
     languages: I_NextIntlLanguage[];
-    currentLanguage: I_NextIntlLanguage;
+    currentLanguage?: I_NextIntlLanguage;
     setCurrentLanguage: (newLang: I_NextIntlLanguage) => void;
 }
 export { I_NextIntlContextType }
@@ -6350,7 +6350,7 @@ export { I_NextIntlContextType as I_NextIntlContextType_alias_2 }
 
 declare interface I_NextIntlContextType_2 {
     languages: I_NextIntlLanguage_2[];
-    currentLanguage: I_NextIntlLanguage_2;
+    currentLanguage?: I_NextIntlLanguage_2;
     setCurrentLanguage: (newLang: I_NextIntlLanguage_2) => void;
 }
 
@@ -7241,7 +7241,11 @@ export { useNextIntl }
 export { useNextIntl as useNextIntl_alias_1 }
 export { useNextIntl as useNextIntl_alias_2 }
 
-declare function useStorage<T>(key: string, initialValue: T, serializer?: I_Serializer_2<T>): readonly [T, (value: T | ((val: T) => T)) => void];
+declare function useStorage<T>(key: string, initialValue?: T, serializer?: I_Serializer_2<T>): {
+    value: T | undefined;
+    set: (newValue: T | ((val: T | undefined) => T)) => void;
+    remove: () => Promise<void>;
+};
 export { useStorage }
 export { useStorage as useStorage_alias_1 }
 export { useStorage as useStorage_alias_2 }

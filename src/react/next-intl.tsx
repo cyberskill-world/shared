@@ -74,11 +74,11 @@ export function NextIntlProvider({
     languages: I_NextIntlLanguage[];
     messages: T_NextIntlMessageList;
 }) {
-    const [currentLanguage, setCurrentLanguage] = useStorage<I_NextIntlLanguage>('lang', languages?.[0] ?? {});
+    const { value, set } = useStorage<I_NextIntlLanguage>('lang', languages?.[0] ?? {});
 
     const contextValue = useMemo(
-        () => ({ languages, currentLanguage, setCurrentLanguage }),
-        [languages, currentLanguage, setCurrentLanguage],
+        () => ({ languages, currentLanguage: value, setCurrentLanguage: set }),
+        [languages, set, value],
     );
 
     return (
