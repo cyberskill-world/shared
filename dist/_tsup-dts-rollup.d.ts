@@ -27,8 +27,9 @@ import type { JSX } from 'react';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
 import type { Locale } from 'date-fns';
 import { Model } from 'mongoose';
-import type { default as mongoose_2 } from 'mongoose';
+import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
+import type mongooseRaw from 'mongoose';
 import type { OptionalUnlessRequiredId } from 'mongodb';
 import type { PaginateModel } from 'mongoose';
 import type { PaginateOptions } from 'mongoose';
@@ -6292,7 +6293,7 @@ declare interface I_MongooseModelMiddleware_2<T extends Partial<C_Document_2>> {
 }
 
 declare interface I_MongooseOptions<T extends Partial<C_Document>> {
-    mongoose: typeof mongoose_2;
+    mongoose: typeof mongoose;
     virtuals?: {
         name: keyof T | string;
         options?: I_VirtualOptions_2;
@@ -6304,7 +6305,7 @@ export { I_MongooseOptions as I_MongooseOptions_alias_1 }
 export { I_MongooseOptions as I_MongooseOptions_alias_2 }
 
 declare interface I_MongooseOptions_2<T extends Partial<C_Document_2>> {
-    mongoose: typeof mongoose_2;
+    mongoose: typeof mongoose;
     virtuals?: {
         name: keyof T | string;
         options?: I_VirtualOptions;
@@ -6512,6 +6513,29 @@ declare const mongo: {
     createGenericFields({ returnDateAs, }?: {
         returnDateAs?: "string" | "date";
     }): I_GenericDocument_2;
+    applyPlugins<T>(schema: T_MongooseShema_2<T>, plugins: Array<T_MongoosePlugin_2 | false>): void;
+    applyMiddlewares<T extends Partial<C_Document_2>>(schema: T_MongooseShema_2<T>, middlewares: I_MongooseModelMiddleware_2<T>[]): void;
+    createGenericSchema(mongoose: typeof mongooseRaw): mongooseRaw.Schema<I_GenericDocument_2, mongooseRaw.Model<I_GenericDocument_2, any, any, any, mongooseRaw.Document<unknown, any, I_GenericDocument_2> & I_GenericDocument_2 & Required<{
+        _id: unknown;
+    }> & {
+        __v: number;
+    }, any>, {}, {}, {}, {}, mongooseRaw.DefaultSchemaOptions, I_GenericDocument_2, mongooseRaw.Document<unknown, {}, mongooseRaw.FlatRecord<I_GenericDocument_2>> & mongooseRaw.FlatRecord<I_GenericDocument_2> & Required<{
+        _id: unknown;
+    }> & {
+        __v: number;
+    }>;
+    createSchema<T extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_CreateSchemaOptions_2<T>): T_MongooseShema_2<T>;
+    createModel<T extends Partial<C_Document_2>>({ mongoose: currentMongooseInstance, name, schema, pagination, aggregate, virtuals, middlewares, }: I_CreateModelOptions_2<T>): I_ExtendedModel_2<T>;
+    createSlugQuery<T>(slug: string, filters?: T_FilterQuery_2<T>, id?: string): T_CreateSlugQueryResponse_2<T>;
+    validator: {
+        isEmpty<T>(): (this: T, value: unknown) => Promise<boolean>;
+        isUnique<T extends {
+            constructor: {
+                findOne: (query: Record<string, unknown>) => Promise<unknown>;
+            };
+        }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
+        matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean>;
+    };
 };
 export { mongo }
 export { mongo as mongo_alias_1 }
@@ -6569,24 +6593,6 @@ declare class MongoController<D extends Partial<C_Document_2>> {
 export { MongoController }
 export { MongoController as MongoController_alias_1 }
 export { MongoController as MongoController_alias_2 }
-
-declare const mongoose: {
-    createSchema<T extends Partial<C_Document_2>>({ mongoose, schema, virtuals, standalone, }: I_CreateSchemaOptions_2<T>): T_MongooseShema_2<T>;
-    createModel<T extends Partial<C_Document_2>>({ mongoose: currentMongooseInstance, name, schema, pagination, aggregate, virtuals, middlewares, }: I_CreateModelOptions_2<T>): I_ExtendedModel_2<T>;
-    createSlugQuery<T>(slug: string, filters?: T_FilterQuery_2<T>, id?: string): T_CreateSlugQueryResponse_2<T>;
-    validator: {
-        isEmpty<T>(): (this: T, value: unknown) => Promise<boolean>;
-        isUnique<T extends {
-            constructor: {
-                findOne: (query: Record<string, unknown>) => Promise<unknown>;
-            };
-        }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
-        matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean>;
-    };
-};
-export { mongoose }
-export { mongoose as mongoose_alias_1 }
-export { mongoose as mongoose_alias_2 }
 
 declare class MongooseController<T extends Partial<C_Document_2>> {
     private model;
@@ -7074,12 +7080,14 @@ export { T_MongoosePlugin }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_1 }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_2 }
 
-declare type T_MongooseShema<T> = mongoose_2.Schema<T>;
+declare type T_MongoosePlugin_2 = (schema: Schema, options?: Record<string, unknown>) => void;
+
+declare type T_MongooseShema<T> = mongoose.Schema<T>;
 export { T_MongooseShema }
 export { T_MongooseShema as T_MongooseShema_alias_1 }
 export { T_MongooseShema as T_MongooseShema_alias_2 }
 
-declare type T_MongooseShema_2<T> = mongoose_2.Schema<T>;
+declare type T_MongooseShema_2<T> = mongoose.Schema<T>;
 
 declare type T_NextIntlMessageList = Record<string, AbstractIntlMessages>;
 export { T_NextIntlMessageList }

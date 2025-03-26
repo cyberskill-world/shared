@@ -31,6 +31,124 @@ export const mongo = {
             updatedAt: now,
         };
     },
+    applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) {
+        plugins
+            .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
+            .forEach(plugin => schema.plugin(plugin));
+    },
+    applyMiddlewares<T extends Partial<C_Document>>(
+        schema: T_MongooseShema<T>,
+        middlewares: I_MongooseModelMiddleware<T>[],
+    ) {
+        middlewares.forEach(({ method, pre, post }) => {
+            if (method && pre) {
+                schema.pre(method as RegExp, pre);
+            }
+
+            if (method && post) {
+                schema.post(method as RegExp, post);
+            }
+        });
+    },
+    createGenericSchema(mongoose: typeof mongooseRaw) {
+        return new mongoose.Schema<I_GenericDocument>(
+            {
+                id: { type: String, default: uuidv4, required: true, unique: true },
+                isDel: { type: Boolean, default: false, required: true },
+            },
+            { timestamps: true },
+        );
+    },
+    createSchema<T extends Partial<C_Document>>({
+        mongoose,
+        schema,
+        virtuals = [],
+        standalone = false,
+    }: I_CreateSchemaOptions<T>): T_MongooseShema<T> {
+        const createdSchema = new mongoose.Schema<T>(schema, { strict: true });
+
+        virtuals.forEach(({ name, options, get }) => {
+            const virtualInstance = createdSchema.virtual(name as string, options);
+            if (get)
+                virtualInstance.get(get);
+        });
+
+        if (!standalone) {
+            createdSchema.add(mongo.createGenericSchema(mongoose));
+        }
+
+        return createdSchema;
+    },
+    createModel<T extends Partial<C_Document>>({
+        mongoose: currentMongooseInstance,
+        name,
+        schema,
+        pagination = false,
+        aggregate = false,
+        virtuals = [],
+        middlewares = [],
+    }: I_CreateModelOptions<T>): I_ExtendedModel<T> {
+        if (!name) {
+            throw new Error('Model name is required.');
+        }
+
+        if (currentMongooseInstance.models[name]) {
+            return currentMongooseInstance.models[name] as I_ExtendedModel<T>;
+        }
+
+        const createdSchema = mongo.createSchema({ mongoose: currentMongooseInstance, schema, virtuals });
+
+        mongo.applyPlugins<T>(createdSchema, [
+            pagination && mongoosePaginate,
+            aggregate && aggregatePaginate,
+        ]);
+
+        mongo.applyMiddlewares<T>(createdSchema, middlewares);
+
+        return currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
+    },
+    createSlugQuery<T>(
+        slug: string,
+        filters: T_FilterQuery<T> = {},
+        id?: string,
+    ): T_CreateSlugQueryResponse<T> {
+        return {
+            ...filters,
+            ...(id && { id: { $ne: id } }),
+            $or: [
+                { slug },
+                { slugHistory: slug },
+            ],
+        };
+    },
+    validator: {
+        isEmpty<T>(): (this: T, value: unknown) => Promise<boolean> {
+            return async function (this: T, value: unknown): Promise<boolean> {
+                return !validate.isEmpty(value);
+            };
+        },
+        isUnique<T extends { constructor: { findOne: (query: Record<string, unknown>) => Promise<unknown> } }>(fields: string[]) {
+            return async function (this: T, value: unknown): Promise<boolean> {
+                if (!Array.isArray(fields) || fields.length === 0) {
+                    throw new Error('Fields must be a non-empty array of strings.');
+                }
+
+                const query = { $or: fields.map(field => ({ [field]: value })) };
+                const existingDocument = await this.constructor.findOne(query);
+
+                return !existingDocument;
+            };
+        },
+        matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean> {
+            return async function (value: string): Promise<boolean> {
+                if (!Array.isArray(regexArray) || regexArray.some(r => !(r instanceof RegExp))) {
+                    throw new Error('regexArray must be an array of valid RegExp objects.');
+                }
+
+                return regexArray.every(regex => regex.test(value));
+            };
+        },
+    },
 };
 
 export class MongoController<D extends Partial<C_Document>> {
@@ -244,130 +362,6 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 }
-
-function applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) {
-    plugins
-        .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
-        .forEach(plugin => schema.plugin(plugin));
-}
-
-function applyMiddlewares<T extends Partial<C_Document>>(
-    schema: T_MongooseShema<T>,
-    middlewares: I_MongooseModelMiddleware<T>[],
-) {
-    middlewares.forEach(({ method, pre, post }) => {
-        if (method && pre) {
-            schema.pre(method as RegExp, pre);
-        }
-
-        if (method && post) {
-            schema.post(method as RegExp, post);
-        }
-    });
-}
-
-function createGenericSchema(mongoose: typeof mongooseRaw) {
-    return new mongoose.Schema<I_GenericDocument>(
-        {
-            id: { type: String, default: uuidv4, required: true, unique: true },
-            isDel: { type: Boolean, default: false, required: true },
-        },
-        { timestamps: true },
-    );
-}
-export const mongoose = {
-    createSchema<T extends Partial<C_Document>>({
-        mongoose,
-        schema,
-        virtuals = [],
-        standalone = false,
-    }: I_CreateSchemaOptions<T>): T_MongooseShema<T> {
-        const createdSchema = new mongoose.Schema<T>(schema, { strict: true });
-
-        virtuals.forEach(({ name, options, get }) => {
-            const virtualInstance = createdSchema.virtual(name as string, options);
-            if (get)
-                virtualInstance.get(get);
-        });
-
-        if (!standalone) {
-            createdSchema.add(createGenericSchema(mongoose));
-        }
-
-        return createdSchema;
-    },
-    createModel<T extends Partial<C_Document>>({
-        mongoose: currentMongooseInstance,
-        name,
-        schema,
-        pagination = false,
-        aggregate = false,
-        virtuals = [],
-        middlewares = [],
-    }: I_CreateModelOptions<T>): I_ExtendedModel<T> {
-        if (!name) {
-            throw new Error('Model name is required.');
-        }
-
-        if (currentMongooseInstance.models[name]) {
-            return currentMongooseInstance.models[name] as I_ExtendedModel<T>;
-        }
-
-        const createdSchema = mongoose.createSchema({ mongoose: currentMongooseInstance, schema, virtuals });
-
-        applyPlugins<T>(createdSchema, [
-            pagination && mongoosePaginate,
-            aggregate && aggregatePaginate,
-        ]);
-
-        applyMiddlewares<T>(createdSchema, middlewares);
-
-        return currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
-    },
-    createSlugQuery<T>(
-        slug: string,
-        filters: T_FilterQuery<T> = {},
-        id?: string,
-    ): T_CreateSlugQueryResponse<T> {
-        return {
-            ...filters,
-            ...(id && { id: { $ne: id } }),
-            $or: [
-                { slug },
-                { slugHistory: slug },
-            ],
-        };
-    },
-    validator: {
-        isEmpty<T>(): (this: T, value: unknown) => Promise<boolean> {
-            return async function (this: T, value: unknown): Promise<boolean> {
-                return !validate.isEmpty(value);
-            };
-        },
-        isUnique<T extends { constructor: { findOne: (query: Record<string, unknown>) => Promise<unknown> } }>(fields: string[]) {
-            return async function (this: T, value: unknown): Promise<boolean> {
-                if (!Array.isArray(fields) || fields.length === 0) {
-                    throw new Error('Fields must be a non-empty array of strings.');
-                }
-
-                const query = { $or: fields.map(field => ({ [field]: value })) };
-                const existingDocument = await this.constructor.findOne(query);
-
-                return !existingDocument;
-            };
-        },
-        matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean> {
-            return async function (value: string): Promise<boolean> {
-                if (!Array.isArray(regexArray) || regexArray.some(r => !(r instanceof RegExp))) {
-                    throw new Error('regexArray must be an array of valid RegExp objects.');
-                }
-
-                return regexArray.every(regex => regex.test(value));
-            };
-        },
-    },
-
-};
 
 export class MongooseController<T extends Partial<C_Document>> {
     constructor(private model: I_ExtendedModel<T>) { }
@@ -675,7 +669,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const createUniqueSlug = async (slug: string): Promise<string> => {
                 let existingDoc = await this.model.findOne(
-                    mongoose.createSlugQuery<T>(slug, filters, fields.id),
+                    mongo.createSlugQuery<T>(slug, filters, fields.id),
                 );
 
                 if (!existingDoc)
@@ -687,7 +681,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 do {
                     uniqueSlug = `${slug}-${suffix}`;
                     existingDoc = await this.model.findOne(
-                        mongoose.createSlugQuery<T>(uniqueSlug, filters, fields.id),
+                        mongo.createSlugQuery<T>(uniqueSlug, filters, fields.id),
                     );
                     suffix++;
                 } while (existingDoc);

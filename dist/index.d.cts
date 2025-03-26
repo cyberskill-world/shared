@@ -5,7 +5,6 @@ export { aggregatePaginate } from './_tsup-dts-rollup.cjs';
 export { mongoosePaginate } from './_tsup-dts-rollup.cjs';
 export { mongo } from './_tsup-dts-rollup.cjs';
 export { MongoController } from './_tsup-dts-rollup.cjs';
-export { mongoose } from './_tsup-dts-rollup.cjs';
 export { MongooseController } from './_tsup-dts-rollup.cjs';
 export { ApolloProvider } from './_tsup-dts-rollup.cjs';
 export { useLoading } from './_tsup-dts-rollup.cjs';
