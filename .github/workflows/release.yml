@@ -19,9 +19,11 @@ jobs:
 
       - name: Set PNPM_HOME and global bin path
         run: |
-          echo "export PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
           echo "$HOME/.local/share/pnpm" >> $GITHUB_PATH
-          mkdir -p "$HOME/.local/share/pnpm"
+          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
+          export PNPM_HOME=$HOME/.local/share/pnpm
+          export PATH="$PNPM_HOME:$PATH"
+          mkdir -p "$PNPM_HOME"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
