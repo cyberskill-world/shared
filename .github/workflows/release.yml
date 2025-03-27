@@ -1,46 +1,59 @@
-- name: Checkout code
-  uses: actions/checkout@v4
+name: Release
 
-- name: Set up Node.js
-  uses: actions/setup-node@v4
-  with:
-    node-version: '22.14.0'
-    registry-url: 'https://registry.npmjs.org'
-    cache: 'pnpm'
+on:
+  push:
+    branches:
+      - main
 
-- name: Install pnpm
-  run: npm install -g pnpm
+jobs:
+  release:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
 
-- name: Set PNPM_HOME and global bin
-  run: |
-    echo "export PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
-    echo "$HOME/.local/share/pnpm" >> $GITHUB_PATH
-    mkdir -p "$HOME/.local/share/pnpm"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-- name: Cache pnpm store
-  uses: actions/cache@v4
-  with:
-    path: ~/.local/share/pnpm/store
-    key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-    restore-keys: |
-      ${{ runner.os }}-pnpm-store-
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
 
-- name: Configure npm authentication
-  run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-- name: Install semantic-release
-  run: |
-    pnpm install --global semantic-release@24.2.3 \
-      @semantic-release/changelog@6.0.2 \
-      @semantic-release/git@10.0.1 \
-      @semantic-release/github@11.0.1 \
-      @semantic-release/npm@12.0.1 \
-      @semantic-release/commit-analyzer@13.0.1 \
-      @semantic-release/release-notes-generator@14.0.3
+      - name: Set PNPM_HOME and global bin path
+        run: |
+          echo "export PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
+          echo "$HOME/.local/share/pnpm" >> $GITHUB_PATH
+          mkdir -p "$HOME/.local/share/pnpm"
 
-- name: Release
-  env:
-    GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  run: semantic-release
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Configure npm authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
+      - name: Install semantic-release globally with pnpm
+        run: |
+          pnpm install --global semantic-release@24.2.3 \
+            @semantic-release/changelog@6.0.2 \
+            @semantic-release/git@10.0.1 \
+            @semantic-release/github@11.0.1 \
+            @semantic-release/npm@12.0.1 \
+            @semantic-release/commit-analyzer@13.0.1 \
+            @semantic-release/release-notes-generator@14.0.3
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: semantic-release
