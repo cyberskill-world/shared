@@ -18,6 +18,13 @@ jobs:
         run: |
           npm install --global pnpm
 
+      - name: Setup PNPM global bin
+        run: |
+          export PNPM_HOME="/home/runner/.local/share/pnpm"
+          echo "export PNPM_HOME=$PNPM_HOME" >> $GITHUB_ENV
+          echo "$PNPM_HOME" >> $GITHUB_PATH
+          pnpm setup
+
       - name: Set up Node.js with pnpm
         uses: actions/setup-node@v4
         with:
