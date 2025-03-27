@@ -28,7 +28,7 @@ const config = {
     E2E_TEST_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/vitest/react/e2e.js'),
 
     HOOKS_CONFIG: {
-        'postinstall': `pnpm exec tsx src/cli.ts setup`,
+        'postinstall': `pnpm exec cyberskill setup`,
         'pre-commit': `pnpm exec cyberskill lint-staged`,
         'commit-msg': `pnpm exec cyberskill commitlint`,
     },
