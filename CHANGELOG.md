@@ -1,3 +1,17 @@
+## [1.47.0](https://github.com/cyberskill-world/shared/compare/v1.46.0...v1.47.0) (2025-03-27)
+
+### ✨ Features
+
+* change npm to pnpm ([de193f6](https://github.com/cyberskill-world/shared/commit/de193f6ef8dfea1fb3b7b9c1417e8e0a2efe1126))
+* change npm to pnpm ([be69d9f](https://github.com/cyberskill-world/shared/commit/be69d9fda17a10b73531f6b83fd1e8d7afdcdb7d))
+* change npm to pnpm ([3cb2cbd](https://github.com/cyberskill-world/shared/commit/3cb2cbd2f1209fffbd65cfdedf054fb43842bf23))
+* change npm to pnpm ([36d6082](https://github.com/cyberskill-world/shared/commit/36d6082d1e51ef0328f70595385ad8b74654afd2))
+* change npm to pnpm ([22b6668](https://github.com/cyberskill-world/shared/commit/22b666814983d1f044b55f52bbd10cb6e21d67c5))
+* change npm to pnpm ([a287960](https://github.com/cyberskill-world/shared/commit/a2879609f3784bf7683b6bcba35a78c89a93b7f9))
+* change npm to pnpm ([ab84769](https://github.com/cyberskill-world/shared/commit/ab8476984374aee02a76ed48f579402e741bccd2))
+* change npm to pnpm ([bd180ef](https://github.com/cyberskill-world/shared/commit/bd180ef79790463758d5d3780d568bd1a210502d))
+* change npm to pnpm ([a024f1f](https://github.com/cyberskill-world/shared/commit/a024f1f9749fe8136611f2904c3e4a0c978c7220))
+
 ## 1.46.0 (2025-03-26)
 
 * feat: merge mongoose into mongo ([19d1896](https://github.com/cyberskill-world/shared/commit/19d1896))
