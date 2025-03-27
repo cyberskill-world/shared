@@ -28,8 +28,16 @@ const config = {
     E2E_TEST_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/vitest/react/e2e.js'),
 
     HOOKS_CONFIG: {
+        'postinstall': `pnpm exec tsx src/cli.ts setup`,
         'pre-commit': `pnpm exec cyberskill lint-staged`,
         'commit-msg': `pnpm exec cyberskill commitlint`,
+    },
+
+    HOOKS_CONFIG_LOCAL: {
+        'postinstall': `pnpm exec tsx src/cli.ts setup`,
+        'pre-commit': `pnpm exec tsx src/cli.ts lint-staged`,
+        'commit-msg': `pnpm exec tsx src/cli.ts commitlint`,
+        'pre-push': 'git pull',
     },
 };
 
@@ -127,8 +135,8 @@ async function setup() {
 
         const isUpToDate
             = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)
-                || (packageJson.dependencies?.[config.PACKAGE_NAME]
-                    && !(await isPackageOutdated(config.PACKAGE_NAME)));
+            || (packageJson.dependencies?.[config.PACKAGE_NAME]
+                && !(await isPackageOutdated(config.PACKAGE_NAME)));
 
         if (isUpToDate) {
             commandLog.success('Cyberskill package is already up to date.');
@@ -156,9 +164,11 @@ async function setupGitHook() {
         await executeCommand(`git config core.hooksPath ${config.GIT_HOOK_PATH}`);
     }
 
+    const shouldApplyLocalHook = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME);
+
     fs.writeFileSync(
         config.SIMPLE_GIT_HOOKS_PATH,
-        JSON.stringify(config.HOOKS_CONFIG, null, 4),
+        JSON.stringify(shouldApplyLocalHook ? config.HOOKS_CONFIG_LOCAL : config.HOOKS_CONFIG, null, 4),
     );
 
     const gitignorePath = path.resolve('.gitignore');
