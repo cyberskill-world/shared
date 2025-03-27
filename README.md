@@ -39,32 +39,26 @@ CyberSkill Shared is a modular utility library designed to:
 
 ## 🚀 **Installation**
 
-Install via **npm**:
+Install via **pnpm**:
 
 ```bash
-npm install @cyberskill/shared
-```
-
-Install via **yarn**:
-
-```bash
-yarn add @cyberskill/shared
+pnpm install @cyberskill/shared
 ```
 
 ---
 
 ## 🛠️ **Scripts**
 
-| Command                | Description                         |
-| ---------------------- | ----------------------------------- |
-| `npm run dev`          | Start development mode 🚧           |
-| `npm run build`        | Build for production 🚀             |
-| `npm run lint`         | Check for linting issues ✅         |
-| `npm run lint:fix`     | Fix linting issues 🔧               |
-| `npm run lint:inspect` | Inspect linting config 🧐           |
-| `npm run setup`        | Project setup 🏗️                    |
-| `npm run reset`        | Reset the project ♻️                |
-| `npm run inspect`      | Inspect the project dependencies 🔍 |
+| Command                 | Description                         |
+| ----------------------- | ----------------------------------- |
+| `pnpm run dev`          | Start development mode 🚧           |
+| `pnpm run build`        | Build for production 🚀             |
+| `pnpm run lint`         | Check for linting issues ✅         |
+| `pnpm run lint:fix`     | Fix linting issues 🔧               |
+| `pnpm run lint:inspect` | Inspect linting config 🧐           |
+| `pnpm run setup`        | Project setup 🏗️                    |
+| `pnpm run reset`        | Reset the project ♻️                |
+| `pnpm run inspect`      | Inspect the project dependencies 🔍 |
 
 ---
 

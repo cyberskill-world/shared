@@ -1,3 +1,3 @@
 export default {
-    '*': ['npx --yes cyberskill lint:fix'],
+    '*': ['pnpm exec cyberskill lint:fix'],
 };

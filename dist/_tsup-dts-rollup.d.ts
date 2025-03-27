@@ -9,7 +9,6 @@ import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
 import type { ComponentType } from 'react';
-import { ConfigNames } from '@antfu/eslint-config';
 import { Context } from 'react';
 import { Db } from 'mongodb';
 import type { DeleteResult } from 'mongodb';
@@ -18,7 +17,6 @@ import type { ErrorHandlingMiddlewareFunction } from 'mongoose';
 import type { ErrorHandlingMiddlewareWithOption } from 'mongoose';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
-import { FlatConfigComposer } from 'eslint-flat-config-utils';
 import type { InitOptions } from 'i18next';
 import type { InsertManyOptions } from 'mongoose';
 import type { InsertManyResult } from 'mongodb';
@@ -49,11 +47,10 @@ import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
-import { TypedFlatConfigItem } from '@antfu/eslint-config';
 import type { UpdateQuery } from 'mongoose';
 import type { UpdateResult } from 'mongodb';
 import type { UserConfig } from 'vite';
-import { useTranslations } from 'use-intl';
+import { useTranslations } from 'next-intl';
 import type { WithId } from 'mongodb';
 
 export { aggregatePaginate }
@@ -131,7 +128,7 @@ export { deepMerge as deepMerge_alias_1 }
 export { deepMerge as deepMerge_alias_2 }
 
 export declare const default_alias: {
-    merge: (type?: string, ...configs: I_Config_2[]) => I_Config_2 | FlatConfigComposer<TypedFlatConfigItem, ConfigNames>;
+    merge: (type: string, ...configs: I_Config_2[]) => Promise<object>;
 };
 
 export declare const default_alias_1: {
@@ -6476,6 +6473,11 @@ export { initNodePersist }
 export { initNodePersist as initNodePersist_alias_1 }
 export { initNodePersist as initNodePersist_alias_2 }
 
+declare function installDependencies(): Promise<void>;
+export { installDependencies }
+export { installDependencies as installDependencies_alias_1 }
+export { installDependencies as installDependencies_alias_2 }
+
 declare function isCurrentProject(WORKING_DIRECTORY: string, PACKAGE_NAME: string): boolean;
 export { isCurrentProject }
 export { isCurrentProject as isCurrentProject_alias_1 }
@@ -7259,7 +7261,7 @@ export { useStorage }
 export { useStorage as useStorage_alias_1 }
 export { useStorage as useStorage_alias_2 }
 
-declare const useTranslateNextIntl: useTranslations;
+declare const useTranslateNextIntl: typeof useTranslations;
 export { useTranslateNextIntl }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_1 }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_2 }

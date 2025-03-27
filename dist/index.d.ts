@@ -107,6 +107,7 @@ export { getLatestPackageVersion } from './_tsup-dts-rollup.js';
 export { isPackageOutdated } from './_tsup-dts-rollup.js';
 export { updatePackage } from './_tsup-dts-rollup.js';
 export { isCurrentProject } from './_tsup-dts-rollup.js';
+export { installDependencies } from './_tsup-dts-rollup.js';
 export { initNodePersist } from './_tsup-dts-rollup.js';
 export { storageDir } from './_tsup-dts-rollup.js';
 export { storageServer } from './_tsup-dts-rollup.js';

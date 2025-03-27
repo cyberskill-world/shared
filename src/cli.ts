@@ -5,11 +5,11 @@ import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
-import { PROJECT_ROOT, WORKING_DIRECTORY } from './constants/path.js';
-import { E_ErrorType } from './typescript/command.js';
-import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists } from './utils/command.js';
-import { fileExists } from './utils/fs.js';
-import { isCurrentProject, isPackageOutdated, updatePackage } from './utils/npm-package.js';
+import { PROJECT_ROOT, WORKING_DIRECTORY } from '#constants/path.js';
+import { E_ErrorType } from '#typescript/command.js';
+import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists } from '#utils/command.js';
+import { fileExists } from '#utils/fs.js';
+import { installDependencies, isCurrentProject, isPackageOutdated, updatePackage } from '#utils/npm-package.js';
 
 const config = {
     TS_CONFIG_PATH: path.resolve(WORKING_DIRECTORY, 'tsconfig.json'),
@@ -19,7 +19,7 @@ const config = {
     SIMPLE_GIT_HOOKS_PATH: path.resolve(WORKING_DIRECTORY, '.simple-git-hooks.json'),
 
     PACKAGE_JSON_PATH: path.resolve(WORKING_DIRECTORY, 'package.json'),
-    PACKAGE_LOCK_PATH: path.resolve(WORKING_DIRECTORY, 'package-lock.json'),
+    PACKAGE_LOCK_PATH: path.resolve(WORKING_DIRECTORY, 'pnpm-lock.yaml'),
     PACKAGE_NAME: '@cyberskill/shared',
 
     LINT_STAGED_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/lint-staged/base.js'),
@@ -28,8 +28,8 @@ const config = {
     E2E_TEST_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/vitest/react/e2e.js'),
 
     HOOKS_CONFIG: {
-        'pre-commit': `npx --yes cyberskill lint-staged`,
-        'commit-msg': `npx --yes cyberskill commitlint`,
+        'pre-commit': `pnpm exec cyberskill lint-staged`,
+        'commit-msg': `pnpm exec cyberskill commitlint`,
     },
 };
 
@@ -41,7 +41,7 @@ async function runCommand(description: string, command: string) {
 
 async function checkTypescript() {
     if (fileExists(config.TS_CONFIG_PATH)) {
-        await runCommand('Running TypeScript check', `npx tsc -p ${config.TS_CONFIG_PATH} --noEmit`);
+        await runCommand('Running TypeScript check', `pnpm exec tsc -p ${config.TS_CONFIG_PATH} --noEmit`);
     }
     else {
         commandLog.warning('TypeScript config not found. Skipping TypeScript check.');
@@ -51,7 +51,7 @@ async function checkTypescript() {
 async function checkEslint(fix = false) {
     await runCommand(
         `Running ESLint ${fix ? '(with fix)' : '(without fix)'}`,
-        `npx eslint ${WORKING_DIRECTORY}${fix ? ' --fix' : ''}`,
+        `pnpm exec eslint ${WORKING_DIRECTORY}${fix ? ' --fix' : ''}`,
     );
 }
 
@@ -78,7 +78,7 @@ async function showCheckResult() {
 async function lintStaged() {
     if (isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
         try {
-            await runCommand('Building @cyberskill/shared', 'npm run build');
+            await runCommand('Building @cyberskill/shared', 'pnpm run build');
             await executeCommand('git add dist');
             commandLog.success('Built and staged @cyberskill/shared');
         }
@@ -88,12 +88,12 @@ async function lintStaged() {
         }
     }
 
-    await runCommand('Running lint-staged', `npx lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
+    await runCommand('Running lint-staged', `pnpm exec lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
     showCheckResult();
 }
 
 async function inspectLint() {
-    await runCommand('Inspecting ESLint rules', 'npx @eslint/config-inspector');
+    await runCommand('Inspecting ESLint rules', 'pnpm exec @eslint/config-inspector');
 }
 
 async function lintCheck() {
@@ -110,7 +110,7 @@ async function lintFix() {
 }
 
 async function commitLint() {
-    await runCommand('Running commit lint', `npx commitlint --edit ${config.GIT_COMMIT_MSG} --config ${config.COMMITLINT_CONFIG_PATH}`);
+    await runCommand('Running commit lint', `pnpm exec commitlint --edit ${config.GIT_COMMIT_MSG} --config ${config.COMMITLINT_CONFIG_PATH}`);
     showCheckResult();
 }
 
@@ -152,7 +152,7 @@ async function setupGitHook() {
     commandLog.info('Setting up Git hooks...');
 
     if (fileExists(config.HUSKY_PATH)) {
-        await executeCommand(`npx rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH}`);
+        await executeCommand(`pnpm exec rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH}`);
         await executeCommand(`git config core.hooksPath ${config.GIT_HOOK_PATH}`);
     }
 
@@ -179,53 +179,30 @@ async function setupGitHook() {
         commandLog.info('Created .gitignore and added .simple-git-hooks.json');
     }
 
-    await executeCommand(`npx simple-git-hooks`);
+    await executeCommand(`pnpm exec simple-git-hooks`);
 
     commandLog.success(`Git hooks configured successfully.`);
-}
-
-async function installDependencies() {
-    const strategies = [
-        { command: 'npm install', message: 'Standard installation' },
-        { command: 'npm install --legacy-peer-deps', message: 'Attempting installation with --legacy-peer-deps' },
-        { command: 'npm install --force', message: 'Attempting forced installation' },
-    ];
-
-    for (const { command, message } of strategies) {
-        try {
-            commandLog.info(`${message}...`);
-            await executeCommand(command);
-            commandLog.success(`Dependencies installed using: ${command}`);
-            return;
-        }
-        catch (error) {
-            commandLog.warning(`Failed with: ${command}`);
-            commandLog.error(`Error: ${(error as Error).message}`);
-        }
-    }
-
-    throw new Error('Failed to install dependencies after multiple attempts.');
 }
 
 async function reset() {
     await runCommand(
         'Resetting project',
-        `npx rimraf ${WORKING_DIRECTORY}/node_modules ${config.PACKAGE_LOCK_PATH}`,
+        `pnpm exec rimraf ${WORKING_DIRECTORY}/node_modules ${config.PACKAGE_LOCK_PATH}`,
     );
     await installDependencies();
     await setupGitHook();
 }
 
 async function inspect() {
-    await runCommand('Inspecting project dependencies', 'npx node-modules-inspector');
+    await runCommand('Inspecting project dependencies', 'pnpm exec node-modules-inspector');
 }
 
 async function testUnit() {
-    await runCommand('Running unit tests', `npx vitest --config ${config.UNIT_TEST_CONFIG_PATH}`);
+    await runCommand('Running unit tests', `pnpm exec vitest --config ${config.UNIT_TEST_CONFIG_PATH}`);
 }
 
 async function testE2E() {
-    await runCommand('Running E2E tests', `npx vitest --config ${config.E2E_TEST_CONFIG_PATH}`);
+    await runCommand('Running E2E tests', `pnpm exec vitest --config ${config.E2E_TEST_CONFIG_PATH}`);
 }
 
 yargs(hideBin(process.argv))

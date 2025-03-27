@@ -23,7 +23,7 @@ export function useNextIntl(): I_NextIntlContextType {
     return context;
 }
 
-export const useTranslateNextIntl = useTranslations;
+export const useTranslateNextIntl: typeof useTranslations = useTranslations;
 // #endregion
 
 // #region -------------- withNextIntl --------------

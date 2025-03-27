@@ -9,6 +9,7 @@ export { getLatestPackageVersion_alias_1 as getLatestPackageVersion } from '../_
 export { isPackageOutdated_alias_1 as isPackageOutdated } from '../_tsup-dts-rollup.cjs';
 export { updatePackage_alias_1 as updatePackage } from '../_tsup-dts-rollup.cjs';
 export { isCurrentProject_alias_1 as isCurrentProject } from '../_tsup-dts-rollup.cjs';
+export { installDependencies_alias_1 as installDependencies } from '../_tsup-dts-rollup.cjs';
 export { initNodePersist_alias_1 as initNodePersist } from '../_tsup-dts-rollup.cjs';
 export { storageDir_alias_1 as storageDir } from '../_tsup-dts-rollup.cjs';
 export { storageServer_alias_1 as storageServer } from '../_tsup-dts-rollup.cjs';

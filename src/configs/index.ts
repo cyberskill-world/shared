@@ -4,7 +4,7 @@ import type { I_Config } from '#typescript/config.js';
 
 import { deepMerge } from '#utils/config.js';
 
-export default {
+const config = {
     merge: (type: string = 'eslint', ...configs: I_Config[]) => {
         const mergeConfigs = () => deepMerge(...configs);
 
@@ -46,4 +46,8 @@ export default {
 
         throw new Error(`Unknown type: ${type}`);
     },
+};
+
+export default config as {
+    merge: (type: string, ...configs: I_Config[]) => Promise<object>;
 };

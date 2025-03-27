@@ -30,7 +30,7 @@ export function createGraphqlCodegenConfig({
             },
         },
         hooks: {
-            afterAllFileWrite: ['npx --yes cyberskill lint:fix'],
+            afterAllFileWrite: ['pnpm exec cyberskill lint:fix'],
         },
     };
 }

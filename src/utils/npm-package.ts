@@ -123,8 +123,8 @@ export async function updatePackage(packageName: string): Promise<void> {
 
         commandLog.info(`Updated ${packageName} to version ${latestVersion}`);
 
-        await executeCommand('npm i -f');
-        await executeCommand('npm run lint:fix');
+        await installDependencies();
+        await executeCommand('pnpm run lint:fix');
 
         commandLog.success(`${packageName} updated successfully.`);
     }
@@ -152,4 +152,27 @@ export function isCurrentProject(WORKING_DIRECTORY: string, PACKAGE_NAME: string
 
         return false;
     }
+}
+
+export async function installDependencies() {
+    const strategies = [
+        { command: 'pnpm install', message: 'Standard installation' },
+        { command: 'pnpm install --legacy-peer-deps', message: 'Attempting installation with --legacy-peer-deps' },
+        { command: 'pnpm install --force', message: 'Attempting forced installation' },
+    ];
+
+    for (const { command, message } of strategies) {
+        try {
+            commandLog.info(`${message}...`);
+            await executeCommand(command);
+            commandLog.success(`Dependencies installed using: ${command}`);
+            return;
+        }
+        catch (error) {
+            commandLog.warning(`Failed with: ${command}`);
+            commandLog.error(`Error: ${(error as Error).message}`);
+        }
+    }
+
+    throw new Error('Failed to install dependencies after multiple attempts.');
 }
