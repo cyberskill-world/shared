@@ -74,6 +74,18 @@ export { ApolloProvider }
 export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
 
+declare function appendFileSync(filePath: string, data: string | object, options?: {
+    isJson?: boolean;
+}): void;
+export { appendFileSync }
+export { appendFileSync as appendFileSync_alias_1 }
+export { appendFileSync as appendFileSync_alias_2 }
+
+declare const BUILD_DIRECTORY = "dist";
+export { BUILD_DIRECTORY }
+export { BUILD_DIRECTORY as BUILD_DIRECTORY_alias_1 }
+export { BUILD_DIRECTORY as BUILD_DIRECTORY_alias_2 }
+
 declare class C_Collection<T extends Partial<C_Document>> extends Collection<T> {
 }
 export { C_Collection }
@@ -102,10 +114,114 @@ export { C_Model }
 export { C_Model as C_Model_alias_1 }
 export { C_Model as C_Model_alias_2 }
 
+declare function checkPackage(packageName: string): Promise<{
+    isInstalled: boolean;
+    isCurrentProject: boolean;
+    installedPath: string;
+    installedVersion: string;
+    latestVersion: string;
+    file: I_JSON_2;
+}>;
+export { checkPackage }
+export { checkPackage as checkPackage_alias_1 }
+export { checkPackage as checkPackage_alias_2 }
+
 declare function clearAllErrorLists(): Promise<void>;
 export { clearAllErrorLists }
 export { clearAllErrorLists as clearAllErrorLists_alias_1 }
 export { clearAllErrorLists as clearAllErrorLists_alias_2 }
+
+declare const COMMAND: {
+    SIMPLE_GIT_HOOKS: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    ESLINT_INSPECT: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    NODE_MODULES_INSPECT: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    RESET: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    ESLINT_CHECK: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    ESLINT_FIX: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    TYPESCRIPT_CHECK: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    CYBERSKILL: {
+        TEST_UNIT: {
+            readonly raw: true;
+            readonly cmd: string;
+        };
+        TEST_E2E: {
+            readonly raw: true;
+            readonly cmd: string;
+        };
+        COMMIT_LINT: {
+            readonly raw: true;
+            readonly cmd: string;
+        };
+        LINT_STAGED: {
+            readonly raw: true;
+            readonly cmd: string;
+        };
+    };
+    CONFIGURE_GIT_HOOK: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    BUILD: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    STAGE_BUILD_DIRECTORY: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    PNPM_INSTALL_STANDARD: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    PNPM_INSTALL_LEGACY: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    PNPM_INSTALL_FORCE: {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+};
+export { COMMAND }
+export { COMMAND as COMMAND_alias_1 }
+export { COMMAND as COMMAND_alias_2 }
+
+declare const commandFormatter: {
+    raw: (cmd: string) => {
+        readonly raw: true;
+        readonly cmd: string;
+    };
+    isRaw(cmd: any): cmd is {
+        raw: true;
+        cmd: string;
+    };
+    format(command: T_Command_2, context?: I_CommandContext_2): string;
+    formatCLI(command: string, context?: I_CommandContext_2): string;
+};
+export { commandFormatter }
+export { commandFormatter as commandFormatter_alias_1 }
+export { commandFormatter as commandFormatter_alias_2 }
 
 declare const commandLog: {
     success: (message: string) => void;
@@ -118,9 +234,34 @@ export { commandLog }
 export { commandLog as commandLog_alias_1 }
 export { commandLog as commandLog_alias_2 }
 
+declare const COMMIT_LINT_CLI = "commitlint";
+export { COMMIT_LINT_CLI }
+export { COMMIT_LINT_CLI as COMMIT_LINT_CLI_alias_1 }
+export { COMMIT_LINT_CLI as COMMIT_LINT_CLI_alias_2 }
+
 declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, }: I_GraphqlCodegenConfig_2): CodegenConfig;
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
+
+declare const CYBERSKILL_CLI = "cyberskill";
+export { CYBERSKILL_CLI }
+export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_1 }
+export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_2 }
+
+declare const CYBERSKILL_DIRECTORY: string;
+export { CYBERSKILL_DIRECTORY }
+export { CYBERSKILL_DIRECTORY as CYBERSKILL_DIRECTORY_alias_1 }
+export { CYBERSKILL_DIRECTORY as CYBERSKILL_DIRECTORY_alias_2 }
+
+declare const CYBERSKILL_PACKAGE_NAME = "@cyberskill/shared";
+export { CYBERSKILL_PACKAGE_NAME }
+export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_1 }
+export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_2 }
+
+declare const CYBERSKILL_STORAGE = ".cyberskill-storage";
+export { CYBERSKILL_STORAGE }
+export { CYBERSKILL_STORAGE as CYBERSKILL_STORAGE_alias_1 }
+export { CYBERSKILL_STORAGE as CYBERSKILL_STORAGE_alias_2 }
 
 declare function deepMerge(...configs: (I_Config_2 | I_Config_2[])[]): I_Config_2;
 export { deepMerge }
@@ -5917,6 +6058,11 @@ export declare const default_alias_8: (options: UserConfig) => UserConfig;
 
 export declare const default_alias_9: (options: UserConfig) => UserConfig;
 
+declare function dirname(url: string): string;
+export { dirname }
+export { dirname as dirname_alias_1 }
+export { dirname as dirname_alias_2 }
+
 declare enum E_ErrorType {
     Error = "error",
     Warning = "warning"
@@ -5930,15 +6076,25 @@ declare enum E_ErrorType_2 {
     Warning = 'warning',
 }
 
+declare const ESLINT_CLI = "eslint";
+export { ESLINT_CLI }
+export { ESLINT_CLI as ESLINT_CLI_alias_1 }
+export { ESLINT_CLI as ESLINT_CLI_alias_2 }
+
+declare const ESLINT_INSPECT_CLI = "@eslint/config-inspector";
+export { ESLINT_INSPECT_CLI }
+export { ESLINT_INSPECT_CLI as ESLINT_INSPECT_CLI_alias_1 }
+export { ESLINT_INSPECT_CLI as ESLINT_INSPECT_CLI_alias_2 }
+
 declare function executeCommand(command: string, parser?: typeof parseCommandOutput): Promise<void>;
 export { executeCommand }
 export { executeCommand as executeCommand_alias_1 }
 export { executeCommand as executeCommand_alias_2 }
 
-declare const fileExists: (filePath: string) => boolean;
-export { fileExists }
-export { fileExists as fileExists_alias_1 }
-export { fileExists as fileExists_alias_2 }
+declare const existsSync: (filePath: string) => boolean;
+export { existsSync }
+export { existsSync as existsSync_alias_1 }
+export { existsSync as existsSync_alias_2 }
 
 declare function generateShortId(uuid: string, length?: number): string;
 export { generateShortId }
@@ -5955,10 +6111,56 @@ export { getLatestPackageVersion }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
 
+declare function getPackageJson(packageName: string): {
+    path: string;
+    file: I_JSON_2;
+} | false;
+export { getPackageJson }
+export { getPackageJson as getPackageJson_alias_1 }
+export { getPackageJson as getPackageJson_alias_2 }
+
+declare function getStorageDir(): string;
+export { getStorageDir }
+export { getStorageDir as getStorageDir_alias_1 }
+export { getStorageDir as getStorageDir_alias_2 }
+
 declare function getStoredErrorLists(): Promise<I_ErrorEntry_2[]>;
 export { getStoredErrorLists }
 export { getStoredErrorLists as getStoredErrorLists_alias_1 }
 export { getStoredErrorLists as getStoredErrorLists_alias_2 }
+
+declare const GIT_CLI = "git";
+export { GIT_CLI }
+export { GIT_CLI as GIT_CLI_alias_1 }
+export { GIT_CLI as GIT_CLI_alias_2 }
+
+declare const GIT_COMMIT_EDITMSG = ".git/COMMIT_EDITMSG";
+export { GIT_COMMIT_EDITMSG }
+export { GIT_COMMIT_EDITMSG as GIT_COMMIT_EDITMSG_alias_1 }
+export { GIT_COMMIT_EDITMSG as GIT_COMMIT_EDITMSG_alias_2 }
+
+declare const GIT_HOOK = ".git/hooks";
+export { GIT_HOOK }
+export { GIT_HOOK as GIT_HOOK_alias_1 }
+export { GIT_HOOK as GIT_HOOK_alias_2 }
+
+declare const GIT_IGNORE = ".gitignore";
+export { GIT_IGNORE }
+export { GIT_IGNORE as GIT_IGNORE_alias_1 }
+export { GIT_IGNORE as GIT_IGNORE_alias_2 }
+
+declare function HOOK({ isCurrentProject }: Partial<I_CommandContext_2>): {
+    'pre-push'?: {
+        readonly raw: true;
+        readonly cmd: string;
+    } | undefined;
+    postinstall: string;
+    'pre-commit': string;
+    'commit-msg': string;
+};
+export { HOOK }
+export { HOOK as HOOK_alias_1 }
+export { HOOK as HOOK_alias_2 }
 
 declare interface I_ApolloOptions extends Omit<ApolloClientOptions<unknown>, 'cache'> {
     uri?: string;
@@ -6015,6 +6217,19 @@ declare interface I_BoxedLogOptions_2 {
     margin?: number;
     borderStyle?: 'round' | 'single' | 'double' | 'bold';
     titleColor?: string;
+}
+
+declare interface I_CommandContext {
+    isRemote: boolean;
+    isCurrentProject: boolean;
+}
+export { I_CommandContext }
+export { I_CommandContext as I_CommandContext_alias_1 }
+export { I_CommandContext as I_CommandContext_alias_2 }
+
+declare interface I_CommandContext_2 {
+    isRemote: boolean;
+    isCurrentProject: boolean;
 }
 
 declare interface I_Config {
@@ -6239,6 +6454,17 @@ declare interface I_Input_UpdateOne<T> extends T_PopulateOption {
 export { I_Input_UpdateOne }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_1 }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_2 }
+
+declare interface I_JSON {
+    [key: string]: any;
+}
+export { I_JSON }
+export { I_JSON as I_JSON_alias_1 }
+export { I_JSON as I_JSON_alias_2 }
+
+declare interface I_JSON_2 {
+    [key: string]: any;
+}
 
 declare interface I_LoadingContext {
     isLoading: boolean;
@@ -6473,25 +6699,22 @@ export { initNodePersist }
 export { initNodePersist as initNodePersist_alias_1 }
 export { initNodePersist as initNodePersist_alias_2 }
 
-declare function installDependencies(): Promise<void>;
-export { installDependencies }
-export { installDependencies as installDependencies_alias_1 }
-export { installDependencies as installDependencies_alias_2 }
-
-declare function isCurrentProject(WORKING_DIRECTORY: string, PACKAGE_NAME: string): boolean;
-export { isCurrentProject }
-export { isCurrentProject as isCurrentProject_alias_1 }
-export { isCurrentProject as isCurrentProject_alias_2 }
+export declare function installDependencies(): Promise<void>;
 
 declare function isJson(str: string): boolean;
 export { isJson }
 export { isJson as isJson_alias_1 }
 export { isJson as isJson_alias_2 }
 
-declare function isPackageOutdated(packageName: string, forceRefresh?: boolean): Promise<boolean>;
-export { isPackageOutdated }
-export { isPackageOutdated as isPackageOutdated_alias_1 }
-export { isPackageOutdated as isPackageOutdated_alias_2 }
+declare function join(...urls: string[]): string;
+export { join }
+export { join as join_alias_1 }
+export { join as join_alias_2 }
+
+declare const LINT_STAGED_CLI = "lint-staged";
+export { LINT_STAGED_CLI }
+export { LINT_STAGED_CLI as LINT_STAGED_CLI_alias_1 }
+export { LINT_STAGED_CLI as LINT_STAGED_CLI_alias_2 }
 
 declare function Loading({ full, block, className, message, ...rest }: I_LoadingProps_2): JSX_2.Element;
 export { Loading }
@@ -6639,14 +6862,83 @@ export { NextIntlProvider }
 export { NextIntlProvider as NextIntlProvider_alias_1 }
 export { NextIntlProvider as NextIntlProvider_alias_2 }
 
+declare const NODE_MODULES = "node_modules";
+export { NODE_MODULES }
+export { NODE_MODULES as NODE_MODULES_alias_1 }
+export { NODE_MODULES as NODE_MODULES_alias_2 }
+
+declare const NODE_MODULES_INSPECT_CLI = "node_modules-inspect";
+export { NODE_MODULES_INSPECT_CLI }
+export { NODE_MODULES_INSPECT_CLI as NODE_MODULES_INSPECT_CLI_alias_1 }
+export { NODE_MODULES_INSPECT_CLI as NODE_MODULES_INSPECT_CLI_alias_2 }
+
+declare const PACKAGE_JSON = "package.json";
+export { PACKAGE_JSON }
+export { PACKAGE_JSON as PACKAGE_JSON_alias_1 }
+export { PACKAGE_JSON as PACKAGE_JSON_alias_2 }
+
+declare const PACKAGE_LOCK_JSON = "package-lock.json";
+export { PACKAGE_LOCK_JSON }
+export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_1 }
+export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_2 }
+
 declare function parseCommandOutput(output: string): void;
+
+declare const PATH: {
+    CYBERSKILL_DIRECTORY: string;
+    WORKING_DIRECTORY: string;
+    TS_CONFIG: string;
+    GIT_IGNORE: string;
+    GIT_HOOK: string;
+    GIT_COMMIT_MSG: string;
+    SIMPLE_GIT_HOOKS: string;
+    PACKAGE_JSON: string;
+    PACKAGE_LOCK_JSON: string;
+    PNPM_LOCK_YAML: string;
+    NODE_MODULES: string;
+    CYBERSKILL: {
+        LINT_STAGED_CONFIG: string;
+        COMMITLINT_CONFIG: string;
+        UNIT_TEST_CONFIG: string;
+        E2E_TEST_CONFIG: string;
+    };
+};
+export { PATH }
+export { PATH as PATH_alias_1 }
+export { PATH as PATH_alias_2 }
+
+declare const PNPM_CLI = "pnpm";
+export { PNPM_CLI }
+export { PNPM_CLI as PNPM_CLI_alias_1 }
+export { PNPM_CLI as PNPM_CLI_alias_2 }
+
+declare const PNPM_DLX_CLI = "pnpm dlx";
+export { PNPM_DLX_CLI }
+export { PNPM_DLX_CLI as PNPM_DLX_CLI_alias_1 }
+export { PNPM_DLX_CLI as PNPM_DLX_CLI_alias_2 }
+
+declare const PNPM_EXEC_CLI = "pnpm exec";
+export { PNPM_EXEC_CLI }
+export { PNPM_EXEC_CLI as PNPM_EXEC_CLI_alias_1 }
+export { PNPM_EXEC_CLI as PNPM_EXEC_CLI_alias_2 }
+
+declare const PNPM_LOCK_YAML = "pnpm-lock.yaml";
+export { PNPM_LOCK_YAML }
+export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_1 }
+export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_2 }
 
 declare function printBoxedLog<T extends string | I_ErrorEntry_2[]>(title: string, content: T, { color, padding, margin, borderStyle, titleColor, }?: I_BoxedLogOptions_2): void;
 
-declare const PROJECT_ROOT: string;
-export { PROJECT_ROOT }
-export { PROJECT_ROOT as PROJECT_ROOT_alias_1 }
-export { PROJECT_ROOT as PROJECT_ROOT_alias_2 }
+declare function readFileSync(filePath: string, options: {
+    asJson: true;
+}): I_JSON_2;
+
+declare function readFileSync(filePath: string, options?: {
+    asJson?: false;
+}): string;
+export { readFileSync }
+export { readFileSync as readFileSync_alias_1 }
+export { readFileSync as readFileSync_alias_2 }
 
 declare function regexSearchMapper(str: string): string;
 export { regexSearchMapper }
@@ -6657,6 +6949,33 @@ declare function removeAccent(str: string): string;
 export { removeAccent }
 export { removeAccent as removeAccent_alias_1 }
 export { removeAccent as removeAccent_alias_2 }
+
+declare function require_2(): NodeJS.Require;
+export { require_2 as require }
+export { require_2 as require_alias_1 }
+export { require_2 as require_alias_2 }
+
+declare function resolve(...urls: string[]): string;
+export { resolve }
+export { resolve as resolve_alias_1 }
+export { resolve as resolve_alias_2 }
+
+declare function resolveCommands(input: T_CommandMapInput_2, context?: Partial<I_CommandContext_2>): Promise<{
+    [k: string]: string;
+}>;
+export { resolveCommands }
+export { resolveCommands as resolveCommands_alias_1 }
+export { resolveCommands as resolveCommands_alias_2 }
+
+declare function resolveCyberSkillPath(...urls: string[]): string;
+export { resolveCyberSkillPath }
+export { resolveCyberSkillPath as resolveCyberSkillPath_alias_1 }
+export { resolveCyberSkillPath as resolveCyberSkillPath_alias_2 }
+
+declare function resolveWorkingPath(...urls: string[]): string;
+export { resolveWorkingPath }
+export { resolveWorkingPath as resolveWorkingPath_alias_1 }
+export { resolveWorkingPath as resolveWorkingPath_alias_2 }
 
 declare const RESPONSE_STATUS: {
     GRAPHQL_PARSE_FAILED: {
@@ -6912,6 +7231,11 @@ export { RESPONSE_STATUS }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_1 }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_2 }
 
+declare const RIMRAF_CLI = "rimraf";
+export { RIMRAF_CLI }
+export { RIMRAF_CLI as RIMRAF_CLI_alias_1 }
+export { RIMRAF_CLI as RIMRAF_CLI_alias_2 }
+
 declare function saveErrorListToStorage(errorList: I_ErrorEntry_2[]): Promise<void>;
 export { saveErrorListToStorage }
 export { saveErrorListToStorage as saveErrorListToStorage_alias_1 }
@@ -6922,6 +7246,16 @@ export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
 
+declare const SIMPLE_GIT_HOOK_CLI = "simple-git-hooks";
+export { SIMPLE_GIT_HOOK_CLI }
+export { SIMPLE_GIT_HOOK_CLI as SIMPLE_GIT_HOOK_CLI_alias_1 }
+export { SIMPLE_GIT_HOOK_CLI as SIMPLE_GIT_HOOK_CLI_alias_2 }
+
+declare const SIMPLE_GIT_HOOK_JSON = ".simple-git-hooks.json";
+export { SIMPLE_GIT_HOOK_JSON }
+export { SIMPLE_GIT_HOOK_JSON as SIMPLE_GIT_HOOK_JSON_alias_1 }
+export { SIMPLE_GIT_HOOK_JSON as SIMPLE_GIT_HOOK_JSON_alias_2 }
+
 declare const storageClient: {
     get<T = unknown>(key: string): Promise<T | null>;
     set<T = unknown>(key: string, value: T): Promise<void>;
@@ -6931,11 +7265,6 @@ declare const storageClient: {
 export { storageClient }
 export { storageClient as storageClient_alias_1 }
 export { storageClient as storageClient_alias_2 }
-
-declare const storageDir: string;
-export { storageDir }
-export { storageDir as storageDir_alias_1 }
-export { storageDir as storageDir_alias_2 }
 
 declare const storageServer: {
     get<T = unknown>(key: string): Promise<T | null>;
@@ -6961,6 +7290,33 @@ export { T_Children as T_Children_alias_1 }
 export { T_Children as T_Children_alias_2 }
 
 declare type T_Children_2 = ReactNode | ReactNode[] | ReactElement | JSX.Element | null;
+
+declare type T_Command = string | ((context?: I_CommandContext) => string) | {
+    raw: true;
+    cmd: string;
+};
+export { T_Command }
+export { T_Command as T_Command_alias_1 }
+export { T_Command as T_Command_alias_2 }
+
+declare type T_Command_2 =
+| string
+| ((context?: I_CommandContext_2) => string)
+| { raw: true; cmd: string };
+
+declare type T_CommandMap = Record<string, T_Command>;
+export { T_CommandMap }
+export { T_CommandMap as T_CommandMap_alias_1 }
+export { T_CommandMap as T_CommandMap_alias_2 }
+
+declare type T_CommandMap_2 = Record<string, T_Command_2>;
+
+declare type T_CommandMapInput = T_CommandMap | ((ctx: I_CommandContext) => T_CommandMap);
+export { T_CommandMapInput }
+export { T_CommandMapInput as T_CommandMapInput_alias_1 }
+export { T_CommandMapInput as T_CommandMapInput_alias_2 }
+
+declare type T_CommandMapInput_2 = T_CommandMap_2 | ((ctx: I_CommandContext_2) => T_CommandMap_2);
 
 declare type T_CreateSlugQueryResponse<T> = T_FilterQuery<T> & {
     $or: Array<{
@@ -7237,10 +7593,22 @@ export { throwResponse }
 export { throwResponse as throwResponse_alias_1 }
 export { throwResponse as throwResponse_alias_2 }
 
-declare function updatePackage(packageName: string): Promise<void>;
-export { updatePackage }
-export { updatePackage as updatePackage_alias_1 }
-export { updatePackage as updatePackage_alias_2 }
+declare const TSC_CLI = "tsc";
+export { TSC_CLI }
+export { TSC_CLI as TSC_CLI_alias_1 }
+export { TSC_CLI as TSC_CLI_alias_2 }
+
+declare const TSCONFIG_JSON = "tsconfig.json";
+export { TSCONFIG_JSON }
+export { TSCONFIG_JSON as TSCONFIG_JSON_alias_1 }
+export { TSCONFIG_JSON as TSCONFIG_JSON_alias_2 }
+
+declare const TSX_CLI = "tsx";
+export { TSX_CLI }
+export { TSX_CLI as TSX_CLI_alias_1 }
+export { TSX_CLI as TSX_CLI_alias_2 }
+
+export declare function updatePackage(packageName: string): Promise<void>;
 
 declare function useLoading(): I_LoadingContext_2;
 export { useLoading }
@@ -7273,6 +7641,11 @@ export { validate }
 export { validate as validate_alias_1 }
 export { validate as validate_alias_2 }
 
+declare const VITEST_CLI = "vitest";
+export { VITEST_CLI }
+export { VITEST_CLI as VITEST_CLI_alias_1 }
+export { VITEST_CLI as VITEST_CLI_alias_2 }
+
 declare function withNextIntl<T extends {
     children: T_Children_2;
 }>(Component: ComponentType<T>): {
@@ -7290,5 +7663,12 @@ declare const WORKING_DIRECTORY: string;
 export { WORKING_DIRECTORY }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_1 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_2 }
+
+declare function writeFileSync(filePath: string, data: string | object, options?: {
+    isJson?: boolean;
+}): void;
+export { writeFileSync }
+export { writeFileSync as writeFileSync_alias_1 }
+export { writeFileSync as writeFileSync_alias_2 }
 
 export { }

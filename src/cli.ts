@@ -1,66 +1,38 @@
 #!/usr/bin/env node
-import * as fs from 'node:fs';
-import * as path from 'node:path';
 import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
-import { PROJECT_ROOT, WORKING_DIRECTORY } from '#constants/path.js';
+import type { T_Command } from '#typescript/command.js';
+
+import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
-import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists } from '#utils/command.js';
-import { fileExists } from '#utils/fs.js';
-import { installDependencies, isCurrentProject, isPackageOutdated, updatePackage } from '#utils/npm-package.js';
+import { clearAllErrorLists, commandFormatter, commandLog, executeCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
+import { appendFileSync, existsSync, readFileSync, writeFileSync } from '#utils/fs.js';
+import { checkPackage } from '#utils/package.js';
 
-const config = {
-    TS_CONFIG_PATH: path.resolve(WORKING_DIRECTORY, 'tsconfig.json'),
-    HUSKY_PATH: path.resolve(WORKING_DIRECTORY, '.husky'),
-    GIT_HOOK_PATH: path.resolve(WORKING_DIRECTORY, '.git/hooks'),
-    GIT_COMMIT_MSG: path.resolve(WORKING_DIRECTORY, '.git/COMMIT_EDITMSG'),
-    SIMPLE_GIT_HOOKS_PATH: path.resolve(WORKING_DIRECTORY, '.simple-git-hooks.json'),
-
-    PACKAGE_JSON_PATH: path.resolve(WORKING_DIRECTORY, 'package.json'),
-    PACKAGE_LOCK_PATH: path.resolve(WORKING_DIRECTORY, 'pnpm-lock.yaml'),
-    PACKAGE_NAME: '@cyberskill/shared',
-
-    LINT_STAGED_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/lint-staged/base.js'),
-    COMMITLINT_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/commitlint/base.js'),
-    UNIT_TEST_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/vitest/react/unit.js'),
-    E2E_TEST_CONFIG_PATH: path.resolve(PROJECT_ROOT, './configs/vitest/react/e2e.js'),
-
-    HOOKS_CONFIG: {
-        'postinstall': `pnpm exec cyberskill setup`,
-        'pre-commit': `pnpm exec cyberskill lint-staged`,
-        'commit-msg': `pnpm exec cyberskill commitlint`,
-    },
-
-    HOOKS_CONFIG_LOCAL: {
-        'postinstall': `pnpm exec tsx src/cli.ts setup`,
-        'pre-commit': `pnpm exec tsx src/cli.ts lint-staged`,
-        'commit-msg': `pnpm exec tsx src/cli.ts commitlint`,
-        'pre-push': 'git pull',
-    },
-};
-
-async function runCommand(description: string, command: string) {
+async function runCommand(description: string, command: T_Command) {
     commandLog.info(`${description}...`);
-    await executeCommand(command);
-    commandLog.success(`${description} completed.`);
+    await executeCommand(commandFormatter.format(command));
+    commandLog.success(`${description} completed successfully.`);
 }
 
 async function checkTypescript() {
-    if (fileExists(config.TS_CONFIG_PATH)) {
-        await runCommand('Running TypeScript check', `pnpm exec tsc -p ${config.TS_CONFIG_PATH} --noEmit`);
+    if (existsSync(PATH.TS_CONFIG)) {
+        await runCommand('Performing TypeScript validation', COMMAND.TYPESCRIPT_CHECK);
     }
     else {
-        commandLog.warning('TypeScript config not found. Skipping TypeScript check.');
+        commandLog.warning('No TypeScript configuration found. Skipping type check.');
     }
 }
 
 async function checkEslint(fix = false) {
-    await runCommand(
-        `Running ESLint ${fix ? '(with fix)' : '(without fix)'}`,
-        `pnpm exec eslint ${WORKING_DIRECTORY}${fix ? ' --fix' : ''}`,
-    );
+    if (fix) {
+        await runCommand('Running ESLint with auto-fix', COMMAND.ESLINT_FIX);
+    }
+    else {
+        await runCommand('Running ESLint check', COMMAND.ESLINT_CHECK);
+    }
 }
 
 async function showCheckResult() {
@@ -84,30 +56,30 @@ async function showCheckResult() {
 }
 
 async function lintStaged() {
-    if (isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)) {
+    const { isCurrentProject } = await checkPackage(CYBERSKILL_PACKAGE_NAME);
+
+    if (isCurrentProject) {
         try {
-            await runCommand('Building @cyberskill/shared', 'pnpm run build');
-            await executeCommand('git add dist');
-            commandLog.success('Built and staged @cyberskill/shared');
+            await runCommand(`Building package: ${CYBERSKILL_PACKAGE_NAME}`, COMMAND.BUILD);
+            await runCommand('Staging build artifacts', COMMAND.STAGE_BUILD_DIRECTORY);
         }
         catch (error) {
-            commandLog.error(`Failed to build and stage @cyberskill/shared: ${(error as Error).message}`);
+            commandLog.error(`Error building and staging ${CYBERSKILL_PACKAGE_NAME}: ${(error as Error).message}`);
             throw error;
         }
     }
 
-    await runCommand('Running lint-staged', `pnpm exec lint-staged --config ${config.LINT_STAGED_CONFIG_PATH}`);
+    await runCommand('Executing lint-staged', COMMAND.CYBERSKILL.LINT_STAGED);
     showCheckResult();
 }
 
 async function inspectLint() {
-    await runCommand('Inspecting ESLint rules', 'pnpm exec @eslint/config-inspector');
+    await runCommand('Inspecting ESLint configuration', COMMAND.ESLINT_INSPECT);
 }
 
 async function lintCheck() {
     await clearAllErrorLists();
     await Promise.all([checkTypescript(), checkEslint()]);
-
     showCheckResult();
 }
 
@@ -118,113 +90,140 @@ async function lintFix() {
 }
 
 async function commitLint() {
-    await runCommand('Running commit lint', `pnpm exec commitlint --edit ${config.GIT_COMMIT_MSG} --config ${config.COMMITLINT_CONFIG_PATH}`);
+    await runCommand('Validating commit message', COMMAND.CYBERSKILL.COMMIT_LINT);
     showCheckResult();
 }
 
-async function setup() {
-    commandLog.info('Starting project setup...');
+async function setupGitHook() {
+    await runCommand('Configuring Git hooks', COMMAND.CONFIGURE_GIT_HOOK);
 
-    if (!fileExists(config.PACKAGE_JSON_PATH)) {
+    const hooks = await resolveCommands(HOOK);
+
+    writeFileSync(PATH.SIMPLE_GIT_HOOKS, hooks, { isJson: true });
+
+    const gitIgnoreEntry = `\n${SIMPLE_GIT_HOOK_JSON}\n`;
+
+    if (existsSync(PATH.GIT_IGNORE)) {
+        const gitignore = readFileSync(PATH.GIT_IGNORE).split('\n');
+
+        if (!gitignore.includes(SIMPLE_GIT_HOOK_JSON)) {
+            appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
+        }
+    }
+    else {
+        writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
+    }
+
+    await runCommand('Installing simple-git-hooks', COMMAND.SIMPLE_GIT_HOOKS);
+}
+
+export async function installDependencies() {
+    const strategies = [
+        { command: COMMAND.PNPM_INSTALL_STANDARD, message: 'Installing dependencies (standard)' },
+        { command: COMMAND.PNPM_INSTALL_LEGACY, message: 'Retrying with legacy peer dependencies' },
+        { command: COMMAND.PNPM_INSTALL_FORCE, message: 'Retrying with force install' },
+    ];
+
+    for (const { command, message } of strategies) {
+        try {
+            await runCommand(`${message} using: ${command.cmd}`, command);
+            return;
+        }
+        catch (error) {
+            commandLog.warning(`Installation attempt failed: ${command.cmd}`);
+            commandLog.error(`Details: ${(error as Error).message}`);
+        }
+    }
+
+    throw new Error('All dependency installation strategies failed.');
+}
+
+export async function updatePackage(packageName: string): Promise<void> {
+    try {
+        const { installedPath, latestVersion, file } = await checkPackage(packageName);
+
+        file.dependencies = {
+            ...file.dependencies,
+            [file.name]: latestVersion,
+        };
+
+        writeFileSync(installedPath, file, { isJson: true });
+
+        await installDependencies();
+        await lintFix();
+    }
+    catch (error) {
+        commandLog.error(`Failed to update "${packageName}": ${(error as Error).message}`);
+        throw error;
+    }
+}
+
+async function setup() {
+    if (!existsSync(PATH.PACKAGE_JSON)) {
         commandLog.error('package.json not found. Aborting setup.');
         return;
     }
 
     try {
-        const packageJson = JSON.parse(fs.readFileSync(config.PACKAGE_JSON_PATH, 'utf-8'));
+        const {
+            isInstalled,
+            installedVersion,
+            latestVersion,
+            isCurrentProject,
+        } = await checkPackage(CYBERSKILL_PACKAGE_NAME);
 
-        const isUpToDate
-            = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME)
-            || (packageJson.dependencies?.[config.PACKAGE_NAME]
-                && !(await isPackageOutdated(config.PACKAGE_NAME)));
+        const isUpToDate = isCurrentProject || (isInstalled && installedVersion === latestVersion);
 
         if (isUpToDate) {
             commandLog.success('Cyberskill package is already up to date.');
         }
         else {
-            commandLog.info('📦 Updating Cyberskill package...');
-            await updatePackage(config.PACKAGE_NAME);
-            commandLog.success('Cyberskill package updated successfully.');
+            await updatePackage(CYBERSKILL_PACKAGE_NAME);
         }
 
         await setupGitHook();
-        commandLog.success('Project setup completed.');
     }
     catch (error) {
-        commandLog.error(`Failed to setup project: ${(error as Error).message}`);
+        commandLog.error(`Project setup failed: ${(error as Error).message}`);
         throw error;
     }
 }
 
-async function setupGitHook() {
-    commandLog.info('Setting up Git hooks...');
-
-    if (fileExists(config.HUSKY_PATH)) {
-        await executeCommand(`pnpm exec rimraf ${config.HUSKY_PATH} ${config.GIT_HOOK_PATH}`);
-        await executeCommand(`git config core.hooksPath ${config.GIT_HOOK_PATH}`);
-    }
-
-    const shouldApplyLocalHook = isCurrentProject(WORKING_DIRECTORY, config.PACKAGE_NAME);
-
-    fs.writeFileSync(
-        config.SIMPLE_GIT_HOOKS_PATH,
-        JSON.stringify(shouldApplyLocalHook ? config.HOOKS_CONFIG_LOCAL : config.HOOKS_CONFIG, null, 4),
-    );
-
-    const gitignorePath = path.resolve('.gitignore');
-
-    if (fileExists(gitignorePath)) {
-        const gitignore = fs.readFileSync(gitignorePath, 'utf8').split('\n');
-
-        if (!gitignore.includes('.simple-git-hooks.json')) {
-            fs.appendFileSync(gitignorePath, '\n# Ignore simple-git-hooks config\n.simple-git-hooks.json\n');
-            commandLog.info('Added .simple-git-hooks.json to .gitignore');
-        }
-        else {
-            commandLog.info('.simple-git-hooks.json is already ignored in .gitignore');
-        }
-    }
-    else {
-        fs.writeFileSync(gitignorePath, '# Ignore simple-git-hooks config\n.simple-git-hooks.json\n');
-        commandLog.info('Created .gitignore and added .simple-git-hooks.json');
-    }
-
-    await executeCommand(`pnpm exec simple-git-hooks`);
-
-    commandLog.success(`Git hooks configured successfully.`);
-}
-
 async function reset() {
-    await runCommand(
-        'Resetting project',
-        `pnpm exec rimraf ${WORKING_DIRECTORY}/node_modules ${config.PACKAGE_LOCK_PATH}`,
-    );
+    await runCommand('Resetting project files', COMMAND.RESET);
     await installDependencies();
     await setupGitHook();
 }
 
 async function inspect() {
-    await runCommand('Inspecting project dependencies', 'pnpm exec node-modules-inspector');
+    await runCommand('Inspecting project dependencies', COMMAND.NODE_MODULES_INSPECT);
 }
 
 async function testUnit() {
-    await runCommand('Running unit tests', `pnpm exec vitest --config ${config.UNIT_TEST_CONFIG_PATH}`);
+    await runCommand('Running unit tests', COMMAND.CYBERSKILL.TEST_UNIT);
 }
 
 async function testE2E() {
-    await runCommand('Running E2E tests', `pnpm exec vitest --config ${config.E2E_TEST_CONFIG_PATH}`);
+    await runCommand('Running end-to-end tests', COMMAND.CYBERSKILL.TEST_E2E);
 }
 
 yargs(hideBin(process.argv))
-    .command('lint', 'Run linting checks', lintCheck)
-    .command('lint:fix', 'Fix linting issues', lintFix)
-    .command('lint:inspect', 'Inspect linting rules', inspectLint)
-    .command('lint-staged', 'Run lint-staged', lintStaged)
-    .command('commitlint', 'Run commitlint', commitLint)
-    .command('setup', 'Run project setup', setup)
-    .command('reset', 'Reset project dependencies', reset)
-    .command('inspect', 'Inspect project dependencies', inspect)
-    .command('test:unit', 'Run unit tests', testUnit)
-    .command('test:e2e', 'Run e2e tests', testE2E)
+    .scriptName(CYBERSKILL_CLI)
+    .usage('$0 <command> [options]')
+    .command('lint', 'Check code for linting issues', lintCheck)
+    .command('lint:fix', 'Fix linting issues automatically', lintFix)
+    .command('lint:inspect', 'View active ESLint configuration', inspectLint)
+    .command('lint-staged', 'Run lint checks on staged files', lintStaged)
+    .command('commitlint', 'Validate commit message format', commitLint)
+    .command('setup', 'Initialize project setup and dependencies', setup)
+    .command('reset', 'Reset the project and reinstall dependencies', reset)
+    .command('inspect', 'Analyze installed project dependencies', inspect)
+    .command('test:unit', 'Run unit test suite', testUnit)
+    .command('test:e2e', 'Run end-to-end test suite', testE2E)
+    .demandCommand(1, 'Please specify a valid command.')
+    .strict()
     .help()
+    .alias('h', 'help')
+    .alias('v', 'version')
+    .epilog('💡 Tip: Use "--help" with any command to see options\n')
     .parse();

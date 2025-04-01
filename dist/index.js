@@ -1,1 +1,4133 @@
-function e(e,r){if(r==null||r>e.length)r=e.length;for(var t=0,n=new Array(r);t<r;t++)n[t]=e[t];return n}function r(e){if(Array.isArray(e))return e}function t(r){if(Array.isArray(r))return e(r)}function n(e){if(e===void 0){throw new ReferenceError("this hasn't been initialised - super() hasn't been called")}return e}function s(e,r,t,n,s,a,o){try{var i=e[a](o);var c=i.value}catch(e){t(e);return}if(i.done){r(c)}else{Promise.resolve(c).then(n,s)}}function a(e){return function(){var r=this,t=arguments;return new Promise(function(n,a){var o=e.apply(r,t);function i(e){s(o,n,a,i,c,"next",e)}function c(e){s(o,n,a,i,c,"throw",e)}i(undefined)})}}function o(e,r,t){r=f(r);return A(e,C()?Reflect.construct(r,t||[],f(e).constructor):r.apply(e,t))}function i(e,r){if(!(e instanceof r)){throw new TypeError("Cannot call a class as a function")}}function c(e,r){for(var t=0;t<r.length;t++){var n=r[t];n.enumerable=n.enumerable||false;n.configurable=true;if("value"in n)n.writable=true;Object.defineProperty(e,n.key,n)}}function u(e,r,t){if(r)c(e.prototype,r);if(t)c(e,t);return e}function l(e,r,t){if(r in e){Object.defineProperty(e,r,{value:t,enumerable:true,configurable:true,writable:true})}else{e[r]=t}return e}function f(e){f=Object.setPrototypeOf?Object.getPrototypeOf:function e(e){return e.__proto__||Object.getPrototypeOf(e)};return f(e)}function d(e,r){if(typeof r!=="function"&&r!==null){throw new TypeError("Super expression must either be null or a function")}e.prototype=Object.create(r&&r.prototype,{constructor:{value:e,writable:true,configurable:true}});if(r)_(e,r)}function E(e,r){if(r!=null&&typeof Symbol!=="undefined"&&r[Symbol.hasInstance]){return!!r[Symbol.hasInstance](e)}else{return e instanceof r}}function h(e){if(typeof Symbol!=="undefined"&&e[Symbol.iterator]!=null||e["@@iterator"]!=null)return Array.from(e)}function v(e,r){var t=e==null?null:typeof Symbol!=="undefined"&&e[Symbol.iterator]||e["@@iterator"];if(t==null)return;var n=[];var s=true;var a=false;var o,i;try{for(t=t.call(e);!(s=(o=t.next()).done);s=true){n.push(o.value);if(r&&n.length===r)break}}catch(e){a=true;i=e}finally{try{if(!s&&t["return"]!=null)t["return"]()}finally{if(a)throw i}}return n}function m(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function g(){throw new TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function p(e){for(var r=1;r<arguments.length;r++){var t=arguments[r]!=null?arguments[r]:{};var n=Object.keys(t);if(typeof Object.getOwnPropertySymbols==="function"){n=n.concat(Object.getOwnPropertySymbols(t).filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))}n.forEach(function(r){l(e,r,t[r])})}return e}function y(e,r){var t=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);if(r){n=n.filter(function(r){return Object.getOwnPropertyDescriptor(e,r).enumerable})}t.push.apply(t,n)}return t}function S(e,r){r=r!=null?r:{};if(Object.getOwnPropertyDescriptors){Object.defineProperties(e,Object.getOwnPropertyDescriptors(r))}else{y(Object(r)).forEach(function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))})}return e}function O(e,r){if(e==null)return{};var t=R(e,r);var n,s;if(Object.getOwnPropertySymbols){var a=Object.getOwnPropertySymbols(e);for(s=0;s<a.length;s++){n=a[s];if(r.indexOf(n)>=0)continue;if(!Object.prototype.propertyIsEnumerable.call(e,n))continue;t[n]=e[n]}}return t}function R(e,r){if(e==null)return{};var t={};var n=Object.keys(e);var s,a;for(a=0;a<n.length;a++){s=n[a];if(r.indexOf(s)>=0)continue;t[s]=e[s]}return t}function A(e,r){if(r&&(N(r)==="object"||typeof r==="function")){return r}return n(e)}function _(e,r){_=Object.setPrototypeOf||function e(e,r){e.__proto__=r;return e};return _(e,r)}function b(e,t){return r(e)||v(e,t)||w(e,t)||m()}function D(e){return t(e)||h(e)||w(e)||g()}function N(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}function w(r,t){if(!r)return;if(typeof r==="string")return e(r,t);var n=Object.prototype.toString.call(r).slice(8,-1);if(n==="Object"&&r.constructor)n=r.constructor.name;if(n==="Map"||n==="Set")return Array.from(n);if(n==="Arguments"||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return e(r,t)}function C(){try{var e=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(e){}return(C=function(){return!!e})()}function T(e,r){var t,n,s,a,o={label:0,sent:function(){if(s[0]&1)throw s[1];return s[1]},trys:[],ops:[]};return a={next:i(0),"throw":i(1),"return":i(2)},typeof Symbol==="function"&&(a[Symbol.iterator]=function(){return this}),a;function i(e){return function(r){return c([e,r])}}function c(a){if(t)throw new TypeError("Generator is already executing.");while(o)try{if(t=1,n&&(s=a[0]&2?n["return"]:a[0]?n["throw"]||((s=n["return"])&&s.call(n),0):n.next)&&!(s=s.call(n,a[1])).done)return s;if(n=0,s)a=[a[0]&2,s.value];switch(a[0]){case 0:case 1:s=a;break;case 4:o.label++;return{value:a[1],done:false};case 5:o.label++;n=a[1];a=[0];continue;case 7:a=o.ops.pop();o.trys.pop();continue;default:if(!(s=o.trys,s=s.length>0&&s[s.length-1])&&(a[0]===6||a[0]===2)){o=0;continue}if(a[0]===3&&(!s||a[1]>s[0]&&a[1]<s[3])){o.label=a[1];break}if(a[0]===6&&o.label<s[1]){o.label=s[1];s=a;break}if(s&&o.label<s[2]){o.label=s[2];o.ops.push(a);break}if(s[2])o.ops.pop();o.trys.pop();continue}a=r.call(e,o)}catch(e){a=[6,e];n=0}finally{t=s=0}if(a[0]&5)throw a[1];return{value:a[0]?a[1]:void 0,done:true}}}import I from"@antfu/eslint-config";function M(){for(var e=arguments.length,r=new Array(e),t=0;t<e;t++){r[t]=arguments[t]}var n=function(e,r){var t=p({},e);return Object.keys(r).forEach(function(e){if(!Object.hasOwnProperty.call(r,e))return;var s=r[e],a=t[e];Array.isArray(s)?t[e]=D(new Set(D(Array.isArray(a)?a:[]).concat(D(s)))):(typeof s==="undefined"?"undefined":N(s))=="object"&&s!==null&&!Array.isArray(s)?t[e]=n((typeof a==="undefined"?"undefined":N(a))=="object"&&a!==null&&!Array.isArray(a)?a:{},s):t[e]=s}),t};return r.flatMap(function(e){return Array.isArray(e)?e:[e]}).reduce(function(e,r){return n(e,r)},{})}import{dirname as P}from"node:path";import L from"node:process";import{fileURLToPath as G}from"node:url";var k=G(import.meta.url),U=P(k),x=L.env.INIT_CWD||L.cwd();var j={GRAPHQL_PARSE_FAILED:{CODE:"GRAPHQL_PARSE_FAILED",MESSAGE:"The GraphQL operation string contains a syntax error."},GRAPHQL_VALIDATION_FAILED:{CODE:"GRAPHQL_VALIDATION_FAILED",MESSAGE:"The GraphQL operation is not valid against the server's schema."},BAD_USER_INPUT:{CODE:"BAD_USER_INPUT",MESSAGE:"The GraphQL operation includes an invalid value for a field argument."},PERSISTED_QUERY_NOT_FOUND:{CODE:"PERSISTED_QUERY_NOT_FOUND",MESSAGE:"A client sent the hash of a query string to execute via automatic persisted queries, but the query was not in the APQ cache."},PERSISTED_QUERY_NOT_SUPPORTED:{CODE:"PERSISTED_QUERY_NOT_SUPPORTED",MESSAGE:"A client sent the hash of a query string to execute via automatic persisted queries, but the server has disabled APQ."},OPERATION_RESOLUTION_FAILURE:{CODE:"OPERATION_RESOLUTION_FAILURE",MESSAGE:"The request was parsed successfully and is valid against the server's schema, but the server couldn't resolve which operation to run. This occurs when a request containing multiple named operations doesn't specify which operation to run (i.e.,operationName), or if the named operation isn't included in the request."},CONTINUE:{CODE:100,MESSAGE:"Continue"},SWITCHING_PROTOCOLS:{CODE:101,MESSAGE:"Switching Protocols"},PROCESSING:{CODE:102,MESSAGE:"Processing"},OK:{CODE:200,MESSAGE:"OK"},CREATED:{CODE:201,MESSAGE:"Created"},ACCEPTED:{CODE:202,MESSAGE:"Accepted"},NON_AUTHORITATIVE_INFORMATION:{CODE:203,MESSAGE:"Non Authoritative Information"},NO_CONTENT:{CODE:204,MESSAGE:"No Content"},RESET_CONTENT:{CODE:205,MESSAGE:"Reset Content"},PARTIAL_CONTENT:{CODE:206,MESSAGE:"Partial Content"},MULTI_STATUS:{CODE:207,MESSAGE:"Multi-Status"},MULTIPLE_CHOICES:{CODE:300,MESSAGE:"Multiple Choices"},MOVED_PERMANENTLY:{CODE:301,MESSAGE:"Moved Permanently"},MOVED_TEMPORARILY:{CODE:302,MESSAGE:"Moved Temporarily"},SEE_OTHER:{CODE:303,MESSAGE:"See Other"},NOT_MODIFIED:{CODE:304,MESSAGE:"Not Modified"},USE_PROXY:{CODE:305,MESSAGE:"Use Proxy"},TEMPORARY_REDIRECT:{CODE:307,MESSAGE:"Temporary Redirect"},PERMANENT_REDIRECT:{CODE:308,MESSAGE:"Permanent Redirect"},BAD_REQUEST:{CODE:400,MESSAGE:"Bad Request"},UNAUTHORIZED:{CODE:401,MESSAGE:"Unauthorized"},PAYMENT_REQUIRED:{CODE:402,MESSAGE:"Payment Required"},FORBIDDEN:{CODE:403,MESSAGE:"Forbidden"},NOT_FOUND:{CODE:404,MESSAGE:"Not Found"},METHOD_NOT_ALLOWED:{CODE:405,MESSAGE:"Method Not Allowed"},NOT_ACCEPTABLE:{CODE:406,MESSAGE:"Not Acceptable"},PROXY_AUTHENTICATION_REQUIRED:{CODE:407,MESSAGE:"Proxy Authentication Required"},REQUEST_TIMEOUT:{CODE:408,MESSAGE:"Request Timeout"},CONFLICT:{CODE:409,MESSAGE:"Conflict"},GONE:{CODE:410,MESSAGE:"Gone"},LENGTH_REQUIRED:{CODE:411,MESSAGE:"Length Required"},PRECONDITION_FAILED:{CODE:412,MESSAGE:"Precondition Failed"},REQUEST_TOO_LONG:{CODE:413,MESSAGE:"Request Entity Too Large"},REQUEST_URI_TOO_LONG:{CODE:414,MESSAGE:"Request-URI Too Long"},UNSUPPORTED_MEDIA_TYPE:{CODE:415,MESSAGE:"Unsupported Media Type"},REQUESTED_RANGE_NOT_SATISFIABLE:{CODE:416,MESSAGE:"Requested Range Not Satisfiable"},EXPECTATION_FAILED:{CODE:417,MESSAGE:"Expectation Failed"},IM_A_TEAPOT:{CODE:418,MESSAGE:"I'm a teapot"},INSUFFICIENT_SPACE_ON_RESOURCE:{CODE:419,MESSAGE:"Insufficient Space on Resource"},METHOD_FAILURE:{CODE:420,MESSAGE:"Method Failure"},MISDIRECTED_REQUEST:{CODE:421,MESSAGE:"Misdirected Request"},UNPROCESSABLE_ENTITY:{CODE:422,MESSAGE:"Unprocessable Entity"},LOCKED:{CODE:423,MESSAGE:"Locked"},FAILED_DEPENDENCY:{CODE:424,MESSAGE:"Failed Dependency"},PRECONDITION_REQUIRED:{CODE:428,MESSAGE:"Precondition Required"},TOO_MANY_REQUESTS:{CODE:429,MESSAGE:"Too Many Requests"},REQUEST_HEADER_FIELDS_TOO_LARGE:{CODE:431,MESSAGE:"Request Header Fields Too Large"},UNAVAILABLE_FOR_LEGAL_REASONS:{CODE:451,MESSAGE:"Unavailable For Legal Reasons"},INTERNAL_SERVER_ERROR:{CODE:500,MESSAGE:"Internal Server Error"},NOT_IMPLEMENTED:{CODE:501,MESSAGE:"Not Implemented"},BAD_GATEWAY:{CODE:502,MESSAGE:"Bad Gateway"},SERVICE_UNAVAILABLE:{CODE:503,MESSAGE:"Service Unavailable"},GATEWAY_TIMEOUT:{CODE:504,MESSAGE:"Gateway Timeout"},HTTP_VERSION_NOT_SUPPORTED:{CODE:505,MESSAGE:"HTTP Version Not Supported"},INSUFFICIENT_STORAGE:{CODE:507,MESSAGE:"Insufficient Storage"},NETWORK_AUTHENTICATION_REQUIRED:{CODE:511,MESSAGE:"Network Authentication Required"}};import{format as F}from"date-fns";import{Document as q}from"mongoose";import Q from"mongoose-aggregate-paginate-v2";import V from"mongoose-paginate-v2";import{v4 as H}from"uuid";import B from"crypto-js";import Y from"slugify";var J=Y.default||Y;function W(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:"",r=arguments.length>1?arguments[1]:void 0;var t=r||{},n=t.lower,s=n===void 0?!0:n,a=t.locale,o=a===void 0?"vi":a,i=O(t,["lower","locale"]);return J(e,p({lower:s,locale:o},i))}function $(e){var r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:4;return B.SHA256(e).toString(B.enc.Hex).slice(0,r)}var z={isEmpty:function e(e){return e==null?!0:Array.isArray(e)?e.length===0:(typeof e==="undefined"?"undefined":N(e))=="object"?E(e,Date)?!1:Object.keys(e).length===0:typeof e=="string"?e.trim().length===0:!1}};var K={getDateTime:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:new Date;return F(e,"yyyy-MM-dd HH:mm:ss.SSS")},createGenericFields:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=e.returnDateAs,t=r===void 0?"string":r;var n=t==="string"?K.getDateTime():new Date;return{id:H(),isDel:!1,createdAt:n,updatedAt:n}},applyPlugins:function e(e,r){r.filter(function(e){return typeof e=="function"}).forEach(function(r){return e.plugin(r)})},applyMiddlewares:function e(e,r){r.forEach(function(r){var t=r.method,n=r.pre,s=r.post;t&&n&&e.pre(t,n),t&&s&&e.post(t,s)})},createGenericSchema:function e(e){return new e.Schema({id:{type:String,default:H,required:!0,unique:!0},isDel:{type:Boolean,default:!1,required:!0}},{timestamps:!0})},createSchema:function e(e){var r=e.mongoose,t=e.schema,n=e.virtuals,s=n===void 0?[]:n,a=e.standalone,o=a===void 0?!1:a;var i=new r.Schema(t,{strict:!0});return s.forEach(function(e){var r=e.name,t=e.options,n=e.get;var s=i.virtual(r,t);n&&s.get(n)}),o||i.add(K.createGenericSchema(r)),i},createModel:function e(e){var r=e.mongoose,t=e.name,n=e.schema,s=e.pagination,a=s===void 0?!1:s,o=e.aggregate,i=o===void 0?!1:o,c=e.virtuals,u=c===void 0?[]:c,l=e.middlewares,f=l===void 0?[]:l;if(!t)throw new Error("Model name is required.");if(r.models[t])return r.models[t];var d=K.createSchema({mongoose:r,schema:n,virtuals:u});return K.applyPlugins(d,[a&&V,i&&Q]),K.applyMiddlewares(d,f),r.model(t,d)},createSlugQuery:function e(e){var r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{},t=arguments.length>2?arguments[2]:void 0;return S(p({},r,t&&{id:{$ne:t}}),{$or:[{slug:e},{slugHistory:e}]})},validator:{isEmpty:function e(){return /*#__PURE__*/function(){var e=a(function(e){return T(this,function(r){return[2,!z.isEmpty(e)]})});return function(r){return e.apply(this,arguments)}}()},isUnique:function e(e){return /*#__PURE__*/function(){var r=a(function(r){var t;return T(this,function(n){switch(n.label){case 0:if(!Array.isArray(e)||e.length===0)throw new Error("Fields must be a non-empty array of strings.");t={$or:e.map(function(e){return l({},e,r)})};return[4,this.constructor.findOne(t)];case 1:return[2,!n.sent()]}})});return function(e){return r.apply(this,arguments)}}()},matchesRegex:function e(e){return /*#__PURE__*/function(){var r=a(function(r){return T(this,function(t){if(!Array.isArray(e)||e.some(function(e){return!E(e,RegExp)}))throw new Error("regexArray must be an array of valid RegExp objects.");return[2,e.every(function(e){return e.test(r)})]})});return function(e){return r.apply(this,arguments)}}()}}},X=/*#__PURE__*/function(){"use strict";function e(r,t){i(this,e);this.collection=r.collection(t)}u(e,[{key:"createOne",value:function e(e){var r=this;return a(function(){var t,n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);t=p({},K.createGenericFields(),e);n={success:!0,message:"Document created successfully"};return[4,r.collection.insertOne(t)];case 1:return[2,(n.result=a.sent(),n)];case 2:s=a.sent();return[2,{success:!1,message:s.message}];case 3:return[2]}})})()}},{key:"createMany",value:function e(e){var r=this;return a(function(){var t,n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);t=e.map(function(e){return p({},K.createGenericFields(),e)});return[4,r.collection.insertMany(t)];case 1:n=a.sent();return[2,n.insertedCount===0?{success:!1,message:"No documents were inserted"}:{success:!0,message:"".concat(n.insertedCount," documents created successfully"),result:n}];case 2:s=a.sent();return[2,{success:!1,message:s.message}];case 3:return[2]}})})()}},{key:"findOne",value:function e(e){var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);return[4,r.collection.findOne(e)];case 1:t=s.sent();return[2,t?{success:!0,message:"Document found",result:t}:{success:!1,message:"Document not found"}];case 2:n=s.sent();return[2,{success:!1,message:n.message}];case 3:return[2]}})})()}},{key:"findAll",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{};var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);t={success:!0,message:"Documents retrieved successfully"};return[4,r.collection.find(e).toArray()];case 1:return[2,(t.result=s.sent(),t)];case 2:n=s.sent();return[2,{success:!1,message:n.message}];case 3:return[2]}})})()}},{key:"count",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{};var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);t={success:!0,message:"Count retrieved successfully"};return[4,r.collection.countDocuments(e)];case 1:return[2,(t.result=s.sent(),t)];case 2:n=s.sent();return[2,{success:!1,message:n.message}];case 3:return[2]}})})()}},{key:"updateOne",value:function e(e,r){var t=this;return a(function(){var n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);return[4,t.collection.updateOne(e,{$set:r})];case 1:n=a.sent();return[2,n.matchedCount===0?{success:!1,message:"No documents matched the filter"}:{success:!0,message:"Document updated successfully",result:n}];case 2:s=a.sent();return[2,{success:!1,message:s.message}];case 3:return[2]}})})()}},{key:"updateMany",value:function e(e,r){var t=this;return a(function(){var n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);return[4,t.collection.updateMany(e,{$set:r})];case 1:n=a.sent();return[2,n.matchedCount===0?{success:!1,message:"No documents matched the filter"}:{success:!0,message:"Documents updated successfully",result:n}];case 2:s=a.sent();return[2,{success:!1,message:s.message}];case 3:return[2]}})})()}},{key:"deleteOne",value:function e(e){var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);return[4,r.collection.deleteOne(e)];case 1:t=s.sent();return[2,t.deletedCount===0?{success:!1,message:"No documents matched the filter"}:{success:!0,message:"Document deleted successfully",result:t}];case 2:n=s.sent();return[2,{success:!1,message:n.message}];case 3:return[2]}})})()}},{key:"deleteMany",value:function e(e){var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);return[4,r.collection.deleteMany(e)];case 1:t=s.sent();return[2,t.deletedCount===0?{success:!1,message:"No documents matched the filter"}:{success:!0,message:"Documents deleted successfully",result:t}];case 2:n=s.sent();return[2,{success:!1,message:n.message}];case 3:return[2]}})})()}}]);return e}(),Z=/*#__PURE__*/function(){"use strict";function e(r){i(this,e);this.model=r}u(e,[{key:"getModelName",value:function e(){return this.model.modelName}},{key:"findOne",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{},t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{},n=arguments.length>3?arguments[3]:void 0;var s=this;return a(function(){var a,o,i;return T(this,function(c){switch(c.label){case 0:c.trys.push([0,2,,3]);a=s.model.findOne(e,r,t);n&&a.populate(n);return[4,a.exec()];case 1:o=c.sent();return[2,o?{success:!0,result:o}:{success:!1,message:"No ".concat(s.getModelName()," found."),code:j.NOT_FOUND.CODE}];case 2:i=c.sent();return[2,{success:!1,message:i.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"findAll",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{},t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{},n=arguments.length>3?arguments[3]:void 0;var s=this;return a(function(){var a,o,i;return T(this,function(c){switch(c.label){case 0:c.trys.push([0,2,,3]);a=s.model.find(e,r,t);n&&a.populate(n);o={success:!0};return[4,a.exec()];case 1:return[2,(o.result=c.sent(),o)];case 2:i=c.sent();return[2,{success:!1,message:i.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"findPaging",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{};var t=this;return a(function(){var n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);n={success:!0};return[4,t.model.paginate(e,r)];case 1:return[2,(n.result=a.sent(),n)];case 2:s=a.sent();return[2,{success:!1,message:s.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"findPagingAggregate",value:function e(e){var r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{};var t=this;return a(function(){var n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);n={success:!0};return[4,t.model.aggregatePaginate(t.model.aggregate(e),r)];case 1:return[2,(n.result=a.sent(),n)];case 2:s=a.sent();return[2,{success:!1,message:s.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"count",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{};var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);t={success:!0};return[4,r.model.countDocuments(e)];case 1:return[2,(t.result=s.sent(),t)];case 2:n=s.sent();return[2,{success:!1,message:n.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"createOne",value:function e(e){var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);t={success:!0};return[4,r.model.create(e)];case 1:return[2,(t.result=s.sent(),t)];case 2:n=s.sent();return[2,{success:!1,message:n.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"createMany",value:function e(e){var r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{};var t=this;return a(function(){var n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);n={success:!0};return[4,t.model.insertMany(e,r)];case 1:return[2,(n.result=a.sent().map(function(e){return E(e,q)?e.toObject():null}).filter(function(e){return e!==null}),n)];case 2:s=a.sent();return[2,{success:!1,message:s.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"updateOne",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{},t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{};var n=this;return a(function(){var s,a;return T(this,function(o){switch(o.label){case 0:o.trys.push([0,2,,3]);return[4,n.model.findOneAndUpdate(e,r,p({new:!0},t)).exec()];case 1:s=o.sent();return[2,s?{success:!0,result:s}:{success:!1,message:"Failed to update ".concat(n.getModelName(),"."),code:j.NOT_FOUND.CODE}];case 2:a=o.sent();return[2,{success:!1,message:a.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"updateMany",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{},t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{};var n=this;return a(function(){var s,a;return T(this,function(o){switch(o.label){case 0:o.trys.push([0,2,,3]);s={success:!0};return[4,n.model.updateMany(e,r,t).exec()];case 1:return[2,(s.result=o.sent(),s)];case 2:a=o.sent();return[2,{success:!1,message:a.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"deleteOne",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{};var t=this;return a(function(){var n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);return[4,t.model.findOneAndDelete(e,r).exec()];case 1:n=a.sent();return[2,n?{success:!0,result:n}:{success:!1,message:"No ".concat(t.getModelName()," found to delete."),code:j.NOT_FOUND.CODE}];case 2:s=a.sent();return[2,{success:!1,message:s.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"deleteMany",value:function e(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:{},r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:{};var t=this;return a(function(){var n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,2,,3]);return[4,t.model.deleteMany(e,r).exec()];case 1:n=a.sent();return[2,n.deletedCount===0?{success:!1,message:"No documents found to delete.",code:j.NOT_FOUND.CODE}:{success:!0,result:n}];case 2:s=a.sent();return[2,{success:!1,message:s.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}},{key:"createShortId",value:function e(e){var r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:4;var t=this;return a(function(){var n,s,a,o;return T(this,function(i){switch(i.label){case 0:n=new Set;s=0;i.label=1;case 1:if(!(s<10))return[3,5];a=$(e,s+r);o=!n.has(a);if(!o)return[3,3];n.add(a);return[4,t.model.exists({shortId:a})];case 2:o=!i.sent();i.label=3;case 3:if(o)return[2,{success:!0,result:a}];i.label=4;case 4:s++;return[3,1];case 5:return[2,{success:!1,message:"Failed to create a unique shortId",code:j.INTERNAL_SERVER_ERROR.CODE}]}})})()}},{key:"createSlug",value:function e(e,r){var t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{};var n=this;return a(function(){var s,o,i,c,u,l,f,d,E,h,v;return T(this,function(m){switch(m.label){case 0:m.trys.push([0,8,,9]);s=r[e],o=/*#__PURE__*/function(){var e=a(function(e){var s,a,o;return T(this,function(i){switch(i.label){case 0:return[4,n.model.findOne(K.createSlugQuery(e,t,r.id))];case 1:s=i.sent();if(!s)return[2,e];a=1;i.label=2;case 2:o="".concat(e,"-").concat(a);return[4,n.model.findOne(K.createSlugQuery(o,t,r.id))];case 3:s=i.sent(),a++;i.label=4;case 4:if(s)return[3,2];i.label=5;case 5:return[2,o]}})});return function r(r){return e.apply(this,arguments)}}();if(!((typeof s==="undefined"?"undefined":N(s))=="object"))return[3,5];i={};c=[];for(u in s)c.push(u);l=0;m.label=1;case 1:if(!(l<c.length))return[3,4];f=c[l];d=W(s[f]);return[4,o(d)];case 2:i[f]=m.sent();m.label=3;case 3:l++;return[3,1];case 4:return[2,{success:!0,result:i}];case 5:E=W(s);h={success:!0};return[4,o(E)];case 6:return[2,(h.result=m.sent(),h)];case 7:return[3,9];case 8:v=m.sent();return[2,{success:!1,message:"Failed to create a unique slug: ".concat(v.message),code:j.INTERNAL_SERVER_ERROR.CODE}];case 9:return[2]}})})()}},{key:"aggregate",value:function e(e){var r=this;return a(function(){var t,n;return T(this,function(s){switch(s.label){case 0:s.trys.push([0,2,,3]);t={success:!0};return[4,r.model.aggregate(e)];case 1:return[2,(t.result=s.sent(),t)];case 2:n=s.sent();return[2,{success:!1,message:n.message,code:j.INTERNAL_SERVER_ERROR.CODE}];case 3:return[2]}})})()}}]);return e}();import{ApolloClient as ee,ApolloLink as er,ApolloProvider as et,HttpLink as en,InMemoryCache as es,split as ea}from"@apollo/client";import{onError as eo}from"@apollo/client/link/error";import{GraphQLWsLink as ei}from"@apollo/client/link/subscriptions";import{getMainDefinition as ec}from"@apollo/client/utilities";import{createClient as eu}from"graphql-ws";import{jsx as el}from"react/jsx-runtime";function ef(e){var r=eo(function(e){var r=e.graphQLErrors,t=e.networkError;r===null||r===void 0?void 0:r.forEach(function(e){var r=e.message,t=e.locations,n=e.path;return console.error("[GraphQL error]: Message: ".concat(r,", Location: ").concat(t,", Path: ").concat(n))}),t&&console.error("[Network error]: ".concat(t))}),t=new en({uri:e===null||e===void 0?void 0:e.uri,credentials:"include"}),n=(e===null||e===void 0?void 0:e.wsUrl)?new ei(eu({url:e.wsUrl})):null,s=n?ea(function(e){var r=e.query;var t=ec(r);if(t.kind==="OperationDefinition"){var n=t.operation;return n==="subscription"}return!1},n,t):t,a=new er(function(e,r){return e.variables&&(e.variables=JSON.parse(JSON.stringify(e.variables),function(e,r){return e==="__typename"?void 0:r})),r(e)});return{errorLink:r,httpLink:t,wsLink:n,splitLink:s,cleanTypeName:a}}function ed(e){var r=e.isNextJS,t=e.options,n=e.children,s=e.client,a=e.provider,o=e.cache;var i=s!==null&&s!==void 0?s:ee;if(typeof i!="function")throw new TypeError("Invalid ApolloClient provided. Ensure CustomClient is a class.");var c=a||et,u=o||es,l=ef(t),f=l.cleanTypeName,d=l.errorLink,h=l.splitLink,v=new i(p({cache:E(u,es)?u:new es,link:er.from([f,d,h].filter(Boolean))},t));return r?el(c,{makeClient:function(){return v},children:n}):el(c,{client:v,children:n})}import eE from"classnames";import{createContext as eh,use as ev,useCallback as em,useMemo as eg,useState as ep}from"react";import ey from"./react/loading.module.scss";import{jsx as eS,jsxs as eO}from"react/jsx-runtime";var eR=eh(void 0);function eA(){var e=ev(eR);if(!e)throw new Error("useLoading must be used within a LoadingProvider");return e}function e_(e){var r=e.full,t=r===void 0?!1:r,n=e.block,s=n===void 0?!1:n,a=e.className,o=a===void 0?"":a,i=e.message,c=i===void 0?"Loading":i,u=O(e,["full","block","className","message"]);function l(){return eO("div",S(p({className:ey.container},u),{children:[eS("div",{className:ey.ring}),eS("div",{className:ey.ring}),eS("div",{className:ey.ring}),eS("div",{className:ey.ring}),c&&eS("div",{className:ey.message,children:c})]}))}return t?eS("div",{className:eE(ey.fullscreen,o),children:l()}):s?eS("div",{className:eE(ey.block,o),children:l()}):l()}function eb(e){var r=e.children;var t=b(ep(!1),2),n=t[0],s=t[1],a=b(ep(!1),2),o=a[0],i=a[1],c=em(function(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:!1;s(!0),i(e)},[]),u=em(function(){s(!1),i(!1)},[]),l=eg(function(){return{isLoading:n,isGlobalLoading:o,showLoading:c,hideLoading:u}},[n,o,c,u]);return eS(eR,{value:l,children:n?eS(e_,{full:o}):r})}import{NextIntlClientProvider as eD,useTranslations as eN}from"next-intl";import{createContext as ew,use as eC,useMemo as eT}from"react";import{useCallback as eI,useEffect as eM,useState as eP}from"react";var eL={serialize:function(e){return JSON.stringify(e,function(e,r){return E(r,Date)?{__type:"Date",value:r.toISOString()}:r})},deserialize:function(e){return JSON.parse(e,function(e,r){return(r===null||r===void 0?void 0:r.__type)==="Date"?new Date(r.value):r})}};import eG from"localforage";var ek={get:function e(e){return a(function(){var r;return T(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,eG.getItem(e)];case 1:return[2,t.sent()];case 2:r=t.sent();return[2,(console.error('❌ [Storage:get] Error getting key "'.concat(e,'":'),r),null)];case 3:return[2]}})})()},set:function e(e,r){return a(function(){var t;return T(this,function(n){switch(n.label){case 0:n.trys.push([0,2,,3]);return[4,eG.setItem(e,r)];case 1:n.sent();return[3,3];case 2:t=n.sent();console.error('❌ [Storage:set] Error setting key "'.concat(e,'":'),t);return[3,3];case 3:return[2]}})})()},remove:function e(e){return a(function(){var r;return T(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,eG.removeItem(e)];case 1:t.sent();return[3,3];case 2:r=t.sent();console.error('❌ [Storage:remove] Error removing key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})})()},keys:function e(){return a(function(){var e,r;return T(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,eG.keys()];case 1:return[2,(e=t.sent())!==null&&e!==void 0?e:[]];case 2:r=t.sent();return[2,(console.error("❌ [Storage:keys] Error getting keys:",r),[])];case 3:return[2]}})})()}};function eU(e,r){var t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:eL;var n=b(eP(r),2),s=n[0],o=n[1],i=b(eP(!1),2),c=i[0],u=i[1];eM(function(){var n=!0;return a(function(){var s,a,i,c;return T(this,function(l){switch(l.label){case 0:l.trys.push([0,6,7,8]);return[4,ek.get(e)];case 1:s=l.sent();if(!n)return[3,5];if(!(s!==null))return[3,2];a=t.deserialize(s);o(a);return[3,5];case 2:if(!(r!==void 0))return[3,4];i=t.serialize(r);return[4,ek.set(e,i)];case 3:l.sent(),o(r);return[3,5];case 4:o(void 0);l.label=5;case 5:return[3,8];case 6:c=l.sent();console.error('Error loading value for key "'.concat(e,'":'),c),n&&o(r);return[3,8];case 7:n&&u(!0);return[7];case 8:return[2]}})})(),function(){n=!1,u(!1)}},[e,r,t]),eM(function(){if(!c)return;a(function(){var r,n;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,3,,4]);if(!(s!==void 0))return[3,2];r=t.serialize(s);return[4,ek.set(e,r)];case 1:a.sent();a.label=2;case 2:return[3,4];case 3:n=a.sent();console.error('Error saving value for key "'.concat(e,'":'),n);return[3,4];case 4:return[2]}})})()},[s,e,t,c]);var l=eI(function(e){o(function(r){return typeof e=="function"?e(r):e})},[]),f=eI(/*#__PURE__*/a(function(){var r;return T(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,ek.remove(e)];case 1:t.sent(),o(void 0);return[3,3];case 2:r=t.sent();console.error('Error removing key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})}),[e]);return{value:s,set:l,remove:f}}import{Fragment as ex,jsx as ej}from"react/jsx-runtime";var eF=ew(void 0);function eq(){var e=eC(eF);if(!e)throw new Error("useNextIntl must be used within a NextIntlProvider");return e}var eQ=eN;function eV(e){var r=function(r){var t;var n=eq(),s=n.currentLanguage,a=r.messages,o=r.languages,i="en",c=a[(s===null||s===void 0?void 0:s.value)||i],u=(t=o.find(function(e){return e.value===(s===null||s===void 0?void 0:s.value)}))===null||t===void 0?void 0:t.timezone;return a?ej(eD,{locale:(s===null||s===void 0?void 0:s.value)||i,messages:c,timeZone:u,children:ej(e,p({},r))}):(console.warn("Missing messages for language: ".concat((s===null||s===void 0?void 0:s.value)||i)),null)};return r.displayName="withNextIntl(".concat(e.displayName||e.name||"Component",")"),r}function eH(e){var r=e.children;return ej(ex,{children:r})}var eB=eV(eH);function eY(e){var r=e.children,t=e.languages,n=e.messages;var s;var a=eU("lang",(s=t===null||t===void 0?void 0:t[0])!==null&&s!==void 0?s:{}),o=a.value,i=a.set,c=eT(function(){return{languages:t,currentLanguage:o,setCurrentLanguage:i}},[t,i,o]);return ej(eF,{value:c,children:ej(eB,{languages:t,messages:n,children:r})})}var eJ=function(e){return e.Error="error",e.Warning="warning",e}(eJ||{});import{Collection as eW,Db as e$}from"mongodb";import{Document as ez,Model as eK}from"mongoose";var eX=/*#__PURE__*/function(e){"use strict";d(r,e);function r(){i(this,r);return o(this,r,arguments)}return r}(e$),eZ=/*#__PURE__*/function(e){"use strict";d(r,e);function r(){i(this,r);return o(this,r,arguments)}return r}(ez),e0=/*#__PURE__*/function(e){"use strict";d(r,e);function r(){i(this,r);return o(this,r,arguments)}return r}(eK),e2=/*#__PURE__*/function(e){"use strict";d(r,e);function r(){i(this,r);return o(this,r,arguments)}return r}(eW);import e1 from"boxen";import e3 from"chalk";import{exec as e4}from"node:child_process";import e5 from"node:process";import*as e8 from"node:util";import e6 from"node-persist";import e7 from"node:os";import e9 from"node:path";import re from"node:process";var rr=re.env.CYBERSKILL_STORAGE_DIR||e9.join(e7.homedir(),".cyberskill-storage");function rt(){return rn.apply(this,arguments)}function rn(){rn=a(function(){var e;return T(this,function(r){switch(r.label){case 0:e=e6.defaultInstance;if(e)return[3,2];return[4,e6.init({dir:rr,stringify:JSON.stringify,parse:JSON.parse,encoding:"utf8",logging:!1,forgiveParseErrors:!0})];case 1:e=r.sent();r.label=2;case 2:e;return[2]}})});return rn.apply(this,arguments)}var rs={get:function e(e){return a(function(){var r,t;return T(this,function(n){switch(n.label){case 0:n.trys.push([0,3,,4]);return[4,rt()];case 1:n.sent();return[4,e6.getItem(e)];case 2:return[2,(r=n.sent())!==null&&r!==void 0?r:null];case 3:t=n.sent();return[2,(console.error('❌ [Storage:get] Error getting key "'.concat(e,'":'),t),null)];case 4:return[2]}})})()},set:function e(e,r){return a(function(){var t;return T(this,function(n){switch(n.label){case 0:n.trys.push([0,3,,4]);return[4,rt()];case 1:n.sent();return[4,e6.setItem(e,r)];case 2:n.sent();return[3,4];case 3:t=n.sent();console.error('❌ [Storage:set] Error setting key "'.concat(e,'":'),t);return[3,4];case 4:return[2]}})})()},remove:function e(e){return a(function(){var r;return T(this,function(t){switch(t.label){case 0:t.trys.push([0,3,,4]);return[4,rt()];case 1:t.sent();return[4,e6.removeItem(e)];case 2:t.sent();return[3,4];case 3:r=t.sent();console.error('❌ [Storage:remove] Error removing key "'.concat(e,'":'),r);return[3,4];case 4:return[2]}})})()},keys:function e(){return a(function(){var e,r;return T(this,function(t){switch(t.label){case 0:t.trys.push([0,3,,4]);return[4,rt()];case 1:t.sent();return[4,e6.keys()];case 2:e=t.sent();return[2,Array.isArray(e)?e:(console.warn("⚠️ [Storage:keys] Invalid keys response:",e),[])];case 3:r=t.sent();return[2,(console.error("❌ [Storage:keys] Error getting keys:",r),[])];case 4:return[2]}})})()},getLogLink:function e(e){return a(function(){return T(this,function(r){try{return[2,"".concat(rr," (key: ").concat(e,")")]}catch(e){return[2,(console.error("❌ [Storage:getLogLink] Error getting log link:",e),null)]}return[2]})})()}};var ra=e5.env.DEBUG==="true",ro=e8.promisify(e4),ri=e3.gray,rc=e3.blue,ru=function(){return ri("[".concat(new Date().toLocaleTimeString(),"]"))};function rl(e){var r=e3[e];return typeof r=="function"?r:e3.green}function rf(e,r,t,n){var s=rl(r);console.log("".concat(ru()," ").concat(s("".concat(t," ").concat(e))," ").concat(n))}function rd(e,r){var t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{},n=t.color,s=n===void 0?"green":n,a=t.padding,o=a===void 0?1:a,i=t.margin,c=i===void 0?1:i,u=t.borderStyle,l=u===void 0?"round":u,f=t.titleColor,d=f===void 0?"bold":f;var E=rl(s),h=rl(d);if(typeof r=="string"){console.log(e1(h(E("".concat(e,"\n").concat(r))),{padding:o,margin:c,borderStyle:l,borderColor:s}));return}Array.isArray(r)&&r.length&&(r.forEach(function(e){var r=e.file,t=e.position,n=e.rule,s=e.message;console.log("".concat(ru()," ").concat(E("File:")," ").concat(rc("".concat(r).concat(t?":".concat(t):"")))),n&&console.log("   ".concat(E("Rule:")," ").concat(E(n))),console.log("   ".concat(E("Message:")," ").concat(E(s)))}),console.log(e1(h(E("".concat(e,": ").concat(r.length))),{padding:o,margin:c,borderStyle:l,borderColor:s})),console.log(ri("─".repeat(40))))}var rE={success:function(e){return rf("SUCCESS","green","✔",e)},error:function(e){return rf("ERROR","red","✖",e)},warning:function(e){return rf("WARNING","yellow","⚠",e)},info:function(e){return rf("INFO","blue","ℹ",e)},printBoxedLog:rd},rh=function(e){return"error_list:".concat(e)};function rv(e){return rm.apply(this,arguments)}function rm(){rm=a(function(e){var r,t,n;return T(this,function(s){switch(s.label){case 0:if(e.length===0)return[2];r=Date.now(),t=rh(r);s.label=1;case 1:s.trys.push([1,3,,4]);return[4,rs.set(t,{errors:e,timestamp:r})];case 2:s.sent(),setTimeout(/*#__PURE__*/a(function(){var e;return T(this,function(r){switch(r.label){case 0:return[4,rs.getLogLink(t)];case 1:e=r.sent();e&&rE.info("\uD83D\uDCC2 Open the error list manually: ".concat(e));return[2]}})}),10);return[3,4];case 3:n=s.sent();rE.error("Failed to save errors: ".concat(n.message));return[3,4];case 4:return[2]}})});return rm.apply(this,arguments)}function rg(){return rp.apply(this,arguments)}function rp(){rp=a(function(){var e,r,t;return T(this,function(n){switch(n.label){case 0:n.trys.push([0,3,,4]);return[4,rs.keys()];case 1:e=n.sent(),r=Array.isArray(e)?e.filter(function(e){var r;return e===null||e===void 0?void 0:(r=e.startsWith)===null||r===void 0?void 0:r.call(e,"error_list:")}):[];return[4,Promise.all(r.map(/*#__PURE__*/function(){var e=a(function(e){var r;return T(this,function(t){switch(t.label){case 0:return[4,rs.get(e)];case 1:return[2,((r=t.sent())===null||r===void 0?void 0:r.errors)||[]]}})});return function(r){return e.apply(this,arguments)}}()))];case 2:return[2,n.sent().flat()];case 3:t=n.sent();return[2,(rE.error("Failed to retrieve stored errors: ".concat(t.message)),[])];case 4:return[2]}})});return rp.apply(this,arguments)}function ry(){return rS.apply(this,arguments)}function rS(){rS=a(function(){var e,r,t;return T(this,function(n){switch(n.label){case 0:n.trys.push([0,3,,4]);return[4,rs.keys()];case 1:e=n.sent(),r=Array.isArray(e)?e.filter(function(e){var r;return e===null||e===void 0?void 0:(r=e.startsWith)===null||r===void 0?void 0:r.call(e,"error_list:")}):[];return[4,Promise.all(r.map(function(e){return rs.remove(e)}))];case 2:n.sent();return[3,4];case 3:t=n.sent();rE.error("Failed to clear error lists: ".concat(t.message));return[3,4];case 4:return[2]}})});return rS.apply(this,arguments)}function rO(e){var r=[],t=[],n="",s=/^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/,a=/^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/,o=/^✖\s+(.*?)\s+\[(.*?)\]$/;e.split("\n").forEach(function(e){if(e.startsWith("/"))n=e.trim();else{var i=s.exec(e)||[],c=a.exec(e)||[],u=o.exec(e)||[];i.length&&n?r.push({file:n,position:"".concat(i[1],":").concat(i[2]),type:i[3]==="error"?"error":"warning",message:i[4].trim(),rule:i[5].trim()}):c.length?r.push({file:c[1],position:"".concat(c[2],":").concat(c[3]),type:c[4]==="error"?"error":"warning",message:c[5].trim()}):u.length?r.push({file:"commitlint",type:"error",message:u[1].trim(),rule:u[2].trim()}):t.push(e.trim())}}),r.length&&rv(r),t.length&&ra&&(rE.warning("Unmatched lines:"),t.forEach(function(e){return console.log("  ".concat(e))}))}function rR(e){try{var r=JSON.parse(e),t=[];r.forEach(function(e){var r=e.filePath,n=e.messages;n.forEach(function(e){var n=e.severity,s=e.line,a=e.column,o=e.ruleId,i=e.message;t.push({type:n===2?"error":"warning",file:r,position:"".concat(s,":").concat(a),rule:o,message:i})})}),t.length&&rv(t)}catch(r){rO(e)}}function rA(e){return r_.apply(this,arguments)}function r_(){r_=a(function(e){var r,t,n,s,a,o,i,c,u;var l=arguments;return T(this,function(f){switch(f.label){case 0:r=l.length>1&&l[1]!==void 0?l[1]:rR;t=new AbortController;e5.on("SIGINT",function(){rE.warning("Process interrupted. Terminating..."),t.abort(),e5.exit()});f.label=1;case 1:f.trys.push([1,3,,4]);return[4,ro(e,{maxBuffer:0x6400000,signal:t.signal})];case 2:n=f.sent(),s=n.stdout,a=n.stderr;[s,a].forEach(function(e){return e&&r(e)});return[3,4];case 3:o=f.sent();i=o.stdout,c=o.stderr,u=o.message;[i,c].forEach(function(e){return e&&r(e)}),!c&&!i&&rE.error("Command failed: ".concat(u));return[3,4];case 4:return[2]}})});return r_.apply(this,arguments)}import*as rb from"node:fs";var rD=function(e){return rb.existsSync(e)};import{GraphQLError as rN}from"graphql";function rw(e){var r=e.message,t=e.status,n=t===void 0?j.INTERNAL_SERVER_ERROR:t,s=e.type,a=s===void 0?"graphql":s;var o;var i=(o=r!==null&&r!==void 0?r:n.MESSAGE)!==null&&o!==void 0?o:"Internal server error";throw a==="graphql"?new rN(i,{extensions:{code:n.CODE}}):new Error(i)}import rC from"node-fetch";import rT from"node:fs";import rI from"node:path";var rM=24*60*60*1e3;function rP(e){return e?rI.join(x,"node_modules",e,"package.json"):rI.join(x,"package.json")}function rL(e){return rG.apply(this,arguments)}function rG(){rG=a(function(e){var r,t,n,s,a,o,i,c,u,l;var f=arguments;return T(this,function(d){switch(d.label){case 0:r=f.length>1&&f[1]!==void 0?f[1]:!1;t="npm_version:".concat(e),n="npm_metadata:".concat(e);return[4,rs.get(t)];case 1:s=d.sent();return[4,rs.get(n)];case 2:a=d.sent(),o=s&&Date.now()-s.timestamp<rM;if(!r&&o)return[2,s.version];i={};(a===null||a===void 0?void 0:a.etag)&&(i["If-None-Match"]=a.etag),(a===null||a===void 0?void 0:a.lastModified)&&(i["If-Modified-Since"]=a.lastModified);d.label=3;case 3:d.trys.push([3,8,,9]);return[4,rC("https://registry.npmjs.org/".concat(e,"/latest"),{headers:i})];case 4:c=d.sent();if(c.status===304&&s)return[2,s.version];if(!c.ok)throw new Error("Failed to fetch latest version: ".concat(c.statusText));return[4,c.json()];case 5:u=d.sent().version;return[4,rs.set(t,{version:u,timestamp:Date.now()})];case 6:d.sent();return[4,rs.set(n,{etag:c.headers.get("ETag")||void 0,lastModified:c.headers.get("Last-Modified")||void 0})];case 7:return[2,(d.sent(),u)];case 8:l=d.sent();if(rE.error("Error fetching latest version for ".concat(e,": ").concat(l.message)),s)return[2,(rE.warning("Falling back to cached version for ".concat(e,": ").concat(s.version)),s.version)];throw l;case 9:return[2]}})});return rG.apply(this,arguments)}function rk(e){return rU.apply(this,arguments)}function rU(){rU=a(function(e){var r,t,n,s,a;var o=arguments;return T(this,function(i){switch(i.label){case 0:r=o.length>1&&o[1]!==void 0?o[1]:!0;i.label=1;case 1:i.trys.push([1,3,,4]);t=rP(e);if(!rT.existsSync(t))return[2,(rE.info("".concat(e," is not installed.")),!0)];n=JSON.parse(rT.readFileSync(t,"utf-8")).version;return[4,rL(e,r)];case 2:s=i.sent();return[2,(rE.info("Installed version of ".concat(e,": ").concat(n)),rE.info("Latest version of ".concat(e,": ").concat(s)),n!==s)];case 3:a=i.sent();return[2,(rE.warning("Failed to check version for ".concat(e,": ").concat(a.message)),!0)];case 4:return[2]}})});return rU.apply(this,arguments)}function rx(e){return rj.apply(this,arguments)}function rj(){rj=a(function(e){var r,t,n,s;return T(this,function(a){switch(a.label){case 0:a.trys.push([0,4,,5]);return[4,rL(e,!0)];case 1:r=a.sent(),t=rP();if(!rT.existsSync(t)){rE.error("package.json not found. Cannot update ".concat(e));return[2]}n=JSON.parse(rT.readFileSync(t,"utf-8"));n.dependencies=S(p({},n.dependencies),l({},e,r)),rT.writeFileSync(t,JSON.stringify(n,null,2)),rE.info("Updated ".concat(e," to version ").concat(r));return[4,rq()];case 2:a.sent();return[4,rA("pnpm run lint:fix")];case 3:a.sent(),rE.success("".concat(e," updated successfully."));return[3,5];case 4:s=a.sent();throw rE.error("Failed to update ".concat(e,": ").concat(s.message)),s;case 5:return[2]}})});return rj.apply(this,arguments)}function rF(e,r){try{var t=rI.join(e,"package.json");return rT.existsSync(t)?JSON.parse(rT.readFileSync(t,"utf-8")).name===r:!1}catch(e){return rE.error("Error reading package.json: ".concat(e.message)),!1}}function rq(){return rQ.apply(this,arguments)}function rQ(){rQ=a(function(){var e,r,t,n,s,a,o,i,c,u,l;return T(this,function(f){switch(f.label){case 0:e=[{command:"pnpm install",message:"Standard installation"},{command:"pnpm install --legacy-peer-deps",message:"Attempting installation with --legacy-peer-deps"},{command:"pnpm install --force",message:"Attempting forced installation"}];r=true,t=false,n=undefined;f.label=1;case 1:f.trys.push([1,8,9,10]);s=e[Symbol.iterator]();f.label=2;case 2:if(!!(r=(a=s.next()).done))return[3,7];o=a.value,i=o.command,c=o.message;f.label=3;case 3:f.trys.push([3,5,,6]);rE.info("".concat(c,"..."));return[4,rA(i)];case 4:f.sent(),rE.success("Dependencies installed using: ".concat(i));return[2];case 5:u=f.sent();rE.warning("Failed with: ".concat(i)),rE.error("Error: ".concat(u.message));return[3,6];case 6:r=true;return[3,2];case 7:return[3,10];case 8:l=f.sent();t=true;n=l;return[3,10];case 9:try{if(!r&&s.return!=null){s.return()}}finally{if(t){throw n}}return[7];case 10:throw new Error("Failed to install dependencies after multiple attempts.")}})});return rQ.apply(this,arguments)}import rV from"unorm";function rH(e){try{return JSON.parse(e),!0}catch(e){return!1}}var rB={a:["\xe0","\xe1","ạ","ả","\xe3","\xe2","ầ","ấ","ậ","ẩ","ẫ","ă","ằ","ắ","ặ","ẳ","ẵ"],e:["\xe8","\xe9","ẹ","ẻ","ẽ","\xea","ề","ế","ệ","ể","ễ"],i:["\xec","\xed","ị","ỉ","ĩ"],o:["\xf2","\xf3","ọ","ỏ","\xf5","\xf4","ồ","ố","ộ","ổ","ỗ","ơ","ờ","ớ","ợ","ở","ỡ"],u:["\xf9","\xfa","ụ","ủ","ũ","ư","ừ","ứ","ự","ử","ữ"],y:["ỳ","\xfd","ỵ","ỷ","ỹ"],d:["đ"]},rY=Object.entries(rB).reduce(function(e,r){var t=b(r,2),n=t[0],s=t[1];return e[n.toUpperCase()]=s.map(function(e){return e.toUpperCase()}),e},{});function rJ(e){e=rV.nfkc(e);var r=p({},rB,rY);var t=true,n=false,s=undefined;try{for(var a=Object.entries(r)[Symbol.iterator](),o;!(t=(o=a.next()).done);t=true){var i=b(o.value,2),c=i[0],u=i[1];var l="[".concat(c).concat(u.join(""),"]"),f="(".concat([c].concat(D(u)).join("|"),")");e=e.replace(new RegExp(l,"g"),f)}}catch(e){n=true;s=e}finally{try{if(!t&&a.return!=null){a.return()}}finally{if(n){throw s}}}return e}function rW(e){return e.normalize("NFD").replace(RegExp("\\p{Diacritic}","gu"),"")}export{ed as ApolloProvider,e2 as C_Collection,eX as C_Db,eZ as C_Document,e0 as C_Model,eJ as E_ErrorType,e_ as Loading,eR as LoadingContext,eb as LoadingProvider,X as MongoController,Z as MongooseController,eF as NextIntlContext,eY as NextIntlProvider,U as PROJECT_ROOT,j as RESPONSE_STATUS,x as WORKING_DIRECTORY,Q as aggregatePaginate,ry as clearAllErrorLists,rE as commandLog,M as deepMerge,rA as executeCommand,rD as fileExists,$ as generateShortId,W as generateSlug,rL as getLatestPackageVersion,rg as getStoredErrorLists,rt as initNodePersist,rq as installDependencies,rF as isCurrentProject,rH as isJson,rk as isPackageOutdated,K as mongo,V as mongoosePaginate,rJ as regexSearchMapper,rW as removeAccent,rv as saveErrorListToStorage,eL as serializer,ek as storageClient,rr as storageDir,rs as storageServer,rw as throwResponse,rx as updatePackage,eA as useLoading,eq as useNextIntl,eU as useStorage,eQ as useTranslateNextIntl,z as validate,eV as withNextIntl};
+// src/configs/index.ts
+function _array_like_to_array(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
+    return arr2;
+}
+function _array_with_holes(arr) {
+    if (Array.isArray(arr)) return arr;
+}
+function _array_without_holes(arr) {
+    if (Array.isArray(arr)) return _array_like_to_array(arr);
+}
+function _assert_this_initialized(self) {
+    if (self === void 0) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+    return self;
+}
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+        var info = gen[key](arg);
+        var value = info.value;
+    } catch (error) {
+        reject(error);
+        return;
+    }
+    if (info.done) {
+        resolve(value);
+    } else {
+        Promise.resolve(value).then(_next, _throw);
+    }
+}
+function _async_to_generator(fn) {
+    return function() {
+        var self = this, args = arguments;
+        return new Promise(function(resolve, reject) {
+            var gen = fn.apply(self, args);
+            function _next(value) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+            }
+            function _throw(err) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+            }
+            _next(undefined);
+        });
+    };
+}
+function _call_super(_this, derived, args) {
+    derived = _get_prototype_of(derived);
+    return _possible_constructor_return(_this, _is_native_reflect_construct() ? Reflect.construct(derived, args || [], _get_prototype_of(_this).constructor) : derived.apply(_this, args));
+}
+function _class_call_check(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+function _defineProperties(target, props) {
+    for(var i = 0; i < props.length; i++){
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+    }
+}
+function _create_class(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+}
+function _define_property(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+function _get_prototype_of(o) {
+    _get_prototype_of = Object.setPrototypeOf ? Object.getPrototypeOf : function getPrototypeOf(o) {
+        return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _get_prototype_of(o);
+}
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function");
+    }
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+        constructor: {
+            value: subClass,
+            writable: true,
+            configurable: true
+        }
+    });
+    if (superClass) _set_prototype_of(subClass, superClass);
+}
+function _instanceof(left, right) {
+    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
+        return !!right[Symbol.hasInstance](left);
+    } else {
+        return left instanceof right;
+    }
+}
+function _iterable_to_array(iter) {
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+function _iterable_to_array_limit(arr, i) {
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+    if (_i == null) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _s, _e;
+    try {
+        for(_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true){
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally{
+        try {
+            if (!_n && _i["return"] != null) _i["return"]();
+        } finally{
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
+}
+function _non_iterable_rest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _non_iterable_spread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _object_spread(target) {
+    for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i] != null ? arguments[i] : {};
+        var ownKeys = Object.keys(source);
+        if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+        }
+        ownKeys.forEach(function(key) {
+            _define_property(target, key, source[key]);
+        });
+    }
+    return target;
+}
+function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+    if (Object.getOwnPropertySymbols) {
+        var symbols = Object.getOwnPropertySymbols(object);
+        if (enumerableOnly) {
+            symbols = symbols.filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+            });
+        }
+        keys.push.apply(keys, symbols);
+    }
+    return keys;
+}
+function _object_spread_props(target, source) {
+    source = source != null ? source : {};
+    if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+        ownKeys(Object(source)).forEach(function(key) {
+            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+    }
+    return target;
+}
+function _object_without_properties(source, excluded) {
+    if (source == null) return {};
+    var target = _object_without_properties_loose(source, excluded);
+    var key, i;
+    if (Object.getOwnPropertySymbols) {
+        var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+        for(i = 0; i < sourceSymbolKeys.length; i++){
+            key = sourceSymbolKeys[i];
+            if (excluded.indexOf(key) >= 0) continue;
+            if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
+function _object_without_properties_loose(source, excluded) {
+    if (source == null) return {};
+    var target = {};
+    var sourceKeys = Object.keys(source);
+    var key, i;
+    for(i = 0; i < sourceKeys.length; i++){
+        key = sourceKeys[i];
+        if (excluded.indexOf(key) >= 0) continue;
+        target[key] = source[key];
+    }
+    return target;
+}
+function _possible_constructor_return(self, call) {
+    if (call && (_type_of(call) === "object" || typeof call === "function")) {
+        return call;
+    }
+    return _assert_this_initialized(self);
+}
+function _set_prototype_of(o, p) {
+    _set_prototype_of = Object.setPrototypeOf || function setPrototypeOf(o, p) {
+        o.__proto__ = p;
+        return o;
+    };
+    return _set_prototype_of(o, p);
+}
+function _sliced_to_array(arr, i) {
+    return _array_with_holes(arr) || _iterable_to_array_limit(arr, i) || _unsupported_iterable_to_array(arr, i) || _non_iterable_rest();
+}
+function _to_consumable_array(arr) {
+    return _array_without_holes(arr) || _iterable_to_array(arr) || _unsupported_iterable_to_array(arr) || _non_iterable_spread();
+}
+function _type_of(obj) {
+    "@swc/helpers - typeof";
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+}
+function _unsupported_iterable_to_array(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _array_like_to_array(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+}
+function _is_native_reflect_construct() {
+    try {
+        var result = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function() {}));
+    } catch (_) {}
+    return (_is_native_reflect_construct = function() {
+        return !!result;
+    })();
+}
+function _ts_generator(thisArg, body) {
+    var f, y, t, g, _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    };
+    return g = {
+        next: verb(0),
+        "throw": verb(1),
+        "return": verb(2)
+    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(_)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+}
+import antfu from "@antfu/eslint-config";
+// src/utils/config.ts
+function deepMerge() {
+    for(var _len = arguments.length, configs = new Array(_len), _key = 0; _key < _len; _key++){
+        configs[_key] = arguments[_key];
+    }
+    var merge = function(target, source) {
+        var result = _object_spread({}, target);
+        Object.keys(source).forEach(function(key) {
+            if (!Object.hasOwnProperty.call(source, key)) {
+                return;
+            }
+            var sourceValue = source[key];
+            var targetValue = result[key];
+            if (Array.isArray(sourceValue)) {
+                result[key] = _to_consumable_array(/* @__PURE__ */ new Set(_to_consumable_array(Array.isArray(targetValue) ? targetValue : []).concat(_to_consumable_array(sourceValue))));
+            } else if ((typeof sourceValue === "undefined" ? "undefined" : _type_of(sourceValue)) === "object" && sourceValue !== null && !Array.isArray(sourceValue)) {
+                result[key] = merge((typeof targetValue === "undefined" ? "undefined" : _type_of(targetValue)) === "object" && targetValue !== null && !Array.isArray(targetValue) ? targetValue : {}, sourceValue);
+            } else {
+                result[key] = sourceValue;
+            }
+        });
+        return result;
+    };
+    return configs.flatMap(function(config) {
+        return Array.isArray(config) ? config : [
+            config
+        ];
+    }).reduce(function(acc, config) {
+        return merge(acc, config);
+    }, {});
+}
+// src/constants/path.ts
+import process3 from "node:process";
+import { fileURLToPath } from "node:url";
+// src/utils/command.ts
+import boxen from "boxen";
+import chalk from "chalk";
+import { exec } from "node:child_process";
+import process2 from "node:process";
+import * as util from "node:util";
+// src/typescript/command.ts
+var E_ErrorType = /* @__PURE__ */ function(E_ErrorType2) {
+    E_ErrorType2["Error"] = "error";
+    E_ErrorType2["Warning"] = "warning";
+    return E_ErrorType2;
+}(E_ErrorType || {});
+// src/utils/package.ts
+import fetch from "node-fetch";
+// src/utils/fs.ts
+import * as fs from "node:fs";
+var existsSync2 = function(filePath) {
+    return fs.existsSync(filePath);
+};
+function readFileSync2(filePath, options) {
+    var content = fs.readFileSync(filePath, "utf-8");
+    if (options === null || options === void 0 ? void 0 : options.asJson) {
+        try {
+            var parsed = JSON.parse(content);
+            if ((typeof parsed === "undefined" ? "undefined" : _type_of(parsed)) === "object" && parsed !== null) {
+                return parsed;
+            }
+            throw new Error("Parsed JSON is not an object or array");
+        } catch (e) {
+            throw new Error("Failed to parse JSON from file: ".concat(filePath));
+        }
+    }
+    return content;
+}
+function writeFileSync2(filePath, data) {
+    var options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
+    var tmp = options.isJson, isJson2 = tmp === void 0 ? false : tmp;
+    var content = isJson2 && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
+    fs.writeFileSync(filePath, content, "utf-8");
+}
+function appendFileSync2(filePath, data) {
+    var options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
+    var tmp = options.isJson, isJson2 = tmp === void 0 ? false : tmp;
+    var content = isJson2 && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
+    fs.appendFileSync(filePath, content, "utf-8");
+}
+// src/utils/path.ts
+import { createRequire } from "node:module";
+import * as path from "node:path";
+function resolveCyberSkillPath() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, [
+        CYBERSKILL_DIRECTORY
+    ].concat(_to_consumable_array(urls)));
+}
+function resolveWorkingPath() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, [
+        WORKING_DIRECTORY
+    ].concat(_to_consumable_array(urls)));
+}
+function resolve2() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, _to_consumable_array(urls));
+}
+function dirname2(url) {
+    return path.dirname(url);
+}
+function require2() {
+    return createRequire(CYBERSKILL_DIRECTORY);
+}
+function join2() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).join.apply(_path, _to_consumable_array(urls));
+}
+// src/utils/storage-server.ts
+import nodePersist from "node-persist";
+import os from "node:os";
+import path2 from "node:path";
+import process from "node:process";
+function getStorageDir() {
+    return process.env.CYBERSKILL_STORAGE_DIR || path2.join(os.homedir(), CYBERSKILL_STORAGE);
+}
+function initNodePersist() {
+    return _initNodePersist.apply(this, arguments);
+}
+function _initNodePersist() {
+    _initNodePersist = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    if (!!nodePersist.defaultInstance) return [
+                        3,
+                        2
+                    ];
+                    return [
+                        4,
+                        nodePersist.init({
+                            dir: getStorageDir(),
+                            stringify: JSON.stringify,
+                            parse: JSON.parse,
+                            encoding: "utf8",
+                            logging: false,
+                            forgiveParseErrors: true
+                        })
+                    ];
+                case 1:
+                    _state.sent();
+                    _state.label = 2;
+                case 2:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _initNodePersist.apply(this, arguments);
+}
+var storageServer = {
+    get: function get(key) {
+        return _async_to_generator(function() {
+            var result, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            nodePersist.getItem(key)
+                        ];
+                    case 2:
+                        result = _state.sent();
+                        return [
+                            2,
+                            result !== null && result !== void 0 ? result : null
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error('❌ [Storage:get] Error getting key "'.concat(key, '":'), error);
+                        return [
+                            2,
+                            null
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    set: function set(key, value) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            nodePersist.setItem(key, value)
+                        ];
+                    case 2:
+                        _state.sent();
+                        return [
+                            3,
+                            4
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error('❌ [Storage:set] Error setting key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            4
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    remove: function remove(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            nodePersist.removeItem(key)
+                        ];
+                    case 2:
+                        _state.sent();
+                        return [
+                            3,
+                            4
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error('❌ [Storage:remove] Error removing key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            4
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    keys: function keys() {
+        return _async_to_generator(function() {
+            var keys, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            nodePersist.keys()
+                        ];
+                    case 2:
+                        keys = _state.sent();
+                        if (!Array.isArray(keys)) {
+                            console.warn("⚠️ [Storage:keys] Invalid keys response:", keys);
+                            return [
+                                2,
+                                []
+                            ];
+                        }
+                        return [
+                            2,
+                            keys
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error("❌ [Storage:keys] Error getting keys:", error);
+                        return [
+                            2,
+                            []
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    getLogLink: function getLogLink(key) {
+        return _async_to_generator(function() {
+            var storagePath;
+            return _ts_generator(this, function(_state) {
+                try {
+                    storagePath = getStorageDir();
+                    return [
+                        2,
+                        "".concat(storagePath, " (key: ").concat(key, ")")
+                    ];
+                } catch (error) {
+                    console.error("❌ [Storage:getLogLink] Error getting log link:", error);
+                    return [
+                        2,
+                        null
+                    ];
+                }
+                return [
+                    2
+                ];
+            });
+        })();
+    }
+};
+// src/utils/package.ts
+var CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1e3;
+function getPackageJson(packageName) {
+    var workingPackageJsonPath = join2(WORKING_DIRECTORY, PACKAGE_JSON);
+    if (existsSync2(workingPackageJsonPath)) {
+        try {
+            var pkg = readFileSync2(workingPackageJsonPath, {
+                asJson: true
+            });
+            if (pkg.name === packageName) {
+                return {
+                    path: workingPackageJsonPath,
+                    file: pkg
+                };
+            }
+        } catch (error) {
+            commandLog.warning("Failed to read local package.json: ".concat(error.message));
+        }
+    }
+    var externalPackageJsonPath = join2(WORKING_DIRECTORY, NODE_MODULES, packageName, PACKAGE_JSON);
+    if (existsSync2(externalPackageJsonPath)) {
+        try {
+            var pkg1 = readFileSync2(externalPackageJsonPath, {
+                asJson: true
+            });
+            if (pkg1.name === packageName) {
+                return {
+                    path: externalPackageJsonPath,
+                    file: pkg1
+                };
+            }
+        } catch (error) {
+            commandLog.warning("Failed to read node_modules package.json for ".concat(packageName, ": ").concat(error.message));
+        }
+    }
+    return false;
+}
+function getLatestPackageVersion(packageName) {
+    return _getLatestPackageVersion.apply(this, arguments);
+}
+function _getLatestPackageVersion() {
+    _getLatestPackageVersion = _async_to_generator(function(packageName) {
+        var forceRefresh, versionCacheKey, metadataCacheKey, cached, metadata, isCacheValid, headers, response, data, latestVersion, error;
+        var _arguments = arguments;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    forceRefresh = _arguments.length > 1 && _arguments[1] !== void 0 ? _arguments[1] : false;
+                    versionCacheKey = "npm_version:".concat(packageName);
+                    metadataCacheKey = "npm_metadata:".concat(packageName);
+                    return [
+                        4,
+                        storageServer.get(versionCacheKey)
+                    ];
+                case 1:
+                    cached = _state.sent();
+                    return [
+                        4,
+                        storageServer.get(metadataCacheKey)
+                    ];
+                case 2:
+                    metadata = _state.sent();
+                    isCacheValid = cached && Date.now() - cached.timestamp < CACHE_EXPIRATION_MS;
+                    if (!forceRefresh && isCacheValid) {
+                        return [
+                            2,
+                            cached.version
+                        ];
+                    }
+                    headers = {};
+                    if (metadata === null || metadata === void 0 ? void 0 : metadata.etag) {
+                        headers["If-None-Match"] = metadata.etag;
+                    }
+                    if (metadata === null || metadata === void 0 ? void 0 : metadata.lastModified) {
+                        headers["If-Modified-Since"] = metadata.lastModified;
+                    }
+                    _state.label = 3;
+                case 3:
+                    _state.trys.push([
+                        3,
+                        8,
+                        ,
+                        9
+                    ]);
+                    return [
+                        4,
+                        fetch("https://registry.npmjs.org/".concat(packageName, "/latest"), {
+                            headers: headers
+                        })
+                    ];
+                case 4:
+                    response = _state.sent();
+                    if (response.status === 304 && cached) {
+                        return [
+                            2,
+                            cached.version
+                        ];
+                    }
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch latest version: ".concat(response.statusText));
+                    }
+                    return [
+                        4,
+                        response.json()
+                    ];
+                case 5:
+                    data = _state.sent();
+                    latestVersion = data.version;
+                    return [
+                        4,
+                        storageServer.set(versionCacheKey, {
+                            version: latestVersion,
+                            timestamp: Date.now()
+                        })
+                    ];
+                case 6:
+                    _state.sent();
+                    return [
+                        4,
+                        storageServer.set(metadataCacheKey, {
+                            etag: response.headers.get("ETag") || void 0,
+                            lastModified: response.headers.get("Last-Modified") || void 0
+                        })
+                    ];
+                case 7:
+                    _state.sent();
+                    return [
+                        2,
+                        latestVersion
+                    ];
+                case 8:
+                    error = _state.sent();
+                    commandLog.error("Error fetching latest version for ".concat(packageName, ": ").concat(error.message));
+                    if (cached) {
+                        commandLog.warning("Falling back to cached version for ".concat(packageName, ": ").concat(cached.version));
+                        return [
+                            2,
+                            cached.version
+                        ];
+                    }
+                    throw error;
+                case 9:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _getLatestPackageVersion.apply(this, arguments);
+}
+function checkPackage(packageName) {
+    return _checkPackage.apply(this, arguments);
+}
+function _checkPackage() {
+    _checkPackage = _async_to_generator(function(packageName) {
+        var result, packageFound, cyberskillPackageJsonPath, isCurrentProject, _tmp, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    result = {
+                        isInstalled: false,
+                        isCurrentProject: false,
+                        installedPath: "",
+                        installedVersion: "",
+                        latestVersion: "",
+                        file: {}
+                    };
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        5,
+                        ,
+                        6
+                    ]);
+                    packageFound = getPackageJson(packageName);
+                    if (!packageFound) {
+                        return [
+                            2,
+                            result
+                        ];
+                    }
+                    cyberskillPackageJsonPath = resolveCyberSkillPath(PACKAGE_JSON);
+                    isCurrentProject = packageFound.path === cyberskillPackageJsonPath;
+                    result.file = packageFound.file;
+                    result.isInstalled = true;
+                    result.installedPath = packageFound.path;
+                    result.installedVersion = packageFound.file.version;
+                    result.isCurrentProject = isCurrentProject;
+                    if (!isCurrentProject) return [
+                        3,
+                        2
+                    ];
+                    _tmp = packageFound.file.version;
+                    return [
+                        3,
+                        4
+                    ];
+                case 2:
+                    return [
+                        4,
+                        getLatestPackageVersion(packageName, true)
+                    ];
+                case 3:
+                    _tmp = _state.sent();
+                    _state.label = 4;
+                case 4:
+                    result.latestVersion = _tmp;
+                    return [
+                        2,
+                        result
+                    ];
+                case 5:
+                    error = _state.sent();
+                    commandLog.error('Error checking package "'.concat(packageName, '": ').concat(error.message));
+                    return [
+                        2,
+                        result
+                    ];
+                case 6:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _checkPackage.apply(this, arguments);
+}
+// src/utils/command.ts
+var DEBUG = process2.env.DEBUG === "true";
+var execPromise = util.promisify(exec);
+var gray = chalk.gray, blue = chalk.blue;
+var getTimeStamp = function() {
+    return gray("[".concat(/* @__PURE__ */ new Date().toLocaleTimeString(), "]"));
+};
+function chalkKeyword(color) {
+    var chalkColor = chalk[color];
+    return typeof chalkColor === "function" ? chalkColor : chalk.green;
+}
+function printLog(type, color, icon, message) {
+    var chalkColor = chalkKeyword(color);
+    console.log("".concat(getTimeStamp(), " ").concat(chalkColor("".concat(icon, " ").concat(type)), " ").concat(message));
+}
+function printBoxedLog(title, content) {
+    var _ref = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, _ref_color = _ref.color, color = _ref_color === void 0 ? "green" : _ref_color, _ref_padding = _ref.padding, padding = _ref_padding === void 0 ? 1 : _ref_padding, _ref_margin = _ref.margin, margin = _ref_margin === void 0 ? 1 : _ref_margin, _ref_borderStyle = _ref.borderStyle, borderStyle = _ref_borderStyle === void 0 ? "round" : _ref_borderStyle, _ref_titleColor = _ref.titleColor, titleColor = _ref_titleColor === void 0 ? "bold" : _ref_titleColor;
+    var chalkColor = chalkKeyword(color);
+    var chalkTitleColor = chalkKeyword(titleColor);
+    if (typeof content === "string") {
+        console.log(boxen(chalkTitleColor(chalkColor("".concat(title, "\n").concat(content))), {
+            padding: padding,
+            margin: margin,
+            borderStyle: borderStyle,
+            borderColor: color
+        }));
+        return;
+    }
+    if (Array.isArray(content) && content.length) {
+        content.forEach(function(param) {
+            var file = param.file, position = param.position, rule = param.rule, message = param.message;
+            console.log("".concat(getTimeStamp(), " ").concat(chalkColor("File:"), " ").concat(blue("".concat(file).concat(position ? ":".concat(position) : ""))));
+            if (rule) console.log("   ".concat(chalkColor("Rule:"), " ").concat(chalkColor(rule)));
+            console.log("   ".concat(chalkColor("Message:"), " ").concat(chalkColor(message)));
+        });
+        console.log(boxen(chalkTitleColor(chalkColor("".concat(title, ": ").concat(content.length))), {
+            padding: padding,
+            margin: margin,
+            borderStyle: borderStyle,
+            borderColor: color
+        }));
+        console.log(gray("\u2500".repeat(40)));
+    }
+}
+var commandLog = {
+    success: function(message) {
+        return printLog("SUCCESS", "green", "\u2714", message);
+    },
+    error: function(message) {
+        return printLog("ERROR", "red", "\u2716", message);
+    },
+    warning: function(message) {
+        return printLog("WARNING", "yellow", "\u26A0", message);
+    },
+    info: function(message) {
+        return printLog("INFO", "blue", "\u2139", message);
+    },
+    printBoxedLog: printBoxedLog
+};
+var getErrorListKey = function(timestamp) {
+    return "error_list:".concat(timestamp);
+};
+function saveErrorListToStorage(errorList) {
+    return _saveErrorListToStorage.apply(this, arguments);
+}
+function _saveErrorListToStorage() {
+    _saveErrorListToStorage = _async_to_generator(function(errorList) {
+        var timestamp, key, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    if (errorList.length === 0) {
+                        return [
+                            2
+                        ];
+                    }
+                    timestamp = Date.now();
+                    key = getErrorListKey(timestamp);
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        storageServer.set(key, {
+                            errors: errorList,
+                            timestamp: timestamp
+                        })
+                    ];
+                case 2:
+                    _state.sent();
+                    setTimeout(/*#__PURE__*/ _async_to_generator(function() {
+                        var logPath;
+                        return _ts_generator(this, function(_state) {
+                            switch(_state.label){
+                                case 0:
+                                    return [
+                                        4,
+                                        storageServer.getLogLink(key)
+                                    ];
+                                case 1:
+                                    logPath = _state.sent();
+                                    if (logPath) {
+                                        commandLog.info("\uD83D\uDCC2 Open the error list manually: ".concat(logPath));
+                                    }
+                                    return [
+                                        2
+                                    ];
+                            }
+                        });
+                    }), 10);
+                    return [
+                        3,
+                        4
+                    ];
+                case 3:
+                    error = _state.sent();
+                    commandLog.error("Failed to save errors: ".concat(error.message));
+                    return [
+                        3,
+                        4
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _saveErrorListToStorage.apply(this, arguments);
+}
+function getStoredErrorLists() {
+    return _getStoredErrorLists.apply(this, arguments);
+}
+function _getStoredErrorLists() {
+    _getStoredErrorLists = _async_to_generator(function() {
+        var keys, errorKeys, allErrors, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        storageServer.keys()
+                    ];
+                case 1:
+                    keys = _state.sent();
+                    errorKeys = Array.isArray(keys) ? keys.filter(function(key) {
+                        var _key_startsWith;
+                        return key === null || key === void 0 ? void 0 : (_key_startsWith = key.startsWith) === null || _key_startsWith === void 0 ? void 0 : _key_startsWith.call(key, "error_list:");
+                    }) : [];
+                    return [
+                        4,
+                        Promise.all(errorKeys.map(/*#__PURE__*/ function() {
+                            var _ref = _async_to_generator(function(key) {
+                                var entry;
+                                return _ts_generator(this, function(_state) {
+                                    switch(_state.label){
+                                        case 0:
+                                            return [
+                                                4,
+                                                storageServer.get(key)
+                                            ];
+                                        case 1:
+                                            entry = _state.sent();
+                                            return [
+                                                2,
+                                                (entry === null || entry === void 0 ? void 0 : entry.errors) || []
+                                            ];
+                                    }
+                                });
+                            });
+                            return function(key) {
+                                return _ref.apply(this, arguments);
+                            };
+                        }()))
+                    ];
+                case 2:
+                    allErrors = _state.sent();
+                    return [
+                        2,
+                        allErrors.flat()
+                    ];
+                case 3:
+                    error = _state.sent();
+                    commandLog.error("Failed to retrieve stored errors: ".concat(error.message));
+                    return [
+                        2,
+                        []
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _getStoredErrorLists.apply(this, arguments);
+}
+function clearAllErrorLists() {
+    return _clearAllErrorLists.apply(this, arguments);
+}
+function _clearAllErrorLists() {
+    _clearAllErrorLists = _async_to_generator(function() {
+        var keys, errorKeys, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        storageServer.keys()
+                    ];
+                case 1:
+                    keys = _state.sent();
+                    errorKeys = Array.isArray(keys) ? keys.filter(function(key) {
+                        var _key_startsWith;
+                        return key === null || key === void 0 ? void 0 : (_key_startsWith = key.startsWith) === null || _key_startsWith === void 0 ? void 0 : _key_startsWith.call(key, "error_list:");
+                    }) : [];
+                    return [
+                        4,
+                        Promise.all(errorKeys.map(function(key) {
+                            return storageServer.remove(key);
+                        }))
+                    ];
+                case 2:
+                    _state.sent();
+                    return [
+                        3,
+                        4
+                    ];
+                case 3:
+                    error = _state.sent();
+                    commandLog.error("Failed to clear error lists: ".concat(error.message));
+                    return [
+                        3,
+                        4
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _clearAllErrorLists.apply(this, arguments);
+}
+function parseTextErrors(output) {
+    var errorList = [];
+    var unmatchedLines = [];
+    var lastFilePath = "";
+    var eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/;
+    var tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
+    var commitlintRegex = /^✖\s+(.*?)\s+\[(.*?)\]$/;
+    output.split("\n").forEach(function(line) {
+        if (line.startsWith("/")) {
+            lastFilePath = line.trim();
+        } else {
+            var eslintMatch = eslintErrorDetailsRegex.exec(line) || [];
+            var tsMatch = tsRegex.exec(line) || [];
+            var commitlintMatch = commitlintRegex.exec(line) || [];
+            if (eslintMatch.length && lastFilePath) {
+                errorList.push({
+                    file: lastFilePath,
+                    position: "".concat(eslintMatch[1], ":").concat(eslintMatch[2]),
+                    type: eslintMatch[3] === "error" /* Error */  ? "error" /* Error */  : "warning" /* Warning */ ,
+                    message: eslintMatch[4].trim(),
+                    rule: eslintMatch[5].trim()
+                });
+            } else if (tsMatch.length) {
+                errorList.push({
+                    file: tsMatch[1],
+                    position: "".concat(tsMatch[2], ":").concat(tsMatch[3]),
+                    type: tsMatch[4] === "error" /* Error */  ? "error" /* Error */  : "warning" /* Warning */ ,
+                    message: tsMatch[5].trim()
+                });
+            } else if (commitlintMatch.length) {
+                errorList.push({
+                    file: "commitlint",
+                    type: "error" /* Error */ ,
+                    message: commitlintMatch[1].trim(),
+                    rule: commitlintMatch[2].trim()
+                });
+            } else {
+                unmatchedLines.push(line.trim());
+            }
+        }
+    });
+    if (errorList.length) {
+        saveErrorListToStorage(errorList);
+    }
+    if (unmatchedLines.length && DEBUG) {
+        commandLog.warning("Unmatched lines:");
+        unmatchedLines.forEach(function(line) {
+            return console.log("  ".concat(line));
+        });
+    }
+}
+function parseCommandOutput(output) {
+    try {
+        var results = JSON.parse(output);
+        var errorList = [];
+        results.forEach(function(param) {
+            var filePath = param.filePath, messages = param.messages;
+            messages.forEach(function(param) {
+                var severity = param.severity, line = param.line, column = param.column, ruleId = param.ruleId, message = param.message;
+                errorList.push({
+                    type: severity === 2 ? "error" /* Error */  : "warning" /* Warning */ ,
+                    file: filePath,
+                    position: "".concat(line, ":").concat(column),
+                    rule: ruleId,
+                    message: message
+                });
+            });
+        });
+        if (errorList.length) {
+            saveErrorListToStorage(errorList);
+        }
+    } catch (e) {
+        parseTextErrors(output);
+    }
+}
+function executeCommand(command) {
+    return _executeCommand.apply(this, arguments);
+}
+function _executeCommand() {
+    _executeCommand = _async_to_generator(function(command) {
+        var parser, controller, _ref, stdout, stderr, error, stdout1, stderr1, message;
+        var _arguments = arguments;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    parser = _arguments.length > 1 && _arguments[1] !== void 0 ? _arguments[1] : parseCommandOutput;
+                    controller = new AbortController();
+                    process2.on("SIGINT", function() {
+                        commandLog.warning("Process interrupted. Terminating...");
+                        controller.abort();
+                        process2.exit();
+                    });
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        execPromise(command, {
+                            maxBuffer: 1024 * 1024 * 100,
+                            signal: controller.signal
+                        })
+                    ];
+                case 2:
+                    _ref = _state.sent(), stdout = _ref.stdout, stderr = _ref.stderr;
+                    [
+                        stdout,
+                        stderr
+                    ].forEach(function(output) {
+                        return output && parser(output);
+                    });
+                    return [
+                        3,
+                        4
+                    ];
+                case 3:
+                    error = _state.sent();
+                    stdout1 = error.stdout, stderr1 = error.stderr, message = error.message;
+                    [
+                        stdout1,
+                        stderr1
+                    ].forEach(function(output) {
+                        return output && parser(output);
+                    });
+                    if (!stderr1 && !stdout1) {
+                        commandLog.error("Command failed: ".concat(message));
+                    }
+                    return [
+                        3,
+                        4
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _executeCommand.apply(this, arguments);
+}
+var commandFormatter = {
+    raw: function(cmd) {
+        return {
+            raw: true,
+            cmd: cmd
+        };
+    },
+    isRaw: function isRaw(cmd) {
+        return (typeof cmd === "undefined" ? "undefined" : _type_of(cmd)) === "object" && cmd !== null && cmd.raw === true;
+    },
+    format: function format(command, context) {
+        if (typeof command === "function") {
+            return commandFormatter.formatCLI(command(context), context);
+        }
+        if (commandFormatter.isRaw(command)) {
+            return command.cmd;
+        }
+        return commandFormatter.formatCLI(command, context);
+    },
+    formatCLI: function formatCLI(command, context) {
+        if (context === null || context === void 0 ? void 0 : context.isRemote) {
+            return "".concat(PNPM_DLX_CLI, " ").concat(CYBERSKILL_PACKAGE_NAME, " ").concat(command);
+        }
+        if (context === null || context === void 0 ? void 0 : context.isCurrentProject) {
+            return "".concat(PNPM_EXEC_CLI, " ").concat(TSX_CLI, " src/cli.ts ").concat(command);
+        }
+        return "".concat(PNPM_EXEC_CLI, " ").concat(CYBERSKILL_CLI, " ").concat(command);
+    }
+};
+function resolveCommands(input) {
+    return _resolveCommands.apply(this, arguments);
+}
+function _resolveCommands() {
+    _resolveCommands = _async_to_generator(function(input) {
+        var context, _context_isRemote, isRemote, isCurrentProject, _tmp, ctx, commands;
+        var _arguments = arguments;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    context = _arguments.length > 1 && _arguments[1] !== void 0 ? _arguments[1] : {};
+                    isRemote = (_context_isRemote = context === null || context === void 0 ? void 0 : context.isRemote) !== null && _context_isRemote !== void 0 ? _context_isRemote : false;
+                    if (!isRemote) return [
+                        3,
+                        1
+                    ];
+                    _tmp = false;
+                    return [
+                        3,
+                        3
+                    ];
+                case 1:
+                    return [
+                        4,
+                        checkPackage(CYBERSKILL_PACKAGE_NAME)
+                    ];
+                case 2:
+                    _tmp = _state.sent().isCurrentProject;
+                    _state.label = 3;
+                case 3:
+                    isCurrentProject = _tmp;
+                    ctx = {
+                        isRemote: isRemote,
+                        isCurrentProject: isCurrentProject
+                    };
+                    commands = typeof input === "function" ? input(ctx) : input;
+                    return [
+                        2,
+                        Object.fromEntries(Object.entries(commands).map(function(param) {
+                            var _param = _sliced_to_array(param, 2), key = _param[0], cmd = _param[1];
+                            return [
+                                key,
+                                commandFormatter.format(cmd, ctx)
+                            ];
+                        }))
+                    ];
+            }
+        });
+    });
+    return _resolveCommands.apply(this, arguments);
+}
+// src/constants/path.ts
+var __filename2 = fileURLToPath(import.meta.url);
+var __dirname2 = dirname2(__filename2);
+var CYBERSKILL_DIRECTORY = resolve2(__dirname2, "../../");
+var WORKING_DIRECTORY = process3.env.INIT_CWD || process3.cwd();
+var CYBERSKILL_PACKAGE_NAME = "@cyberskill/shared";
+var CYBERSKILL_STORAGE = ".cyberskill-storage";
+var NODE_MODULES = "node_modules";
+var BUILD_DIRECTORY = "dist";
+var PACKAGE_JSON = "package.json";
+var PACKAGE_LOCK_JSON = "package-lock.json";
+var TSCONFIG_JSON = "tsconfig.json";
+var GIT_IGNORE = ".gitignore";
+var SIMPLE_GIT_HOOK_JSON = ".simple-git-hooks.json";
+var PNPM_LOCK_YAML = "pnpm-lock.yaml";
+var GIT_HOOK = ".git/hooks";
+var GIT_COMMIT_EDITMSG = ".git/COMMIT_EDITMSG";
+var CYBERSKILL_CLI = "cyberskill";
+var ESLINT_CLI = "eslint";
+var VITEST_CLI = "vitest";
+var COMMIT_LINT_CLI = "commitlint";
+var LINT_STAGED_CLI = "lint-staged";
+var RIMRAF_CLI = "rimraf";
+var TSC_CLI = "tsc";
+var TSX_CLI = "tsx";
+var GIT_CLI = "git";
+var PNPM_CLI = "pnpm";
+var PNPM_DLX_CLI = "pnpm dlx";
+var PNPM_EXEC_CLI = "pnpm exec";
+var SIMPLE_GIT_HOOK_CLI = "simple-git-hooks";
+var ESLINT_INSPECT_CLI = "@eslint/config-inspector";
+var NODE_MODULES_INSPECT_CLI = "node_modules-inspect";
+var PATH = {
+    CYBERSKILL_DIRECTORY: CYBERSKILL_DIRECTORY,
+    WORKING_DIRECTORY: WORKING_DIRECTORY,
+    TS_CONFIG: resolveWorkingPath(TSCONFIG_JSON),
+    GIT_IGNORE: resolveWorkingPath(GIT_IGNORE),
+    GIT_HOOK: resolveWorkingPath(GIT_HOOK),
+    GIT_COMMIT_MSG: resolveWorkingPath(GIT_COMMIT_EDITMSG),
+    SIMPLE_GIT_HOOKS: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
+    PACKAGE_JSON: resolveWorkingPath(PACKAGE_JSON),
+    PACKAGE_LOCK_JSON: resolveWorkingPath(PACKAGE_LOCK_JSON),
+    PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
+    NODE_MODULES: resolveWorkingPath(NODE_MODULES),
+    CYBERSKILL: {
+        LINT_STAGED_CONFIG: resolveCyberSkillPath("./configs/lint-staged/base.js"),
+        COMMITLINT_CONFIG: resolveCyberSkillPath("./configs/commitlint/base.js"),
+        UNIT_TEST_CONFIG: resolveCyberSkillPath("./configs/vitest/react/unit.js"),
+        E2E_TEST_CONFIG: resolveCyberSkillPath("./configs/vitest/react/e2e.js")
+    }
+};
+function HOOK(param) {
+    var isCurrentProject = param.isCurrentProject;
+    return _object_spread({
+        "postinstall": "setup",
+        "pre-commit": LINT_STAGED_CLI,
+        "commit-msg": COMMIT_LINT_CLI
+    }, isCurrentProject && {
+        "pre-push": commandFormatter.raw("".concat(GIT_CLI, " pull"))
+    });
+}
+var COMMAND = {
+    SIMPLE_GIT_HOOKS: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(SIMPLE_GIT_HOOK_CLI)),
+    ESLINT_INSPECT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_INSPECT_CLI)),
+    NODE_MODULES_INSPECT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(NODE_MODULES_INSPECT_CLI)),
+    RESET: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(RIMRAF_CLI, " ").concat(NODE_MODULES, " ").concat(PNPM_LOCK_YAML)),
+    ESLINT_CHECK: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_CLI, " ").concat(PATH.WORKING_DIRECTORY)),
+    ESLINT_FIX: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_CLI, " ").concat(PATH.WORKING_DIRECTORY, " --fix")),
+    TYPESCRIPT_CHECK: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(TSC_CLI, " -p ").concat(PATH.TS_CONFIG, " --noEmit")),
+    CYBERSKILL: {
+        TEST_UNIT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(VITEST_CLI, " --config ").concat(PATH.CYBERSKILL.UNIT_TEST_CONFIG)),
+        TEST_E2E: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(VITEST_CLI, " --config ").concat(PATH.CYBERSKILL.E2E_TEST_CONFIG)),
+        COMMIT_LINT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(COMMIT_LINT_CLI, " --edit ").concat(PATH.GIT_COMMIT_MSG, " --config ").concat(PATH.CYBERSKILL.COMMITLINT_CONFIG)),
+        LINT_STAGED: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(LINT_STAGED_CLI, " --config ").concat(PATH.CYBERSKILL.LINT_STAGED_CONFIG))
+    },
+    CONFIGURE_GIT_HOOK: commandFormatter.raw("".concat(GIT_CLI, " config core.hooksPath ").concat(PATH.GIT_HOOK)),
+    BUILD: commandFormatter.raw("".concat(PNPM_CLI, " run build")),
+    STAGE_BUILD_DIRECTORY: commandFormatter.raw("".concat(GIT_CLI, " add ").concat(BUILD_DIRECTORY)),
+    PNPM_INSTALL_STANDARD: commandFormatter.raw("".concat(PNPM_CLI, " install")),
+    PNPM_INSTALL_LEGACY: commandFormatter.raw("".concat(PNPM_CLI, " install --legacy-peer-deps")),
+    PNPM_INSTALL_FORCE: commandFormatter.raw("".concat(PNPM_CLI, " install --force"))
+};
+// src/constants/response-status.ts
+var RESPONSE_STATUS = {
+    GRAPHQL_PARSE_FAILED: {
+        CODE: "GRAPHQL_PARSE_FAILED",
+        MESSAGE: "The GraphQL operation string contains a syntax error."
+    },
+    GRAPHQL_VALIDATION_FAILED: {
+        CODE: "GRAPHQL_VALIDATION_FAILED",
+        MESSAGE: "The GraphQL operation is not valid against the server's schema."
+    },
+    BAD_USER_INPUT: {
+        CODE: "BAD_USER_INPUT",
+        MESSAGE: "The GraphQL operation includes an invalid value for a field argument."
+    },
+    PERSISTED_QUERY_NOT_FOUND: {
+        CODE: "PERSISTED_QUERY_NOT_FOUND",
+        MESSAGE: "A client sent the hash of a query string to execute via automatic persisted queries, but the query was not in the APQ cache."
+    },
+    PERSISTED_QUERY_NOT_SUPPORTED: {
+        CODE: "PERSISTED_QUERY_NOT_SUPPORTED",
+        MESSAGE: "A client sent the hash of a query string to execute via automatic persisted queries, but the server has disabled APQ."
+    },
+    OPERATION_RESOLUTION_FAILURE: {
+        CODE: "OPERATION_RESOLUTION_FAILURE",
+        MESSAGE: "The request was parsed successfully and is valid against the server's schema, but the server couldn't resolve which operation to run. This occurs when a request containing multiple named operations doesn't specify which operation to run (i.e.,operationName), or if the named operation isn't included in the request."
+    },
+    CONTINUE: {
+        CODE: 100,
+        MESSAGE: "Continue"
+    },
+    SWITCHING_PROTOCOLS: {
+        CODE: 101,
+        MESSAGE: "Switching Protocols"
+    },
+    PROCESSING: {
+        CODE: 102,
+        MESSAGE: "Processing"
+    },
+    OK: {
+        CODE: 200,
+        MESSAGE: "OK"
+    },
+    CREATED: {
+        CODE: 201,
+        MESSAGE: "Created"
+    },
+    ACCEPTED: {
+        CODE: 202,
+        MESSAGE: "Accepted"
+    },
+    NON_AUTHORITATIVE_INFORMATION: {
+        CODE: 203,
+        MESSAGE: "Non Authoritative Information"
+    },
+    NO_CONTENT: {
+        CODE: 204,
+        MESSAGE: "No Content"
+    },
+    RESET_CONTENT: {
+        CODE: 205,
+        MESSAGE: "Reset Content"
+    },
+    PARTIAL_CONTENT: {
+        CODE: 206,
+        MESSAGE: "Partial Content"
+    },
+    MULTI_STATUS: {
+        CODE: 207,
+        MESSAGE: "Multi-Status"
+    },
+    MULTIPLE_CHOICES: {
+        CODE: 300,
+        MESSAGE: "Multiple Choices"
+    },
+    MOVED_PERMANENTLY: {
+        CODE: 301,
+        MESSAGE: "Moved Permanently"
+    },
+    MOVED_TEMPORARILY: {
+        CODE: 302,
+        MESSAGE: "Moved Temporarily"
+    },
+    SEE_OTHER: {
+        CODE: 303,
+        MESSAGE: "See Other"
+    },
+    NOT_MODIFIED: {
+        CODE: 304,
+        MESSAGE: "Not Modified"
+    },
+    USE_PROXY: {
+        CODE: 305,
+        MESSAGE: "Use Proxy"
+    },
+    TEMPORARY_REDIRECT: {
+        CODE: 307,
+        MESSAGE: "Temporary Redirect"
+    },
+    PERMANENT_REDIRECT: {
+        CODE: 308,
+        MESSAGE: "Permanent Redirect"
+    },
+    BAD_REQUEST: {
+        CODE: 400,
+        MESSAGE: "Bad Request"
+    },
+    UNAUTHORIZED: {
+        CODE: 401,
+        MESSAGE: "Unauthorized"
+    },
+    PAYMENT_REQUIRED: {
+        CODE: 402,
+        MESSAGE: "Payment Required"
+    },
+    FORBIDDEN: {
+        CODE: 403,
+        MESSAGE: "Forbidden"
+    },
+    NOT_FOUND: {
+        CODE: 404,
+        MESSAGE: "Not Found"
+    },
+    METHOD_NOT_ALLOWED: {
+        CODE: 405,
+        MESSAGE: "Method Not Allowed"
+    },
+    NOT_ACCEPTABLE: {
+        CODE: 406,
+        MESSAGE: "Not Acceptable"
+    },
+    PROXY_AUTHENTICATION_REQUIRED: {
+        CODE: 407,
+        MESSAGE: "Proxy Authentication Required"
+    },
+    REQUEST_TIMEOUT: {
+        CODE: 408,
+        MESSAGE: "Request Timeout"
+    },
+    CONFLICT: {
+        CODE: 409,
+        MESSAGE: "Conflict"
+    },
+    GONE: {
+        CODE: 410,
+        MESSAGE: "Gone"
+    },
+    LENGTH_REQUIRED: {
+        CODE: 411,
+        MESSAGE: "Length Required"
+    },
+    PRECONDITION_FAILED: {
+        CODE: 412,
+        MESSAGE: "Precondition Failed"
+    },
+    REQUEST_TOO_LONG: {
+        CODE: 413,
+        MESSAGE: "Request Entity Too Large"
+    },
+    REQUEST_URI_TOO_LONG: {
+        CODE: 414,
+        MESSAGE: "Request-URI Too Long"
+    },
+    UNSUPPORTED_MEDIA_TYPE: {
+        CODE: 415,
+        MESSAGE: "Unsupported Media Type"
+    },
+    REQUESTED_RANGE_NOT_SATISFIABLE: {
+        CODE: 416,
+        MESSAGE: "Requested Range Not Satisfiable"
+    },
+    EXPECTATION_FAILED: {
+        CODE: 417,
+        MESSAGE: "Expectation Failed"
+    },
+    IM_A_TEAPOT: {
+        CODE: 418,
+        MESSAGE: "I'm a teapot"
+    },
+    INSUFFICIENT_SPACE_ON_RESOURCE: {
+        CODE: 419,
+        MESSAGE: "Insufficient Space on Resource"
+    },
+    METHOD_FAILURE: {
+        CODE: 420,
+        MESSAGE: "Method Failure"
+    },
+    MISDIRECTED_REQUEST: {
+        CODE: 421,
+        MESSAGE: "Misdirected Request"
+    },
+    UNPROCESSABLE_ENTITY: {
+        CODE: 422,
+        MESSAGE: "Unprocessable Entity"
+    },
+    LOCKED: {
+        CODE: 423,
+        MESSAGE: "Locked"
+    },
+    FAILED_DEPENDENCY: {
+        CODE: 424,
+        MESSAGE: "Failed Dependency"
+    },
+    PRECONDITION_REQUIRED: {
+        CODE: 428,
+        MESSAGE: "Precondition Required"
+    },
+    TOO_MANY_REQUESTS: {
+        CODE: 429,
+        MESSAGE: "Too Many Requests"
+    },
+    REQUEST_HEADER_FIELDS_TOO_LARGE: {
+        CODE: 431,
+        MESSAGE: "Request Header Fields Too Large"
+    },
+    UNAVAILABLE_FOR_LEGAL_REASONS: {
+        CODE: 451,
+        MESSAGE: "Unavailable For Legal Reasons"
+    },
+    INTERNAL_SERVER_ERROR: {
+        CODE: 500,
+        MESSAGE: "Internal Server Error"
+    },
+    NOT_IMPLEMENTED: {
+        CODE: 501,
+        MESSAGE: "Not Implemented"
+    },
+    BAD_GATEWAY: {
+        CODE: 502,
+        MESSAGE: "Bad Gateway"
+    },
+    SERVICE_UNAVAILABLE: {
+        CODE: 503,
+        MESSAGE: "Service Unavailable"
+    },
+    GATEWAY_TIMEOUT: {
+        CODE: 504,
+        MESSAGE: "Gateway Timeout"
+    },
+    HTTP_VERSION_NOT_SUPPORTED: {
+        CODE: 505,
+        MESSAGE: "HTTP Version Not Supported"
+    },
+    INSUFFICIENT_STORAGE: {
+        CODE: 507,
+        MESSAGE: "Insufficient Storage"
+    },
+    NETWORK_AUTHENTICATION_REQUIRED: {
+        CODE: 511,
+        MESSAGE: "Network Authentication Required"
+    }
+};
+// src/nodejs/mongo.ts
+import { format } from "date-fns";
+import { Document } from "mongoose";
+import aggregatePaginate from "mongoose-aggregate-paginate-v2";
+import mongoosePaginate from "mongoose-paginate-v2";
+import { v4 as uuidv4 } from "uuid";
+// src/utils/string.ts
+import cryptoJS from "crypto-js";
+import slugifyRaw from "slugify";
+var slugify = slugifyRaw.default || slugifyRaw;
+function generateSlug() {
+    var str = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : "", options = arguments.length > 1 ? arguments[1] : void 0;
+    var _ref = options || {}, _ref_lower = _ref.lower, lower = _ref_lower === void 0 ? true : _ref_lower, _ref_locale = _ref.locale, locale = _ref_locale === void 0 ? "vi" : _ref_locale, rest = _object_without_properties(_ref, [
+        "lower",
+        "locale"
+    ]);
+    return slugify(str, _object_spread({
+        lower: lower,
+        locale: locale
+    }, rest));
+}
+function generateShortId(uuid) {
+    var length = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 4;
+    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
+}
+// src/utils/validate.ts
+var validate = {
+    isEmpty: function isEmpty(value) {
+        if (value === null || value === void 0) {
+            return true;
+        }
+        if (Array.isArray(value)) {
+            return value.length === 0;
+        }
+        if ((typeof value === "undefined" ? "undefined" : _type_of(value)) === "object") {
+            if (_instanceof(value, Date)) {
+                return false;
+            }
+            return Object.keys(value).length === 0;
+        }
+        if (typeof value === "string") {
+            return value.trim().length === 0;
+        }
+        return false;
+    }
+};
+// src/nodejs/mongo.ts
+var mongo = {
+    getDateTime: function getDateTime() {
+        var now = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : /* @__PURE__ */ new Date();
+        return format(now, "yyyy-MM-dd HH:mm:ss.SSS");
+    },
+    createGenericFields: function createGenericFields() {
+        var _ref = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, _ref_returnDateAs = _ref.returnDateAs, returnDateAs = _ref_returnDateAs === void 0 ? "string" : _ref_returnDateAs;
+        var now = returnDateAs === "string" ? mongo.getDateTime() : /* @__PURE__ */ new Date();
+        return {
+            id: uuidv4(),
+            isDel: false,
+            createdAt: now,
+            updatedAt: now
+        };
+    },
+    applyPlugins: function applyPlugins(schema, plugins) {
+        plugins.filter(function(plugin) {
+            return typeof plugin === "function";
+        }).forEach(function(plugin) {
+            return schema.plugin(plugin);
+        });
+    },
+    applyMiddlewares: function applyMiddlewares(schema, middlewares) {
+        middlewares.forEach(function(param) {
+            var method = param.method, pre = param.pre, post = param.post;
+            if (method && pre) {
+                schema.pre(method, pre);
+            }
+            if (method && post) {
+                schema.post(method, post);
+            }
+        });
+    },
+    createGenericSchema: function createGenericSchema(mongoose) {
+        return new mongoose.Schema({
+            id: {
+                type: String,
+                default: uuidv4,
+                required: true,
+                unique: true
+            },
+            isDel: {
+                type: Boolean,
+                default: false,
+                required: true
+            }
+        }, {
+            timestamps: true
+        });
+    },
+    createSchema: function createSchema(param) {
+        var mongoose = param.mongoose, schema = param.schema, _param_virtuals = param.virtuals, virtuals = _param_virtuals === void 0 ? [] : _param_virtuals, _param_standalone = param.standalone, standalone = _param_standalone === void 0 ? false : _param_standalone;
+        var createdSchema = new mongoose.Schema(schema, {
+            strict: true
+        });
+        virtuals.forEach(function(param) {
+            var name = param.name, options = param.options, get = param.get;
+            var virtualInstance = createdSchema.virtual(name, options);
+            if (get) virtualInstance.get(get);
+        });
+        if (!standalone) {
+            createdSchema.add(mongo.createGenericSchema(mongoose));
+        }
+        return createdSchema;
+    },
+    createModel: function createModel(param) {
+        var currentMongooseInstance = param.mongoose, name = param.name, schema = param.schema, _param_pagination = param.pagination, pagination = _param_pagination === void 0 ? false : _param_pagination, _param_aggregate = param.aggregate, aggregate = _param_aggregate === void 0 ? false : _param_aggregate, _param_virtuals = param.virtuals, virtuals = _param_virtuals === void 0 ? [] : _param_virtuals, _param_middlewares = param.middlewares, middlewares = _param_middlewares === void 0 ? [] : _param_middlewares;
+        if (!name) {
+            throw new Error("Model name is required.");
+        }
+        if (currentMongooseInstance.models[name]) {
+            return currentMongooseInstance.models[name];
+        }
+        var createdSchema = mongo.createSchema({
+            mongoose: currentMongooseInstance,
+            schema: schema,
+            virtuals: virtuals
+        });
+        mongo.applyPlugins(createdSchema, [
+            pagination && mongoosePaginate,
+            aggregate && aggregatePaginate
+        ]);
+        mongo.applyMiddlewares(createdSchema, middlewares);
+        return currentMongooseInstance.model(name, createdSchema);
+    },
+    createSlugQuery: function createSlugQuery(slug) {
+        var filters = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, id = arguments.length > 2 ? arguments[2] : void 0;
+        return _object_spread_props(_object_spread({}, filters, id && {
+            id: {
+                $ne: id
+            }
+        }), {
+            $or: [
+                {
+                    slug: slug
+                },
+                {
+                    slugHistory: slug
+                }
+            ]
+        });
+    },
+    validator: {
+        isEmpty: function isEmpty() {
+            return /*#__PURE__*/ function() {
+                var _ref = _async_to_generator(function(value) {
+                    return _ts_generator(this, function(_state) {
+                        return [
+                            2,
+                            !validate.isEmpty(value)
+                        ];
+                    });
+                });
+                return function(value) {
+                    return _ref.apply(this, arguments);
+                };
+            }();
+        },
+        isUnique: function isUnique(fields) {
+            return /*#__PURE__*/ function() {
+                var _ref = _async_to_generator(function(value) {
+                    var query, existingDocument;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                if (!Array.isArray(fields) || fields.length === 0) {
+                                    throw new Error("Fields must be a non-empty array of strings.");
+                                }
+                                query = {
+                                    $or: fields.map(function(field) {
+                                        return _define_property({}, field, value);
+                                    })
+                                };
+                                return [
+                                    4,
+                                    this.constructor.findOne(query)
+                                ];
+                            case 1:
+                                existingDocument = _state.sent();
+                                return [
+                                    2,
+                                    !existingDocument
+                                ];
+                        }
+                    });
+                });
+                return function(value) {
+                    return _ref.apply(this, arguments);
+                };
+            }();
+        },
+        matchesRegex: function matchesRegex(regexArray) {
+            return /*#__PURE__*/ function() {
+                var _ref = _async_to_generator(function(value) {
+                    return _ts_generator(this, function(_state) {
+                        if (!Array.isArray(regexArray) || regexArray.some(function(r) {
+                            return !_instanceof(r, RegExp);
+                        })) {
+                            throw new Error("regexArray must be an array of valid RegExp objects.");
+                        }
+                        return [
+                            2,
+                            regexArray.every(function(regex) {
+                                return regex.test(value);
+                            })
+                        ];
+                    });
+                });
+                return function(value) {
+                    return _ref.apply(this, arguments);
+                };
+            }();
+        }
+    }
+};
+var MongoController = /*#__PURE__*/ function() {
+    "use strict";
+    function MongoController(db, collectionName) {
+        _class_call_check(this, MongoController);
+        this.collection = db.collection(collectionName);
+    }
+    _create_class(MongoController, [
+        {
+            key: "createOne",
+            value: function createOne(document) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var finalDocument, result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                finalDocument = _object_spread({}, mongo.createGenericFields(), document);
+                                return [
+                                    4,
+                                    _this.collection.insertOne(finalDocument)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Document created successfully",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "createMany",
+            value: function createMany(documents) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var finalDocuments, result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                finalDocuments = documents.map(function(document) {
+                                    return _object_spread({}, mongo.createGenericFields(), document);
+                                });
+                                return [
+                                    4,
+                                    _this.collection.insertMany(finalDocuments)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (result.insertedCount === 0) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No documents were inserted"
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "".concat(result.insertedCount, " documents created successfully"),
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "findOne",
+            value: function findOne(filter) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.collection.findOne(filter)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (!result) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "Document not found"
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Document found",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "findAll",
+            value: function findAll() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.collection.find(filter).toArray()
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Documents retrieved successfully",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "count",
+            value: function count() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.collection.countDocuments(filter)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Count retrieved successfully",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "updateOne",
+            value: function updateOne(filter, update) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.collection.updateOne(filter, {
+                                        $set: update
+                                    })
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (result.matchedCount === 0) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No documents matched the filter"
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Document updated successfully",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "updateMany",
+            value: function updateMany(filter, update) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.collection.updateMany(filter, {
+                                        $set: update
+                                    })
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (result.matchedCount === 0) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No documents matched the filter"
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Documents updated successfully",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "deleteOne",
+            value: function deleteOne(filter) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.collection.deleteOne(filter)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (result.deletedCount === 0) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No documents matched the filter"
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Document deleted successfully",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "deleteMany",
+            value: function deleteMany(filter) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.collection.deleteMany(filter)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (result.deletedCount === 0) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No documents matched the filter"
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        message: "Documents deleted successfully",
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        }
+    ]);
+    return MongoController;
+}();
+var MongooseController = /*#__PURE__*/ function() {
+    "use strict";
+    function MongooseController(model) {
+        _class_call_check(this, MongooseController);
+        this.model = model;
+    }
+    _create_class(MongooseController, [
+        {
+            key: "getModelName",
+            value: function getModelName() {
+                return this.model.modelName;
+            }
+        },
+        {
+            key: "findOne",
+            value: function findOne() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, projection = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, populate = arguments.length > 3 ? arguments[3] : void 0;
+                var _this = this;
+                return _async_to_generator(function() {
+                    var query, result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                query = _this.model.findOne(filter, projection, options);
+                                if (populate) {
+                                    query.populate(populate);
+                                }
+                                return [
+                                    4,
+                                    query.exec()
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (!result) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No ".concat(_this.getModelName(), " found."),
+                                            code: RESPONSE_STATUS.NOT_FOUND.CODE
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "findAll",
+            value: function findAll() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, projection = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, populate = arguments.length > 3 ? arguments[3] : void 0;
+                var _this = this;
+                return _async_to_generator(function() {
+                    var query, result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                query = _this.model.find(filter, projection, options);
+                                if (populate) {
+                                    query.populate(populate);
+                                }
+                                return [
+                                    4,
+                                    query.exec()
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "findPaging",
+            value: function findPaging() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.paginate(filter, options)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "findPagingAggregate",
+            value: function findPagingAggregate(pipeline) {
+                var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.aggregatePaginate(_this.model.aggregate(pipeline), options)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "count",
+            value: function count() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.countDocuments(filter)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "createOne",
+            value: function createOne(doc) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.create(doc)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "createMany",
+            value: function createMany(docs) {
+                var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var createdDocuments, result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.insertMany(docs, options)
+                                ];
+                            case 1:
+                                createdDocuments = _state.sent();
+                                result = createdDocuments.map(function(doc) {
+                                    if (_instanceof(doc, Document)) {
+                                        return doc.toObject();
+                                    }
+                                    return null;
+                                }).filter(function(doc) {
+                                    return doc !== null;
+                                });
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "updateOne",
+            value: function updateOne() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, update = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.findOneAndUpdate(filter, update, _object_spread({
+                                        new: true
+                                    }, options)).exec()
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (!result) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "Failed to update ".concat(_this.getModelName(), "."),
+                                            code: RESPONSE_STATUS.NOT_FOUND.CODE
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "updateMany",
+            value: function updateMany() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, update = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.updateMany(filter, update, options).exec()
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "deleteOne",
+            value: function deleteOne() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.findOneAndDelete(filter, options).exec()
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (!result) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No ".concat(_this.getModelName(), " found to delete."),
+                                            code: RESPONSE_STATUS.NOT_FOUND.CODE
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "deleteMany",
+            value: function deleteMany() {
+                var filter = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}, options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.deleteMany(filter, options).exec()
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                if (result.deletedCount === 0) {
+                                    return [
+                                        2,
+                                        {
+                                            success: false,
+                                            message: "No documents found to delete.",
+                                            code: RESPONSE_STATUS.NOT_FOUND.CODE
+                                        }
+                                    ];
+                                }
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "createShortId",
+            value: function createShortId(id) {
+                var length = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 4;
+                var _this = this;
+                return _async_to_generator(function() {
+                    var maxRetries, existingShortIds, retries, shortId, shortIdExists;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                maxRetries = 10;
+                                existingShortIds = /* @__PURE__ */ new Set();
+                                retries = 0;
+                                _state.label = 1;
+                            case 1:
+                                if (!(retries < maxRetries)) return [
+                                    3,
+                                    4
+                                ];
+                                shortId = generateShortId(id, retries + length);
+                                if (!!existingShortIds.has(shortId)) return [
+                                    3,
+                                    3
+                                ];
+                                existingShortIds.add(shortId);
+                                return [
+                                    4,
+                                    _this.model.exists({
+                                        shortId: shortId
+                                    })
+                                ];
+                            case 2:
+                                shortIdExists = _state.sent();
+                                if (!shortIdExists) {
+                                    return [
+                                        2,
+                                        {
+                                            success: true,
+                                            result: shortId
+                                        }
+                                    ];
+                                }
+                                _state.label = 3;
+                            case 3:
+                                retries++;
+                                return [
+                                    3,
+                                    1
+                                ];
+                            case 4:
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: "Failed to create a unique shortId",
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "createSlug",
+            value: function createSlug(fieldName, fields) {
+                var filters = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
+                var _this = this;
+                return _async_to_generator(function() {
+                    var fieldValue, createUniqueSlug, slugResults, _tmp, _tmp1, _i, lang, slug, slug1, uniqueSlug, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    8,
+                                    ,
+                                    9
+                                ]);
+                                fieldValue = fields[fieldName];
+                                createUniqueSlug = /*#__PURE__*/ function() {
+                                    var _ref = _async_to_generator(function(slug) {
+                                        var existingDoc, suffix, uniqueSlug;
+                                        return _ts_generator(this, function(_state) {
+                                            switch(_state.label){
+                                                case 0:
+                                                    return [
+                                                        4,
+                                                        _this.model.findOne(mongo.createSlugQuery(slug, filters, fields.id))
+                                                    ];
+                                                case 1:
+                                                    existingDoc = _state.sent();
+                                                    if (!existingDoc) return [
+                                                        2,
+                                                        slug
+                                                    ];
+                                                    suffix = 1;
+                                                    _state.label = 2;
+                                                case 2:
+                                                    uniqueSlug = "".concat(slug, "-").concat(suffix);
+                                                    return [
+                                                        4,
+                                                        _this.model.findOne(mongo.createSlugQuery(uniqueSlug, filters, fields.id))
+                                                    ];
+                                                case 3:
+                                                    existingDoc = _state.sent();
+                                                    suffix++;
+                                                    _state.label = 4;
+                                                case 4:
+                                                    if (existingDoc) return [
+                                                        3,
+                                                        2
+                                                    ];
+                                                    _state.label = 5;
+                                                case 5:
+                                                    return [
+                                                        2,
+                                                        uniqueSlug
+                                                    ];
+                                            }
+                                        });
+                                    });
+                                    return function createUniqueSlug(slug) {
+                                        return _ref.apply(this, arguments);
+                                    };
+                                }();
+                                if (!((typeof fieldValue === "undefined" ? "undefined" : _type_of(fieldValue)) === "object")) return [
+                                    3,
+                                    5
+                                ];
+                                slugResults = {};
+                                _tmp = [];
+                                for(_tmp1 in fieldValue)_tmp.push(_tmp1);
+                                _i = 0;
+                                _state.label = 1;
+                            case 1:
+                                if (!(_i < _tmp.length)) return [
+                                    3,
+                                    4
+                                ];
+                                lang = _tmp[_i];
+                                slug = generateSlug(fieldValue[lang]);
+                                return [
+                                    4,
+                                    createUniqueSlug(slug)
+                                ];
+                            case 2:
+                                slugResults[lang] = _state.sent();
+                                _state.label = 3;
+                            case 3:
+                                _i++;
+                                return [
+                                    3,
+                                    1
+                                ];
+                            case 4:
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: slugResults
+                                    }
+                                ];
+                            case 5:
+                                slug1 = generateSlug(fieldValue);
+                                return [
+                                    4,
+                                    createUniqueSlug(slug1)
+                                ];
+                            case 6:
+                                uniqueSlug = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: uniqueSlug
+                                    }
+                                ];
+                            case 7:
+                                return [
+                                    3,
+                                    9
+                                ];
+                            case 8:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: "Failed to create a unique slug: ".concat(error.message),
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 9:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        },
+        {
+            key: "aggregate",
+            value: function aggregate(pipeline) {
+                var _this = this;
+                return _async_to_generator(function() {
+                    var result, error;
+                    return _ts_generator(this, function(_state) {
+                        switch(_state.label){
+                            case 0:
+                                _state.trys.push([
+                                    0,
+                                    2,
+                                    ,
+                                    3
+                                ]);
+                                return [
+                                    4,
+                                    _this.model.aggregate(pipeline)
+                                ];
+                            case 1:
+                                result = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: true,
+                                        result: result
+                                    }
+                                ];
+                            case 2:
+                                error = _state.sent();
+                                return [
+                                    2,
+                                    {
+                                        success: false,
+                                        message: error.message,
+                                        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE
+                                    }
+                                ];
+                            case 3:
+                                return [
+                                    2
+                                ];
+                        }
+                    });
+                })();
+            }
+        }
+    ]);
+    return MongooseController;
+}();
+// src/react/apollo-client.tsx
+import { ApolloClient, ApolloLink, ApolloProvider as ApolloProviderDefault, HttpLink, InMemoryCache, split } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { createClient as createGraphqlWebSocketClient } from "graphql-ws";
+import { jsx } from "react/jsx-runtime";
+function createLinks(options) {
+    var errorLink = onError(function(param) {
+        var graphQLErrors = param.graphQLErrors, networkError = param.networkError;
+        graphQLErrors === null || graphQLErrors === void 0 ? void 0 : graphQLErrors.forEach(function(param) {
+            var message = param.message, locations = param.locations, path3 = param.path;
+            return console.error("[GraphQL error]: Message: ".concat(message, ", Location: ").concat(locations, ", Path: ").concat(path3));
+        });
+        if (networkError) {
+            console.error("[Network error]: ".concat(networkError));
+        }
+    });
+    var httpLink = new HttpLink({
+        uri: options === null || options === void 0 ? void 0 : options.uri,
+        credentials: "include"
+    });
+    var wsLink = (options === null || options === void 0 ? void 0 : options.wsUrl) ? new GraphQLWsLink(createGraphqlWebSocketClient({
+        url: options.wsUrl
+    })) : null;
+    var splitLink = wsLink ? split(function(param) {
+        var query = param.query;
+        var mainDefinition = getMainDefinition(query);
+        if (mainDefinition.kind === "OperationDefinition") {
+            var operation = mainDefinition.operation;
+            return operation === "subscription";
+        }
+        return false;
+    }, wsLink, httpLink) : httpLink;
+    var cleanTypeName = new ApolloLink(function(operation, forward) {
+        if (operation.variables) {
+            operation.variables = JSON.parse(JSON.stringify(operation.variables), function(key, value) {
+                return key === "__typename" ? void 0 : value;
+            });
+        }
+        return forward(operation);
+    });
+    return {
+        errorLink: errorLink,
+        httpLink: httpLink,
+        wsLink: wsLink,
+        splitLink: splitLink,
+        cleanTypeName: cleanTypeName
+    };
+}
+function ApolloProvider(param) {
+    var isNextJS = param.isNextJS, options = param.options, children = param.children, CustomClient = param.client, CustomProvider = param.provider, CustomCache = param.cache;
+    var Client = CustomClient !== null && CustomClient !== void 0 ? CustomClient : ApolloClient;
+    if (typeof Client !== "function") {
+        throw new TypeError("Invalid ApolloClient provided. Ensure CustomClient is a class.");
+    }
+    var Provider = CustomProvider || ApolloProviderDefault;
+    var Cache = CustomCache || InMemoryCache;
+    var _createLinks = createLinks(options), cleanTypeName = _createLinks.cleanTypeName, errorLink = _createLinks.errorLink, splitLink = _createLinks.splitLink;
+    var client = new Client(_object_spread({
+        cache: _instanceof(Cache, InMemoryCache) ? Cache : new InMemoryCache(),
+        link: ApolloLink.from([
+            cleanTypeName,
+            errorLink,
+            splitLink
+        ].filter(Boolean))
+    }, options));
+    if (isNextJS) {
+        return /* @__PURE__ */ jsx(Provider, {
+            makeClient: function() {
+                return client;
+            },
+            children: children
+        });
+    }
+    return /* @__PURE__ */ jsx(Provider, {
+        client: client,
+        children: children
+    });
+}
+// src/react/loading.tsx
+import cn from "classnames";
+import { createContext, use, useCallback, useMemo, useState } from "react";
+import styles from "./react/loading.module.scss";
+import { jsx as jsx2, jsxs } from "react/jsx-runtime";
+var LoadingContext = createContext(void 0);
+function useLoading() {
+    var context = use(LoadingContext);
+    if (!context) {
+        throw new Error("useLoading must be used within a LoadingProvider");
+    }
+    return context;
+}
+function Loading(_param) {
+    var _param_full = _param.full, full = _param_full === void 0 ? false : _param_full, _param_block = _param.block, block = _param_block === void 0 ? false : _param_block, _param_className = _param.className, className = _param_className === void 0 ? "" : _param_className, _param_message = _param.message, message = _param_message === void 0 ? "Loading" : _param_message, rest = _object_without_properties(_param, [
+        "full",
+        "block",
+        "className",
+        "message"
+    ]);
+    function _renderLoading() {
+        return /* @__PURE__ */ jsxs("div", _object_spread_props(_object_spread({
+            className: styles.container
+        }, rest), {
+            children: [
+                /* @__PURE__ */ jsx2("div", {
+                    className: styles.ring
+                }),
+                /* @__PURE__ */ jsx2("div", {
+                    className: styles.ring
+                }),
+                /* @__PURE__ */ jsx2("div", {
+                    className: styles.ring
+                }),
+                /* @__PURE__ */ jsx2("div", {
+                    className: styles.ring
+                }),
+                message && /* @__PURE__ */ jsx2("div", {
+                    className: styles.message,
+                    children: message
+                })
+            ]
+        }));
+    }
+    if (full) {
+        return /* @__PURE__ */ jsx2("div", {
+            className: cn(styles.fullscreen, className),
+            children: _renderLoading()
+        });
+    } else if (block) {
+        return /* @__PURE__ */ jsx2("div", {
+            className: cn(styles.block, className),
+            children: _renderLoading()
+        });
+    }
+    return _renderLoading();
+}
+function LoadingProvider(param) {
+    var children = param.children;
+    var _useState = _sliced_to_array(useState(false), 2), isLoading = _useState[0], setIsLoading = _useState[1];
+    var _useState1 = _sliced_to_array(useState(false), 2), isGlobalLoading = _useState1[0], setIsGlobalLoading = _useState1[1];
+    var showLoading = useCallback(function() {
+        var global = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : false;
+        setIsLoading(true);
+        setIsGlobalLoading(global);
+    }, []);
+    var hideLoading = useCallback(function() {
+        setIsLoading(false);
+        setIsGlobalLoading(false);
+    }, []);
+    var contextValue = useMemo(function() {
+        return {
+            isLoading: isLoading,
+            isGlobalLoading: isGlobalLoading,
+            showLoading: showLoading,
+            hideLoading: hideLoading
+        };
+    }, [
+        isLoading,
+        isGlobalLoading,
+        showLoading,
+        hideLoading
+    ]);
+    return /* @__PURE__ */ jsx2(LoadingContext, {
+        value: contextValue,
+        children: isLoading ? /* @__PURE__ */ jsx2(Loading, {
+            full: isGlobalLoading
+        }) : children
+    });
+}
+// src/react/next-intl.tsx
+import { NextIntlClientProvider, useTranslations } from "next-intl";
+import { createContext as createContext2, use as use2, useMemo as useMemo2 } from "react";
+// src/react/storage.tsx
+import { useCallback as useCallback2, useEffect, useState as useState2 } from "react";
+// src/utils/serializer.ts
+var serializer = {
+    serialize: function(value) {
+        return JSON.stringify(value, function(_, v) {
+            if (_instanceof(v, Date)) {
+                return {
+                    __type: "Date",
+                    value: v.toISOString()
+                };
+            }
+            return v;
+        });
+    },
+    deserialize: function(value) {
+        return JSON.parse(value, function(_, v) {
+            if ((v === null || v === void 0 ? void 0 : v.__type) === "Date") {
+                return new Date(v.value);
+            }
+            return v;
+        });
+    }
+};
+// src/utils/storage-client.ts
+import localForage from "localforage";
+var storageClient = {
+    get: function get(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.getItem(key)
+                        ];
+                    case 1:
+                        return [
+                            2,
+                            _state.sent()
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:get] Error getting key "'.concat(key, '":'), error);
+                        return [
+                            2,
+                            null
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    set: function set(key, value) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.setItem(key, value)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:set] Error setting key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    remove: function remove(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.removeItem(key)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:remove] Error removing key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    keys: function keys() {
+        return _async_to_generator(function() {
+            var keys, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.keys()
+                        ];
+                    case 1:
+                        keys = _state.sent();
+                        return [
+                            2,
+                            keys !== null && keys !== void 0 ? keys : []
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error("❌ [Storage:keys] Error getting keys:", error);
+                        return [
+                            2,
+                            []
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    }
+};
+// src/react/storage.tsx
+function useStorage(key, initialValue) {
+    var serializer2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : serializer;
+    var _useState2 = _sliced_to_array(useState2(initialValue), 2), value = _useState2[0], setValue = _useState2[1];
+    var _useState21 = _sliced_to_array(useState2(false), 2), isLoaded = _useState21[0], setIsLoaded = _useState21[1];
+    useEffect(function() {
+        var isMounted = true;
+        var loadValue = /*#__PURE__*/ function() {
+            var _ref = _async_to_generator(function() {
+                var valueFound, parsedValue, serialized, error;
+                return _ts_generator(this, function(_state) {
+                    switch(_state.label){
+                        case 0:
+                            _state.trys.push([
+                                0,
+                                6,
+                                7,
+                                8
+                            ]);
+                            return [
+                                4,
+                                storageClient.get(key)
+                            ];
+                        case 1:
+                            valueFound = _state.sent();
+                            if (!isMounted) return [
+                                3,
+                                5
+                            ];
+                            if (!(valueFound !== null)) return [
+                                3,
+                                2
+                            ];
+                            parsedValue = serializer2.deserialize(valueFound);
+                            setValue(parsedValue);
+                            return [
+                                3,
+                                5
+                            ];
+                        case 2:
+                            if (!(initialValue !== void 0)) return [
+                                3,
+                                4
+                            ];
+                            serialized = serializer2.serialize(initialValue);
+                            return [
+                                4,
+                                storageClient.set(key, serialized)
+                            ];
+                        case 3:
+                            _state.sent();
+                            setValue(initialValue);
+                            return [
+                                3,
+                                5
+                            ];
+                        case 4:
+                            setValue(void 0);
+                            _state.label = 5;
+                        case 5:
+                            return [
+                                3,
+                                8
+                            ];
+                        case 6:
+                            error = _state.sent();
+                            console.error('Error loading value for key "'.concat(key, '":'), error);
+                            if (isMounted) {
+                                setValue(initialValue);
+                            }
+                            return [
+                                3,
+                                8
+                            ];
+                        case 7:
+                            if (isMounted) setIsLoaded(true);
+                            return [
+                                7
+                            ];
+                        case 8:
+                            return [
+                                2
+                            ];
+                    }
+                });
+            });
+            return function loadValue() {
+                return _ref.apply(this, arguments);
+            };
+        }();
+        loadValue();
+        return function() {
+            isMounted = false;
+            setIsLoaded(false);
+        };
+    }, [
+        key,
+        initialValue,
+        serializer2
+    ]);
+    useEffect(function() {
+        if (!isLoaded) return;
+        var saveValue = /*#__PURE__*/ function() {
+            var _ref = _async_to_generator(function() {
+                var serialized, error;
+                return _ts_generator(this, function(_state) {
+                    switch(_state.label){
+                        case 0:
+                            _state.trys.push([
+                                0,
+                                3,
+                                ,
+                                4
+                            ]);
+                            if (!(value !== void 0)) return [
+                                3,
+                                2
+                            ];
+                            serialized = serializer2.serialize(value);
+                            return [
+                                4,
+                                storageClient.set(key, serialized)
+                            ];
+                        case 1:
+                            _state.sent();
+                            _state.label = 2;
+                        case 2:
+                            return [
+                                3,
+                                4
+                            ];
+                        case 3:
+                            error = _state.sent();
+                            console.error('Error saving value for key "'.concat(key, '":'), error);
+                            return [
+                                3,
+                                4
+                            ];
+                        case 4:
+                            return [
+                                2
+                            ];
+                    }
+                });
+            });
+            return function saveValue() {
+                return _ref.apply(this, arguments);
+            };
+        }();
+        saveValue();
+    }, [
+        value,
+        key,
+        serializer2,
+        isLoaded
+    ]);
+    var set = useCallback2(function(newValue) {
+        setValue(function(prev) {
+            return typeof newValue === "function" ? newValue(prev) : newValue;
+        });
+    }, []);
+    var remove = useCallback2(/*#__PURE__*/ _async_to_generator(function() {
+        var error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        2,
+                        ,
+                        3
+                    ]);
+                    return [
+                        4,
+                        storageClient.remove(key)
+                    ];
+                case 1:
+                    _state.sent();
+                    setValue(void 0);
+                    return [
+                        3,
+                        3
+                    ];
+                case 2:
+                    error = _state.sent();
+                    console.error('Error removing key "'.concat(key, '":'), error);
+                    return [
+                        3,
+                        3
+                    ];
+                case 3:
+                    return [
+                        2
+                    ];
+            }
+        });
+    }), [
+        key
+    ]);
+    return {
+        value: value,
+        set: set,
+        remove: remove
+    };
+}
+// src/react/next-intl.tsx
+import { Fragment, jsx as jsx3 } from "react/jsx-runtime";
+var NextIntlContext = createContext2(void 0);
+function useNextIntl() {
+    var context = use2(NextIntlContext);
+    if (!context) {
+        throw new Error("useNextIntl must be used within a NextIntlProvider");
+    }
+    return context;
+}
+var useTranslateNextIntl = useTranslations;
+function withNextIntl(Component) {
+    var PageWithI18n = function(props) {
+        var _languages_find;
+        var currentLanguage = useNextIntl().currentLanguage;
+        var messages = props.messages, languages = props.languages;
+        var defaultLang = "en";
+        var defaultMessages = messages[(currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value) || defaultLang];
+        var timeZone = (_languages_find = languages.find(function(lang) {
+            return lang.value === (currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value);
+        })) === null || _languages_find === void 0 ? void 0 : _languages_find.timezone;
+        if (!messages) {
+            console.warn("Missing messages for language: ".concat((currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value) || defaultLang));
+            return null;
+        }
+        return /* @__PURE__ */ jsx3(NextIntlClientProvider, {
+            locale: (currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value) || defaultLang,
+            messages: defaultMessages,
+            timeZone: timeZone,
+            children: /* @__PURE__ */ jsx3(Component, _object_spread({}, props))
+        });
+    };
+    PageWithI18n.displayName = "withNextIntl(".concat(Component.displayName || Component.name || "Component", ")");
+    return PageWithI18n;
+}
+function LanguageWrapperBase(param) {
+    var children = param.children;
+    return /* @__PURE__ */ jsx3(Fragment, {
+        children: children
+    });
+}
+var LanguageWrapper = withNextIntl(LanguageWrapperBase);
+function NextIntlProvider(param) {
+    var children = param.children, languages = param.languages, messages = param.messages;
+    var _languages_;
+    var _useStorage = useStorage("lang", (_languages_ = languages === null || languages === void 0 ? void 0 : languages[0]) !== null && _languages_ !== void 0 ? _languages_ : {}), value = _useStorage.value, set = _useStorage.set;
+    var contextValue = useMemo2(function() {
+        return {
+            languages: languages,
+            currentLanguage: value,
+            setCurrentLanguage: set
+        };
+    }, [
+        languages,
+        set,
+        value
+    ]);
+    return /* @__PURE__ */ jsx3(NextIntlContext, {
+        value: contextValue,
+        children: /* @__PURE__ */ jsx3(LanguageWrapper, {
+            languages: languages,
+            messages: messages,
+            children: children
+        })
+    });
+}
+// src/typescript/mongo.ts
+import { Collection, Db } from "mongodb";
+import { Document as Document2, Model } from "mongoose";
+var C_Db = /*#__PURE__*/ function(Db) {
+    "use strict";
+    _inherits(C_Db, Db);
+    function C_Db() {
+        _class_call_check(this, C_Db);
+        return _call_super(this, C_Db, arguments);
+    }
+    return C_Db;
+}(Db);
+var C_Document = /*#__PURE__*/ function(Document2) {
+    "use strict";
+    _inherits(C_Document, Document2);
+    function C_Document() {
+        _class_call_check(this, C_Document);
+        return _call_super(this, C_Document, arguments);
+    }
+    return C_Document;
+}(Document2);
+var C_Model = /*#__PURE__*/ function(Model) {
+    "use strict";
+    _inherits(C_Model, Model);
+    function C_Model() {
+        _class_call_check(this, C_Model);
+        return _call_super(this, C_Model, arguments);
+    }
+    return C_Model;
+}(Model);
+var C_Collection = /*#__PURE__*/ function(Collection) {
+    "use strict";
+    _inherits(C_Collection, Collection);
+    function C_Collection() {
+        _class_call_check(this, C_Collection);
+        return _call_super(this, C_Collection, arguments);
+    }
+    return C_Collection;
+}(Collection);
+// src/utils/log.ts
+import { GraphQLError } from "graphql";
+function throwResponse(param) {
+    var message = param.message, _param_status = param.status, status = _param_status === void 0 ? RESPONSE_STATUS.INTERNAL_SERVER_ERROR : _param_status, _param_type = param.type, type = _param_type === void 0 ? "graphql" : _param_type;
+    var _ref;
+    var responseMessage = (_ref = message !== null && message !== void 0 ? message : status.MESSAGE) !== null && _ref !== void 0 ? _ref : "Internal server error";
+    if (type === "graphql") {
+        throw new GraphQLError(responseMessage, {
+            extensions: {
+                code: status.CODE
+            }
+        });
+    } else {
+        throw new Error(responseMessage);
+    }
+}
+// src/utils/common.ts
+import unorm from "unorm";
+function isJson(str) {
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+var charMap = {
+    a: [
+        "\xE0",
+        "\xE1",
+        "\u1EA1",
+        "\u1EA3",
+        "\xE3",
+        "\xE2",
+        "\u1EA7",
+        "\u1EA5",
+        "\u1EAD",
+        "\u1EA9",
+        "\u1EAB",
+        "\u0103",
+        "\u1EB1",
+        "\u1EAF",
+        "\u1EB7",
+        "\u1EB3",
+        "\u1EB5"
+    ],
+    e: [
+        "\xE8",
+        "\xE9",
+        "\u1EB9",
+        "\u1EBB",
+        "\u1EBD",
+        "\xEA",
+        "\u1EC1",
+        "\u1EBF",
+        "\u1EC7",
+        "\u1EC3",
+        "\u1EC5"
+    ],
+    i: [
+        "\xEC",
+        "\xED",
+        "\u1ECB",
+        "\u1EC9",
+        "\u0129"
+    ],
+    o: [
+        "\xF2",
+        "\xF3",
+        "\u1ECD",
+        "\u1ECF",
+        "\xF5",
+        "\xF4",
+        "\u1ED3",
+        "\u1ED1",
+        "\u1ED9",
+        "\u1ED5",
+        "\u1ED7",
+        "\u01A1",
+        "\u1EDD",
+        "\u1EDB",
+        "\u1EE3",
+        "\u1EDF",
+        "\u1EE1"
+    ],
+    u: [
+        "\xF9",
+        "\xFA",
+        "\u1EE5",
+        "\u1EE7",
+        "\u0169",
+        "\u01B0",
+        "\u1EEB",
+        "\u1EE9",
+        "\u1EF1",
+        "\u1EED",
+        "\u1EEF"
+    ],
+    y: [
+        "\u1EF3",
+        "\xFD",
+        "\u1EF5",
+        "\u1EF7",
+        "\u1EF9"
+    ],
+    d: [
+        "\u0111"
+    ]
+};
+var upperCharMap = Object.entries(charMap).reduce(function(map, param) {
+    var _param = _sliced_to_array(param, 2), key = _param[0], value = _param[1];
+    map[key.toUpperCase()] = value.map(function(char) {
+        return char.toUpperCase();
+    });
+    return map;
+}, {});
+function regexSearchMapper(str) {
+    str = unorm.nfkc(str);
+    var combinedMap = _object_spread({}, charMap, upperCharMap);
+    var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+    try {
+        for(var _iterator = Object.entries(combinedMap)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
+            var _step_value = _sliced_to_array(_step.value, 2), baseChar = _step_value[0], variations = _step_value[1];
+            var pattern = "[".concat(baseChar).concat(variations.join(""), "]");
+            var replacement = "(".concat([
+                baseChar
+            ].concat(_to_consumable_array(variations)).join("|"), ")");
+            str = str.replace(new RegExp(pattern, "g"), replacement);
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally{
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+            }
+        } finally{
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+    return str;
+}
+function removeAccent(str) {
+    return str.normalize("NFD").replace(RegExp("\\p{Diacritic}", "gu"), "");
+}
+export { ApolloProvider, BUILD_DIRECTORY, COMMAND, COMMIT_LINT_CLI, CYBERSKILL_CLI, CYBERSKILL_DIRECTORY, CYBERSKILL_PACKAGE_NAME, CYBERSKILL_STORAGE, C_Collection, C_Db, C_Document, C_Model, ESLINT_CLI, ESLINT_INSPECT_CLI, E_ErrorType, GIT_CLI, GIT_COMMIT_EDITMSG, GIT_HOOK, GIT_IGNORE, HOOK, LINT_STAGED_CLI, Loading, LoadingContext, LoadingProvider, MongoController, MongooseController, NODE_MODULES, NODE_MODULES_INSPECT_CLI, NextIntlContext, NextIntlProvider, PACKAGE_JSON, PACKAGE_LOCK_JSON, PATH, PNPM_CLI, PNPM_DLX_CLI, PNPM_EXEC_CLI, PNPM_LOCK_YAML, RESPONSE_STATUS, RIMRAF_CLI, SIMPLE_GIT_HOOK_CLI, SIMPLE_GIT_HOOK_JSON, TSCONFIG_JSON, TSC_CLI, TSX_CLI, VITEST_CLI, WORKING_DIRECTORY, aggregatePaginate, appendFileSync2 as appendFileSync, checkPackage, clearAllErrorLists, commandFormatter, commandLog, deepMerge, dirname2 as dirname, executeCommand, existsSync2 as existsSync, generateShortId, generateSlug, getLatestPackageVersion, getPackageJson, getStorageDir, getStoredErrorLists, initNodePersist, isJson, join2 as join, mongo, mongoosePaginate, readFileSync2 as readFileSync, regexSearchMapper, removeAccent, require2 as require, resolve2 as resolve, resolveCommands, resolveCyberSkillPath, resolveWorkingPath, saveErrorListToStorage, serializer, storageClient, storageServer, throwResponse, useLoading, useNextIntl, useStorage, useTranslateNextIntl, validate, withNextIntl, writeFileSync2 as writeFileSync };

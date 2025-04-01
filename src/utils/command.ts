@@ -7,10 +7,12 @@ import { exec } from 'node:child_process';
 import process from 'node:process';
 import * as util from 'node:util';
 
-import type { I_BoxedLogOptions, I_ErrorEntry, I_EslintError } from '#typescript/command.js';
+import type { I_BoxedLogOptions, I_CommandContext, I_ErrorEntry, I_EslintError, T_Command, T_CommandMapInput } from '#typescript/command.js';
 
+import { CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PNPM_DLX_CLI, PNPM_EXEC_CLI, TSX_CLI } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
 
+import { checkPackage } from './package.js';
 import { storageServer } from './storage-server.js';
 
 const DEBUG = process.env.DEBUG === 'true';
@@ -276,4 +278,47 @@ export async function executeCommand(command: string, parser = parseCommandOutpu
             commandLog.error(`Command failed: ${message}`);
         }
     }
+}
+
+export const commandFormatter = {
+    raw: (cmd: string) => ({ raw: true, cmd } as const),
+    isRaw(cmd: any): cmd is { raw: true; cmd: string } {
+        return typeof cmd === 'object' && cmd !== null && cmd.raw === true;
+    },
+    format(command: T_Command, context?: I_CommandContext): string {
+        if (typeof command === 'function') {
+            return commandFormatter.formatCLI(command(context), context);
+        }
+
+        if (commandFormatter.isRaw(command)) {
+            return command.cmd;
+        }
+
+        return commandFormatter.formatCLI(command, context);
+    },
+    formatCLI(command: string, context?: I_CommandContext): string {
+        if (context?.isRemote) {
+            return `${PNPM_DLX_CLI} ${CYBERSKILL_PACKAGE_NAME} ${command}`;
+        }
+
+        if (context?.isCurrentProject) {
+            return `${PNPM_EXEC_CLI} ${TSX_CLI} src/cli.ts ${command}`;
+        }
+
+        return `${PNPM_EXEC_CLI} ${CYBERSKILL_CLI} ${command}`;
+    },
+};
+
+export async function resolveCommands(input: T_CommandMapInput, context: Partial<I_CommandContext> = {}) {
+    const isRemote = context?.isRemote ?? false;
+    const isCurrentProject = isRemote
+        ? false
+        : (await checkPackage(CYBERSKILL_PACKAGE_NAME)).isCurrentProject;
+
+    const ctx: I_CommandContext = { isRemote, isCurrentProject };
+    const commands = typeof input === 'function' ? input(ctx) : input;
+
+    return Object.fromEntries(
+        Object.entries(commands).map(([key, cmd]) => [key, commandFormatter.format(cmd, ctx)]),
+    );
 }

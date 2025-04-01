@@ -3,14 +3,17 @@ import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 
-export const storageDir
-    = process.env.CYBERSKILL_STORAGE_DIR
-        || path.join(os.homedir(), '.cyberskill-storage');
+import { CYBERSKILL_STORAGE } from '#constants/path.js';
+
+export function getStorageDir() {
+    return process.env.CYBERSKILL_STORAGE_DIR
+        || path.join(os.homedir(), CYBERSKILL_STORAGE);
+}
 
 export async function initNodePersist() {
     if (!nodePersist.defaultInstance) {
         await nodePersist.init({
-            dir: storageDir,
+            dir: getStorageDir(),
             stringify: JSON.stringify,
             parse: JSON.parse,
             encoding: 'utf8',
@@ -69,7 +72,7 @@ export const storageServer = {
     },
     async getLogLink(key: string): Promise<string | null> {
         try {
-            const storagePath = storageDir;
+            const storagePath = getStorageDir();
             return `${storagePath} (key: ${key})`;
         }
         catch (error) {

@@ -1,1 +1,75 @@
-function e(e,r,t){if(r in e){Object.defineProperty(e,r,{value:t,enumerable:true,configurable:true,writable:true})}else{e[r]=t}return e}function r(r){for(var t=1;t<arguments.length;t++){var n=arguments[t]!=null?arguments[t]:{};var o=Object.keys(n);if(typeof Object.getOwnPropertySymbols==="function"){o=o.concat(Object.getOwnPropertySymbols(n).filter(function(e){return Object.getOwnPropertyDescriptor(n,e).enumerable}))}o.forEach(function(t){e(r,t,n[t])})}return r}function t(e,r){if(e==null)return{};var t=n(e,r);var o,i;if(Object.getOwnPropertySymbols){var l=Object.getOwnPropertySymbols(e);for(i=0;i<l.length;i++){o=l[i];if(r.indexOf(o)>=0)continue;if(!Object.prototype.propertyIsEnumerable.call(e,o))continue;t[o]=e[o]}}return t}function n(e,r){if(e==null)return{};var t={};var n=Object.keys(e);var o,i;for(i=0;i<n.length;i++){o=n[i];if(r.indexOf(o)>=0)continue;t[o]=e[o]}return t}import o from"crypto-js";import i from"slugify";var l=i.default||i;function u(){var e=arguments.length>0&&arguments[0]!==void 0?arguments[0]:"",n=arguments.length>1?arguments[1]:void 0;var o=n||{},i=o.lower,u=i===void 0?!0:i,c=o.locale,f=c===void 0?"vi":c,a=t(o,["lower","locale"]);return l(e,r({lower:u,locale:f},a))}function c(e){var r=arguments.length>1&&arguments[1]!==void 0?arguments[1]:4;return o.SHA256(e).toString(o.enc.Hex).slice(0,r)}export{c as generateShortId,u as generateSlug};
+// src/utils/string.ts
+function _define_property(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+function _object_spread(target) {
+    for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i] != null ? arguments[i] : {};
+        var ownKeys = Object.keys(source);
+        if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+        }
+        ownKeys.forEach(function(key) {
+            _define_property(target, key, source[key]);
+        });
+    }
+    return target;
+}
+function _object_without_properties(source, excluded) {
+    if (source == null) return {};
+    var target = _object_without_properties_loose(source, excluded);
+    var key, i;
+    if (Object.getOwnPropertySymbols) {
+        var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+        for(i = 0; i < sourceSymbolKeys.length; i++){
+            key = sourceSymbolKeys[i];
+            if (excluded.indexOf(key) >= 0) continue;
+            if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
+function _object_without_properties_loose(source, excluded) {
+    if (source == null) return {};
+    var target = {};
+    var sourceKeys = Object.keys(source);
+    var key, i;
+    for(i = 0; i < sourceKeys.length; i++){
+        key = sourceKeys[i];
+        if (excluded.indexOf(key) >= 0) continue;
+        target[key] = source[key];
+    }
+    return target;
+}
+import cryptoJS from "crypto-js";
+import slugifyRaw from "slugify";
+var slugify = slugifyRaw.default || slugifyRaw;
+function generateSlug() {
+    var str = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : "", options = arguments.length > 1 ? arguments[1] : void 0;
+    var _ref = options || {}, _ref_lower = _ref.lower, lower = _ref_lower === void 0 ? true : _ref_lower, _ref_locale = _ref.locale, locale = _ref_locale === void 0 ? "vi" : _ref_locale, rest = _object_without_properties(_ref, [
+        "lower",
+        "locale"
+    ]);
+    return slugify(str, _object_spread({
+        lower: lower,
+        locale: locale
+    }, rest));
+}
+function generateShortId(uuid) {
+    var length = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : 4;
+    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
+}
+export { generateShortId, generateSlug };

@@ -1,2 +1,2137 @@
 #!/usr/bin/env node
-"use strict";function e(e,t,n,r,s,i,c){try{var o=e[i](c);var a=o.value}catch(e){n(e);return}if(o.done){t(a)}else{Promise.resolve(a).then(r,s)}}function t(t){return function(){var n=this,r=arguments;return new Promise(function(s,i){var c=t.apply(n,r);function o(t){e(c,s,i,o,a,"next",t)}function a(t){e(c,s,i,o,a,"throw",t)}o(undefined)})}}function n(e,t,n){if(t in e){Object.defineProperty(e,t,{value:n,enumerable:true,configurable:true,writable:true})}else{e[t]=n}return e}function r(e){for(var t=1;t<arguments.length;t++){var r=arguments[t]!=null?arguments[t]:{};var s=Object.keys(r);if(typeof Object.getOwnPropertySymbols==="function"){s=s.concat(Object.getOwnPropertySymbols(r).filter(function(e){return Object.getOwnPropertyDescriptor(r,e).enumerable}))}s.forEach(function(t){n(e,t,r[t])})}return e}function s(e,t){var n=Object.keys(e);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(e);if(t){r=r.filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable})}n.push.apply(n,r)}return n}function i(e,t){t=t!=null?t:{};if(Object.getOwnPropertyDescriptors){Object.defineProperties(e,Object.getOwnPropertyDescriptors(t))}else{s(Object(t)).forEach(function(n){Object.defineProperty(e,n,Object.getOwnPropertyDescriptor(t,n))})}return e}function c(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}function o(e,t){var n,r,s,i,c={label:0,sent:function(){if(s[0]&1)throw s[1];return s[1]},trys:[],ops:[]};return i={next:o(0),"throw":o(1),"return":o(2)},typeof Symbol==="function"&&(i[Symbol.iterator]=function(){return this}),i;function o(e){return function(t){return a([e,t])}}function a(i){if(n)throw new TypeError("Generator is already executing.");while(c)try{if(n=1,r&&(s=i[0]&2?r["return"]:i[0]?r["throw"]||((s=r["return"])&&s.call(r),0):r.next)&&!(s=s.call(r,i[1])).done)return s;if(r=0,s)i=[i[0]&2,s.value];switch(i[0]){case 0:case 1:s=i;break;case 4:c.label++;return{value:i[1],done:false};case 5:c.label++;r=i[1];i=[0];continue;case 7:i=c.ops.pop();c.trys.pop();continue;default:if(!(s=c.trys,s=s.length>0&&s[s.length-1])&&(i[0]===6||i[0]===2)){c=0;continue}if(i[0]===3&&(!s||i[1]>s[0]&&i[1]<s[3])){c.label=i[1];break}if(i[0]===6&&c.label<s[1]){c.label=s[1];s=i;break}if(s&&c.label<s[2]){c.label=s[2];c.ops.push(i);break}if(s[2])c.ops.pop();c.trys.pop();continue}i=t.call(e,c)}catch(e){i=[6,e];r=0}finally{n=s=0}if(i[0]&5)throw i[1];return{value:i[0]?i[1]:void 0,done:true}}}var a=Object.create;var u=Object.defineProperty;var l=Object.getOwnPropertyDescriptor;var f=Object.getOwnPropertyNames;var p=Object.getPrototypeOf,d=Object.prototype.hasOwnProperty;var h=function(e,t,n,r){var s=true,i=false,o=undefined;if(t&&(typeof t==="undefined"?"undefined":c(t))=="object"||typeof t=="function")try{var a=function(){var s=h.value;!d.call(e,s)&&s!==n&&u(e,s,{get:function(){return t[s]},enumerable:!(r=l(t,s))||r.enumerable})};for(var p=f(t)[Symbol.iterator](),h;!(s=(h=p.next()).done);s=true)a()}catch(e){i=true;o=e}finally{try{if(!s&&p.return!=null){p.return()}}finally{if(i){throw o}}}return e};var g=function(e,t,n){return n=e!=null?a(p(e)):{},h(t||!e||!e.__esModule?u(n,"default",{value:e,enumerable:!0}):n,e)};var y=function(){return(typeof document==="undefined"?"undefined":c(document))>"u"?new URL("file:".concat(__filename)).href:document.currentScript&&document.currentScript.src||new URL("main.js",document.baseURI).href},m=y();var v=g(require("fs"),1),b=g(require("path"),1),w=g(require("process"),1),O=require("yargs/helpers"),_=g(require("yargs/yargs"),1);var S=require("path"),A=g(require("process"),1),T=require("url"),P=(0,T.fileURLToPath)(m),E=(0,S.dirname)(P),k=A.default.env.INIT_CWD||A.default.cwd();var I=g(require("boxen"),1),j=g(require("chalk"),1),C=require("child_process"),x=g(require("process"),1),N=g(require("util"),1);var G=g(require("node-persist"),1),F=g(require("os"),1),H=g(require("path"),1),L=g(require("process"),1),M=L.default.env.CYBERSKILL_STORAGE_DIR||H.default.join(F.default.homedir(),".cyberskill-storage");function R(){return K.apply(this,arguments)}function K(){K=t(function(){var e;return o(this,function(t){switch(t.label){case 0:e=G.default.defaultInstance;if(e)return[3,2];return[4,G.default.init({dir:M,stringify:JSON.stringify,parse:JSON.parse,encoding:"utf8",logging:!1,forgiveParseErrors:!0})];case 1:e=t.sent();t.label=2;case 2:e;return[2]}})});return K.apply(this,arguments)}var q={get:function e(e){return t(function(){var t,n;return o(this,function(r){switch(r.label){case 0:r.trys.push([0,3,,4]);return[4,R()];case 1:r.sent();return[4,G.default.getItem(e)];case 2:return[2,(t=r.sent())!==null&&t!==void 0?t:null];case 3:n=r.sent();return[2,(console.error('❌ [Storage:get] Error getting key "'.concat(e,'":'),n),null)];case 4:return[2]}})})()},set:function e(e,n){return t(function(){var t;return o(this,function(r){switch(r.label){case 0:r.trys.push([0,3,,4]);return[4,R()];case 1:r.sent();return[4,G.default.setItem(e,n)];case 2:r.sent();return[3,4];case 3:t=r.sent();console.error('❌ [Storage:set] Error setting key "'.concat(e,'":'),t);return[3,4];case 4:return[2]}})})()},remove:function e(e){return t(function(){var t;return o(this,function(n){switch(n.label){case 0:n.trys.push([0,3,,4]);return[4,R()];case 1:n.sent();return[4,G.default.removeItem(e)];case 2:n.sent();return[3,4];case 3:t=n.sent();console.error('❌ [Storage:remove] Error removing key "'.concat(e,'":'),t);return[3,4];case 4:return[2]}})})()},keys:function e(){return t(function(){var e,t;return o(this,function(n){switch(n.label){case 0:n.trys.push([0,3,,4]);return[4,R()];case 1:n.sent();return[4,G.default.keys()];case 2:e=n.sent();return[2,Array.isArray(e)?e:(console.warn("⚠️ [Storage:keys] Invalid keys response:",e),[])];case 3:t=n.sent();return[2,(console.error("❌ [Storage:keys] Error getting keys:",t),[])];case 4:return[2]}})})()},getLogLink:function e(e){return t(function(){return o(this,function(t){try{return[2,"".concat(M," (key: ").concat(e,")")]}catch(e){return[2,(console.error("❌ [Storage:getLogLink] Error getting log link:",e),null)]}return[2]})})()}};var D=x.default.env.DEBUG==="true",U=N.promisify(C.exec),J=j.default,B=J.gray,W=J.blue,Y=function(){return B("[".concat(new Date().toLocaleTimeString(),"]"))};function $(e){var t=j.default[e];return typeof t=="function"?t:j.default.green}function z(e,t,n,r){var s=$(t);console.log("".concat(Y()," ").concat(s("".concat(n," ").concat(e))," ").concat(r))}function Q(e,t){var n=arguments.length>2&&arguments[2]!==void 0?arguments[2]:{},r=n.color,s=r===void 0?"green":r,i=n.padding,c=i===void 0?1:i,o=n.margin,a=o===void 0?1:o,u=n.borderStyle,l=u===void 0?"round":u,f=n.titleColor,p=f===void 0?"bold":f;var d=$(s),h=$(p);if(typeof t=="string"){console.log((0,I.default)(h(d("".concat(e,"\n").concat(t))),{padding:c,margin:a,borderStyle:l,borderColor:s}));return}Array.isArray(t)&&t.length&&(t.forEach(function(e){var t=e.file,n=e.position,r=e.rule,s=e.message;console.log("".concat(Y()," ").concat(d("File:")," ").concat(W("".concat(t).concat(n?":".concat(n):"")))),r&&console.log("   ".concat(d("Rule:")," ").concat(d(r))),console.log("   ".concat(d("Message:")," ").concat(d(s)))}),console.log((0,I.default)(h(d("".concat(e,": ").concat(t.length))),{padding:c,margin:a,borderStyle:l,borderColor:s})),console.log(B("─".repeat(40))))}var V={success:function(e){return z("SUCCESS","green","✔",e)},error:function(e){return z("ERROR","red","✖",e)},warning:function(e){return z("WARNING","yellow","⚠",e)},info:function(e){return z("INFO","blue","ℹ",e)},printBoxedLog:Q},X=function(e){return"error_list:".concat(e)};function Z(e){return ee.apply(this,arguments)}function ee(){ee=t(function(e){var n,r,s;return o(this,function(i){switch(i.label){case 0:if(e.length===0)return[2];n=Date.now(),r=X(n);i.label=1;case 1:i.trys.push([1,3,,4]);return[4,q.set(r,{errors:e,timestamp:n})];case 2:i.sent(),setTimeout(/*#__PURE__*/t(function(){var e;return o(this,function(t){switch(t.label){case 0:return[4,q.getLogLink(r)];case 1:e=t.sent();e&&V.info("\uD83D\uDCC2 Open the error list manually: ".concat(e));return[2]}})}),10);return[3,4];case 3:s=i.sent();V.error("Failed to save errors: ".concat(s.message));return[3,4];case 4:return[2]}})});return ee.apply(this,arguments)}function et(){return en.apply(this,arguments)}function en(){en=t(function(){var e,n,r;return o(this,function(s){switch(s.label){case 0:s.trys.push([0,3,,4]);return[4,q.keys()];case 1:e=s.sent(),n=Array.isArray(e)?e.filter(function(e){var t;return e===null||e===void 0?void 0:(t=e.startsWith)===null||t===void 0?void 0:t.call(e,"error_list:")}):[];return[4,Promise.all(n.map(/*#__PURE__*/function(){var e=t(function(e){var t;return o(this,function(n){switch(n.label){case 0:return[4,q.get(e)];case 1:return[2,((t=n.sent())===null||t===void 0?void 0:t.errors)||[]]}})});return function(t){return e.apply(this,arguments)}}()))];case 2:return[2,s.sent().flat()];case 3:r=s.sent();return[2,(V.error("Failed to retrieve stored errors: ".concat(r.message)),[])];case 4:return[2]}})});return en.apply(this,arguments)}function er(){return es.apply(this,arguments)}function es(){es=t(function(){var e,t,n;return o(this,function(r){switch(r.label){case 0:r.trys.push([0,3,,4]);return[4,q.keys()];case 1:e=r.sent(),t=Array.isArray(e)?e.filter(function(e){var t;return e===null||e===void 0?void 0:(t=e.startsWith)===null||t===void 0?void 0:t.call(e,"error_list:")}):[];return[4,Promise.all(t.map(function(e){return q.remove(e)}))];case 2:r.sent();return[3,4];case 3:n=r.sent();V.error("Failed to clear error lists: ".concat(n.message));return[3,4];case 4:return[2]}})});return es.apply(this,arguments)}function ei(e){var t=[],n=[],r="",s=/^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/,i=/^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/,c=/^✖\s+(.*?)\s+\[(.*?)\]$/;e.split("\n").forEach(function(e){if(e.startsWith("/"))r=e.trim();else{var o=s.exec(e)||[],a=i.exec(e)||[],u=c.exec(e)||[];o.length&&r?t.push({file:r,position:"".concat(o[1],":").concat(o[2]),type:o[3]==="error"?"error":"warning",message:o[4].trim(),rule:o[5].trim()}):a.length?t.push({file:a[1],position:"".concat(a[2],":").concat(a[3]),type:a[4]==="error"?"error":"warning",message:a[5].trim()}):u.length?t.push({file:"commitlint",type:"error",message:u[1].trim(),rule:u[2].trim()}):n.push(e.trim())}}),t.length&&Z(t),n.length&&D&&(V.warning("Unmatched lines:"),n.forEach(function(e){return console.log("  ".concat(e))}))}function ec(e){try{var t=JSON.parse(e),n=[];t.forEach(function(e){var t=e.filePath,r=e.messages;r.forEach(function(e){var r=e.severity,s=e.line,i=e.column,c=e.ruleId,o=e.message;n.push({type:r===2?"error":"warning",file:t,position:"".concat(s,":").concat(i),rule:c,message:o})})}),n.length&&Z(n)}catch(t){ei(e)}}function eo(e){return ea.apply(this,arguments)}function ea(){ea=t(function(e){var t,n,r,s,i,c,a,u,l;var f=arguments;return o(this,function(o){switch(o.label){case 0:t=f.length>1&&f[1]!==void 0?f[1]:ec;n=new AbortController;x.default.on("SIGINT",function(){V.warning("Process interrupted. Terminating..."),n.abort(),x.default.exit()});o.label=1;case 1:o.trys.push([1,3,,4]);return[4,U(e,{maxBuffer:0x6400000,signal:n.signal})];case 2:r=o.sent(),s=r.stdout,i=r.stderr;[s,i].forEach(function(e){return e&&t(e)});return[3,4];case 3:c=o.sent();a=c.stdout,u=c.stderr,l=c.message;[a,u].forEach(function(e){return e&&t(e)}),!u&&!a&&V.error("Command failed: ".concat(l));return[3,4];case 4:return[2]}})});return ea.apply(this,arguments)}var eu=g(require("fs"),1),el=function(e){return eu.existsSync(e)};var ef=g(require("node-fetch"),1),ep=g(require("fs"),1),ed=g(require("path"),1);var eh=24*60*60*1e3;function eg(e){return e?ed.default.join(k,"node_modules",e,"package.json"):ed.default.join(k,"package.json")}function ey(e){return em.apply(this,arguments)}function em(){em=t(function(e){var t,n,r,s,i,c,a,u,l,f;var p=arguments;return o(this,function(o){switch(o.label){case 0:t=p.length>1&&p[1]!==void 0?p[1]:!1;n="npm_version:".concat(e),r="npm_metadata:".concat(e);return[4,q.get(n)];case 1:s=o.sent();return[4,q.get(r)];case 2:i=o.sent(),c=s&&Date.now()-s.timestamp<eh;if(!t&&c)return[2,s.version];a={};(i===null||i===void 0?void 0:i.etag)&&(a["If-None-Match"]=i.etag),(i===null||i===void 0?void 0:i.lastModified)&&(a["If-Modified-Since"]=i.lastModified);o.label=3;case 3:o.trys.push([3,8,,9]);return[4,(0,ef.default)("https://registry.npmjs.org/".concat(e,"/latest"),{headers:a})];case 4:u=o.sent();if(u.status===304&&s)return[2,s.version];if(!u.ok)throw new Error("Failed to fetch latest version: ".concat(u.statusText));return[4,u.json()];case 5:l=o.sent().version;return[4,q.set(n,{version:l,timestamp:Date.now()})];case 6:o.sent();return[4,q.set(r,{etag:u.headers.get("ETag")||void 0,lastModified:u.headers.get("Last-Modified")||void 0})];case 7:return[2,(o.sent(),l)];case 8:f=o.sent();if(V.error("Error fetching latest version for ".concat(e,": ").concat(f.message)),s)return[2,(V.warning("Falling back to cached version for ".concat(e,": ").concat(s.version)),s.version)];throw f;case 9:return[2]}})});return em.apply(this,arguments)}function ev(e){return eb.apply(this,arguments)}function eb(){eb=t(function(e){var t,n,r,s,i;var c=arguments;return o(this,function(o){switch(o.label){case 0:t=c.length>1&&c[1]!==void 0?c[1]:!0;o.label=1;case 1:o.trys.push([1,3,,4]);n=eg(e);if(!ep.default.existsSync(n))return[2,(V.info("".concat(e," is not installed.")),!0)];r=JSON.parse(ep.default.readFileSync(n,"utf-8")).version;return[4,ey(e,t)];case 2:s=o.sent();return[2,(V.info("Installed version of ".concat(e,": ").concat(r)),V.info("Latest version of ".concat(e,": ").concat(s)),r!==s)];case 3:i=o.sent();return[2,(V.warning("Failed to check version for ".concat(e,": ").concat(i.message)),!0)];case 4:return[2]}})});return eb.apply(this,arguments)}function ew(e){return eO.apply(this,arguments)}function eO(){eO=t(function(e){var t,s,c,a;return o(this,function(o){switch(o.label){case 0:o.trys.push([0,4,,5]);return[4,ey(e,!0)];case 1:t=o.sent(),s=eg();if(!ep.default.existsSync(s)){V.error("package.json not found. Cannot update ".concat(e));return[2]}c=JSON.parse(ep.default.readFileSync(s,"utf-8"));c.dependencies=i(r({},c.dependencies),n({},e,t)),ep.default.writeFileSync(s,JSON.stringify(c,null,2)),V.info("Updated ".concat(e," to version ").concat(t));return[4,eS()];case 2:o.sent();return[4,eo("pnpm run lint:fix")];case 3:o.sent(),V.success("".concat(e," updated successfully."));return[3,5];case 4:a=o.sent();throw V.error("Failed to update ".concat(e,": ").concat(a.message)),a;case 5:return[2]}})});return eO.apply(this,arguments)}function e_(e,t){try{var n=ed.default.join(e,"package.json");return ep.default.existsSync(n)?JSON.parse(ep.default.readFileSync(n,"utf-8")).name===t:!1}catch(e){return V.error("Error reading package.json: ".concat(e.message)),!1}}function eS(){return eA.apply(this,arguments)}function eA(){eA=t(function(){var e,t,n,r,s,i,c,a,u,l,f;return o(this,function(o){switch(o.label){case 0:e=[{command:"pnpm install",message:"Standard installation"},{command:"pnpm install --legacy-peer-deps",message:"Attempting installation with --legacy-peer-deps"},{command:"pnpm install --force",message:"Attempting forced installation"}];t=true,n=false,r=undefined;o.label=1;case 1:o.trys.push([1,8,9,10]);s=e[Symbol.iterator]();o.label=2;case 2:if(!!(t=(i=s.next()).done))return[3,7];c=i.value,a=c.command,u=c.message;o.label=3;case 3:o.trys.push([3,5,,6]);V.info("".concat(u,"..."));return[4,eo(a)];case 4:o.sent(),V.success("Dependencies installed using: ".concat(a));return[2];case 5:l=o.sent();V.warning("Failed with: ".concat(a)),V.error("Error: ".concat(l.message));return[3,6];case 6:t=true;return[3,2];case 7:return[3,10];case 8:f=o.sent();n=true;r=f;return[3,10];case 9:try{if(!t&&s.return!=null){s.return()}}finally{if(n){throw r}}return[7];case 10:throw new Error("Failed to install dependencies after multiple attempts.")}})});return eA.apply(this,arguments)}var eT={TS_CONFIG_PATH:b.resolve(k,"tsconfig.json"),HUSKY_PATH:b.resolve(k,".husky"),GIT_HOOK_PATH:b.resolve(k,".git/hooks"),GIT_COMMIT_MSG:b.resolve(k,".git/COMMIT_EDITMSG"),SIMPLE_GIT_HOOKS_PATH:b.resolve(k,".simple-git-hooks.json"),PACKAGE_JSON_PATH:b.resolve(k,"package.json"),PACKAGE_LOCK_PATH:b.resolve(k,"pnpm-lock.yaml"),PACKAGE_NAME:"@cyberskill/shared",LINT_STAGED_CONFIG_PATH:b.resolve(E,"./configs/lint-staged/base.js"),COMMITLINT_CONFIG_PATH:b.resolve(E,"./configs/commitlint/base.js"),UNIT_TEST_CONFIG_PATH:b.resolve(E,"./configs/vitest/react/unit.js"),E2E_TEST_CONFIG_PATH:b.resolve(E,"./configs/vitest/react/e2e.js"),HOOKS_CONFIG:{postinstall:"pnpm exec cyberskill setup","pre-commit":"pnpm exec cyberskill lint-staged","commit-msg":"pnpm exec cyberskill commitlint"},HOOKS_CONFIG_LOCAL:{postinstall:"pnpm exec tsx src/cli.ts setup","pre-commit":"pnpm exec tsx src/cli.ts lint-staged","commit-msg":"pnpm exec tsx src/cli.ts commitlint","pre-push":"git pull"}};function eP(e,t){return eE.apply(this,arguments)}function eE(){eE=t(function(e,t){return o(this,function(n){switch(n.label){case 0:V.info("".concat(e,"..."));return[4,eo(t)];case 1:n.sent(),V.success("".concat(e," completed."));return[2]}})});return eE.apply(this,arguments)}function ek(){return eI.apply(this,arguments)}function eI(){eI=t(function(){var e;return o(this,function(t){switch(t.label){case 0:if(!el(eT.TS_CONFIG_PATH))return[3,2];return[4,eP("Running TypeScript check","pnpm exec tsc -p ".concat(eT.TS_CONFIG_PATH," --noEmit"))];case 1:e=t.sent();return[3,3];case 2:e=V.warning("TypeScript config not found. Skipping TypeScript check.");t.label=3;case 3:e;return[2]}})});return eI.apply(this,arguments)}function ej(){return eC.apply(this,arguments)}function eC(){eC=t(function(){var e;var t=arguments;return o(this,function(n){switch(n.label){case 0:e=t.length>0&&t[0]!==void 0?t[0]:!1;return[4,eP("Running ESLint ".concat(e?"(with fix)":"(without fix)"),"pnpm exec eslint ".concat(k).concat(e?" --fix":""))];case 1:n.sent();return[2]}})});return eC.apply(this,arguments)}function ex(){return eN.apply(this,arguments)}function eN(){eN=t(function(){var e,t,n;return o(this,function(r){switch(r.label){case 0:return[4,et()];case 1:e=r.sent(),t=e.filter(function(e){return e.type==="error"}),n=e.filter(function(e){return e.type==="warning"});!t.length&&!n.length?V.printBoxedLog("✔ NO ISSUES FOUND","",{color:"green"}):(V.printBoxedLog("⚠ Warnings",n,{color:"yellow"}),V.printBoxedLog("✖ Errors",t,{color:"red"}));return[2]}})});return eN.apply(this,arguments)}function eG(){return eF.apply(this,arguments)}function eF(){eF=t(function(){var e;return o(this,function(t){switch(t.label){case 0:if(!e_(k,eT.PACKAGE_NAME))return[3,5];t.label=1;case 1:t.trys.push([1,4,,5]);return[4,eP("Building @cyberskill/shared","pnpm run build")];case 2:t.sent();return[4,eo("git add dist")];case 3:t.sent(),V.success("Built and staged @cyberskill/shared");return[3,5];case 4:e=t.sent();throw V.error("Failed to build and stage @cyberskill/shared: ".concat(e.message)),e;case 5:return[4,eP("Running lint-staged","pnpm exec lint-staged --config ".concat(eT.LINT_STAGED_CONFIG_PATH))];case 6:t.sent(),ex();return[2]}})});return eF.apply(this,arguments)}function eH(){return eL.apply(this,arguments)}function eL(){eL=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,eP("Inspecting ESLint rules","pnpm exec @eslint/config-inspector")];case 1:e.sent();return[2]}})});return eL.apply(this,arguments)}function eM(){return eR.apply(this,arguments)}function eR(){eR=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,er()];case 1:e.sent();return[4,Promise.all([ek(),ej()])];case 2:e.sent(),ex();return[2]}})});return eR.apply(this,arguments)}function eK(){return eq.apply(this,arguments)}function eq(){eq=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,er()];case 1:e.sent();return[4,Promise.all([ek(),ej(!0)])];case 2:e.sent(),ex();return[2]}})});return eq.apply(this,arguments)}function eD(){return eU.apply(this,arguments)}function eU(){eU=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,eP("Running commit lint","pnpm exec commitlint --edit ".concat(eT.GIT_COMMIT_MSG," --config ").concat(eT.COMMITLINT_CONFIG_PATH))];case 1:e.sent(),ex();return[2]}})});return eU.apply(this,arguments)}function eJ(){return eB.apply(this,arguments)}function eB(){eB=t(function(){var e,t,n,r,s,i;return o(this,function(c){switch(c.label){case 0:if(V.info("Starting project setup..."),!el(eT.PACKAGE_JSON_PATH)){V.error("package.json not found. Aborting setup.");return[2]}c.label=1;case 1:c.trys.push([1,9,,10]);t=JSON.parse(v.readFileSync(eT.PACKAGE_JSON_PATH,"utf-8"));r=e_(k,eT.PACKAGE_NAME);if(r)return[3,4];s=(e=t.dependencies)===null||e===void 0?void 0:e[eT.PACKAGE_NAME];if(!s)return[3,3];return[4,ev(eT.PACKAGE_NAME)];case 2:s=!c.sent();c.label=3;case 3:r=s;c.label=4;case 4:if(!r)return[3,5];n=V.success("Cyberskill package is already up to date.");return[3,7];case 5:V.info("\uD83D\uDCE6 Updating Cyberskill package...");return[4,ew(eT.PACKAGE_NAME)];case 6:n=(c.sent(),V.success("Cyberskill package updated successfully."));c.label=7;case 7:n;return[4,eW()];case 8:c.sent(),V.success("Project setup completed.");return[3,10];case 9:i=c.sent();throw V.error("Failed to setup project: ".concat(i.message)),i;case 10:return[2]}})});return eB.apply(this,arguments)}function eW(){return eY.apply(this,arguments)}function eY(){eY=t(function(){var e,t,n;return o(this,function(r){switch(r.label){case 0:V.info("Setting up Git hooks...");e=el(eT.HUSKY_PATH);if(!e)return[3,3];return[4,eo("pnpm exec rimraf ".concat(eT.HUSKY_PATH," ").concat(eT.GIT_HOOK_PATH))];case 1:r.sent();return[4,eo("git config core.hooksPath ".concat(eT.GIT_HOOK_PATH))];case 2:e=r.sent();r.label=3;case 3:e;t=e_(k,eT.PACKAGE_NAME);v.writeFileSync(eT.SIMPLE_GIT_HOOKS_PATH,JSON.stringify(t?eT.HOOKS_CONFIG_LOCAL:eT.HOOKS_CONFIG,null,4));n=b.resolve(".gitignore");el(n)?v.readFileSync(n,"utf8").split("\n").includes(".simple-git-hooks.json")?V.info(".simple-git-hooks.json is already ignored in .gitignore"):(v.appendFileSync(n,"\n# Ignore simple-git-hooks config\n.simple-git-hooks.json\n"),V.info("Added .simple-git-hooks.json to .gitignore")):(v.writeFileSync(n,"# Ignore simple-git-hooks config\n.simple-git-hooks.json\n"),V.info("Created .gitignore and added .simple-git-hooks.json"));return[4,eo("pnpm exec simple-git-hooks")];case 4:r.sent(),V.success("Git hooks configured successfully.");return[2]}})});return eY.apply(this,arguments)}function e$(){return ez.apply(this,arguments)}function ez(){ez=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,eP("Resetting project","pnpm exec rimraf ".concat(k,"/node_modules ").concat(eT.PACKAGE_LOCK_PATH))];case 1:e.sent();return[4,eS()];case 2:e.sent();return[4,eW()];case 3:e.sent();return[2]}})});return ez.apply(this,arguments)}function eQ(){return eV.apply(this,arguments)}function eV(){eV=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,eP("Inspecting project dependencies","pnpm exec node-modules-inspector")];case 1:e.sent();return[2]}})});return eV.apply(this,arguments)}function eX(){return eZ.apply(this,arguments)}function eZ(){eZ=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,eP("Running unit tests","pnpm exec vitest --config ".concat(eT.UNIT_TEST_CONFIG_PATH))];case 1:e.sent();return[2]}})});return eZ.apply(this,arguments)}function e0(){return e1.apply(this,arguments)}function e1(){e1=t(function(){return o(this,function(e){switch(e.label){case 0:return[4,eP("Running E2E tests","pnpm exec vitest --config ".concat(eT.E2E_TEST_CONFIG_PATH))];case 1:e.sent();return[2]}})});return e1.apply(this,arguments)}(0,_.default)((0,O.hideBin)(w.default.argv)).command("lint","Run linting checks",eM).command("lint:fix","Fix linting issues",eK).command("lint:inspect","Inspect linting rules",eH).command("lint-staged","Run lint-staged",eG).command("commitlint","Run commitlint",eD).command("setup","Run project setup",eJ).command("reset","Reset project dependencies",e$).command("inspect","Inspect project dependencies",eQ).command("test:unit","Run unit tests",eX).command("test:e2e","Run e2e tests",e0).help().parse();
+"use strict";
+function _array_like_to_array(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
+    return arr2;
+}
+function _array_with_holes(arr) {
+    if (Array.isArray(arr)) return arr;
+}
+function _array_without_holes(arr) {
+    if (Array.isArray(arr)) return _array_like_to_array(arr);
+}
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+        var info = gen[key](arg);
+        var value = info.value;
+    } catch (error) {
+        reject(error);
+        return;
+    }
+    if (info.done) {
+        resolve(value);
+    } else {
+        Promise.resolve(value).then(_next, _throw);
+    }
+}
+function _async_to_generator(fn) {
+    return function() {
+        var self = this, args = arguments;
+        return new Promise(function(resolve, reject) {
+            var gen = fn.apply(self, args);
+            function _next(value) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+            }
+            function _throw(err) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+            }
+            _next(undefined);
+        });
+    };
+}
+function _define_property(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+function _iterable_to_array(iter) {
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+function _iterable_to_array_limit(arr, i) {
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+    if (_i == null) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _s, _e;
+    try {
+        for(_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true){
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally{
+        try {
+            if (!_n && _i["return"] != null) _i["return"]();
+        } finally{
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
+}
+function _non_iterable_rest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _non_iterable_spread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _object_spread(target) {
+    for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i] != null ? arguments[i] : {};
+        var ownKeys = Object.keys(source);
+        if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+        }
+        ownKeys.forEach(function(key) {
+            _define_property(target, key, source[key]);
+        });
+    }
+    return target;
+}
+function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+    if (Object.getOwnPropertySymbols) {
+        var symbols = Object.getOwnPropertySymbols(object);
+        if (enumerableOnly) {
+            symbols = symbols.filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+            });
+        }
+        keys.push.apply(keys, symbols);
+    }
+    return keys;
+}
+function _object_spread_props(target, source) {
+    source = source != null ? source : {};
+    if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+        ownKeys(Object(source)).forEach(function(key) {
+            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+    }
+    return target;
+}
+function _sliced_to_array(arr, i) {
+    return _array_with_holes(arr) || _iterable_to_array_limit(arr, i) || _unsupported_iterable_to_array(arr, i) || _non_iterable_rest();
+}
+function _to_consumable_array(arr) {
+    return _array_without_holes(arr) || _iterable_to_array(arr) || _unsupported_iterable_to_array(arr) || _non_iterable_spread();
+}
+function _type_of(obj) {
+    "@swc/helpers - typeof";
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+}
+function _unsupported_iterable_to_array(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _array_like_to_array(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+}
+function _ts_generator(thisArg, body) {
+    var f, y, t, g, _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    };
+    return g = {
+        next: verb(0),
+        "throw": verb(1),
+        "return": verb(2)
+    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(_)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+}
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = function(target, all) {
+    for(var name in all)__defProp(target, name, {
+        get: all[name],
+        enumerable: true
+    });
+};
+var __copyProps = function(to, from, except, desc) {
+    if (from && (typeof from === "undefined" ? "undefined" : _type_of(from)) === "object" || typeof from === "function") {
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+        try {
+            var _loop = function() {
+                var key = _step.value;
+                if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+                    get: function() {
+                        return from[key];
+                    },
+                    enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+                });
+            };
+            for(var _iterator = __getOwnPropNames(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true)_loop();
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally{
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                    _iterator.return();
+                }
+            } finally{
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    }
+    return to;
+};
+var __toESM = function(mod, isNodeMode, target) {
+    return target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(// If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+        value: mod,
+        enumerable: true
+    }) : target, mod);
+};
+var __toCommonJS = function(mod) {
+    return __copyProps(__defProp({}, "__esModule", {
+        value: true
+    }), mod);
+};
+// src/cli.ts
+var cli_exports = {};
+__export(cli_exports, {
+    installDependencies: function() {
+        return installDependencies;
+    },
+    updatePackage: function() {
+        return updatePackage;
+    }
+});
+module.exports = __toCommonJS(cli_exports);
+// node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.52.2_@types+node@22.13.15__@swc+core@1.11.16_@swc_2cf618e3551c9a9c667a9bb2a289f06e/node_modules/tsup/assets/cjs_shims.js
+var getImportMetaUrl = function() {
+    return typeof document === "undefined" ? new URL("file:".concat(__filename)).href : document.currentScript && document.currentScript.src || new URL("main.js", document.baseURI).href;
+};
+var importMetaUrl = /* @__PURE__ */ getImportMetaUrl();
+// src/cli.ts
+var import_node_process4 = __toESM(require("process"), 1);
+var import_helpers = require("yargs/helpers");
+var import_yargs = __toESM(require("yargs/yargs"), 1);
+// src/constants/path.ts
+var import_node_process3 = __toESM(require("process"), 1);
+var import_node_url = require("url");
+// src/utils/command.ts
+var import_boxen = __toESM(require("boxen"), 1);
+var import_chalk = __toESM(require("chalk"), 1);
+var import_node_child_process = require("child_process");
+var import_node_process2 = __toESM(require("process"), 1);
+var util = __toESM(require("util"), 1);
+// src/utils/package.ts
+var import_node_fetch = __toESM(require("node-fetch"), 1);
+// src/utils/fs.ts
+var fs = __toESM(require("fs"), 1);
+var existsSync2 = function(filePath) {
+    return fs.existsSync(filePath);
+};
+function readFileSync2(filePath, options) {
+    var content = fs.readFileSync(filePath, "utf-8");
+    if (options === null || options === void 0 ? void 0 : options.asJson) {
+        try {
+            var parsed = JSON.parse(content);
+            if ((typeof parsed === "undefined" ? "undefined" : _type_of(parsed)) === "object" && parsed !== null) {
+                return parsed;
+            }
+            throw new Error("Parsed JSON is not an object or array");
+        } catch (e) {
+            throw new Error("Failed to parse JSON from file: ".concat(filePath));
+        }
+    }
+    return content;
+}
+function writeFileSync2(filePath, data) {
+    var options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
+    var _options_isJson = options.isJson, isJson = _options_isJson === void 0 ? false : _options_isJson;
+    var content = isJson && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
+    fs.writeFileSync(filePath, content, "utf-8");
+}
+function appendFileSync2(filePath, data) {
+    var options = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {};
+    var _options_isJson = options.isJson, isJson = _options_isJson === void 0 ? false : _options_isJson;
+    var content = isJson && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
+    fs.appendFileSync(filePath, content, "utf-8");
+}
+// src/utils/path.ts
+var import_node_module = require("module");
+var path = __toESM(require("path"), 1);
+function resolveCyberSkillPath() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, [
+        CYBERSKILL_DIRECTORY
+    ].concat(_to_consumable_array(urls)));
+}
+function resolveWorkingPath() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, [
+        WORKING_DIRECTORY
+    ].concat(_to_consumable_array(urls)));
+}
+function resolve2() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, _to_consumable_array(urls));
+}
+function dirname2(url) {
+    return path.dirname(url);
+}
+function join2() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).join.apply(_path, _to_consumable_array(urls));
+}
+// src/utils/storage-server.ts
+var import_node_persist = __toESM(require("node-persist"), 1);
+var import_node_os = __toESM(require("os"), 1);
+var import_node_path = __toESM(require("path"), 1);
+var import_node_process = __toESM(require("process"), 1);
+function getStorageDir() {
+    return import_node_process.default.env.CYBERSKILL_STORAGE_DIR || import_node_path.default.join(import_node_os.default.homedir(), CYBERSKILL_STORAGE);
+}
+function initNodePersist() {
+    return _initNodePersist.apply(this, arguments);
+}
+function _initNodePersist() {
+    _initNodePersist = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    if (!!import_node_persist.default.defaultInstance) return [
+                        3,
+                        2
+                    ];
+                    return [
+                        4,
+                        import_node_persist.default.init({
+                            dir: getStorageDir(),
+                            stringify: JSON.stringify,
+                            parse: JSON.parse,
+                            encoding: "utf8",
+                            logging: false,
+                            forgiveParseErrors: true
+                        })
+                    ];
+                case 1:
+                    _state.sent();
+                    _state.label = 2;
+                case 2:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _initNodePersist.apply(this, arguments);
+}
+var storageServer = {
+    get: function get(key) {
+        return _async_to_generator(function() {
+            var result, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            import_node_persist.default.getItem(key)
+                        ];
+                    case 2:
+                        result = _state.sent();
+                        return [
+                            2,
+                            result !== null && result !== void 0 ? result : null
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error('❌ [Storage:get] Error getting key "'.concat(key, '":'), error);
+                        return [
+                            2,
+                            null
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    set: function set(key, value) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            import_node_persist.default.setItem(key, value)
+                        ];
+                    case 2:
+                        _state.sent();
+                        return [
+                            3,
+                            4
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error('❌ [Storage:set] Error setting key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            4
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    remove: function remove(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            import_node_persist.default.removeItem(key)
+                        ];
+                    case 2:
+                        _state.sent();
+                        return [
+                            3,
+                            4
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error('❌ [Storage:remove] Error removing key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            4
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    keys: function keys() {
+        return _async_to_generator(function() {
+            var keys, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            3,
+                            ,
+                            4
+                        ]);
+                        return [
+                            4,
+                            initNodePersist()
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            4,
+                            import_node_persist.default.keys()
+                        ];
+                    case 2:
+                        keys = _state.sent();
+                        if (!Array.isArray(keys)) {
+                            console.warn("⚠️ [Storage:keys] Invalid keys response:", keys);
+                            return [
+                                2,
+                                []
+                            ];
+                        }
+                        return [
+                            2,
+                            keys
+                        ];
+                    case 3:
+                        error = _state.sent();
+                        console.error("❌ [Storage:keys] Error getting keys:", error);
+                        return [
+                            2,
+                            []
+                        ];
+                    case 4:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    getLogLink: function getLogLink(key) {
+        return _async_to_generator(function() {
+            var storagePath;
+            return _ts_generator(this, function(_state) {
+                try {
+                    storagePath = getStorageDir();
+                    return [
+                        2,
+                        "".concat(storagePath, " (key: ").concat(key, ")")
+                    ];
+                } catch (error) {
+                    console.error("❌ [Storage:getLogLink] Error getting log link:", error);
+                    return [
+                        2,
+                        null
+                    ];
+                }
+                return [
+                    2
+                ];
+            });
+        })();
+    }
+};
+// src/utils/package.ts
+var CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1e3;
+function getPackageJson(packageName) {
+    var workingPackageJsonPath = join2(WORKING_DIRECTORY, PACKAGE_JSON);
+    if (existsSync2(workingPackageJsonPath)) {
+        try {
+            var pkg = readFileSync2(workingPackageJsonPath, {
+                asJson: true
+            });
+            if (pkg.name === packageName) {
+                return {
+                    path: workingPackageJsonPath,
+                    file: pkg
+                };
+            }
+        } catch (error) {
+            commandLog.warning("Failed to read local package.json: ".concat(error.message));
+        }
+    }
+    var externalPackageJsonPath = join2(WORKING_DIRECTORY, NODE_MODULES, packageName, PACKAGE_JSON);
+    if (existsSync2(externalPackageJsonPath)) {
+        try {
+            var pkg1 = readFileSync2(externalPackageJsonPath, {
+                asJson: true
+            });
+            if (pkg1.name === packageName) {
+                return {
+                    path: externalPackageJsonPath,
+                    file: pkg1
+                };
+            }
+        } catch (error) {
+            commandLog.warning("Failed to read node_modules package.json for ".concat(packageName, ": ").concat(error.message));
+        }
+    }
+    return false;
+}
+function getLatestPackageVersion(packageName) {
+    return _getLatestPackageVersion.apply(this, arguments);
+}
+function _getLatestPackageVersion() {
+    _getLatestPackageVersion = _async_to_generator(function(packageName) {
+        var forceRefresh, versionCacheKey, metadataCacheKey, cached, metadata, isCacheValid, headers, response, data, latestVersion, error;
+        var _arguments = arguments;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    forceRefresh = _arguments.length > 1 && _arguments[1] !== void 0 ? _arguments[1] : false;
+                    versionCacheKey = "npm_version:".concat(packageName);
+                    metadataCacheKey = "npm_metadata:".concat(packageName);
+                    return [
+                        4,
+                        storageServer.get(versionCacheKey)
+                    ];
+                case 1:
+                    cached = _state.sent();
+                    return [
+                        4,
+                        storageServer.get(metadataCacheKey)
+                    ];
+                case 2:
+                    metadata = _state.sent();
+                    isCacheValid = cached && Date.now() - cached.timestamp < CACHE_EXPIRATION_MS;
+                    if (!forceRefresh && isCacheValid) {
+                        return [
+                            2,
+                            cached.version
+                        ];
+                    }
+                    headers = {};
+                    if (metadata === null || metadata === void 0 ? void 0 : metadata.etag) {
+                        headers["If-None-Match"] = metadata.etag;
+                    }
+                    if (metadata === null || metadata === void 0 ? void 0 : metadata.lastModified) {
+                        headers["If-Modified-Since"] = metadata.lastModified;
+                    }
+                    _state.label = 3;
+                case 3:
+                    _state.trys.push([
+                        3,
+                        8,
+                        ,
+                        9
+                    ]);
+                    return [
+                        4,
+                        (0, import_node_fetch.default)("https://registry.npmjs.org/".concat(packageName, "/latest"), {
+                            headers: headers
+                        })
+                    ];
+                case 4:
+                    response = _state.sent();
+                    if (response.status === 304 && cached) {
+                        return [
+                            2,
+                            cached.version
+                        ];
+                    }
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch latest version: ".concat(response.statusText));
+                    }
+                    return [
+                        4,
+                        response.json()
+                    ];
+                case 5:
+                    data = _state.sent();
+                    latestVersion = data.version;
+                    return [
+                        4,
+                        storageServer.set(versionCacheKey, {
+                            version: latestVersion,
+                            timestamp: Date.now()
+                        })
+                    ];
+                case 6:
+                    _state.sent();
+                    return [
+                        4,
+                        storageServer.set(metadataCacheKey, {
+                            etag: response.headers.get("ETag") || void 0,
+                            lastModified: response.headers.get("Last-Modified") || void 0
+                        })
+                    ];
+                case 7:
+                    _state.sent();
+                    return [
+                        2,
+                        latestVersion
+                    ];
+                case 8:
+                    error = _state.sent();
+                    commandLog.error("Error fetching latest version for ".concat(packageName, ": ").concat(error.message));
+                    if (cached) {
+                        commandLog.warning("Falling back to cached version for ".concat(packageName, ": ").concat(cached.version));
+                        return [
+                            2,
+                            cached.version
+                        ];
+                    }
+                    throw error;
+                case 9:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _getLatestPackageVersion.apply(this, arguments);
+}
+function checkPackage(packageName) {
+    return _checkPackage.apply(this, arguments);
+}
+function _checkPackage() {
+    _checkPackage = _async_to_generator(function(packageName) {
+        var result, packageFound, cyberskillPackageJsonPath, isCurrentProject, _tmp, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    result = {
+                        isInstalled: false,
+                        isCurrentProject: false,
+                        installedPath: "",
+                        installedVersion: "",
+                        latestVersion: "",
+                        file: {}
+                    };
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        5,
+                        ,
+                        6
+                    ]);
+                    packageFound = getPackageJson(packageName);
+                    if (!packageFound) {
+                        return [
+                            2,
+                            result
+                        ];
+                    }
+                    cyberskillPackageJsonPath = resolveCyberSkillPath(PACKAGE_JSON);
+                    isCurrentProject = packageFound.path === cyberskillPackageJsonPath;
+                    result.file = packageFound.file;
+                    result.isInstalled = true;
+                    result.installedPath = packageFound.path;
+                    result.installedVersion = packageFound.file.version;
+                    result.isCurrentProject = isCurrentProject;
+                    if (!isCurrentProject) return [
+                        3,
+                        2
+                    ];
+                    _tmp = packageFound.file.version;
+                    return [
+                        3,
+                        4
+                    ];
+                case 2:
+                    return [
+                        4,
+                        getLatestPackageVersion(packageName, true)
+                    ];
+                case 3:
+                    _tmp = _state.sent();
+                    _state.label = 4;
+                case 4:
+                    result.latestVersion = _tmp;
+                    return [
+                        2,
+                        result
+                    ];
+                case 5:
+                    error = _state.sent();
+                    commandLog.error('Error checking package "'.concat(packageName, '": ').concat(error.message));
+                    return [
+                        2,
+                        result
+                    ];
+                case 6:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _checkPackage.apply(this, arguments);
+}
+// src/utils/command.ts
+var DEBUG = import_node_process2.default.env.DEBUG === "true";
+var execPromise = util.promisify(import_node_child_process.exec);
+var _import_chalk_default = import_chalk.default, gray = _import_chalk_default.gray, blue = _import_chalk_default.blue;
+var getTimeStamp = function() {
+    return gray("[".concat(/* @__PURE__ */ new Date().toLocaleTimeString(), "]"));
+};
+function chalkKeyword(color) {
+    var chalkColor = import_chalk.default[color];
+    return typeof chalkColor === "function" ? chalkColor : import_chalk.default.green;
+}
+function printLog(type, color, icon, message) {
+    var chalkColor = chalkKeyword(color);
+    console.log("".concat(getTimeStamp(), " ").concat(chalkColor("".concat(icon, " ").concat(type)), " ").concat(message));
+}
+function printBoxedLog(title, content) {
+    var _ref = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : {}, _ref_color = _ref.color, color = _ref_color === void 0 ? "green" : _ref_color, _ref_padding = _ref.padding, padding = _ref_padding === void 0 ? 1 : _ref_padding, _ref_margin = _ref.margin, margin = _ref_margin === void 0 ? 1 : _ref_margin, _ref_borderStyle = _ref.borderStyle, borderStyle = _ref_borderStyle === void 0 ? "round" : _ref_borderStyle, _ref_titleColor = _ref.titleColor, titleColor = _ref_titleColor === void 0 ? "bold" : _ref_titleColor;
+    var chalkColor = chalkKeyword(color);
+    var chalkTitleColor = chalkKeyword(titleColor);
+    if (typeof content === "string") {
+        console.log((0, import_boxen.default)(chalkTitleColor(chalkColor("".concat(title, "\n").concat(content))), {
+            padding: padding,
+            margin: margin,
+            borderStyle: borderStyle,
+            borderColor: color
+        }));
+        return;
+    }
+    if (Array.isArray(content) && content.length) {
+        content.forEach(function(param) {
+            var file = param.file, position = param.position, rule = param.rule, message = param.message;
+            console.log("".concat(getTimeStamp(), " ").concat(chalkColor("File:"), " ").concat(blue("".concat(file).concat(position ? ":".concat(position) : ""))));
+            if (rule) console.log("   ".concat(chalkColor("Rule:"), " ").concat(chalkColor(rule)));
+            console.log("   ".concat(chalkColor("Message:"), " ").concat(chalkColor(message)));
+        });
+        console.log((0, import_boxen.default)(chalkTitleColor(chalkColor("".concat(title, ": ").concat(content.length))), {
+            padding: padding,
+            margin: margin,
+            borderStyle: borderStyle,
+            borderColor: color
+        }));
+        console.log(gray("\u2500".repeat(40)));
+    }
+}
+var commandLog = {
+    success: function(message) {
+        return printLog("SUCCESS", "green", "\u2714", message);
+    },
+    error: function(message) {
+        return printLog("ERROR", "red", "\u2716", message);
+    },
+    warning: function(message) {
+        return printLog("WARNING", "yellow", "\u26A0", message);
+    },
+    info: function(message) {
+        return printLog("INFO", "blue", "\u2139", message);
+    },
+    printBoxedLog: printBoxedLog
+};
+var getErrorListKey = function(timestamp) {
+    return "error_list:".concat(timestamp);
+};
+function saveErrorListToStorage(errorList) {
+    return _saveErrorListToStorage.apply(this, arguments);
+}
+function _saveErrorListToStorage() {
+    _saveErrorListToStorage = _async_to_generator(function(errorList) {
+        var timestamp, key, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    if (errorList.length === 0) {
+                        return [
+                            2
+                        ];
+                    }
+                    timestamp = Date.now();
+                    key = getErrorListKey(timestamp);
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        storageServer.set(key, {
+                            errors: errorList,
+                            timestamp: timestamp
+                        })
+                    ];
+                case 2:
+                    _state.sent();
+                    setTimeout(/*#__PURE__*/ _async_to_generator(function() {
+                        var logPath;
+                        return _ts_generator(this, function(_state) {
+                            switch(_state.label){
+                                case 0:
+                                    return [
+                                        4,
+                                        storageServer.getLogLink(key)
+                                    ];
+                                case 1:
+                                    logPath = _state.sent();
+                                    if (logPath) {
+                                        commandLog.info("\uD83D\uDCC2 Open the error list manually: ".concat(logPath));
+                                    }
+                                    return [
+                                        2
+                                    ];
+                            }
+                        });
+                    }), 10);
+                    return [
+                        3,
+                        4
+                    ];
+                case 3:
+                    error = _state.sent();
+                    commandLog.error("Failed to save errors: ".concat(error.message));
+                    return [
+                        3,
+                        4
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _saveErrorListToStorage.apply(this, arguments);
+}
+function getStoredErrorLists() {
+    return _getStoredErrorLists.apply(this, arguments);
+}
+function _getStoredErrorLists() {
+    _getStoredErrorLists = _async_to_generator(function() {
+        var keys, errorKeys, allErrors, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        storageServer.keys()
+                    ];
+                case 1:
+                    keys = _state.sent();
+                    errorKeys = Array.isArray(keys) ? keys.filter(function(key) {
+                        var _key_startsWith;
+                        return key === null || key === void 0 ? void 0 : (_key_startsWith = key.startsWith) === null || _key_startsWith === void 0 ? void 0 : _key_startsWith.call(key, "error_list:");
+                    }) : [];
+                    return [
+                        4,
+                        Promise.all(errorKeys.map(/*#__PURE__*/ function() {
+                            var _ref = _async_to_generator(function(key) {
+                                var entry;
+                                return _ts_generator(this, function(_state) {
+                                    switch(_state.label){
+                                        case 0:
+                                            return [
+                                                4,
+                                                storageServer.get(key)
+                                            ];
+                                        case 1:
+                                            entry = _state.sent();
+                                            return [
+                                                2,
+                                                (entry === null || entry === void 0 ? void 0 : entry.errors) || []
+                                            ];
+                                    }
+                                });
+                            });
+                            return function(key) {
+                                return _ref.apply(this, arguments);
+                            };
+                        }()))
+                    ];
+                case 2:
+                    allErrors = _state.sent();
+                    return [
+                        2,
+                        allErrors.flat()
+                    ];
+                case 3:
+                    error = _state.sent();
+                    commandLog.error("Failed to retrieve stored errors: ".concat(error.message));
+                    return [
+                        2,
+                        []
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _getStoredErrorLists.apply(this, arguments);
+}
+function clearAllErrorLists() {
+    return _clearAllErrorLists.apply(this, arguments);
+}
+function _clearAllErrorLists() {
+    _clearAllErrorLists = _async_to_generator(function() {
+        var keys, errorKeys, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        storageServer.keys()
+                    ];
+                case 1:
+                    keys = _state.sent();
+                    errorKeys = Array.isArray(keys) ? keys.filter(function(key) {
+                        var _key_startsWith;
+                        return key === null || key === void 0 ? void 0 : (_key_startsWith = key.startsWith) === null || _key_startsWith === void 0 ? void 0 : _key_startsWith.call(key, "error_list:");
+                    }) : [];
+                    return [
+                        4,
+                        Promise.all(errorKeys.map(function(key) {
+                            return storageServer.remove(key);
+                        }))
+                    ];
+                case 2:
+                    _state.sent();
+                    return [
+                        3,
+                        4
+                    ];
+                case 3:
+                    error = _state.sent();
+                    commandLog.error("Failed to clear error lists: ".concat(error.message));
+                    return [
+                        3,
+                        4
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _clearAllErrorLists.apply(this, arguments);
+}
+function parseTextErrors(output) {
+    var errorList = [];
+    var unmatchedLines = [];
+    var lastFilePath = "";
+    var eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/;
+    var tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
+    var commitlintRegex = /^✖\s+(.*?)\s+\[(.*?)\]$/;
+    output.split("\n").forEach(function(line) {
+        if (line.startsWith("/")) {
+            lastFilePath = line.trim();
+        } else {
+            var eslintMatch = eslintErrorDetailsRegex.exec(line) || [];
+            var tsMatch = tsRegex.exec(line) || [];
+            var commitlintMatch = commitlintRegex.exec(line) || [];
+            if (eslintMatch.length && lastFilePath) {
+                errorList.push({
+                    file: lastFilePath,
+                    position: "".concat(eslintMatch[1], ":").concat(eslintMatch[2]),
+                    type: eslintMatch[3] === "error" /* Error */  ? "error" /* Error */  : "warning" /* Warning */ ,
+                    message: eslintMatch[4].trim(),
+                    rule: eslintMatch[5].trim()
+                });
+            } else if (tsMatch.length) {
+                errorList.push({
+                    file: tsMatch[1],
+                    position: "".concat(tsMatch[2], ":").concat(tsMatch[3]),
+                    type: tsMatch[4] === "error" /* Error */  ? "error" /* Error */  : "warning" /* Warning */ ,
+                    message: tsMatch[5].trim()
+                });
+            } else if (commitlintMatch.length) {
+                errorList.push({
+                    file: "commitlint",
+                    type: "error" /* Error */ ,
+                    message: commitlintMatch[1].trim(),
+                    rule: commitlintMatch[2].trim()
+                });
+            } else {
+                unmatchedLines.push(line.trim());
+            }
+        }
+    });
+    if (errorList.length) {
+        saveErrorListToStorage(errorList);
+    }
+    if (unmatchedLines.length && DEBUG) {
+        commandLog.warning("Unmatched lines:");
+        unmatchedLines.forEach(function(line) {
+            return console.log("  ".concat(line));
+        });
+    }
+}
+function parseCommandOutput(output) {
+    try {
+        var results = JSON.parse(output);
+        var errorList = [];
+        results.forEach(function(param) {
+            var filePath = param.filePath, messages = param.messages;
+            messages.forEach(function(param) {
+                var severity = param.severity, line = param.line, column = param.column, ruleId = param.ruleId, message = param.message;
+                errorList.push({
+                    type: severity === 2 ? "error" /* Error */  : "warning" /* Warning */ ,
+                    file: filePath,
+                    position: "".concat(line, ":").concat(column),
+                    rule: ruleId,
+                    message: message
+                });
+            });
+        });
+        if (errorList.length) {
+            saveErrorListToStorage(errorList);
+        }
+    } catch (e) {
+        parseTextErrors(output);
+    }
+}
+function executeCommand(command) {
+    return _executeCommand.apply(this, arguments);
+}
+function _executeCommand() {
+    _executeCommand = _async_to_generator(function(command) {
+        var parser, controller, _ref, stdout, stderr, error, stdout1, stderr1, message;
+        var _arguments = arguments;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    parser = _arguments.length > 1 && _arguments[1] !== void 0 ? _arguments[1] : parseCommandOutput;
+                    controller = new AbortController();
+                    import_node_process2.default.on("SIGINT", function() {
+                        commandLog.warning("Process interrupted. Terminating...");
+                        controller.abort();
+                        import_node_process2.default.exit();
+                    });
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        3,
+                        ,
+                        4
+                    ]);
+                    return [
+                        4,
+                        execPromise(command, {
+                            maxBuffer: 1024 * 1024 * 100,
+                            signal: controller.signal
+                        })
+                    ];
+                case 2:
+                    _ref = _state.sent(), stdout = _ref.stdout, stderr = _ref.stderr;
+                    [
+                        stdout,
+                        stderr
+                    ].forEach(function(output) {
+                        return output && parser(output);
+                    });
+                    return [
+                        3,
+                        4
+                    ];
+                case 3:
+                    error = _state.sent();
+                    stdout1 = error.stdout, stderr1 = error.stderr, message = error.message;
+                    [
+                        stdout1,
+                        stderr1
+                    ].forEach(function(output) {
+                        return output && parser(output);
+                    });
+                    if (!stderr1 && !stdout1) {
+                        commandLog.error("Command failed: ".concat(message));
+                    }
+                    return [
+                        3,
+                        4
+                    ];
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _executeCommand.apply(this, arguments);
+}
+var commandFormatter = {
+    raw: function(cmd) {
+        return {
+            raw: true,
+            cmd: cmd
+        };
+    },
+    isRaw: function isRaw(cmd) {
+        return (typeof cmd === "undefined" ? "undefined" : _type_of(cmd)) === "object" && cmd !== null && cmd.raw === true;
+    },
+    format: function format(command, context) {
+        if (typeof command === "function") {
+            return commandFormatter.formatCLI(command(context), context);
+        }
+        if (commandFormatter.isRaw(command)) {
+            return command.cmd;
+        }
+        return commandFormatter.formatCLI(command, context);
+    },
+    formatCLI: function formatCLI(command, context) {
+        if (context === null || context === void 0 ? void 0 : context.isRemote) {
+            return "".concat(PNPM_DLX_CLI, " ").concat(CYBERSKILL_PACKAGE_NAME, " ").concat(command);
+        }
+        if (context === null || context === void 0 ? void 0 : context.isCurrentProject) {
+            return "".concat(PNPM_EXEC_CLI, " ").concat(TSX_CLI, " src/cli.ts ").concat(command);
+        }
+        return "".concat(PNPM_EXEC_CLI, " ").concat(CYBERSKILL_CLI, " ").concat(command);
+    }
+};
+function resolveCommands(input) {
+    return _resolveCommands.apply(this, arguments);
+}
+function _resolveCommands() {
+    _resolveCommands = _async_to_generator(function(input) {
+        var context, _context_isRemote, isRemote, isCurrentProject, _tmp, ctx, commands;
+        var _arguments = arguments;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    context = _arguments.length > 1 && _arguments[1] !== void 0 ? _arguments[1] : {};
+                    isRemote = (_context_isRemote = context === null || context === void 0 ? void 0 : context.isRemote) !== null && _context_isRemote !== void 0 ? _context_isRemote : false;
+                    if (!isRemote) return [
+                        3,
+                        1
+                    ];
+                    _tmp = false;
+                    return [
+                        3,
+                        3
+                    ];
+                case 1:
+                    return [
+                        4,
+                        checkPackage(CYBERSKILL_PACKAGE_NAME)
+                    ];
+                case 2:
+                    _tmp = _state.sent().isCurrentProject;
+                    _state.label = 3;
+                case 3:
+                    isCurrentProject = _tmp;
+                    ctx = {
+                        isRemote: isRemote,
+                        isCurrentProject: isCurrentProject
+                    };
+                    commands = typeof input === "function" ? input(ctx) : input;
+                    return [
+                        2,
+                        Object.fromEntries(Object.entries(commands).map(function(param) {
+                            var _param = _sliced_to_array(param, 2), key = _param[0], cmd = _param[1];
+                            return [
+                                key,
+                                commandFormatter.format(cmd, ctx)
+                            ];
+                        }))
+                    ];
+            }
+        });
+    });
+    return _resolveCommands.apply(this, arguments);
+}
+// src/constants/path.ts
+var __filename2 = (0, import_node_url.fileURLToPath)(importMetaUrl);
+var __dirname = dirname2(__filename2);
+var CYBERSKILL_DIRECTORY = resolve2(__dirname, "../../");
+var WORKING_DIRECTORY = import_node_process3.default.env.INIT_CWD || import_node_process3.default.cwd();
+var CYBERSKILL_PACKAGE_NAME = "@cyberskill/shared";
+var CYBERSKILL_STORAGE = ".cyberskill-storage";
+var NODE_MODULES = "node_modules";
+var BUILD_DIRECTORY = "dist";
+var PACKAGE_JSON = "package.json";
+var PACKAGE_LOCK_JSON = "package-lock.json";
+var TSCONFIG_JSON = "tsconfig.json";
+var GIT_IGNORE = ".gitignore";
+var SIMPLE_GIT_HOOK_JSON = ".simple-git-hooks.json";
+var PNPM_LOCK_YAML = "pnpm-lock.yaml";
+var GIT_HOOK = ".git/hooks";
+var GIT_COMMIT_EDITMSG = ".git/COMMIT_EDITMSG";
+var CYBERSKILL_CLI = "cyberskill";
+var ESLINT_CLI = "eslint";
+var VITEST_CLI = "vitest";
+var COMMIT_LINT_CLI = "commitlint";
+var LINT_STAGED_CLI = "lint-staged";
+var RIMRAF_CLI = "rimraf";
+var TSC_CLI = "tsc";
+var TSX_CLI = "tsx";
+var GIT_CLI = "git";
+var PNPM_CLI = "pnpm";
+var PNPM_DLX_CLI = "pnpm dlx";
+var PNPM_EXEC_CLI = "pnpm exec";
+var SIMPLE_GIT_HOOK_CLI = "simple-git-hooks";
+var ESLINT_INSPECT_CLI = "@eslint/config-inspector";
+var NODE_MODULES_INSPECT_CLI = "node_modules-inspect";
+var PATH = {
+    CYBERSKILL_DIRECTORY: CYBERSKILL_DIRECTORY,
+    WORKING_DIRECTORY: WORKING_DIRECTORY,
+    TS_CONFIG: resolveWorkingPath(TSCONFIG_JSON),
+    GIT_IGNORE: resolveWorkingPath(GIT_IGNORE),
+    GIT_HOOK: resolveWorkingPath(GIT_HOOK),
+    GIT_COMMIT_MSG: resolveWorkingPath(GIT_COMMIT_EDITMSG),
+    SIMPLE_GIT_HOOKS: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
+    PACKAGE_JSON: resolveWorkingPath(PACKAGE_JSON),
+    PACKAGE_LOCK_JSON: resolveWorkingPath(PACKAGE_LOCK_JSON),
+    PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
+    NODE_MODULES: resolveWorkingPath(NODE_MODULES),
+    CYBERSKILL: {
+        LINT_STAGED_CONFIG: resolveCyberSkillPath("./configs/lint-staged/base.js"),
+        COMMITLINT_CONFIG: resolveCyberSkillPath("./configs/commitlint/base.js"),
+        UNIT_TEST_CONFIG: resolveCyberSkillPath("./configs/vitest/react/unit.js"),
+        E2E_TEST_CONFIG: resolveCyberSkillPath("./configs/vitest/react/e2e.js")
+    }
+};
+function HOOK(param) {
+    var isCurrentProject = param.isCurrentProject;
+    return _object_spread({
+        "postinstall": "setup",
+        "pre-commit": LINT_STAGED_CLI,
+        "commit-msg": COMMIT_LINT_CLI
+    }, isCurrentProject && {
+        "pre-push": commandFormatter.raw("".concat(GIT_CLI, " pull"))
+    });
+}
+var COMMAND = {
+    SIMPLE_GIT_HOOKS: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(SIMPLE_GIT_HOOK_CLI)),
+    ESLINT_INSPECT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_INSPECT_CLI)),
+    NODE_MODULES_INSPECT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(NODE_MODULES_INSPECT_CLI)),
+    RESET: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(RIMRAF_CLI, " ").concat(NODE_MODULES, " ").concat(PNPM_LOCK_YAML)),
+    ESLINT_CHECK: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_CLI, " ").concat(PATH.WORKING_DIRECTORY)),
+    ESLINT_FIX: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_CLI, " ").concat(PATH.WORKING_DIRECTORY, " --fix")),
+    TYPESCRIPT_CHECK: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(TSC_CLI, " -p ").concat(PATH.TS_CONFIG, " --noEmit")),
+    CYBERSKILL: {
+        TEST_UNIT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(VITEST_CLI, " --config ").concat(PATH.CYBERSKILL.UNIT_TEST_CONFIG)),
+        TEST_E2E: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(VITEST_CLI, " --config ").concat(PATH.CYBERSKILL.E2E_TEST_CONFIG)),
+        COMMIT_LINT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(COMMIT_LINT_CLI, " --edit ").concat(PATH.GIT_COMMIT_MSG, " --config ").concat(PATH.CYBERSKILL.COMMITLINT_CONFIG)),
+        LINT_STAGED: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(LINT_STAGED_CLI, " --config ").concat(PATH.CYBERSKILL.LINT_STAGED_CONFIG))
+    },
+    CONFIGURE_GIT_HOOK: commandFormatter.raw("".concat(GIT_CLI, " config core.hooksPath ").concat(PATH.GIT_HOOK)),
+    BUILD: commandFormatter.raw("".concat(PNPM_CLI, " run build")),
+    STAGE_BUILD_DIRECTORY: commandFormatter.raw("".concat(GIT_CLI, " add ").concat(BUILD_DIRECTORY)),
+    PNPM_INSTALL_STANDARD: commandFormatter.raw("".concat(PNPM_CLI, " install")),
+    PNPM_INSTALL_LEGACY: commandFormatter.raw("".concat(PNPM_CLI, " install --legacy-peer-deps")),
+    PNPM_INSTALL_FORCE: commandFormatter.raw("".concat(PNPM_CLI, " install --force"))
+};
+function runCommand(description, command) {
+    return _runCommand.apply(this, arguments);
+}
+function _runCommand() {
+    _runCommand = // src/cli.ts
+    _async_to_generator(function(description, command) {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    commandLog.info("".concat(description, "..."));
+                    return [
+                        4,
+                        executeCommand(commandFormatter.format(command))
+                    ];
+                case 1:
+                    _state.sent();
+                    commandLog.success("".concat(description, " completed successfully."));
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _runCommand.apply(this, arguments);
+}
+function checkTypescript() {
+    return _checkTypescript.apply(this, arguments);
+}
+function _checkTypescript() {
+    _checkTypescript = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    if (!existsSync2(PATH.TS_CONFIG)) return [
+                        3,
+                        2
+                    ];
+                    return [
+                        4,
+                        runCommand("Performing TypeScript validation", COMMAND.TYPESCRIPT_CHECK)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        3,
+                        3
+                    ];
+                case 2:
+                    commandLog.warning("No TypeScript configuration found. Skipping type check.");
+                    _state.label = 3;
+                case 3:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _checkTypescript.apply(this, arguments);
+}
+function checkEslint() {
+    return _checkEslint.apply(this, arguments);
+}
+function _checkEslint() {
+    _checkEslint = _async_to_generator(function() {
+        var fix;
+        var _arguments = arguments;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    fix = _arguments.length > 0 && _arguments[0] !== void 0 ? _arguments[0] : false;
+                    if (!fix) return [
+                        3,
+                        2
+                    ];
+                    return [
+                        4,
+                        runCommand("Running ESLint with auto-fix", COMMAND.ESLINT_FIX)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        3,
+                        4
+                    ];
+                case 2:
+                    return [
+                        4,
+                        runCommand("Running ESLint check", COMMAND.ESLINT_CHECK)
+                    ];
+                case 3:
+                    _state.sent();
+                    _state.label = 4;
+                case 4:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _checkEslint.apply(this, arguments);
+}
+function showCheckResult() {
+    return _showCheckResult.apply(this, arguments);
+}
+function _showCheckResult() {
+    _showCheckResult = _async_to_generator(function() {
+        var allResults, errors, warnings;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        getStoredErrorLists()
+                    ];
+                case 1:
+                    allResults = _state.sent();
+                    errors = allResults.filter(function(e) {
+                        return e.type === "error" /* Error */ ;
+                    });
+                    warnings = allResults.filter(function(e) {
+                        return e.type === "warning" /* Warning */ ;
+                    });
+                    if (!errors.length && !warnings.length) {
+                        commandLog.printBoxedLog("\u2714 NO ISSUES FOUND", "", {
+                            color: "green"
+                        });
+                    } else {
+                        commandLog.printBoxedLog("\u26A0 Warnings", warnings, {
+                            color: "yellow"
+                        });
+                        commandLog.printBoxedLog("\u2716 Errors", errors, {
+                            color: "red"
+                        });
+                    }
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _showCheckResult.apply(this, arguments);
+}
+function lintStaged() {
+    return _lintStaged.apply(this, arguments);
+}
+function _lintStaged() {
+    _lintStaged = _async_to_generator(function() {
+        var isCurrentProject, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        checkPackage(CYBERSKILL_PACKAGE_NAME)
+                    ];
+                case 1:
+                    isCurrentProject = _state.sent().isCurrentProject;
+                    if (!isCurrentProject) return [
+                        3,
+                        6
+                    ];
+                    _state.label = 2;
+                case 2:
+                    _state.trys.push([
+                        2,
+                        5,
+                        ,
+                        6
+                    ]);
+                    return [
+                        4,
+                        runCommand("Building package: ".concat(CYBERSKILL_PACKAGE_NAME), COMMAND.BUILD)
+                    ];
+                case 3:
+                    _state.sent();
+                    return [
+                        4,
+                        runCommand("Staging build artifacts", COMMAND.STAGE_BUILD_DIRECTORY)
+                    ];
+                case 4:
+                    _state.sent();
+                    return [
+                        3,
+                        6
+                    ];
+                case 5:
+                    error = _state.sent();
+                    commandLog.error("Error building and staging ".concat(CYBERSKILL_PACKAGE_NAME, ": ").concat(error.message));
+                    throw error;
+                case 6:
+                    return [
+                        4,
+                        runCommand("Executing lint-staged", COMMAND.CYBERSKILL.LINT_STAGED)
+                    ];
+                case 7:
+                    _state.sent();
+                    showCheckResult();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _lintStaged.apply(this, arguments);
+}
+function inspectLint() {
+    return _inspectLint.apply(this, arguments);
+}
+function _inspectLint() {
+    _inspectLint = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        runCommand("Inspecting ESLint configuration", COMMAND.ESLINT_INSPECT)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _inspectLint.apply(this, arguments);
+}
+function lintCheck() {
+    return _lintCheck.apply(this, arguments);
+}
+function _lintCheck() {
+    _lintCheck = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        clearAllErrorLists()
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        4,
+                        Promise.all([
+                            checkTypescript(),
+                            checkEslint()
+                        ])
+                    ];
+                case 2:
+                    _state.sent();
+                    showCheckResult();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _lintCheck.apply(this, arguments);
+}
+function lintFix() {
+    return _lintFix.apply(this, arguments);
+}
+function _lintFix() {
+    _lintFix = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        clearAllErrorLists()
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        4,
+                        Promise.all([
+                            checkTypescript(),
+                            checkEslint(true)
+                        ])
+                    ];
+                case 2:
+                    _state.sent();
+                    showCheckResult();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _lintFix.apply(this, arguments);
+}
+function commitLint() {
+    return _commitLint.apply(this, arguments);
+}
+function _commitLint() {
+    _commitLint = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        runCommand("Validating commit message", COMMAND.CYBERSKILL.COMMIT_LINT)
+                    ];
+                case 1:
+                    _state.sent();
+                    showCheckResult();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _commitLint.apply(this, arguments);
+}
+function setupGitHook() {
+    return _setupGitHook.apply(this, arguments);
+}
+function _setupGitHook() {
+    _setupGitHook = _async_to_generator(function() {
+        var hooks, gitIgnoreEntry, gitignore;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        runCommand("Configuring Git hooks", COMMAND.CONFIGURE_GIT_HOOK)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        4,
+                        resolveCommands(HOOK)
+                    ];
+                case 2:
+                    hooks = _state.sent();
+                    writeFileSync2(PATH.SIMPLE_GIT_HOOKS, hooks, {
+                        isJson: true
+                    });
+                    gitIgnoreEntry = "\n".concat(SIMPLE_GIT_HOOK_JSON, "\n");
+                    if (existsSync2(PATH.GIT_IGNORE)) {
+                        gitignore = readFileSync2(PATH.GIT_IGNORE).split("\n");
+                        if (!gitignore.includes(SIMPLE_GIT_HOOK_JSON)) {
+                            appendFileSync2(PATH.GIT_IGNORE, gitIgnoreEntry);
+                        }
+                    } else {
+                        writeFileSync2(PATH.GIT_IGNORE, gitIgnoreEntry);
+                    }
+                    return [
+                        4,
+                        runCommand("Installing simple-git-hooks", COMMAND.SIMPLE_GIT_HOOKS)
+                    ];
+                case 3:
+                    _state.sent();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _setupGitHook.apply(this, arguments);
+}
+function installDependencies() {
+    return _installDependencies.apply(this, arguments);
+}
+function _installDependencies() {
+    _installDependencies = _async_to_generator(function() {
+        var strategies, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _step_value, command, message, error, err;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    strategies = [
+                        {
+                            command: COMMAND.PNPM_INSTALL_STANDARD,
+                            message: "Installing dependencies (standard)"
+                        },
+                        {
+                            command: COMMAND.PNPM_INSTALL_LEGACY,
+                            message: "Retrying with legacy peer dependencies"
+                        },
+                        {
+                            command: COMMAND.PNPM_INSTALL_FORCE,
+                            message: "Retrying with force install"
+                        }
+                    ];
+                    _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        8,
+                        9,
+                        10
+                    ]);
+                    _iterator = strategies[Symbol.iterator]();
+                    _state.label = 2;
+                case 2:
+                    if (!!(_iteratorNormalCompletion = (_step = _iterator.next()).done)) return [
+                        3,
+                        7
+                    ];
+                    _step_value = _step.value, command = _step_value.command, message = _step_value.message;
+                    _state.label = 3;
+                case 3:
+                    _state.trys.push([
+                        3,
+                        5,
+                        ,
+                        6
+                    ]);
+                    return [
+                        4,
+                        runCommand("".concat(message, " using: ").concat(command.cmd), command)
+                    ];
+                case 4:
+                    _state.sent();
+                    return [
+                        2
+                    ];
+                case 5:
+                    error = _state.sent();
+                    commandLog.warning("Installation attempt failed: ".concat(command.cmd));
+                    commandLog.error("Details: ".concat(error.message));
+                    return [
+                        3,
+                        6
+                    ];
+                case 6:
+                    _iteratorNormalCompletion = true;
+                    return [
+                        3,
+                        2
+                    ];
+                case 7:
+                    return [
+                        3,
+                        10
+                    ];
+                case 8:
+                    err = _state.sent();
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                    return [
+                        3,
+                        10
+                    ];
+                case 9:
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return != null) {
+                            _iterator.return();
+                        }
+                    } finally{
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                    return [
+                        7
+                    ];
+                case 10:
+                    throw new Error("All dependency installation strategies failed.");
+            }
+        });
+    });
+    return _installDependencies.apply(this, arguments);
+}
+function updatePackage(packageName) {
+    return _updatePackage.apply(this, arguments);
+}
+function _updatePackage() {
+    _updatePackage = _async_to_generator(function(packageName) {
+        var _ref, installedPath, latestVersion, file, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        4,
+                        ,
+                        5
+                    ]);
+                    return [
+                        4,
+                        checkPackage(packageName)
+                    ];
+                case 1:
+                    _ref = _state.sent(), installedPath = _ref.installedPath, latestVersion = _ref.latestVersion, file = _ref.file;
+                    file.dependencies = _object_spread_props(_object_spread({}, file.dependencies), _define_property({}, file.name, latestVersion));
+                    writeFileSync2(installedPath, file, {
+                        isJson: true
+                    });
+                    return [
+                        4,
+                        installDependencies()
+                    ];
+                case 2:
+                    _state.sent();
+                    return [
+                        4,
+                        lintFix()
+                    ];
+                case 3:
+                    _state.sent();
+                    return [
+                        3,
+                        5
+                    ];
+                case 4:
+                    error = _state.sent();
+                    commandLog.error('Failed to update "'.concat(packageName, '": ').concat(error.message));
+                    throw error;
+                case 5:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _updatePackage.apply(this, arguments);
+}
+function setup() {
+    return _setup.apply(this, arguments);
+}
+function _setup() {
+    _setup = _async_to_generator(function() {
+        var _ref, isInstalled, installedVersion, latestVersion, isCurrentProject, isUpToDate, error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    if (!existsSync2(PATH.PACKAGE_JSON)) {
+                        commandLog.error("package.json not found. Aborting setup.");
+                        return [
+                            2
+                        ];
+                    }
+                    _state.label = 1;
+                case 1:
+                    _state.trys.push([
+                        1,
+                        7,
+                        ,
+                        8
+                    ]);
+                    return [
+                        4,
+                        checkPackage(CYBERSKILL_PACKAGE_NAME)
+                    ];
+                case 2:
+                    _ref = _state.sent(), isInstalled = _ref.isInstalled, installedVersion = _ref.installedVersion, latestVersion = _ref.latestVersion, isCurrentProject = _ref.isCurrentProject;
+                    isUpToDate = isCurrentProject || isInstalled && installedVersion === latestVersion;
+                    if (!isUpToDate) return [
+                        3,
+                        3
+                    ];
+                    commandLog.success("Cyberskill package is already up to date.");
+                    return [
+                        3,
+                        5
+                    ];
+                case 3:
+                    return [
+                        4,
+                        updatePackage(CYBERSKILL_PACKAGE_NAME)
+                    ];
+                case 4:
+                    _state.sent();
+                    _state.label = 5;
+                case 5:
+                    return [
+                        4,
+                        setupGitHook()
+                    ];
+                case 6:
+                    _state.sent();
+                    return [
+                        3,
+                        8
+                    ];
+                case 7:
+                    error = _state.sent();
+                    commandLog.error("Project setup failed: ".concat(error.message));
+                    throw error;
+                case 8:
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _setup.apply(this, arguments);
+}
+function reset() {
+    return _reset.apply(this, arguments);
+}
+function _reset() {
+    _reset = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        runCommand("Resetting project files", COMMAND.RESET)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        4,
+                        installDependencies()
+                    ];
+                case 2:
+                    _state.sent();
+                    return [
+                        4,
+                        setupGitHook()
+                    ];
+                case 3:
+                    _state.sent();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _reset.apply(this, arguments);
+}
+function inspect() {
+    return _inspect.apply(this, arguments);
+}
+function _inspect() {
+    _inspect = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        runCommand("Inspecting project dependencies", COMMAND.NODE_MODULES_INSPECT)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _inspect.apply(this, arguments);
+}
+function testUnit() {
+    return _testUnit.apply(this, arguments);
+}
+function _testUnit() {
+    _testUnit = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        runCommand("Running unit tests", COMMAND.CYBERSKILL.TEST_UNIT)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _testUnit.apply(this, arguments);
+}
+function testE2E() {
+    return _testE2E.apply(this, arguments);
+}
+function _testE2E() {
+    _testE2E = _async_to_generator(function() {
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    return [
+                        4,
+                        runCommand("Running end-to-end tests", COMMAND.CYBERSKILL.TEST_E2E)
+                    ];
+                case 1:
+                    _state.sent();
+                    return [
+                        2
+                    ];
+            }
+        });
+    });
+    return _testE2E.apply(this, arguments);
+}
+(0, import_yargs.default)((0, import_helpers.hideBin)(import_node_process4.default.argv)).scriptName(CYBERSKILL_CLI).usage("$0 <command> [options]").command("lint", "Check code for linting issues", lintCheck).command("lint:fix", "Fix linting issues automatically", lintFix).command("lint:inspect", "View active ESLint configuration", inspectLint).command("lint-staged", "Run lint checks on staged files", lintStaged).command("commitlint", "Validate commit message format", commitLint).command("setup", "Initialize project setup and dependencies", setup).command("reset", "Reset the project and reinstall dependencies", reset).command("inspect", "Analyze installed project dependencies", inspect).command("test:unit", "Run unit test suite", testUnit).command("test:e2e", "Run end-to-end test suite", testE2E).demandCommand(1, "Please specify a valid command.").strict().help().alias("h", "help").alias("v", "version").epilog('\u{1F4A1} Tip: Use "--help" with any command to see options\n').parse();
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+    installDependencies: installDependencies,
+    updatePackage: updatePackage
+});

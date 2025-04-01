@@ -1,1 +1,631 @@
-"use strict";function e(e,r){if(r==null||r>e.length)r=e.length;for(var t=0,n=new Array(r);t<r;t++)n[t]=e[t];return n}function r(e){if(Array.isArray(e))return e}function t(e,r,t,n,u,o,a){try{var i=e[o](a);var c=i.value}catch(e){t(e);return}if(i.done){r(c)}else{Promise.resolve(c).then(n,u)}}function n(e){return function(){var r=this,n=arguments;return new Promise(function(u,o){var a=e.apply(r,n);function i(e){t(a,u,o,i,c,"next",e)}function c(e){t(a,u,o,i,c,"throw",e)}i(undefined)})}}function u(e,r){if(r!=null&&typeof Symbol!=="undefined"&&r[Symbol.hasInstance]){return!!r[Symbol.hasInstance](e)}else{return e instanceof r}}function o(e,r){var t=e==null?null:typeof Symbol!=="undefined"&&e[Symbol.iterator]||e["@@iterator"];if(t==null)return;var n=[];var u=true;var o=false;var a,i;try{for(t=t.call(e);!(u=(a=t.next()).done);u=true){n.push(a.value);if(r&&n.length===r)break}}catch(e){o=true;i=e}finally{try{if(!u&&t["return"]!=null)t["return"]()}finally{if(o)throw i}}return n}function a(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function i(e,t){return r(e)||o(e,t)||s(e,t)||a()}function c(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}function s(r,t){if(!r)return;if(typeof r==="string")return e(r,t);var n=Object.prototype.toString.call(r).slice(8,-1);if(n==="Object"&&r.constructor)n=r.constructor.name;if(n==="Map"||n==="Set")return Array.from(n);if(n==="Arguments"||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return e(r,t)}function l(e,r){var t,n,u,o,a={label:0,sent:function(){if(u[0]&1)throw u[1];return u[1]},trys:[],ops:[]};return o={next:i(0),"throw":i(1),"return":i(2)},typeof Symbol==="function"&&(o[Symbol.iterator]=function(){return this}),o;function i(e){return function(r){return c([e,r])}}function c(o){if(t)throw new TypeError("Generator is already executing.");while(a)try{if(t=1,n&&(u=o[0]&2?n["return"]:o[0]?n["throw"]||((u=n["return"])&&u.call(n),0):n.next)&&!(u=u.call(n,o[1])).done)return u;if(n=0,u)o=[o[0]&2,u.value];switch(o[0]){case 0:case 1:u=o;break;case 4:a.label++;return{value:o[1],done:false};case 5:a.label++;n=o[1];o=[0];continue;case 7:o=a.ops.pop();a.trys.pop();continue;default:if(!(u=a.trys,u=u.length>0&&u[u.length-1])&&(o[0]===6||o[0]===2)){a=0;continue}if(o[0]===3&&(!u||o[1]>u[0]&&o[1]<u[3])){a.label=o[1];break}if(o[0]===6&&a.label<u[1]){a.label=u[1];u=o;break}if(u&&a.label<u[2]){a.label=u[2];a.ops.push(o);break}if(u[2])a.ops.pop();a.trys.pop();continue}o=r.call(e,a)}catch(e){o=[6,e];n=0}finally{t=u=0}if(o[0]&5)throw o[1];return{value:o[0]?o[1]:void 0,done:true}}}var f=Object.create;var y=Object.defineProperty;var v=Object.getOwnPropertyDescriptor;var p=Object.getOwnPropertyNames;var b=Object.getPrototypeOf,h=Object.prototype.hasOwnProperty;var d=function(e,r){for(var t in r)y(e,t,{get:r[t],enumerable:!0})},g=function(e,r,t,n){var u=true,o=false,a=undefined;if(r&&(typeof r==="undefined"?"undefined":c(r))=="object"||typeof r=="function")try{var i=function(){var u=l.value;!h.call(e,u)&&u!==t&&y(e,u,{get:function(){return r[u]},enumerable:!(n=v(r,u))||n.enumerable})};for(var s=p(r)[Symbol.iterator](),l;!(u=(l=s.next()).done);u=true)i()}catch(e){o=true;a=e}finally{try{if(!u&&s.return!=null){s.return()}}finally{if(o){throw a}}}return e};var m=function(e,r,t){return t=e!=null?f(b(e)):{},g(r||!e||!e.__esModule?y(t,"default",{value:e,enumerable:!0}):t,e)},w=function(e){return g(y({},"__esModule",{value:!0}),e)};var S={};d(S,{useStorage:function(){return j}});module.exports=w(S);var k=require("react");var O={serialize:function(e){return JSON.stringify(e,function(e,r){return u(r,Date)?{__type:"Date",value:r.toISOString()}:r})},deserialize:function(e){return JSON.parse(e,function(e,r){return(r===null||r===void 0?void 0:r.__type)==="Date"?new Date(r.value):r})}};var E=m(require("localforage"),1),_={get:function e(e){return n(function(){var r;return l(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,E.default.getItem(e)];case 1:return[2,t.sent()];case 2:r=t.sent();return[2,(console.error('❌ [Storage:get] Error getting key "'.concat(e,'":'),r),null)];case 3:return[2]}})})()},set:function e(e,r){return n(function(){var t;return l(this,function(n){switch(n.label){case 0:n.trys.push([0,2,,3]);return[4,E.default.setItem(e,r)];case 1:n.sent();return[3,3];case 2:t=n.sent();console.error('❌ [Storage:set] Error setting key "'.concat(e,'":'),t);return[3,3];case 3:return[2]}})})()},remove:function e(e){return n(function(){var r;return l(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,E.default.removeItem(e)];case 1:t.sent();return[3,3];case 2:r=t.sent();console.error('❌ [Storage:remove] Error removing key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})})()},keys:function e(){return n(function(){var e,r;return l(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,E.default.keys()];case 1:return[2,(e=t.sent())!==null&&e!==void 0?e:[]];case 2:r=t.sent();return[2,(console.error("❌ [Storage:keys] Error getting keys:",r),[])];case 3:return[2]}})})()}};function j(e,r){var t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:O;var u=i((0,k.useState)(r),2),o=u[0],a=u[1],c=i((0,k.useState)(!1),2),s=c[0],f=c[1];(0,k.useEffect)(function(){var u=!0;return n(function(){var n,o,i,c;return l(this,function(s){switch(s.label){case 0:s.trys.push([0,6,7,8]);return[4,_.get(e)];case 1:n=s.sent();if(!u)return[3,5];if(!(n!==null))return[3,2];o=t.deserialize(n);a(o);return[3,5];case 2:if(!(r!==void 0))return[3,4];i=t.serialize(r);return[4,_.set(e,i)];case 3:s.sent(),a(r);return[3,5];case 4:a(void 0);s.label=5;case 5:return[3,8];case 6:c=s.sent();console.error('Error loading value for key "'.concat(e,'":'),c),u&&a(r);return[3,8];case 7:u&&f(!0);return[7];case 8:return[2]}})})(),function(){u=!1,f(!1)}},[e,r,t]),(0,k.useEffect)(function(){if(!s)return;n(function(){var r,n;return l(this,function(u){switch(u.label){case 0:u.trys.push([0,3,,4]);if(!(o!==void 0))return[3,2];r=t.serialize(o);return[4,_.set(e,r)];case 1:u.sent();u.label=2;case 2:return[3,4];case 3:n=u.sent();console.error('Error saving value for key "'.concat(e,'":'),n);return[3,4];case 4:return[2]}})})()},[o,e,t,s]);var y=(0,k.useCallback)(function(e){a(function(r){return typeof e=="function"?e(r):e})},[]),v=(0,k.useCallback)(/*#__PURE__*/n(function(){var r;return l(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,_.remove(e)];case 1:t.sent(),a(void 0);return[3,3];case 2:r=t.sent();console.error('Error removing key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})}),[e]);return{value:o,set:y,remove:v}}0&&(module.exports={useStorage:useStorage});
+"use strict";
+function _array_like_to_array(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
+    return arr2;
+}
+function _array_with_holes(arr) {
+    if (Array.isArray(arr)) return arr;
+}
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+        var info = gen[key](arg);
+        var value = info.value;
+    } catch (error) {
+        reject(error);
+        return;
+    }
+    if (info.done) {
+        resolve(value);
+    } else {
+        Promise.resolve(value).then(_next, _throw);
+    }
+}
+function _async_to_generator(fn) {
+    return function() {
+        var self = this, args = arguments;
+        return new Promise(function(resolve, reject) {
+            var gen = fn.apply(self, args);
+            function _next(value) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+            }
+            function _throw(err) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+            }
+            _next(undefined);
+        });
+    };
+}
+function _instanceof(left, right) {
+    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
+        return !!right[Symbol.hasInstance](left);
+    } else {
+        return left instanceof right;
+    }
+}
+function _iterable_to_array_limit(arr, i) {
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+    if (_i == null) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _s, _e;
+    try {
+        for(_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true){
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally{
+        try {
+            if (!_n && _i["return"] != null) _i["return"]();
+        } finally{
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
+}
+function _non_iterable_rest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _sliced_to_array(arr, i) {
+    return _array_with_holes(arr) || _iterable_to_array_limit(arr, i) || _unsupported_iterable_to_array(arr, i) || _non_iterable_rest();
+}
+function _type_of(obj) {
+    "@swc/helpers - typeof";
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+}
+function _unsupported_iterable_to_array(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _array_like_to_array(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+}
+function _ts_generator(thisArg, body) {
+    var f, y, t, g, _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    };
+    return g = {
+        next: verb(0),
+        "throw": verb(1),
+        "return": verb(2)
+    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(_)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+}
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = function(target, all) {
+    for(var name in all)__defProp(target, name, {
+        get: all[name],
+        enumerable: true
+    });
+};
+var __copyProps = function(to, from, except, desc) {
+    if (from && (typeof from === "undefined" ? "undefined" : _type_of(from)) === "object" || typeof from === "function") {
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+        try {
+            var _loop = function() {
+                var key = _step.value;
+                if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+                    get: function() {
+                        return from[key];
+                    },
+                    enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+                });
+            };
+            for(var _iterator = __getOwnPropNames(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true)_loop();
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally{
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                    _iterator.return();
+                }
+            } finally{
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    }
+    return to;
+};
+var __toESM = function(mod, isNodeMode, target) {
+    return target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(// If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+        value: mod,
+        enumerable: true
+    }) : target, mod);
+};
+var __toCommonJS = function(mod) {
+    return __copyProps(__defProp({}, "__esModule", {
+        value: true
+    }), mod);
+};
+// src/react/storage.tsx
+var storage_exports = {};
+__export(storage_exports, {
+    useStorage: function() {
+        return useStorage;
+    }
+});
+module.exports = __toCommonJS(storage_exports);
+var import_react = require("react");
+// src/utils/serializer.ts
+var serializer = {
+    serialize: function(value) {
+        return JSON.stringify(value, function(_, v) {
+            if (_instanceof(v, Date)) {
+                return {
+                    __type: "Date",
+                    value: v.toISOString()
+                };
+            }
+            return v;
+        });
+    },
+    deserialize: function(value) {
+        return JSON.parse(value, function(_, v) {
+            if ((v === null || v === void 0 ? void 0 : v.__type) === "Date") {
+                return new Date(v.value);
+            }
+            return v;
+        });
+    }
+};
+// src/utils/storage-client.ts
+var import_localforage = __toESM(require("localforage"), 1);
+var storageClient = {
+    get: function get(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            import_localforage.default.getItem(key)
+                        ];
+                    case 1:
+                        return [
+                            2,
+                            _state.sent()
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:get] Error getting key "'.concat(key, '":'), error);
+                        return [
+                            2,
+                            null
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    set: function set(key, value) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            import_localforage.default.setItem(key, value)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:set] Error setting key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    remove: function remove(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            import_localforage.default.removeItem(key)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:remove] Error removing key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    keys: function keys() {
+        return _async_to_generator(function() {
+            var keys, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            import_localforage.default.keys()
+                        ];
+                    case 1:
+                        keys = _state.sent();
+                        return [
+                            2,
+                            keys !== null && keys !== void 0 ? keys : []
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error("❌ [Storage:keys] Error getting keys:", error);
+                        return [
+                            2,
+                            []
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    }
+};
+// src/react/storage.tsx
+function useStorage(key, initialValue) {
+    var serializer2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : serializer;
+    var _ref = _sliced_to_array((0, import_react.useState)(initialValue), 2), value = _ref[0], setValue = _ref[1];
+    var _ref1 = _sliced_to_array((0, import_react.useState)(false), 2), isLoaded = _ref1[0], setIsLoaded = _ref1[1];
+    (0, import_react.useEffect)(function() {
+        var isMounted = true;
+        var loadValue = /*#__PURE__*/ function() {
+            var _ref = _async_to_generator(function() {
+                var valueFound, parsedValue, serialized, error;
+                return _ts_generator(this, function(_state) {
+                    switch(_state.label){
+                        case 0:
+                            _state.trys.push([
+                                0,
+                                6,
+                                7,
+                                8
+                            ]);
+                            return [
+                                4,
+                                storageClient.get(key)
+                            ];
+                        case 1:
+                            valueFound = _state.sent();
+                            if (!isMounted) return [
+                                3,
+                                5
+                            ];
+                            if (!(valueFound !== null)) return [
+                                3,
+                                2
+                            ];
+                            parsedValue = serializer2.deserialize(valueFound);
+                            setValue(parsedValue);
+                            return [
+                                3,
+                                5
+                            ];
+                        case 2:
+                            if (!(initialValue !== void 0)) return [
+                                3,
+                                4
+                            ];
+                            serialized = serializer2.serialize(initialValue);
+                            return [
+                                4,
+                                storageClient.set(key, serialized)
+                            ];
+                        case 3:
+                            _state.sent();
+                            setValue(initialValue);
+                            return [
+                                3,
+                                5
+                            ];
+                        case 4:
+                            setValue(void 0);
+                            _state.label = 5;
+                        case 5:
+                            return [
+                                3,
+                                8
+                            ];
+                        case 6:
+                            error = _state.sent();
+                            console.error('Error loading value for key "'.concat(key, '":'), error);
+                            if (isMounted) {
+                                setValue(initialValue);
+                            }
+                            return [
+                                3,
+                                8
+                            ];
+                        case 7:
+                            if (isMounted) setIsLoaded(true);
+                            return [
+                                7
+                            ];
+                        case 8:
+                            return [
+                                2
+                            ];
+                    }
+                });
+            });
+            return function loadValue() {
+                return _ref.apply(this, arguments);
+            };
+        }();
+        loadValue();
+        return function() {
+            isMounted = false;
+            setIsLoaded(false);
+        };
+    }, [
+        key,
+        initialValue,
+        serializer2
+    ]);
+    (0, import_react.useEffect)(function() {
+        if (!isLoaded) return;
+        var saveValue = /*#__PURE__*/ function() {
+            var _ref = _async_to_generator(function() {
+                var serialized, error;
+                return _ts_generator(this, function(_state) {
+                    switch(_state.label){
+                        case 0:
+                            _state.trys.push([
+                                0,
+                                3,
+                                ,
+                                4
+                            ]);
+                            if (!(value !== void 0)) return [
+                                3,
+                                2
+                            ];
+                            serialized = serializer2.serialize(value);
+                            return [
+                                4,
+                                storageClient.set(key, serialized)
+                            ];
+                        case 1:
+                            _state.sent();
+                            _state.label = 2;
+                        case 2:
+                            return [
+                                3,
+                                4
+                            ];
+                        case 3:
+                            error = _state.sent();
+                            console.error('Error saving value for key "'.concat(key, '":'), error);
+                            return [
+                                3,
+                                4
+                            ];
+                        case 4:
+                            return [
+                                2
+                            ];
+                    }
+                });
+            });
+            return function saveValue() {
+                return _ref.apply(this, arguments);
+            };
+        }();
+        saveValue();
+    }, [
+        value,
+        key,
+        serializer2,
+        isLoaded
+    ]);
+    var set = (0, import_react.useCallback)(function(newValue) {
+        setValue(function(prev) {
+            return typeof newValue === "function" ? newValue(prev) : newValue;
+        });
+    }, []);
+    var remove = (0, import_react.useCallback)(/*#__PURE__*/ _async_to_generator(function() {
+        var error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        2,
+                        ,
+                        3
+                    ]);
+                    return [
+                        4,
+                        storageClient.remove(key)
+                    ];
+                case 1:
+                    _state.sent();
+                    setValue(void 0);
+                    return [
+                        3,
+                        3
+                    ];
+                case 2:
+                    error = _state.sent();
+                    console.error('Error removing key "'.concat(key, '":'), error);
+                    return [
+                        3,
+                        3
+                    ];
+                case 3:
+                    return [
+                        2
+                    ];
+            }
+        });
+    }), [
+        key
+    ]);
+    return {
+        value: value,
+        set: set,
+        remove: remove
+    };
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+    useStorage: useStorage
+});

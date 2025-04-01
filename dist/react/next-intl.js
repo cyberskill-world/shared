@@ -1,1 +1,655 @@
-function e(e,r){if(r==null||r>e.length)r=e.length;for(var t=0,n=new Array(r);t<r;t++)n[t]=e[t];return n}function r(e){if(Array.isArray(e))return e}function t(e,r,t,n,a,u,o){try{var i=e[u](o);var s=i.value}catch(e){t(e);return}if(i.done){r(s)}else{Promise.resolve(s).then(n,a)}}function n(e){return function(){var r=this,n=arguments;return new Promise(function(a,u){var o=e.apply(r,n);function i(e){t(o,a,u,i,s,"next",e)}function s(e){t(o,a,u,i,s,"throw",e)}i(undefined)})}}function a(e,r,t){if(r in e){Object.defineProperty(e,r,{value:t,enumerable:true,configurable:true,writable:true})}else{e[r]=t}return e}function u(e,r){if(r!=null&&typeof Symbol!=="undefined"&&r[Symbol.hasInstance]){return!!r[Symbol.hasInstance](e)}else{return e instanceof r}}function o(e,r){var t=e==null?null:typeof Symbol!=="undefined"&&e[Symbol.iterator]||e["@@iterator"];if(t==null)return;var n=[];var a=true;var u=false;var o,i;try{for(t=t.call(e);!(a=(o=t.next()).done);a=true){n.push(o.value);if(r&&n.length===r)break}}catch(e){u=true;i=e}finally{try{if(!a&&t["return"]!=null)t["return"]()}finally{if(u)throw i}}return n}function i(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}function s(e){for(var r=1;r<arguments.length;r++){var t=arguments[r]!=null?arguments[r]:{};var n=Object.keys(t);if(typeof Object.getOwnPropertySymbols==="function"){n=n.concat(Object.getOwnPropertySymbols(t).filter(function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))}n.forEach(function(r){a(e,r,t[r])})}return e}function l(e,t){return r(e)||o(e,t)||c(e,t)||i()}function c(r,t){if(!r)return;if(typeof r==="string")return e(r,t);var n=Object.prototype.toString.call(r).slice(8,-1);if(n==="Object"&&r.constructor)n=r.constructor.name;if(n==="Map"||n==="Set")return Array.from(n);if(n==="Arguments"||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return e(r,t)}function f(e,r){var t,n,a,u,o={label:0,sent:function(){if(a[0]&1)throw a[1];return a[1]},trys:[],ops:[]};return u={next:i(0),"throw":i(1),"return":i(2)},typeof Symbol==="function"&&(u[Symbol.iterator]=function(){return this}),u;function i(e){return function(r){return s([e,r])}}function s(u){if(t)throw new TypeError("Generator is already executing.");while(o)try{if(t=1,n&&(a=u[0]&2?n["return"]:u[0]?n["throw"]||((a=n["return"])&&a.call(n),0):n.next)&&!(a=a.call(n,u[1])).done)return a;if(n=0,a)u=[u[0]&2,a.value];switch(u[0]){case 0:case 1:a=u;break;case 4:o.label++;return{value:u[1],done:false};case 5:o.label++;n=u[1];u=[0];continue;case 7:u=o.ops.pop();o.trys.pop();continue;default:if(!(a=o.trys,a=a.length>0&&a[a.length-1])&&(u[0]===6||u[0]===2)){o=0;continue}if(u[0]===3&&(!a||u[1]>a[0]&&u[1]<a[3])){o.label=u[1];break}if(u[0]===6&&o.label<a[1]){o.label=a[1];a=u;break}if(a&&o.label<a[2]){o.label=a[2];o.ops.push(u);break}if(a[2])o.ops.pop();o.trys.pop();continue}u=r.call(e,o)}catch(e){u=[6,e];n=0}finally{t=a=0}if(u[0]&5)throw u[1];return{value:u[0]?u[1]:void 0,done:true}}}import{NextIntlClientProvider as v,useTranslations as y}from"next-intl";import{createContext as h,use as g,useMemo as d}from"react";import{useCallback as m,useEffect as p,useState as b}from"react";var w={serialize:function(e){return JSON.stringify(e,function(e,r){return u(r,Date)?{__type:"Date",value:r.toISOString()}:r})},deserialize:function(e){return JSON.parse(e,function(e,r){return(r===null||r===void 0?void 0:r.__type)==="Date"?new Date(r.value):r})}};import S from"localforage";var x={get:function e(e){return n(function(){var r;return f(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,S.getItem(e)];case 1:return[2,t.sent()];case 2:r=t.sent();return[2,(console.error('❌ [Storage:get] Error getting key "'.concat(e,'":'),r),null)];case 3:return[2]}})})()},set:function e(e,r){return n(function(){var t;return f(this,function(n){switch(n.label){case 0:n.trys.push([0,2,,3]);return[4,S.setItem(e,r)];case 1:n.sent();return[3,3];case 2:t=n.sent();console.error('❌ [Storage:set] Error setting key "'.concat(e,'":'),t);return[3,3];case 3:return[2]}})})()},remove:function e(e){return n(function(){var r;return f(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,S.removeItem(e)];case 1:t.sent();return[3,3];case 2:r=t.sent();console.error('❌ [Storage:remove] Error removing key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})})()},keys:function e(){return n(function(){var e,r;return f(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,S.keys()];case 1:return[2,(e=t.sent())!==null&&e!==void 0?e:[]];case 2:r=t.sent();return[2,(console.error("❌ [Storage:keys] Error getting keys:",r),[])];case 3:return[2]}})})()}};function I(e,r){var t=arguments.length>2&&arguments[2]!==void 0?arguments[2]:w;var a=l(b(r),2),u=a[0],o=a[1],i=l(b(!1),2),s=i[0],c=i[1];p(function(){var a=!0;return n(function(){var n,u,i,s;return f(this,function(l){switch(l.label){case 0:l.trys.push([0,6,7,8]);return[4,x.get(e)];case 1:n=l.sent();if(!a)return[3,5];if(!(n!==null))return[3,2];u=t.deserialize(n);o(u);return[3,5];case 2:if(!(r!==void 0))return[3,4];i=t.serialize(r);return[4,x.set(e,i)];case 3:l.sent(),o(r);return[3,5];case 4:o(void 0);l.label=5;case 5:return[3,8];case 6:s=l.sent();console.error('Error loading value for key "'.concat(e,'":'),s),a&&o(r);return[3,8];case 7:a&&c(!0);return[7];case 8:return[2]}})})(),function(){a=!1,c(!1)}},[e,r,t]),p(function(){if(!s)return;n(function(){var r,n;return f(this,function(a){switch(a.label){case 0:a.trys.push([0,3,,4]);if(!(u!==void 0))return[3,2];r=t.serialize(u);return[4,x.set(e,r)];case 1:a.sent();a.label=2;case 2:return[3,4];case 3:n=a.sent();console.error('Error saving value for key "'.concat(e,'":'),n);return[3,4];case 4:return[2]}})})()},[u,e,t,s]);var v=m(function(e){o(function(r){return typeof e=="function"?e(r):e})},[]),y=m(/*#__PURE__*/n(function(){var r;return f(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,x.remove(e)];case 1:t.sent(),o(void 0);return[3,3];case 2:r=t.sent();console.error('Error removing key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})}),[e]);return{value:u,set:v,remove:y}}import{Fragment as k,jsx as E}from"react/jsx-runtime";var N=h(void 0);function O(){var e=g(N);if(!e)throw new Error("useNextIntl must be used within a NextIntlProvider");return e}var P=y;function j(e){var r=function(r){var t;var n=O(),a=n.currentLanguage,u=r.messages,o=r.languages,i="en",l=u[(a===null||a===void 0?void 0:a.value)||i],c=(t=o.find(function(e){return e.value===(a===null||a===void 0?void 0:a.value)}))===null||t===void 0?void 0:t.timezone;return u?E(v,{locale:(a===null||a===void 0?void 0:a.value)||i,messages:l,timeZone:c,children:E(e,s({},r))}):(console.warn("Missing messages for language: ".concat((a===null||a===void 0?void 0:a.value)||i)),null)};return r.displayName="withNextIntl(".concat(e.displayName||e.name||"Component",")"),r}function _(e){var r=e.children;return E(k,{children:r})}var C=j(_);function z(e){var r=e.children,t=e.languages,n=e.messages;var a;var u=I("lang",(a=t===null||t===void 0?void 0:t[0])!==null&&a!==void 0?a:{}),o=u.value,i=u.set,s=d(function(){return{languages:t,currentLanguage:o,setCurrentLanguage:i}},[t,i,o]);return E(N,{value:s,children:E(C,{languages:t,messages:n,children:r})})}export{N as NextIntlContext,z as NextIntlProvider,O as useNextIntl,P as useTranslateNextIntl,j as withNextIntl};
+// src/react/next-intl.tsx
+function _array_like_to_array(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
+    return arr2;
+}
+function _array_with_holes(arr) {
+    if (Array.isArray(arr)) return arr;
+}
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+        var info = gen[key](arg);
+        var value = info.value;
+    } catch (error) {
+        reject(error);
+        return;
+    }
+    if (info.done) {
+        resolve(value);
+    } else {
+        Promise.resolve(value).then(_next, _throw);
+    }
+}
+function _async_to_generator(fn) {
+    return function() {
+        var self = this, args = arguments;
+        return new Promise(function(resolve, reject) {
+            var gen = fn.apply(self, args);
+            function _next(value) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+            }
+            function _throw(err) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+            }
+            _next(undefined);
+        });
+    };
+}
+function _define_property(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+function _instanceof(left, right) {
+    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
+        return !!right[Symbol.hasInstance](left);
+    } else {
+        return left instanceof right;
+    }
+}
+function _iterable_to_array_limit(arr, i) {
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+    if (_i == null) return;
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _s, _e;
+    try {
+        for(_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true){
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally{
+        try {
+            if (!_n && _i["return"] != null) _i["return"]();
+        } finally{
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
+}
+function _non_iterable_rest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _object_spread(target) {
+    for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i] != null ? arguments[i] : {};
+        var ownKeys = Object.keys(source);
+        if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+        }
+        ownKeys.forEach(function(key) {
+            _define_property(target, key, source[key]);
+        });
+    }
+    return target;
+}
+function _sliced_to_array(arr, i) {
+    return _array_with_holes(arr) || _iterable_to_array_limit(arr, i) || _unsupported_iterable_to_array(arr, i) || _non_iterable_rest();
+}
+function _unsupported_iterable_to_array(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _array_like_to_array(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+}
+function _ts_generator(thisArg, body) {
+    var f, y, t, g, _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    };
+    return g = {
+        next: verb(0),
+        "throw": verb(1),
+        "return": verb(2)
+    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(_)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+}
+import { NextIntlClientProvider, useTranslations } from "next-intl";
+import { createContext, use, useMemo } from "react";
+// src/react/storage.tsx
+import { useCallback, useEffect, useState } from "react";
+// src/utils/serializer.ts
+var serializer = {
+    serialize: function(value) {
+        return JSON.stringify(value, function(_, v) {
+            if (_instanceof(v, Date)) {
+                return {
+                    __type: "Date",
+                    value: v.toISOString()
+                };
+            }
+            return v;
+        });
+    },
+    deserialize: function(value) {
+        return JSON.parse(value, function(_, v) {
+            if ((v === null || v === void 0 ? void 0 : v.__type) === "Date") {
+                return new Date(v.value);
+            }
+            return v;
+        });
+    }
+};
+// src/utils/storage-client.ts
+import localForage from "localforage";
+var storageClient = {
+    get: function get(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.getItem(key)
+                        ];
+                    case 1:
+                        return [
+                            2,
+                            _state.sent()
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:get] Error getting key "'.concat(key, '":'), error);
+                        return [
+                            2,
+                            null
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    set: function set(key, value) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.setItem(key, value)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:set] Error setting key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    remove: function remove(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.removeItem(key)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:remove] Error removing key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    keys: function keys() {
+        return _async_to_generator(function() {
+            var keys, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.keys()
+                        ];
+                    case 1:
+                        keys = _state.sent();
+                        return [
+                            2,
+                            keys !== null && keys !== void 0 ? keys : []
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error("❌ [Storage:keys] Error getting keys:", error);
+                        return [
+                            2,
+                            []
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    }
+};
+// src/react/storage.tsx
+function useStorage(key, initialValue) {
+    var serializer2 = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : serializer;
+    var _useState = _sliced_to_array(useState(initialValue), 2), value = _useState[0], setValue = _useState[1];
+    var _useState1 = _sliced_to_array(useState(false), 2), isLoaded = _useState1[0], setIsLoaded = _useState1[1];
+    useEffect(function() {
+        var isMounted = true;
+        var loadValue = /*#__PURE__*/ function() {
+            var _ref = _async_to_generator(function() {
+                var valueFound, parsedValue, serialized, error;
+                return _ts_generator(this, function(_state) {
+                    switch(_state.label){
+                        case 0:
+                            _state.trys.push([
+                                0,
+                                6,
+                                7,
+                                8
+                            ]);
+                            return [
+                                4,
+                                storageClient.get(key)
+                            ];
+                        case 1:
+                            valueFound = _state.sent();
+                            if (!isMounted) return [
+                                3,
+                                5
+                            ];
+                            if (!(valueFound !== null)) return [
+                                3,
+                                2
+                            ];
+                            parsedValue = serializer2.deserialize(valueFound);
+                            setValue(parsedValue);
+                            return [
+                                3,
+                                5
+                            ];
+                        case 2:
+                            if (!(initialValue !== void 0)) return [
+                                3,
+                                4
+                            ];
+                            serialized = serializer2.serialize(initialValue);
+                            return [
+                                4,
+                                storageClient.set(key, serialized)
+                            ];
+                        case 3:
+                            _state.sent();
+                            setValue(initialValue);
+                            return [
+                                3,
+                                5
+                            ];
+                        case 4:
+                            setValue(void 0);
+                            _state.label = 5;
+                        case 5:
+                            return [
+                                3,
+                                8
+                            ];
+                        case 6:
+                            error = _state.sent();
+                            console.error('Error loading value for key "'.concat(key, '":'), error);
+                            if (isMounted) {
+                                setValue(initialValue);
+                            }
+                            return [
+                                3,
+                                8
+                            ];
+                        case 7:
+                            if (isMounted) setIsLoaded(true);
+                            return [
+                                7
+                            ];
+                        case 8:
+                            return [
+                                2
+                            ];
+                    }
+                });
+            });
+            return function loadValue() {
+                return _ref.apply(this, arguments);
+            };
+        }();
+        loadValue();
+        return function() {
+            isMounted = false;
+            setIsLoaded(false);
+        };
+    }, [
+        key,
+        initialValue,
+        serializer2
+    ]);
+    useEffect(function() {
+        if (!isLoaded) return;
+        var saveValue = /*#__PURE__*/ function() {
+            var _ref = _async_to_generator(function() {
+                var serialized, error;
+                return _ts_generator(this, function(_state) {
+                    switch(_state.label){
+                        case 0:
+                            _state.trys.push([
+                                0,
+                                3,
+                                ,
+                                4
+                            ]);
+                            if (!(value !== void 0)) return [
+                                3,
+                                2
+                            ];
+                            serialized = serializer2.serialize(value);
+                            return [
+                                4,
+                                storageClient.set(key, serialized)
+                            ];
+                        case 1:
+                            _state.sent();
+                            _state.label = 2;
+                        case 2:
+                            return [
+                                3,
+                                4
+                            ];
+                        case 3:
+                            error = _state.sent();
+                            console.error('Error saving value for key "'.concat(key, '":'), error);
+                            return [
+                                3,
+                                4
+                            ];
+                        case 4:
+                            return [
+                                2
+                            ];
+                    }
+                });
+            });
+            return function saveValue() {
+                return _ref.apply(this, arguments);
+            };
+        }();
+        saveValue();
+    }, [
+        value,
+        key,
+        serializer2,
+        isLoaded
+    ]);
+    var set = useCallback(function(newValue) {
+        setValue(function(prev) {
+            return typeof newValue === "function" ? newValue(prev) : newValue;
+        });
+    }, []);
+    var remove = useCallback(/*#__PURE__*/ _async_to_generator(function() {
+        var error;
+        return _ts_generator(this, function(_state) {
+            switch(_state.label){
+                case 0:
+                    _state.trys.push([
+                        0,
+                        2,
+                        ,
+                        3
+                    ]);
+                    return [
+                        4,
+                        storageClient.remove(key)
+                    ];
+                case 1:
+                    _state.sent();
+                    setValue(void 0);
+                    return [
+                        3,
+                        3
+                    ];
+                case 2:
+                    error = _state.sent();
+                    console.error('Error removing key "'.concat(key, '":'), error);
+                    return [
+                        3,
+                        3
+                    ];
+                case 3:
+                    return [
+                        2
+                    ];
+            }
+        });
+    }), [
+        key
+    ]);
+    return {
+        value: value,
+        set: set,
+        remove: remove
+    };
+}
+// src/react/next-intl.tsx
+import { Fragment, jsx } from "react/jsx-runtime";
+var NextIntlContext = createContext(void 0);
+function useNextIntl() {
+    var context = use(NextIntlContext);
+    if (!context) {
+        throw new Error("useNextIntl must be used within a NextIntlProvider");
+    }
+    return context;
+}
+var useTranslateNextIntl = useTranslations;
+function withNextIntl(Component) {
+    var PageWithI18n = function(props) {
+        var _languages_find;
+        var currentLanguage = useNextIntl().currentLanguage;
+        var messages = props.messages, languages = props.languages;
+        var defaultLang = "en";
+        var defaultMessages = messages[(currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value) || defaultLang];
+        var timeZone = (_languages_find = languages.find(function(lang) {
+            return lang.value === (currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value);
+        })) === null || _languages_find === void 0 ? void 0 : _languages_find.timezone;
+        if (!messages) {
+            console.warn("Missing messages for language: ".concat((currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value) || defaultLang));
+            return null;
+        }
+        return /* @__PURE__ */ jsx(NextIntlClientProvider, {
+            locale: (currentLanguage === null || currentLanguage === void 0 ? void 0 : currentLanguage.value) || defaultLang,
+            messages: defaultMessages,
+            timeZone: timeZone,
+            children: /* @__PURE__ */ jsx(Component, _object_spread({}, props))
+        });
+    };
+    PageWithI18n.displayName = "withNextIntl(".concat(Component.displayName || Component.name || "Component", ")");
+    return PageWithI18n;
+}
+function LanguageWrapperBase(param) {
+    var children = param.children;
+    return /* @__PURE__ */ jsx(Fragment, {
+        children: children
+    });
+}
+var LanguageWrapper = withNextIntl(LanguageWrapperBase);
+function NextIntlProvider(param) {
+    var children = param.children, languages = param.languages, messages = param.messages;
+    var _languages_;
+    var _useStorage = useStorage("lang", (_languages_ = languages === null || languages === void 0 ? void 0 : languages[0]) !== null && _languages_ !== void 0 ? _languages_ : {}), value = _useStorage.value, set = _useStorage.set;
+    var contextValue = useMemo(function() {
+        return {
+            languages: languages,
+            currentLanguage: value,
+            setCurrentLanguage: set
+        };
+    }, [
+        languages,
+        set,
+        value
+    ]);
+    return /* @__PURE__ */ jsx(NextIntlContext, {
+        value: contextValue,
+        children: /* @__PURE__ */ jsx(LanguageWrapper, {
+            languages: languages,
+            messages: messages,
+            children: children
+        })
+    });
+}
+export { NextIntlContext, NextIntlProvider, useNextIntl, useTranslateNextIntl, withNextIntl };

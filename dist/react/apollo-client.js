@@ -1,1 +1,116 @@
-function r(r,n,e){if(n in r){Object.defineProperty(r,n,{value:e,enumerable:true,configurable:true,writable:true})}else{r[n]=e}return r}function n(r,n){if(n!=null&&typeof Symbol!=="undefined"&&n[Symbol.hasInstance]){return!!n[Symbol.hasInstance](r)}else{return r instanceof n}}function e(n){for(var e=1;e<arguments.length;e++){var o=arguments[e]!=null?arguments[e]:{};var i=Object.keys(o);if(typeof Object.getOwnPropertySymbols==="function"){i=i.concat(Object.getOwnPropertySymbols(o).filter(function(r){return Object.getOwnPropertyDescriptor(o,r).enumerable}))}i.forEach(function(e){r(n,e,o[e])})}return n}import{ApolloClient as o,ApolloLink as i,ApolloProvider as t,HttpLink as l,InMemoryCache as a,split as c}from"@apollo/client";import{onError as s}from"@apollo/client/link/error";import{GraphQLWsLink as u}from"@apollo/client/link/subscriptions";import{getMainDefinition as p}from"@apollo/client/utilities";import{createClient as f}from"graphql-ws";import{jsx as v}from"react/jsx-runtime";function m(r){var n=s(function(r){var n=r.graphQLErrors,e=r.networkError;n===null||n===void 0?void 0:n.forEach(function(r){var n=r.message,e=r.locations,o=r.path;return console.error("[GraphQL error]: Message: ".concat(n,", Location: ").concat(e,", Path: ").concat(o))}),e&&console.error("[Network error]: ".concat(e))}),e=new l({uri:r===null||r===void 0?void 0:r.uri,credentials:"include"}),o=(r===null||r===void 0?void 0:r.wsUrl)?new u(f({url:r.wsUrl})):null,t=o?c(function(r){var n=r.query;var e=p(n);if(e.kind==="OperationDefinition"){var o=e.operation;return o==="subscription"}return!1},o,e):e,a=new i(function(r,n){return r.variables&&(r.variables=JSON.parse(JSON.stringify(r.variables),function(r,n){return r==="__typename"?void 0:n})),n(r)});return{errorLink:n,httpLink:e,wsLink:o,splitLink:t,cleanTypeName:a}}function d(r){var l=r.isNextJS,c=r.options,s=r.children,u=r.client,p=r.provider,f=r.cache;var d=u!==null&&u!==void 0?u:o;if(typeof d!="function")throw new TypeError("Invalid ApolloClient provided. Ensure CustomClient is a class.");var y=p||t,b=f||a,h=m(c),k=h.cleanTypeName,w=h.errorLink,L=h.splitLink,g=new d(e({cache:n(b,a)?b:new a,link:i.from([k,w,L].filter(Boolean))},c));return l?v(y,{makeClient:function(){return g},children:s}):v(y,{client:g,children:s})}export{d as ApolloProvider};
+// src/react/apollo-client.tsx
+function _define_property(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+function _instanceof(left, right) {
+    if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) {
+        return !!right[Symbol.hasInstance](left);
+    } else {
+        return left instanceof right;
+    }
+}
+function _object_spread(target) {
+    for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i] != null ? arguments[i] : {};
+        var ownKeys = Object.keys(source);
+        if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+        }
+        ownKeys.forEach(function(key) {
+            _define_property(target, key, source[key]);
+        });
+    }
+    return target;
+}
+import { ApolloClient, ApolloLink, ApolloProvider as ApolloProviderDefault, HttpLink, InMemoryCache, split } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { getMainDefinition } from "@apollo/client/utilities";
+import { createClient as createGraphqlWebSocketClient } from "graphql-ws";
+import { jsx } from "react/jsx-runtime";
+function createLinks(options) {
+    var errorLink = onError(function(param) {
+        var graphQLErrors = param.graphQLErrors, networkError = param.networkError;
+        graphQLErrors === null || graphQLErrors === void 0 ? void 0 : graphQLErrors.forEach(function(param) {
+            var message = param.message, locations = param.locations, path = param.path;
+            return console.error("[GraphQL error]: Message: ".concat(message, ", Location: ").concat(locations, ", Path: ").concat(path));
+        });
+        if (networkError) {
+            console.error("[Network error]: ".concat(networkError));
+        }
+    });
+    var httpLink = new HttpLink({
+        uri: options === null || options === void 0 ? void 0 : options.uri,
+        credentials: "include"
+    });
+    var wsLink = (options === null || options === void 0 ? void 0 : options.wsUrl) ? new GraphQLWsLink(createGraphqlWebSocketClient({
+        url: options.wsUrl
+    })) : null;
+    var splitLink = wsLink ? split(function(param) {
+        var query = param.query;
+        var mainDefinition = getMainDefinition(query);
+        if (mainDefinition.kind === "OperationDefinition") {
+            var operation = mainDefinition.operation;
+            return operation === "subscription";
+        }
+        return false;
+    }, wsLink, httpLink) : httpLink;
+    var cleanTypeName = new ApolloLink(function(operation, forward) {
+        if (operation.variables) {
+            operation.variables = JSON.parse(JSON.stringify(operation.variables), function(key, value) {
+                return key === "__typename" ? void 0 : value;
+            });
+        }
+        return forward(operation);
+    });
+    return {
+        errorLink: errorLink,
+        httpLink: httpLink,
+        wsLink: wsLink,
+        splitLink: splitLink,
+        cleanTypeName: cleanTypeName
+    };
+}
+function ApolloProvider(param) {
+    var isNextJS = param.isNextJS, options = param.options, children = param.children, CustomClient = param.client, CustomProvider = param.provider, CustomCache = param.cache;
+    var Client = CustomClient !== null && CustomClient !== void 0 ? CustomClient : ApolloClient;
+    if (typeof Client !== "function") {
+        throw new TypeError("Invalid ApolloClient provided. Ensure CustomClient is a class.");
+    }
+    var Provider = CustomProvider || ApolloProviderDefault;
+    var Cache = CustomCache || InMemoryCache;
+    var _createLinks = createLinks(options), cleanTypeName = _createLinks.cleanTypeName, errorLink = _createLinks.errorLink, splitLink = _createLinks.splitLink;
+    var client = new Client(_object_spread({
+        cache: _instanceof(Cache, InMemoryCache) ? Cache : new InMemoryCache(),
+        link: ApolloLink.from([
+            cleanTypeName,
+            errorLink,
+            splitLink
+        ].filter(Boolean))
+    }, options));
+    if (isNextJS) {
+        return /* @__PURE__ */ jsx(Provider, {
+            makeClient: function() {
+                return client;
+            },
+            children: children
+        });
+    }
+    return /* @__PURE__ */ jsx(Provider, {
+        client: client,
+        children: children
+    });
+}
+export { ApolloProvider };

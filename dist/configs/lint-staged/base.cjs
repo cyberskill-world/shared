@@ -1,1 +1,64 @@
-"use strict";function e(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}var r=Object.defineProperty;var t=Object.getOwnPropertyDescriptor;var n=Object.getOwnPropertyNames;var o=Object.prototype.hasOwnProperty;var u=function(e,t){for(var n in t)r(e,n,{get:t[n],enumerable:!0})},f=function(u,f,a,i){var l=true,c=false,y=undefined;if(f&&(typeof f==="undefined"?"undefined":e(f))=="object"||typeof f=="function")try{var p=function(){var e=b.value;!o.call(u,e)&&e!==a&&r(u,e,{get:function(){return f[e]},enumerable:!(i=t(f,e))||i.enumerable})};for(var v=n(f)[Symbol.iterator](),b;!(l=(b=v.next()).done);l=true)p()}catch(e){c=true;y=e}finally{try{if(!l&&v.return!=null){v.return()}}finally{if(c){throw y}}}return u};var a=function(e){return f(r({},"__esModule",{value:!0}),e)};var i={};u(i,{default:function(){return l}});module.exports=a(i);var l={"*":["pnpm exec cyberskill lint:fix"]};
+"use strict";
+function _type_of(obj) {
+    "@swc/helpers - typeof";
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+}
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = function(target, all) {
+    for(var name in all)__defProp(target, name, {
+        get: all[name],
+        enumerable: true
+    });
+};
+var __copyProps = function(to, from, except, desc) {
+    if (from && (typeof from === "undefined" ? "undefined" : _type_of(from)) === "object" || typeof from === "function") {
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+        try {
+            var _loop = function() {
+                var key = _step.value;
+                if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+                    get: function() {
+                        return from[key];
+                    },
+                    enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+                });
+            };
+            for(var _iterator = __getOwnPropNames(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true)_loop();
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally{
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                    _iterator.return();
+                }
+            } finally{
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    }
+    return to;
+};
+var __toCommonJS = function(mod) {
+    return __copyProps(__defProp({}, "__esModule", {
+        value: true
+    }), mod);
+};
+// src/configs/lint-staged/base.ts
+var base_exports = {};
+__export(base_exports, {
+    default: function() {
+        return base_default;
+    }
+});
+module.exports = __toCommonJS(base_exports);
+var base_default = {
+    "*": [
+        "pnpm exec cyberskill lint:fix"
+    ]
+};

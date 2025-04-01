@@ -1,1 +1,305 @@
-"use strict";function e(e,r,t){if(r in e){Object.defineProperty(e,r,{value:t,enumerable:true,configurable:true,writable:true})}else{e[r]=t}return e}function r(r){for(var t=1;t<arguments.length;t++){var n=arguments[t]!=null?arguments[t]:{};var u=Object.keys(n);if(typeof Object.getOwnPropertySymbols==="function"){u=u.concat(Object.getOwnPropertySymbols(n).filter(function(e){return Object.getOwnPropertyDescriptor(n,e).enumerable}))}u.forEach(function(t){e(r,t,n[t])})}return r}function t(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}var n=Object.create;var u=Object.defineProperty;var o=Object.getOwnPropertyDescriptor;var i=Object.getOwnPropertyNames;var c=Object.getPrototypeOf,a=Object.prototype.hasOwnProperty;var f=function(e,r){for(var t in r)u(e,t,{get:r[t],enumerable:!0})},l=function(e,r,n,c){var f=true,l=false,s=undefined;if(r&&(typeof r==="undefined"?"undefined":t(r))=="object"||typeof r=="function")try{var d=function(){var t=v.value;!a.call(e,t)&&t!==n&&u(e,t,{get:function(){return r[t]},enumerable:!(c=o(r,t))||c.enumerable})};for(var p=i(r)[Symbol.iterator](),v;!(f=(v=p.next()).done);f=true)d()}catch(e){l=true;s=e}finally{try{if(!f&&p.return!=null){p.return()}}finally{if(l){throw s}}}return e};var s=function(e,r,t){return t=e!=null?n(c(e)):{},l(r||!e||!e.__esModule?u(t,"default",{value:e,enumerable:!0}):t,e)},d=function(e){return l(u({},"__esModule",{value:!0}),e)};var p={};f(p,{default:function(){return _}});module.exports=d(p);var v=function(){return(typeof document==="undefined"?"undefined":t(document))>"u"?new URL("file:".concat(__filename)).href:document.currentScript&&document.currentScript.src||new URL("main.js",document.baseURI).href},b=v();var y=s(require("@vitejs/plugin-react-swc"),1),m=s(require("path"),1),O=require("vitest/config");var j=require("path"),g=s(require("process"),1),w=require("url"),h=(0,w.fileURLToPath)(b),P=(0,j.dirname)(h),S=g.default.env.INIT_CWD||g.default.cwd();var _=function(e){return(0,O.defineConfig)(r({plugins:[(0,y.default)()],test:{globals:!0,environment:"jsdom",pool:"vmThreads",include:["**/*.test.unit.?(c|m)[jt]s?(x)"],setupFiles:m.default.resolve(P,"./unit.setup.js")}},e))};
+"use strict";
+function _array_like_to_array(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
+    return arr2;
+}
+function _array_without_holes(arr) {
+    if (Array.isArray(arr)) return _array_like_to_array(arr);
+}
+function _define_property(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, {
+            value: value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+        });
+    } else {
+        obj[key] = value;
+    }
+    return obj;
+}
+function _iterable_to_array(iter) {
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+function _non_iterable_spread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+function _object_spread(target) {
+    for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i] != null ? arguments[i] : {};
+        var ownKeys = Object.keys(source);
+        if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+                return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+        }
+        ownKeys.forEach(function(key) {
+            _define_property(target, key, source[key]);
+        });
+    }
+    return target;
+}
+function _to_consumable_array(arr) {
+    return _array_without_holes(arr) || _iterable_to_array(arr) || _unsupported_iterable_to_array(arr) || _non_iterable_spread();
+}
+function _type_of(obj) {
+    "@swc/helpers - typeof";
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+}
+function _unsupported_iterable_to_array(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _array_like_to_array(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+}
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = function(target, all) {
+    for(var name in all)__defProp(target, name, {
+        get: all[name],
+        enumerable: true
+    });
+};
+var __copyProps = function(to, from, except, desc) {
+    if (from && (typeof from === "undefined" ? "undefined" : _type_of(from)) === "object" || typeof from === "function") {
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+        try {
+            var _loop = function() {
+                var key = _step.value;
+                if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+                    get: function() {
+                        return from[key];
+                    },
+                    enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+                });
+            };
+            for(var _iterator = __getOwnPropNames(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true)_loop();
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally{
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                    _iterator.return();
+                }
+            } finally{
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    }
+    return to;
+};
+var __toESM = function(mod, isNodeMode, target) {
+    return target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(// If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+        value: mod,
+        enumerable: true
+    }) : target, mod);
+};
+var __toCommonJS = function(mod) {
+    return __copyProps(__defProp({}, "__esModule", {
+        value: true
+    }), mod);
+};
+// src/configs/vitest/react/unit.ts
+var unit_exports = {};
+__export(unit_exports, {
+    default: function() {
+        return unit_default;
+    }
+});
+module.exports = __toCommonJS(unit_exports);
+// node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.52.2_@types+node@22.13.15__@swc+core@1.11.16_@swc_2cf618e3551c9a9c667a9bb2a289f06e/node_modules/tsup/assets/cjs_shims.js
+var getImportMetaUrl = function() {
+    return typeof document === "undefined" ? new URL("file:".concat(__filename)).href : document.currentScript && document.currentScript.src || new URL("main.js", document.baseURI).href;
+};
+var importMetaUrl = /* @__PURE__ */ getImportMetaUrl();
+// src/configs/vitest/react/unit.ts
+var import_plugin_react_swc = __toESM(require("@vitejs/plugin-react-swc"), 1);
+var import_node_path2 = __toESM(require("path"), 1);
+var import_config = require("vitest/config");
+// src/constants/path.ts
+var import_node_process3 = __toESM(require("process"), 1);
+var import_node_url = require("url");
+// src/utils/command.ts
+var import_boxen = __toESM(require("boxen"), 1);
+var import_chalk = __toESM(require("chalk"), 1);
+var import_node_child_process = require("child_process");
+var import_node_process2 = __toESM(require("process"), 1);
+var util = __toESM(require("util"), 1);
+// src/utils/package.ts
+var import_node_fetch = __toESM(require("node-fetch"), 1);
+// src/utils/fs.ts
+var fs = __toESM(require("fs"), 1);
+// src/utils/path.ts
+var import_node_module = require("module");
+var path = __toESM(require("path"), 1);
+function resolveCyberSkillPath() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, [
+        CYBERSKILL_DIRECTORY
+    ].concat(_to_consumable_array(urls)));
+}
+function resolveWorkingPath() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, [
+        WORKING_DIRECTORY
+    ].concat(_to_consumable_array(urls)));
+}
+function resolve2() {
+    for(var _len = arguments.length, urls = new Array(_len), _key = 0; _key < _len; _key++){
+        urls[_key] = arguments[_key];
+    }
+    var _path;
+    return (_path = path).resolve.apply(_path, _to_consumable_array(urls));
+}
+function dirname2(url) {
+    return path.dirname(url);
+}
+// src/utils/storage-server.ts
+var import_node_persist = __toESM(require("node-persist"), 1);
+var import_node_os = __toESM(require("os"), 1);
+var import_node_path = __toESM(require("path"), 1);
+var import_node_process = __toESM(require("process"), 1);
+// src/utils/package.ts
+var CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1e3;
+// src/utils/command.ts
+var DEBUG = import_node_process2.default.env.DEBUG === "true";
+var execPromise = util.promisify(import_node_child_process.exec);
+var _import_chalk_default = import_chalk.default, gray = _import_chalk_default.gray, blue = _import_chalk_default.blue;
+var commandFormatter = {
+    raw: function(cmd) {
+        return {
+            raw: true,
+            cmd: cmd
+        };
+    },
+    isRaw: function isRaw(cmd) {
+        return (typeof cmd === "undefined" ? "undefined" : _type_of(cmd)) === "object" && cmd !== null && cmd.raw === true;
+    },
+    format: function format(command, context) {
+        if (typeof command === "function") {
+            return commandFormatter.formatCLI(command(context), context);
+        }
+        if (commandFormatter.isRaw(command)) {
+            return command.cmd;
+        }
+        return commandFormatter.formatCLI(command, context);
+    },
+    formatCLI: function formatCLI(command, context) {
+        if (context === null || context === void 0 ? void 0 : context.isRemote) {
+            return "".concat(PNPM_DLX_CLI, " ").concat(CYBERSKILL_PACKAGE_NAME, " ").concat(command);
+        }
+        if (context === null || context === void 0 ? void 0 : context.isCurrentProject) {
+            return "".concat(PNPM_EXEC_CLI, " ").concat(TSX_CLI, " src/cli.ts ").concat(command);
+        }
+        return "".concat(PNPM_EXEC_CLI, " ").concat(CYBERSKILL_CLI, " ").concat(command);
+    }
+};
+// src/constants/path.ts
+var __filename2 = (0, import_node_url.fileURLToPath)(importMetaUrl);
+var __dirname = dirname2(__filename2);
+var CYBERSKILL_DIRECTORY = resolve2(__dirname, "../../");
+var WORKING_DIRECTORY = import_node_process3.default.env.INIT_CWD || import_node_process3.default.cwd();
+var CYBERSKILL_PACKAGE_NAME = "@cyberskill/shared";
+var NODE_MODULES = "node_modules";
+var BUILD_DIRECTORY = "dist";
+var PACKAGE_JSON = "package.json";
+var PACKAGE_LOCK_JSON = "package-lock.json";
+var TSCONFIG_JSON = "tsconfig.json";
+var GIT_IGNORE = ".gitignore";
+var SIMPLE_GIT_HOOK_JSON = ".simple-git-hooks.json";
+var PNPM_LOCK_YAML = "pnpm-lock.yaml";
+var GIT_HOOK = ".git/hooks";
+var GIT_COMMIT_EDITMSG = ".git/COMMIT_EDITMSG";
+var CYBERSKILL_CLI = "cyberskill";
+var ESLINT_CLI = "eslint";
+var VITEST_CLI = "vitest";
+var COMMIT_LINT_CLI = "commitlint";
+var LINT_STAGED_CLI = "lint-staged";
+var RIMRAF_CLI = "rimraf";
+var TSC_CLI = "tsc";
+var TSX_CLI = "tsx";
+var GIT_CLI = "git";
+var PNPM_CLI = "pnpm";
+var PNPM_DLX_CLI = "pnpm dlx";
+var PNPM_EXEC_CLI = "pnpm exec";
+var SIMPLE_GIT_HOOK_CLI = "simple-git-hooks";
+var ESLINT_INSPECT_CLI = "@eslint/config-inspector";
+var NODE_MODULES_INSPECT_CLI = "node_modules-inspect";
+var PATH = {
+    CYBERSKILL_DIRECTORY: CYBERSKILL_DIRECTORY,
+    WORKING_DIRECTORY: WORKING_DIRECTORY,
+    TS_CONFIG: resolveWorkingPath(TSCONFIG_JSON),
+    GIT_IGNORE: resolveWorkingPath(GIT_IGNORE),
+    GIT_HOOK: resolveWorkingPath(GIT_HOOK),
+    GIT_COMMIT_MSG: resolveWorkingPath(GIT_COMMIT_EDITMSG),
+    SIMPLE_GIT_HOOKS: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
+    PACKAGE_JSON: resolveWorkingPath(PACKAGE_JSON),
+    PACKAGE_LOCK_JSON: resolveWorkingPath(PACKAGE_LOCK_JSON),
+    PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
+    NODE_MODULES: resolveWorkingPath(NODE_MODULES),
+    CYBERSKILL: {
+        LINT_STAGED_CONFIG: resolveCyberSkillPath("./configs/lint-staged/base.js"),
+        COMMITLINT_CONFIG: resolveCyberSkillPath("./configs/commitlint/base.js"),
+        UNIT_TEST_CONFIG: resolveCyberSkillPath("./configs/vitest/react/unit.js"),
+        E2E_TEST_CONFIG: resolveCyberSkillPath("./configs/vitest/react/e2e.js")
+    }
+};
+var COMMAND = {
+    SIMPLE_GIT_HOOKS: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(SIMPLE_GIT_HOOK_CLI)),
+    ESLINT_INSPECT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_INSPECT_CLI)),
+    NODE_MODULES_INSPECT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(NODE_MODULES_INSPECT_CLI)),
+    RESET: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(RIMRAF_CLI, " ").concat(NODE_MODULES, " ").concat(PNPM_LOCK_YAML)),
+    ESLINT_CHECK: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_CLI, " ").concat(PATH.WORKING_DIRECTORY)),
+    ESLINT_FIX: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(ESLINT_CLI, " ").concat(PATH.WORKING_DIRECTORY, " --fix")),
+    TYPESCRIPT_CHECK: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(TSC_CLI, " -p ").concat(PATH.TS_CONFIG, " --noEmit")),
+    CYBERSKILL: {
+        TEST_UNIT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(VITEST_CLI, " --config ").concat(PATH.CYBERSKILL.UNIT_TEST_CONFIG)),
+        TEST_E2E: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(VITEST_CLI, " --config ").concat(PATH.CYBERSKILL.E2E_TEST_CONFIG)),
+        COMMIT_LINT: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(COMMIT_LINT_CLI, " --edit ").concat(PATH.GIT_COMMIT_MSG, " --config ").concat(PATH.CYBERSKILL.COMMITLINT_CONFIG)),
+        LINT_STAGED: commandFormatter.raw("".concat(PNPM_EXEC_CLI, " ").concat(LINT_STAGED_CLI, " --config ").concat(PATH.CYBERSKILL.LINT_STAGED_CONFIG))
+    },
+    CONFIGURE_GIT_HOOK: commandFormatter.raw("".concat(GIT_CLI, " config core.hooksPath ").concat(PATH.GIT_HOOK)),
+    BUILD: commandFormatter.raw("".concat(PNPM_CLI, " run build")),
+    STAGE_BUILD_DIRECTORY: commandFormatter.raw("".concat(GIT_CLI, " add ").concat(BUILD_DIRECTORY)),
+    PNPM_INSTALL_STANDARD: commandFormatter.raw("".concat(PNPM_CLI, " install")),
+    PNPM_INSTALL_LEGACY: commandFormatter.raw("".concat(PNPM_CLI, " install --legacy-peer-deps")),
+    PNPM_INSTALL_FORCE: commandFormatter.raw("".concat(PNPM_CLI, " install --force"))
+};
+// src/configs/vitest/react/unit.ts
+var unit_default = function(options) {
+    return (0, import_config.defineConfig)(_object_spread({
+        plugins: [
+            (0, import_plugin_react_swc.default)()
+        ],
+        test: {
+            globals: true,
+            environment: "jsdom",
+            pool: "vmThreads",
+            include: [
+                "**/*.test.unit.?(c|m)[jt]s?(x)"
+            ],
+            setupFiles: import_node_path2.default.resolve(CYBERSKILL_DIRECTORY, "./unit.setup.js")
+        }
+    }, options));
+};

@@ -29,3 +29,17 @@ export interface I_BoxedLogOptions {
     borderStyle?: 'round' | 'single' | 'double' | 'bold';
     titleColor?: string;
 }
+
+export interface I_CommandContext {
+    isRemote: boolean;
+    isCurrentProject: boolean;
+}
+
+export type T_Command =
+    | string
+    | ((context?: I_CommandContext) => string)
+    | { raw: true; cmd: string };
+
+export type T_CommandMap = Record<string, T_Command>;
+
+export type T_CommandMapInput = T_CommandMap | ((ctx: I_CommandContext) => T_CommandMap);

@@ -1,1 +1,175 @@
-"use strict";function t(t){if(t===void 0){throw new ReferenceError("this hasn't been initialised - super() hasn't been called")}return t}function e(t,e,r){e=n(e);return u(t,f()?Reflect.construct(e,r||[],n(t).constructor):e.apply(t,r))}function r(t,e){if(!(t instanceof e)){throw new TypeError("Cannot call a class as a function")}}function n(t){n=Object.setPrototypeOf?Object.getPrototypeOf:function t(t){return t.__proto__||Object.getPrototypeOf(t)};return n(t)}function o(t,e){if(typeof e!=="function"&&e!==null){throw new TypeError("Super expression must either be null or a function")}t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:true,configurable:true}});if(e)c(t,e)}function u(e,r){if(r&&(i(r)==="object"||typeof r==="function")){return r}return t(e)}function c(t,e){c=Object.setPrototypeOf||function t(t,e){t.__proto__=e;return t};return c(t,e)}function i(t){"@swc/helpers - typeof";return t&&typeof Symbol!=="undefined"&&t.constructor===Symbol?"symbol":typeof t}function f(){try{var t=!Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){}))}catch(t){}return(f=function(){return!!t})()}var l=Object.defineProperty;var a=Object.getOwnPropertyDescriptor;var _=Object.getOwnPropertyNames;var s=Object.prototype.hasOwnProperty;var p=function(t,e){for(var r in e)l(t,r,{get:e[r],enumerable:!0})},y=function(t,e,r,n){var o=true,u=false,c=undefined;if(e&&(typeof e==="undefined"?"undefined":i(e))=="object"||typeof e=="function")try{var f=function(){var o=y.value;!s.call(t,o)&&o!==r&&l(t,o,{get:function(){return e[o]},enumerable:!(n=a(e,o))||n.enumerable})};for(var p=_(e)[Symbol.iterator](),y;!(o=(y=p.next()).done);o=true)f()}catch(t){u=true;c=t}finally{try{if(!o&&p.return!=null){p.return()}}finally{if(u){throw c}}}return t};var b=function(t){return y(l({},"__esModule",{value:!0}),t)};var d={};p(d,{C_Collection:function(){return w},C_Db:function(){return C},C_Document:function(){return O},C_Model:function(){return E},E_ErrorType:function(){return h}});module.exports=b(d);var h=function(t){return t.Error="error",t.Warning="warning",t}(h||{});var v=require("mongodb"),m=require("mongoose"),C=/*#__PURE__*/function(t){o(n,t);function n(){r(this,n);return e(this,n,arguments)}return n}(v.Db),O=/*#__PURE__*/function(t){o(n,t);function n(){r(this,n);return e(this,n,arguments)}return n}(m.Document),E=/*#__PURE__*/function(t){o(n,t);function n(){r(this,n);return e(this,n,arguments)}return n}(m.Model),w=/*#__PURE__*/function(t){o(n,t);function n(){r(this,n);return e(this,n,arguments)}return n}(v.Collection);0&&(module.exports={C_Collection:C_Collection,C_Db:C_Db,C_Document:C_Document,C_Model:C_Model,E_ErrorType:E_ErrorType});
+"use strict";
+function _assert_this_initialized(self) {
+    if (self === void 0) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }
+    return self;
+}
+function _call_super(_this, derived, args) {
+    derived = _get_prototype_of(derived);
+    return _possible_constructor_return(_this, _is_native_reflect_construct() ? Reflect.construct(derived, args || [], _get_prototype_of(_this).constructor) : derived.apply(_this, args));
+}
+function _class_call_check(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+function _get_prototype_of(o) {
+    _get_prototype_of = Object.setPrototypeOf ? Object.getPrototypeOf : function getPrototypeOf(o) {
+        return o.__proto__ || Object.getPrototypeOf(o);
+    };
+    return _get_prototype_of(o);
+}
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function");
+    }
+    subClass.prototype = Object.create(superClass && superClass.prototype, {
+        constructor: {
+            value: subClass,
+            writable: true,
+            configurable: true
+        }
+    });
+    if (superClass) _set_prototype_of(subClass, superClass);
+}
+function _possible_constructor_return(self, call) {
+    if (call && (_type_of(call) === "object" || typeof call === "function")) {
+        return call;
+    }
+    return _assert_this_initialized(self);
+}
+function _set_prototype_of(o, p) {
+    _set_prototype_of = Object.setPrototypeOf || function setPrototypeOf(o, p) {
+        o.__proto__ = p;
+        return o;
+    };
+    return _set_prototype_of(o, p);
+}
+function _type_of(obj) {
+    "@swc/helpers - typeof";
+    return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+}
+function _is_native_reflect_construct() {
+    try {
+        var result = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function() {}));
+    } catch (_) {}
+    return (_is_native_reflect_construct = function() {
+        return !!result;
+    })();
+}
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = function(target, all) {
+    for(var name in all)__defProp(target, name, {
+        get: all[name],
+        enumerable: true
+    });
+};
+var __copyProps = function(to, from, except, desc) {
+    if (from && (typeof from === "undefined" ? "undefined" : _type_of(from)) === "object" || typeof from === "function") {
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
+        try {
+            var _loop = function() {
+                var key = _step.value;
+                if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+                    get: function() {
+                        return from[key];
+                    },
+                    enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+                });
+            };
+            for(var _iterator = __getOwnPropNames(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true)_loop();
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally{
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                    _iterator.return();
+                }
+            } finally{
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+    }
+    return to;
+};
+var __toCommonJS = function(mod) {
+    return __copyProps(__defProp({}, "__esModule", {
+        value: true
+    }), mod);
+};
+// src/typescript/index.ts
+var typescript_exports = {};
+__export(typescript_exports, {
+    C_Collection: function() {
+        return C_Collection;
+    },
+    C_Db: function() {
+        return C_Db;
+    },
+    C_Document: function() {
+        return C_Document;
+    },
+    C_Model: function() {
+        return C_Model;
+    },
+    E_ErrorType: function() {
+        return E_ErrorType;
+    }
+});
+module.exports = __toCommonJS(typescript_exports);
+// src/typescript/command.ts
+var E_ErrorType = /* @__PURE__ */ function(E_ErrorType2) {
+    E_ErrorType2["Error"] = "error";
+    E_ErrorType2["Warning"] = "warning";
+    return E_ErrorType2;
+}(E_ErrorType || {});
+// src/typescript/mongo.ts
+var import_mongodb = require("mongodb");
+var import_mongoose = require("mongoose");
+var C_Db = /*#__PURE__*/ function(_import_mongodb_Db) {
+    _inherits(C_Db, _import_mongodb_Db);
+    function C_Db() {
+        _class_call_check(this, C_Db);
+        return _call_super(this, C_Db, arguments);
+    }
+    return C_Db;
+}(import_mongodb.Db);
+var C_Document = /*#__PURE__*/ function(_import_mongoose_Document) {
+    _inherits(C_Document, _import_mongoose_Document);
+    function C_Document() {
+        _class_call_check(this, C_Document);
+        return _call_super(this, C_Document, arguments);
+    }
+    return C_Document;
+}(import_mongoose.Document);
+var C_Model = /*#__PURE__*/ function(_import_mongoose_Model) {
+    _inherits(C_Model, _import_mongoose_Model);
+    function C_Model() {
+        _class_call_check(this, C_Model);
+        return _call_super(this, C_Model, arguments);
+    }
+    return C_Model;
+}(import_mongoose.Model);
+var C_Collection = /*#__PURE__*/ function(_import_mongodb_Collection) {
+    _inherits(C_Collection, _import_mongodb_Collection);
+    function C_Collection() {
+        _class_call_check(this, C_Collection);
+        return _call_super(this, C_Collection, arguments);
+    }
+    return C_Collection;
+}(import_mongodb.Collection);
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+    C_Collection: C_Collection,
+    C_Db: C_Db,
+    C_Document: C_Document,
+    C_Model: C_Model,
+    E_ErrorType: E_ErrorType
+});

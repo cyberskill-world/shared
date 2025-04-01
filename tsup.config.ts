@@ -2,6 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig(({ watch, ...rest }) => {
     return {
+        target: 'es5',
         entry: ['src/**/*.{js,ts,jsx,tsx,css,scss}'],
         loader: {
             '.css': 'copy',
@@ -9,10 +10,10 @@ export default defineConfig(({ watch, ...rest }) => {
         },
         outDir: 'dist',
         format: ['cjs', 'esm'],
-        target: 'es5',
         external: ['react', 'react-dom', 'react/jsx-runtime'],
         sourcemap: !!watch,
-        minify: !watch,
+        // minify: !watch,
+        minify: false,
         splitting: false,
         clean: true,
         experimentalDts: true,

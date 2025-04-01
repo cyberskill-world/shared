@@ -1,1 +1,276 @@
-function e(e,r,t,n,o,u,s){try{var a=e[u](s);var c=a.value}catch(e){t(e);return}if(a.done){r(c)}else{Promise.resolve(c).then(n,o)}}function r(r){return function(){var t=this,n=arguments;return new Promise(function(o,u){var s=r.apply(t,n);function a(r){e(s,o,u,a,c,"next",r)}function c(r){e(s,o,u,a,c,"throw",r)}a(undefined)})}}function t(e,r){var t,n,o,u,s={label:0,sent:function(){if(o[0]&1)throw o[1];return o[1]},trys:[],ops:[]};return u={next:a(0),"throw":a(1),"return":a(2)},typeof Symbol==="function"&&(u[Symbol.iterator]=function(){return this}),u;function a(e){return function(r){return c([e,r])}}function c(u){if(t)throw new TypeError("Generator is already executing.");while(s)try{if(t=1,n&&(o=u[0]&2?n["return"]:u[0]?n["throw"]||((o=n["return"])&&o.call(n),0):n.next)&&!(o=o.call(n,u[1])).done)return o;if(n=0,o)u=[u[0]&2,o.value];switch(u[0]){case 0:case 1:o=u;break;case 4:s.label++;return{value:u[1],done:false};case 5:s.label++;n=u[1];u=[0];continue;case 7:u=s.ops.pop();s.trys.pop();continue;default:if(!(o=s.trys,o=o.length>0&&o[o.length-1])&&(u[0]===6||u[0]===2)){s=0;continue}if(u[0]===3&&(!o||u[1]>o[0]&&u[1]<o[3])){s.label=u[1];break}if(u[0]===6&&s.label<o[1]){s.label=o[1];o=u;break}if(o&&s.label<o[2]){s.label=o[2];s.ops.push(u);break}if(o[2])s.ops.pop();s.trys.pop();continue}u=r.call(e,s)}catch(e){u=[6,e];n=0}finally{t=o=0}if(u[0]&5)throw u[1];return{value:u[0]?u[1]:void 0,done:true}}}import n from"localforage";var o={get:function e(e){return r(function(){var r;return t(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,n.getItem(e)];case 1:return[2,t.sent()];case 2:r=t.sent();return[2,(console.error('❌ [Storage:get] Error getting key "'.concat(e,'":'),r),null)];case 3:return[2]}})})()},set:function e(e,o){return r(function(){var r;return t(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,n.setItem(e,o)];case 1:t.sent();return[3,3];case 2:r=t.sent();console.error('❌ [Storage:set] Error setting key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})})()},remove:function e(e){return r(function(){var r;return t(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,n.removeItem(e)];case 1:t.sent();return[3,3];case 2:r=t.sent();console.error('❌ [Storage:remove] Error removing key "'.concat(e,'":'),r);return[3,3];case 3:return[2]}})})()},keys:function e(){return r(function(){var e,r;return t(this,function(t){switch(t.label){case 0:t.trys.push([0,2,,3]);return[4,n.keys()];case 1:return[2,(e=t.sent())!==null&&e!==void 0?e:[]];case 2:r=t.sent();return[2,(console.error("❌ [Storage:keys] Error getting keys:",r),[])];case 3:return[2]}})})()}};export{o as storageClient};
+// src/utils/storage-client.ts
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+        var info = gen[key](arg);
+        var value = info.value;
+    } catch (error) {
+        reject(error);
+        return;
+    }
+    if (info.done) {
+        resolve(value);
+    } else {
+        Promise.resolve(value).then(_next, _throw);
+    }
+}
+function _async_to_generator(fn) {
+    return function() {
+        var self = this, args = arguments;
+        return new Promise(function(resolve, reject) {
+            var gen = fn.apply(self, args);
+            function _next(value) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+            }
+            function _throw(err) {
+                asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+            }
+            _next(undefined);
+        });
+    };
+}
+function _ts_generator(thisArg, body) {
+    var f, y, t, g, _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    };
+    return g = {
+        next: verb(0),
+        "throw": verb(1),
+        "return": verb(2)
+    }, typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(_)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+}
+import localForage from "localforage";
+var storageClient = {
+    get: function get(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.getItem(key)
+                        ];
+                    case 1:
+                        return [
+                            2,
+                            _state.sent()
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:get] Error getting key "'.concat(key, '":'), error);
+                        return [
+                            2,
+                            null
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    set: function set(key, value) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.setItem(key, value)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:set] Error setting key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    remove: function remove(key) {
+        return _async_to_generator(function() {
+            var error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.removeItem(key)
+                        ];
+                    case 1:
+                        _state.sent();
+                        return [
+                            3,
+                            3
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error('❌ [Storage:remove] Error removing key "'.concat(key, '":'), error);
+                        return [
+                            3,
+                            3
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    },
+    keys: function keys() {
+        return _async_to_generator(function() {
+            var keys, error;
+            return _ts_generator(this, function(_state) {
+                switch(_state.label){
+                    case 0:
+                        _state.trys.push([
+                            0,
+                            2,
+                            ,
+                            3
+                        ]);
+                        return [
+                            4,
+                            localForage.keys()
+                        ];
+                    case 1:
+                        keys = _state.sent();
+                        return [
+                            2,
+                            keys !== null && keys !== void 0 ? keys : []
+                        ];
+                    case 2:
+                        error = _state.sent();
+                        console.error("❌ [Storage:keys] Error getting keys:", error);
+                        return [
+                            2,
+                            []
+                        ];
+                    case 3:
+                        return [
+                            2
+                        ];
+                }
+            });
+        })();
+    }
+};
+export { storageClient };

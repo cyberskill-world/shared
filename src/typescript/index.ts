@@ -2,6 +2,7 @@ export * from './api-response.js';
 export * from './apollo.js';
 export * from './command.js';
 export * from './config.js';
+export * from './fs.js';
 export * from './graphql-codegen.js';
 export * from './loading.js';
 export * from './log.js';
