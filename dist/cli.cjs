@@ -1449,6 +1449,7 @@ function _runCommand() {
             switch(_state.label){
                 case 0:
                     commandLog.info("".concat(description, "..."));
+                    console.log("run", commandFormatter.format(command));
                     return [
                         4,
                         executeCommand(commandFormatter.format(command))

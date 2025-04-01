@@ -8,11 +8,12 @@ import type { T_Command } from '#typescript/command.js';
 import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
 import { clearAllErrorLists, commandFormatter, commandLog, executeCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
-import { appendFileSync, existsSync, readFileSync, writeFileSync } from '#utils/fs.js';
+import { appendFileSync, existsSync, readFileSync, rmSync, writeFileSync } from '#utils/fs.js';
 import { checkPackage } from '#utils/package.js';
 
 async function runCommand(description: string, command: T_Command) {
     commandLog.info(`${description}...`);
+    console.log('run', commandFormatter.format(command));
     await executeCommand(commandFormatter.format(command));
     commandLog.success(`${description} completed successfully.`);
 }
@@ -190,7 +191,7 @@ async function setup() {
 }
 
 async function reset() {
-    await runCommand('Resetting project files', COMMAND.RESET);
+    rmSync([PATH.NODE_MODULES, PATH.PNPM_LOCK_YAML]);
     await installDependencies();
     await setupGitHook();
 }

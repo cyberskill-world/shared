@@ -42,3 +42,11 @@ export function appendFileSync(filePath: string, data: string | object, options:
 
     fs.appendFileSync(filePath, content, 'utf-8');
 }
+
+export function rmSync(filePaths: string[]) {
+    filePaths.forEach(filePath => {
+        if (existsSync(filePath)) {
+            fs.rmSync(filePath, { recursive: true, force: true });
+        }
+    });
+}
