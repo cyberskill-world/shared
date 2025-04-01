@@ -1,3 +1,9 @@
+## [1.50.0](https://github.com/cyberskill-world/shared/compare/v1.49.0...v1.50.0) (2025-04-01)
+
+### ✨ Features
+
+* correct simple git hook ([357fad3](https://github.com/cyberskill-world/shared/commit/357fad393246600f8d84ceb18a9ca1fdd5146b26))
+
 ## [1.49.0](https://github.com/cyberskill-world/shared/compare/v1.48.0...v1.49.0) (2025-04-01)
 
 ### ✨ Features
