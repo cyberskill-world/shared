@@ -1,3 +1,10 @@
+## [1.49.0](https://github.com/cyberskill-world/shared/compare/v1.48.0...v1.49.0) (2025-04-01)
+
+### ✨ Features
+
+* remove rimraf ([07ef8d2](https://github.com/cyberskill-world/shared/commit/07ef8d24fdd2e1850c170efe5184f72b23f0e29c))
+* remove rimraf ([cc32aaf](https://github.com/cyberskill-world/shared/commit/cc32aaf6c1702961f67c5a7299136595fff45428))
+
 ## [1.48.0](https://github.com/cyberskill-world/shared/compare/v1.47.0...v1.48.0) (2025-04-01)
 
 ### ✨ Features
