@@ -95,11 +95,12 @@ async function commitLint() {
 }
 
 async function setupGitHook() {
+    rmSync([PATH.GIT_HOOK]);
     await runCommand('Configuring Git hooks', COMMAND.CONFIGURE_GIT_HOOK);
 
     const hooks = await resolveCommands(HOOK);
 
-    writeFileSync(PATH.SIMPLE_GIT_HOOKS, hooks, { isJson: true });
+    writeFileSync(PATH.SIMPLE_GIT_HOOKS_JSON, hooks, { isJson: true });
 
     const gitIgnoreEntry = `\n${SIMPLE_GIT_HOOK_JSON}\n`;
 

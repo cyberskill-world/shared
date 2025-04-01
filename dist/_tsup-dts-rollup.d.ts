@@ -6154,7 +6154,6 @@ declare function HOOK({ isCurrentProject }: Partial<I_CommandContext_2>): {
         readonly raw: true;
         readonly cmd: string;
     } | undefined;
-    postinstall: string;
     'pre-commit': string;
     'commit-msg': string;
 };
@@ -6891,7 +6890,7 @@ declare const PATH: {
     GIT_IGNORE: string;
     GIT_HOOK: string;
     GIT_COMMIT_MSG: string;
-    SIMPLE_GIT_HOOKS: string;
+    SIMPLE_GIT_HOOKS_JSON: string;
     PACKAGE_JSON: string;
     PACKAGE_LOCK_JSON: string;
     PNPM_LOCK_YAML: string;

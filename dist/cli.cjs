@@ -1406,7 +1406,7 @@ var PATH = {
     GIT_IGNORE: resolveWorkingPath(GIT_IGNORE),
     GIT_HOOK: resolveWorkingPath(GIT_HOOK),
     GIT_COMMIT_MSG: resolveWorkingPath(GIT_COMMIT_EDITMSG),
-    SIMPLE_GIT_HOOKS: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
+    SIMPLE_GIT_HOOKS_JSON: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
     PACKAGE_JSON: resolveWorkingPath(PACKAGE_JSON),
     PACKAGE_LOCK_JSON: resolveWorkingPath(PACKAGE_LOCK_JSON),
     PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
@@ -1421,7 +1421,6 @@ var PATH = {
 function HOOK(param) {
     var isCurrentProject = param.isCurrentProject;
     return _object_spread({
-        "postinstall": "setup",
         "pre-commit": LINT_STAGED_CLI,
         "commit-msg": COMMIT_LINT_CLI
     }, isCurrentProject && {
@@ -1772,6 +1771,9 @@ function _setupGitHook() {
         return _ts_generator(this, function(_state) {
             switch(_state.label){
                 case 0:
+                    rmSync2([
+                        PATH.GIT_HOOK
+                    ]);
                     return [
                         4,
                         runCommand("Configuring Git hooks", COMMAND.CONFIGURE_GIT_HOOK)
@@ -1784,7 +1786,7 @@ function _setupGitHook() {
                     ];
                 case 2:
                     hooks = _state.sent();
-                    writeFileSync2(PATH.SIMPLE_GIT_HOOKS, hooks, {
+                    writeFileSync2(PATH.SIMPLE_GIT_HOOKS_JSON, hooks, {
                         isJson: true
                     });
                     gitIgnoreEntry = "\n".concat(SIMPLE_GIT_HOOK_JSON, "\n");

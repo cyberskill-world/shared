@@ -253,7 +253,7 @@ var PATH = {
     GIT_IGNORE: resolveWorkingPath(GIT_IGNORE),
     GIT_HOOK: resolveWorkingPath(GIT_HOOK),
     GIT_COMMIT_MSG: resolveWorkingPath(GIT_COMMIT_EDITMSG),
-    SIMPLE_GIT_HOOKS: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
+    SIMPLE_GIT_HOOKS_JSON: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
     PACKAGE_JSON: resolveWorkingPath(PACKAGE_JSON),
     PACKAGE_LOCK_JSON: resolveWorkingPath(PACKAGE_LOCK_JSON),
     PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
