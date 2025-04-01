@@ -1,3 +1,9 @@
+## [1.48.0](https://github.com/cyberskill-world/shared/compare/v1.47.0...v1.48.0) (2025-04-01)
+
+### ✨ Features
+
+* refactor cli ([61cc5e4](https://github.com/cyberskill-world/shared/commit/61cc5e482d6ef9c8ff210bcad7ed0e6f1fd5b455))
+
 ## [1.47.0](https://github.com/cyberskill-world/shared/compare/v1.46.0...v1.47.0) (2025-03-27)
 
 ### ✨ Features
