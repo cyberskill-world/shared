@@ -284,6 +284,16 @@ function appendFileSync2(filePath, data) {
     var content = isJson && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
     fs.appendFileSync(filePath, content, "utf-8");
 }
+function rmSync2(filePaths) {
+    filePaths.forEach(function(filePath) {
+        if (existsSync2(filePath)) {
+            fs.rmSync(filePath, {
+                recursive: true,
+                force: true
+            });
+        }
+    });
+}
 // src/utils/path.ts
 import * as path from "node:path";
 function resolveCyberSkillPath() {
@@ -1373,7 +1383,6 @@ function _runCommand() {
             switch(_state.label){
                 case 0:
                     commandLog.info("".concat(description, "..."));
-                    console.log("run", commandFormatter.format(command));
                     return [
                         4,
                         executeCommand(commandFormatter.format(command))
@@ -1962,23 +1971,21 @@ function _reset() {
         return _ts_generator(this, function(_state) {
             switch(_state.label){
                 case 0:
+                    rmSync2([
+                        PATH.NODE_MODULES,
+                        PATH.PNPM_LOCK_YAML
+                    ]);
                     return [
                         4,
-                        runCommand("Resetting project files", COMMAND.RESET)
+                        installDependencies()
                     ];
                 case 1:
                     _state.sent();
                     return [
                         4,
-                        installDependencies()
-                    ];
-                case 2:
-                    _state.sent();
-                    return [
-                        4,
                         setupGitHook()
                     ];
-                case 3:
+                case 2:
                     _state.sent();
                     return [
                         2

@@ -307,7 +307,7 @@ __export(cli_exports, {
     }
 });
 module.exports = __toCommonJS(cli_exports);
-// node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.52.2_@types+node@22.13.15__@swc+core@1.11.16_@swc_2cf618e3551c9a9c667a9bb2a289f06e/node_modules/tsup/assets/cjs_shims.js
+// node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.52.2_@types+node@22.13.17__@swc+core@1.11.16_@swc_95e38cac10676cdf66b55e0093c30cae/node_modules/tsup/assets/cjs_shims.js
 var getImportMetaUrl = function() {
     return typeof document === "undefined" ? new URL("file:".concat(__filename)).href : document.currentScript && document.currentScript.src || new URL("main.js", document.baseURI).href;
 };
@@ -358,6 +358,16 @@ function appendFileSync2(filePath, data) {
     var _options_isJson = options.isJson, isJson = _options_isJson === void 0 ? false : _options_isJson;
     var content = isJson && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
     fs.appendFileSync(filePath, content, "utf-8");
+}
+function rmSync2(filePaths) {
+    filePaths.forEach(function(filePath) {
+        if (existsSync2(filePath)) {
+            fs.rmSync(filePath, {
+                recursive: true,
+                force: true
+            });
+        }
+    });
 }
 // src/utils/path.ts
 var import_node_module = require("module");
@@ -1449,7 +1459,6 @@ function _runCommand() {
             switch(_state.label){
                 case 0:
                     commandLog.info("".concat(description, "..."));
-                    console.log("run", commandFormatter.format(command));
                     return [
                         4,
                         executeCommand(commandFormatter.format(command))
@@ -2038,23 +2047,21 @@ function _reset() {
         return _ts_generator(this, function(_state) {
             switch(_state.label){
                 case 0:
+                    rmSync2([
+                        PATH.NODE_MODULES,
+                        PATH.PNPM_LOCK_YAML
+                    ]);
                     return [
                         4,
-                        runCommand("Resetting project files", COMMAND.RESET)
+                        installDependencies()
                     ];
                 case 1:
                     _state.sent();
                     return [
                         4,
-                        installDependencies()
-                    ];
-                case 2:
-                    _state.sent();
-                    return [
-                        4,
                         setupGitHook()
                     ];
-                case 3:
+                case 2:
                     _state.sent();
                     return [
                         2

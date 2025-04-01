@@ -421,6 +421,16 @@ function appendFileSync2(filePath, data) {
     var content = isJson2 && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
     fs.appendFileSync(filePath, content, "utf-8");
 }
+function rmSync2(filePaths) {
+    filePaths.forEach(function(filePath) {
+        if (existsSync2(filePath)) {
+            fs.rmSync(filePath, {
+                recursive: true,
+                force: true
+            });
+        }
+    });
+}
 // src/utils/path.ts
 import { createRequire } from "node:module";
 import * as path from "node:path";
@@ -4130,4 +4140,4 @@ function regexSearchMapper(str) {
 function removeAccent(str) {
     return str.normalize("NFD").replace(RegExp("\\p{Diacritic}", "gu"), "");
 }
-export { ApolloProvider, BUILD_DIRECTORY, COMMAND, COMMIT_LINT_CLI, CYBERSKILL_CLI, CYBERSKILL_DIRECTORY, CYBERSKILL_PACKAGE_NAME, CYBERSKILL_STORAGE, C_Collection, C_Db, C_Document, C_Model, ESLINT_CLI, ESLINT_INSPECT_CLI, E_ErrorType, GIT_CLI, GIT_COMMIT_EDITMSG, GIT_HOOK, GIT_IGNORE, HOOK, LINT_STAGED_CLI, Loading, LoadingContext, LoadingProvider, MongoController, MongooseController, NODE_MODULES, NODE_MODULES_INSPECT_CLI, NextIntlContext, NextIntlProvider, PACKAGE_JSON, PACKAGE_LOCK_JSON, PATH, PNPM_CLI, PNPM_DLX_CLI, PNPM_EXEC_CLI, PNPM_LOCK_YAML, RESPONSE_STATUS, RIMRAF_CLI, SIMPLE_GIT_HOOK_CLI, SIMPLE_GIT_HOOK_JSON, TSCONFIG_JSON, TSC_CLI, TSX_CLI, VITEST_CLI, WORKING_DIRECTORY, aggregatePaginate, appendFileSync2 as appendFileSync, checkPackage, clearAllErrorLists, commandFormatter, commandLog, deepMerge, dirname2 as dirname, executeCommand, existsSync2 as existsSync, generateShortId, generateSlug, getLatestPackageVersion, getPackageJson, getStorageDir, getStoredErrorLists, initNodePersist, isJson, join2 as join, mongo, mongoosePaginate, readFileSync2 as readFileSync, regexSearchMapper, removeAccent, require2 as require, resolve2 as resolve, resolveCommands, resolveCyberSkillPath, resolveWorkingPath, saveErrorListToStorage, serializer, storageClient, storageServer, throwResponse, useLoading, useNextIntl, useStorage, useTranslateNextIntl, validate, withNextIntl, writeFileSync2 as writeFileSync };
+export { ApolloProvider, BUILD_DIRECTORY, COMMAND, COMMIT_LINT_CLI, CYBERSKILL_CLI, CYBERSKILL_DIRECTORY, CYBERSKILL_PACKAGE_NAME, CYBERSKILL_STORAGE, C_Collection, C_Db, C_Document, C_Model, ESLINT_CLI, ESLINT_INSPECT_CLI, E_ErrorType, GIT_CLI, GIT_COMMIT_EDITMSG, GIT_HOOK, GIT_IGNORE, HOOK, LINT_STAGED_CLI, Loading, LoadingContext, LoadingProvider, MongoController, MongooseController, NODE_MODULES, NODE_MODULES_INSPECT_CLI, NextIntlContext, NextIntlProvider, PACKAGE_JSON, PACKAGE_LOCK_JSON, PATH, PNPM_CLI, PNPM_DLX_CLI, PNPM_EXEC_CLI, PNPM_LOCK_YAML, RESPONSE_STATUS, RIMRAF_CLI, SIMPLE_GIT_HOOK_CLI, SIMPLE_GIT_HOOK_JSON, TSCONFIG_JSON, TSC_CLI, TSX_CLI, VITEST_CLI, WORKING_DIRECTORY, aggregatePaginate, appendFileSync2 as appendFileSync, checkPackage, clearAllErrorLists, commandFormatter, commandLog, deepMerge, dirname2 as dirname, executeCommand, existsSync2 as existsSync, generateShortId, generateSlug, getLatestPackageVersion, getPackageJson, getStorageDir, getStoredErrorLists, initNodePersist, isJson, join2 as join, mongo, mongoosePaginate, readFileSync2 as readFileSync, regexSearchMapper, removeAccent, require2 as require, resolve2 as resolve, resolveCommands, resolveCyberSkillPath, resolveWorkingPath, rmSync2 as rmSync, saveErrorListToStorage, serializer, storageClient, storageServer, throwResponse, useLoading, useNextIntl, useStorage, useTranslateNextIntl, validate, withNextIntl, writeFileSync2 as writeFileSync };

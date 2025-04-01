@@ -7236,6 +7236,11 @@ export { RIMRAF_CLI }
 export { RIMRAF_CLI as RIMRAF_CLI_alias_1 }
 export { RIMRAF_CLI as RIMRAF_CLI_alias_2 }
 
+declare function rmSync(filePaths: string[]): void;
+export { rmSync }
+export { rmSync as rmSync_alias_1 }
+export { rmSync as rmSync_alias_2 }
+
 declare function saveErrorListToStorage(errorList: I_ErrorEntry_2[]): Promise<void>;
 export { saveErrorListToStorage }
 export { saveErrorListToStorage as saveErrorListToStorage_alias_1 }

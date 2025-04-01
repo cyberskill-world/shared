@@ -340,6 +340,16 @@ function appendFileSync2(filePath, data) {
     var content = isJson && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
     fs.appendFileSync(filePath, content, "utf-8");
 }
+function rmSync2(filePaths) {
+    filePaths.forEach(function(filePath) {
+        if (existsSync2(filePath)) {
+            fs.rmSync(filePath, {
+                recursive: true,
+                force: true
+            });
+        }
+    });
+}
 // src/utils/storage-server.ts
 import nodePersist from "node-persist";
 import os from "node:os";
@@ -1568,4 +1578,4 @@ function throwResponse(param) {
         throw new Error(responseMessage);
     }
 }
-export { appendFileSync2 as appendFileSync, checkPackage, clearAllErrorLists, commandFormatter, commandLog, dirname2 as dirname, executeCommand, existsSync2 as existsSync, getLatestPackageVersion, getPackageJson, getStorageDir, getStoredErrorLists, initNodePersist, join2 as join, readFileSync2 as readFileSync, require2 as require, resolve2 as resolve, resolveCommands, resolveCyberSkillPath, resolveWorkingPath, saveErrorListToStorage, storageServer, throwResponse, writeFileSync2 as writeFileSync };
+export { appendFileSync2 as appendFileSync, checkPackage, clearAllErrorLists, commandFormatter, commandLog, dirname2 as dirname, executeCommand, existsSync2 as existsSync, getLatestPackageVersion, getPackageJson, getStorageDir, getStoredErrorLists, initNodePersist, join2 as join, readFileSync2 as readFileSync, require2 as require, resolve2 as resolve, resolveCommands, resolveCyberSkillPath, resolveWorkingPath, rmSync2 as rmSync, saveErrorListToStorage, storageServer, throwResponse, writeFileSync2 as writeFileSync };

@@ -8,6 +8,7 @@ export { commandFormatter_alias_2 as commandFormatter } from '../_tsup-dts-rollu
 export { readFileSync_alias_2 as readFileSync } from '../_tsup-dts-rollup.js';
 export { writeFileSync_alias_2 as writeFileSync } from '../_tsup-dts-rollup.js';
 export { appendFileSync_alias_2 as appendFileSync } from '../_tsup-dts-rollup.js';
+export { rmSync_alias_2 as rmSync } from '../_tsup-dts-rollup.js';
 export { existsSync_alias_2 as existsSync } from '../_tsup-dts-rollup.js';
 export { throwResponse_alias_1 as throwResponse } from '../_tsup-dts-rollup.js';
 export { getPackageJson_alias_1 as getPackageJson } from '../_tsup-dts-rollup.js';

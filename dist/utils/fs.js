@@ -34,4 +34,14 @@ function appendFileSync2(filePath, data) {
     var content = isJson && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
     fs.appendFileSync(filePath, content, "utf-8");
 }
-export { appendFileSync2 as appendFileSync, existsSync2 as existsSync, readFileSync2 as readFileSync, writeFileSync2 as writeFileSync };
+function rmSync2(filePaths) {
+    filePaths.forEach(function(filePath) {
+        if (existsSync2(filePath)) {
+            fs.rmSync(filePath, {
+                recursive: true,
+                force: true
+            });
+        }
+    });
+}
+export { appendFileSync2 as appendFileSync, existsSync2 as existsSync, readFileSync2 as readFileSync, rmSync2 as rmSync, writeFileSync2 as writeFileSync };

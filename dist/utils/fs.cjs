@@ -73,6 +73,9 @@ __export(fs_exports, {
     readFileSync: function() {
         return readFileSync2;
     },
+    rmSync: function() {
+        return rmSync2;
+    },
     writeFileSync: function() {
         return writeFileSync2;
     }
@@ -109,10 +112,21 @@ function appendFileSync2(filePath, data) {
     var content = isJson && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
     fs.appendFileSync(filePath, content, "utf-8");
 }
+function rmSync2(filePaths) {
+    filePaths.forEach(function(filePath) {
+        if (existsSync2(filePath)) {
+            fs.rmSync(filePath, {
+                recursive: true,
+                force: true
+            });
+        }
+    });
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
     appendFileSync: appendFileSync,
     existsSync: existsSync,
     readFileSync: readFileSync,
+    rmSync: rmSync,
     writeFileSync: writeFileSync
 });

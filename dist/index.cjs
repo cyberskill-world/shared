@@ -626,6 +626,9 @@ __export(index_exports, {
     resolveWorkingPath: function() {
         return resolveWorkingPath;
     },
+    rmSync: function() {
+        return rmSync2;
+    },
     saveErrorListToStorage: function() {
         return saveErrorListToStorage;
     },
@@ -664,7 +667,7 @@ __export(index_exports, {
     }
 });
 module.exports = __toCommonJS(index_exports);
-// node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.52.2_@types+node@22.13.15__@swc+core@1.11.16_@swc_2cf618e3551c9a9c667a9bb2a289f06e/node_modules/tsup/assets/cjs_shims.js
+// node_modules/.pnpm/tsup@8.4.0_@microsoft+api-extractor@7.52.2_@types+node@22.13.17__@swc+core@1.11.16_@swc_95e38cac10676cdf66b55e0093c30cae/node_modules/tsup/assets/cjs_shims.js
 var getImportMetaUrl = function() {
     return typeof document === "undefined" ? new URL("file:".concat(__filename)).href : document.currentScript && document.currentScript.src || new URL("main.js", document.baseURI).href;
 };
@@ -750,6 +753,16 @@ function appendFileSync2(filePath, data) {
     var tmp = options.isJson, isJson2 = tmp === void 0 ? false : tmp;
     var content = isJson2 && (typeof data === "undefined" ? "undefined" : _type_of(data)) === "object" ? JSON.stringify(data, null, 4) : String(data);
     fs.appendFileSync(filePath, content, "utf-8");
+}
+function rmSync2(filePaths) {
+    filePaths.forEach(function(filePath) {
+        if (existsSync2(filePath)) {
+            fs.rmSync(filePath, {
+                recursive: true,
+                force: true
+            });
+        }
+    });
 }
 // src/utils/path.ts
 var import_node_module = require("module");
@@ -4531,6 +4544,7 @@ function removeAccent(str) {
     resolveCommands: resolveCommands,
     resolveCyberSkillPath: resolveCyberSkillPath,
     resolveWorkingPath: resolveWorkingPath,
+    rmSync: rmSync,
     saveErrorListToStorage: saveErrorListToStorage,
     serializer: serializer,
     storageClient: storageClient,

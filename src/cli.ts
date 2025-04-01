@@ -13,7 +13,6 @@ import { checkPackage } from '#utils/package.js';
 
 async function runCommand(description: string, command: T_Command) {
     commandLog.info(`${description}...`);
-    console.log('run', commandFormatter.format(command));
     await executeCommand(commandFormatter.format(command));
     commandLog.success(`${description} completed successfully.`);
 }

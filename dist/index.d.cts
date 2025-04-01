@@ -141,6 +141,7 @@ export { commandFormatter } from './_tsup-dts-rollup.cjs';
 export { readFileSync } from './_tsup-dts-rollup.cjs';
 export { writeFileSync } from './_tsup-dts-rollup.cjs';
 export { appendFileSync } from './_tsup-dts-rollup.cjs';
+export { rmSync } from './_tsup-dts-rollup.cjs';
 export { existsSync } from './_tsup-dts-rollup.cjs';
 export { throwResponse } from './_tsup-dts-rollup.cjs';
 export { getPackageJson } from './_tsup-dts-rollup.cjs';
