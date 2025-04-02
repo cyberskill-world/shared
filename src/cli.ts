@@ -7,13 +7,13 @@ import type { T_Command } from '#typescript/command.js';
 
 import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
-import { clearAllErrorLists, commandFormatter, commandLog, executeCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
+import { clearAllErrorLists, commandLog, executeCommand, formatCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
 import { appendFileSync, existsSync, readFileSync, rmSync, writeFileSync } from '#utils/fs.js';
 import { checkPackage } from '#utils/package.js';
 
 async function runCommand(description: string, command: T_Command) {
     commandLog.info(`${description}...`);
-    await executeCommand(commandFormatter.format(command));
+    await executeCommand(formatCommand(command) as string);
     commandLog.success(`${description} completed successfully.`);
 }
 
@@ -56,6 +56,7 @@ async function showCheckResult() {
 }
 
 async function lintStaged() {
+    await clearAllErrorLists();
     const { isCurrentProject } = await checkPackage(CYBERSKILL_PACKAGE_NAME);
 
     if (isCurrentProject) {
@@ -90,13 +91,15 @@ async function lintFix() {
 }
 
 async function commitLint() {
+    await clearAllErrorLists();
     await runCommand('Validating commit message', COMMAND.CYBERSKILL.COMMIT_LINT);
     showCheckResult();
 }
 
 async function setupGitHook() {
-    rmSync([PATH.GIT_HOOK]);
     await runCommand('Configuring Git hooks', COMMAND.CONFIGURE_GIT_HOOK);
+
+    rmSync([PATH.GIT_HOOK]);
 
     const hooks = await resolveCommands(HOOK);
 
@@ -118,7 +121,7 @@ async function setupGitHook() {
     await runCommand('Installing simple-git-hooks', COMMAND.SIMPLE_GIT_HOOKS);
 }
 
-export async function installDependencies() {
+async function installDependencies() {
     const strategies = [
         { command: COMMAND.PNPM_INSTALL_STANDARD, message: 'Installing dependencies (standard)' },
         { command: COMMAND.PNPM_INSTALL_LEGACY, message: 'Retrying with legacy peer dependencies' },
@@ -139,7 +142,7 @@ export async function installDependencies() {
     throw new Error('All dependency installation strategies failed.');
 }
 
-export async function updatePackage(packageName: string): Promise<void> {
+async function updatePackage(packageName: string): Promise<void> {
     try {
         const { installedPath, latestVersion, file } = await checkPackage(packageName);
 

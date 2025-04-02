@@ -9,7 +9,7 @@ import * as util from 'node:util';
 
 import type { I_BoxedLogOptions, I_CommandContext, I_ErrorEntry, I_EslintError, T_Command, T_CommandMapInput } from '#typescript/command.js';
 
-import { CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PNPM_DLX_CLI, PNPM_EXEC_CLI, TSX_CLI } from '#constants/path.js';
+import { CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
 
 import { checkPackage } from './package.js';
@@ -21,7 +21,9 @@ const execPromise = util.promisify(exec);
 
 const { gray, blue } = chalk;
 
-const getTimeStamp = () => gray(`[${new Date().toLocaleTimeString()}]`);
+function getTimeStamp() {
+    return gray(`[${new Date().toLocaleTimeString()}]`);
+}
 
 function chalkKeyword(color: string): ChalkInstance {
     const chalkColor = chalk[color as keyof typeof chalk];
@@ -93,9 +95,11 @@ export const commandLog = {
     printBoxedLog,
 };
 
-const getErrorListKey = (timestamp: number) => `error_list:${timestamp}`;
+function getErrorListKey(timestamp: number) {
+    return `error_list:${timestamp}`;
+}
 
-export async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void> {
+async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void> {
     if (errorList.length === 0) {
         return;
     }
@@ -280,34 +284,37 @@ export async function executeCommand(command: string, parser = parseCommandOutpu
     }
 }
 
-export const commandFormatter = {
-    raw: (cmd: string) => ({ raw: true, cmd } as const),
-    isRaw(cmd: any): cmd is { raw: true; cmd: string } {
-        return typeof cmd === 'object' && cmd !== null && cmd.raw === true;
-    },
-    format(command: T_Command, context?: I_CommandContext): string {
-        if (typeof command === 'function') {
-            return commandFormatter.formatCLI(command(context), context);
-        }
+export function rawCommand(cmd: string) {
+    return { raw: true, cmd };
+}
 
-        if (commandFormatter.isRaw(command)) {
-            return command.cmd;
-        }
+function formatCLI(command: string, context?: I_CommandContext) {
+    if (context?.isRemote) {
+        return `${PNPM_EXEC_CLI} ${CYBERSKILL_PACKAGE_NAME} ${command}`;
+    }
 
-        return commandFormatter.formatCLI(command, context);
-    },
-    formatCLI(command: string, context?: I_CommandContext): string {
-        if (context?.isRemote) {
-            return `${PNPM_DLX_CLI} ${CYBERSKILL_PACKAGE_NAME} ${command}`;
-        }
+    if (context?.isCurrentProject) {
+        return `${PNPM_EXEC_CLI} ${TSX_CLI} src/cli.ts ${command}`;
+    }
 
-        if (context?.isCurrentProject) {
-            return `${PNPM_EXEC_CLI} ${TSX_CLI} src/cli.ts ${command}`;
-        }
+    return `${PNPM_EXEC_CLI} ${CYBERSKILL_CLI} ${command}`;
+}
 
-        return `${PNPM_EXEC_CLI} ${CYBERSKILL_CLI} ${command}`;
-    },
-};
+export function formatCommand(command: T_Command, context?: I_CommandContext) {
+    if (typeof command === 'function') {
+        return formatCLI(command(context), context);
+    }
+
+    if (typeof command === 'object' && command?.raw === true) {
+        return command.cmd;
+    }
+
+    if (typeof command === 'string') {
+        return formatCLI(command, context);
+    }
+
+    return command;
+}
 
 export async function resolveCommands(input: T_CommandMapInput, context: Partial<I_CommandContext> = {}) {
     const isRemote = context?.isRemote ?? false;
@@ -319,6 +326,6 @@ export async function resolveCommands(input: T_CommandMapInput, context: Partial
     const commands = typeof input === 'function' ? input(ctx) : input;
 
     return Object.fromEntries(
-        Object.entries(commands).map(([key, cmd]) => [key, commandFormatter.format(cmd, ctx)]),
+        Object.entries(commands).map(([key, cmd]) => [key, formatCommand(cmd, ctx)]),
     );
 }

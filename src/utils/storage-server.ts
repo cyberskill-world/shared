@@ -1,13 +1,14 @@
 import nodePersist from 'node-persist';
 import os from 'node:os';
-import path from 'node:path';
 import process from 'node:process';
 
 import { CYBERSKILL_STORAGE } from '#constants/path.js';
 
+import { join } from './path.js';
+
 export function getStorageDir() {
     return process.env.CYBERSKILL_STORAGE_DIR
-        || path.join(os.homedir(), CYBERSKILL_STORAGE);
+        || join(os.homedir(), CYBERSKILL_STORAGE);
 }
 
 export async function initNodePersist() {

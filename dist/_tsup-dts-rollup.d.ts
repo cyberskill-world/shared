@@ -17,6 +17,7 @@ import type { ErrorHandlingMiddlewareFunction } from 'mongoose';
 import type { ErrorHandlingMiddlewareWithOption } from 'mongoose';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
+import { I_Command as I_Command_3 } from '#typescript/command.js';
 import type { InitOptions } from 'i18next';
 import type { InsertManyOptions } from 'mongoose';
 import type { InsertManyResult } from 'mongodb';
@@ -133,95 +134,75 @@ export { clearAllErrorLists as clearAllErrorLists_alias_2 }
 
 declare const COMMAND: {
     SIMPLE_GIT_HOOKS: {
-        readonly raw: true;
-        readonly cmd: string;
+        raw: boolean;
+        cmd: string;
     };
     ESLINT_INSPECT: {
-        readonly raw: true;
-        readonly cmd: string;
+        raw: boolean;
+        cmd: string;
     };
     NODE_MODULES_INSPECT: {
-        readonly raw: true;
-        readonly cmd: string;
-    };
-    RESET: {
-        readonly raw: true;
-        readonly cmd: string;
+        raw: boolean;
+        cmd: string;
     };
     ESLINT_CHECK: {
-        readonly raw: true;
-        readonly cmd: string;
+        raw: boolean;
+        cmd: string;
     };
     ESLINT_FIX: {
-        readonly raw: true;
-        readonly cmd: string;
+        raw: boolean;
+        cmd: string;
     };
     TYPESCRIPT_CHECK: {
-        readonly raw: true;
-        readonly cmd: string;
+        raw: boolean;
+        cmd: string;
+    };
+    CONFIGURE_GIT_HOOK: {
+        raw: boolean;
+        cmd: string;
+    };
+    BUILD: {
+        raw: boolean;
+        cmd: string;
+    };
+    STAGE_BUILD_DIRECTORY: {
+        raw: boolean;
+        cmd: string;
+    };
+    PNPM_INSTALL_STANDARD: {
+        raw: boolean;
+        cmd: string;
+    };
+    PNPM_INSTALL_LEGACY: {
+        raw: boolean;
+        cmd: string;
+    };
+    PNPM_INSTALL_FORCE: {
+        raw: boolean;
+        cmd: string;
     };
     CYBERSKILL: {
         TEST_UNIT: {
-            readonly raw: true;
-            readonly cmd: string;
+            raw: boolean;
+            cmd: string;
         };
         TEST_E2E: {
-            readonly raw: true;
-            readonly cmd: string;
+            raw: boolean;
+            cmd: string;
         };
         COMMIT_LINT: {
-            readonly raw: true;
-            readonly cmd: string;
+            raw: boolean;
+            cmd: string;
         };
         LINT_STAGED: {
-            readonly raw: true;
-            readonly cmd: string;
+            raw: boolean;
+            cmd: string;
         };
-    };
-    CONFIGURE_GIT_HOOK: {
-        readonly raw: true;
-        readonly cmd: string;
-    };
-    BUILD: {
-        readonly raw: true;
-        readonly cmd: string;
-    };
-    STAGE_BUILD_DIRECTORY: {
-        readonly raw: true;
-        readonly cmd: string;
-    };
-    PNPM_INSTALL_STANDARD: {
-        readonly raw: true;
-        readonly cmd: string;
-    };
-    PNPM_INSTALL_LEGACY: {
-        readonly raw: true;
-        readonly cmd: string;
-    };
-    PNPM_INSTALL_FORCE: {
-        readonly raw: true;
-        readonly cmd: string;
     };
 };
 export { COMMAND }
 export { COMMAND as COMMAND_alias_1 }
 export { COMMAND as COMMAND_alias_2 }
-
-declare const commandFormatter: {
-    raw: (cmd: string) => {
-        readonly raw: true;
-        readonly cmd: string;
-    };
-    isRaw(cmd: any): cmd is {
-        raw: true;
-        cmd: string;
-    };
-    format(command: T_Command_2, context?: I_CommandContext_2): string;
-    formatCLI(command: string, context?: I_CommandContext_2): string;
-};
-export { commandFormatter }
-export { commandFormatter as commandFormatter_alias_1 }
-export { commandFormatter as commandFormatter_alias_2 }
 
 declare const commandLog: {
     success: (message: string) => void;
@@ -238,6 +219,11 @@ declare const COMMIT_LINT_CLI = "commitlint";
 export { COMMIT_LINT_CLI }
 export { COMMIT_LINT_CLI as COMMIT_LINT_CLI_alias_1 }
 export { COMMIT_LINT_CLI as COMMIT_LINT_CLI_alias_2 }
+
+declare const COMMIT_LINT_PACKAGE_NAME = "@commitlint/cli";
+export { COMMIT_LINT_PACKAGE_NAME }
+export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_1 }
+export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_2 }
 
 declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, }: I_GraphqlCodegenConfig_2): CodegenConfig;
 export { createGraphqlCodegenConfig }
@@ -6058,11 +6044,6 @@ export declare const default_alias_8: (options: UserConfig) => UserConfig;
 
 export declare const default_alias_9: (options: UserConfig) => UserConfig;
 
-declare function dirname(url: string): string;
-export { dirname }
-export { dirname as dirname_alias_1 }
-export { dirname as dirname_alias_2 }
-
 declare enum E_ErrorType {
     Error = "error",
     Warning = "warning"
@@ -6081,10 +6062,15 @@ export { ESLINT_CLI }
 export { ESLINT_CLI as ESLINT_CLI_alias_1 }
 export { ESLINT_CLI as ESLINT_CLI_alias_2 }
 
-declare const ESLINT_INSPECT_CLI = "@eslint/config-inspector";
+declare const ESLINT_INSPECT_CLI = "eslint-config-inspector";
 export { ESLINT_INSPECT_CLI }
 export { ESLINT_INSPECT_CLI as ESLINT_INSPECT_CLI_alias_1 }
 export { ESLINT_INSPECT_CLI as ESLINT_INSPECT_CLI_alias_2 }
+
+declare const ESLINT_INSPECT_PACKAGE_NAME = "@eslint/config-inspector";
+export { ESLINT_INSPECT_PACKAGE_NAME }
+export { ESLINT_INSPECT_PACKAGE_NAME as ESLINT_INSPECT_PACKAGE_NAME_alias_1 }
+export { ESLINT_INSPECT_PACKAGE_NAME as ESLINT_INSPECT_PACKAGE_NAME_alias_2 }
 
 declare function executeCommand(command: string, parser?: typeof parseCommandOutput): Promise<void>;
 export { executeCommand }
@@ -6095,6 +6081,11 @@ declare const existsSync: (filePath: string) => boolean;
 export { existsSync }
 export { existsSync as existsSync_alias_1 }
 export { existsSync as existsSync_alias_2 }
+
+declare function formatCommand(command: T_Command_2, context?: I_CommandContext_2): string | I_Command_3;
+export { formatCommand }
+export { formatCommand as formatCommand_alias_1 }
+export { formatCommand as formatCommand_alias_2 }
 
 declare function generateShortId(uuid: string, length?: number): string;
 export { generateShortId }
@@ -6114,6 +6105,7 @@ export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
 declare function getPackageJson(packageName: string): {
     path: string;
     file: I_JSON_2;
+    isCurrentProject: boolean;
 } | false;
 export { getPackageJson }
 export { getPackageJson as getPackageJson_alias_1 }
@@ -6139,7 +6131,7 @@ export { GIT_COMMIT_EDITMSG }
 export { GIT_COMMIT_EDITMSG as GIT_COMMIT_EDITMSG_alias_1 }
 export { GIT_COMMIT_EDITMSG as GIT_COMMIT_EDITMSG_alias_2 }
 
-declare const GIT_HOOK = ".git/hooks";
+declare const GIT_HOOK = ".git/hooks/";
 export { GIT_HOOK }
 export { GIT_HOOK as GIT_HOOK_alias_1 }
 export { GIT_HOOK as GIT_HOOK_alias_2 }
@@ -6151,8 +6143,8 @@ export { GIT_IGNORE as GIT_IGNORE_alias_2 }
 
 declare function HOOK({ isCurrentProject }: Partial<I_CommandContext_2>): {
     'pre-push'?: {
-        readonly raw: true;
-        readonly cmd: string;
+        raw: boolean;
+        cmd: string;
     } | undefined;
     'pre-commit': string;
     'commit-msg': string;
@@ -6217,6 +6209,16 @@ declare interface I_BoxedLogOptions_2 {
     borderStyle?: 'round' | 'single' | 'double' | 'bold';
     titleColor?: string;
 }
+
+declare interface I_Command {
+    raw: boolean;
+    cmd: string;
+}
+export { I_Command }
+export { I_Command as I_Command_alias_1 }
+export { I_Command as I_Command_alias_2 }
+
+declare interface I_Command_2 { raw: boolean; cmd: string }
 
 declare interface I_CommandContext {
     isRemote: boolean;
@@ -6698,8 +6700,6 @@ export { initNodePersist }
 export { initNodePersist as initNodePersist_alias_1 }
 export { initNodePersist as initNodePersist_alias_2 }
 
-export declare function installDependencies(): Promise<void>;
-
 declare function isJson(str: string): boolean;
 export { isJson }
 export { isJson as isJson_alias_1 }
@@ -6714,6 +6714,11 @@ declare const LINT_STAGED_CLI = "lint-staged";
 export { LINT_STAGED_CLI }
 export { LINT_STAGED_CLI as LINT_STAGED_CLI_alias_1 }
 export { LINT_STAGED_CLI as LINT_STAGED_CLI_alias_2 }
+
+declare const LINT_STAGED_PACKAGE_NAME = "lint-staged";
+export { LINT_STAGED_PACKAGE_NAME }
+export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_1 }
+export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_2 }
 
 declare function Loading({ full, block, className, message, ...rest }: I_LoadingProps_2): JSX_2.Element;
 export { Loading }
@@ -6866,10 +6871,15 @@ export { NODE_MODULES }
 export { NODE_MODULES as NODE_MODULES_alias_1 }
 export { NODE_MODULES as NODE_MODULES_alias_2 }
 
-declare const NODE_MODULES_INSPECT_CLI = "node_modules-inspect";
+declare const NODE_MODULES_INSPECT_CLI = "node-modules-inspector";
 export { NODE_MODULES_INSPECT_CLI }
 export { NODE_MODULES_INSPECT_CLI as NODE_MODULES_INSPECT_CLI_alias_1 }
 export { NODE_MODULES_INSPECT_CLI as NODE_MODULES_INSPECT_CLI_alias_2 }
+
+declare const NODE_MODULES_INSPECT_PACKAGE_NAME = "node-modules-inspector";
+export { NODE_MODULES_INSPECT_PACKAGE_NAME }
+export { NODE_MODULES_INSPECT_PACKAGE_NAME as NODE_MODULES_INSPECT_PACKAGE_NAME_alias_1 }
+export { NODE_MODULES_INSPECT_PACKAGE_NAME as NODE_MODULES_INSPECT_PACKAGE_NAME_alias_2 }
 
 declare const PACKAGE_JSON = "package.json";
 export { PACKAGE_JSON }
@@ -6911,11 +6921,6 @@ export { PNPM_CLI }
 export { PNPM_CLI as PNPM_CLI_alias_1 }
 export { PNPM_CLI as PNPM_CLI_alias_2 }
 
-declare const PNPM_DLX_CLI = "pnpm dlx";
-export { PNPM_DLX_CLI }
-export { PNPM_DLX_CLI as PNPM_DLX_CLI_alias_1 }
-export { PNPM_DLX_CLI as PNPM_DLX_CLI_alias_2 }
-
 declare const PNPM_EXEC_CLI = "pnpm exec";
 export { PNPM_EXEC_CLI }
 export { PNPM_EXEC_CLI as PNPM_EXEC_CLI_alias_1 }
@@ -6927,6 +6932,14 @@ export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_1 }
 export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_2 }
 
 declare function printBoxedLog<T extends string | I_ErrorEntry_2[]>(title: string, content: T, { color, padding, margin, borderStyle, titleColor, }?: I_BoxedLogOptions_2): void;
+
+declare function rawCommand(cmd: string): {
+    raw: boolean;
+    cmd: string;
+};
+export { rawCommand }
+export { rawCommand as rawCommand_alias_1 }
+export { rawCommand as rawCommand_alias_2 }
 
 declare function readFileSync(filePath: string, options: {
     asJson: true;
@@ -6949,27 +6962,17 @@ export { removeAccent }
 export { removeAccent as removeAccent_alias_1 }
 export { removeAccent as removeAccent_alias_2 }
 
-declare function require_2(): NodeJS.Require;
-export { require_2 as require }
-export { require_2 as require_alias_1 }
-export { require_2 as require_alias_2 }
-
 declare function resolve(...urls: string[]): string;
 export { resolve }
 export { resolve as resolve_alias_1 }
 export { resolve as resolve_alias_2 }
 
 declare function resolveCommands(input: T_CommandMapInput_2, context?: Partial<I_CommandContext_2>): Promise<{
-    [k: string]: string;
+    [k: string]: string | I_Command_3;
 }>;
 export { resolveCommands }
 export { resolveCommands as resolveCommands_alias_1 }
 export { resolveCommands as resolveCommands_alias_2 }
-
-declare function resolveCyberSkillPath(...urls: string[]): string;
-export { resolveCyberSkillPath }
-export { resolveCyberSkillPath as resolveCyberSkillPath_alias_1 }
-export { resolveCyberSkillPath as resolveCyberSkillPath_alias_2 }
 
 declare function resolveWorkingPath(...urls: string[]): string;
 export { resolveWorkingPath }
@@ -7230,20 +7233,10 @@ export { RESPONSE_STATUS }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_1 }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_2 }
 
-declare const RIMRAF_CLI = "rimraf";
-export { RIMRAF_CLI }
-export { RIMRAF_CLI as RIMRAF_CLI_alias_1 }
-export { RIMRAF_CLI as RIMRAF_CLI_alias_2 }
-
 declare function rmSync(filePaths: string[]): void;
 export { rmSync }
 export { rmSync as rmSync_alias_1 }
 export { rmSync as rmSync_alias_2 }
-
-declare function saveErrorListToStorage(errorList: I_ErrorEntry_2[]): Promise<void>;
-export { saveErrorListToStorage }
-export { saveErrorListToStorage as saveErrorListToStorage_alias_1 }
-export { saveErrorListToStorage as saveErrorListToStorage_alias_2 }
 
 declare const serializer: I_Serializer_2<unknown>;
 export { serializer }
@@ -7259,6 +7252,11 @@ declare const SIMPLE_GIT_HOOK_JSON = ".simple-git-hooks.json";
 export { SIMPLE_GIT_HOOK_JSON }
 export { SIMPLE_GIT_HOOK_JSON as SIMPLE_GIT_HOOK_JSON_alias_1 }
 export { SIMPLE_GIT_HOOK_JSON as SIMPLE_GIT_HOOK_JSON_alias_2 }
+
+declare const SIMPLE_GIT_HOOKS_PACKAGE_NAME = "simple-git-hooks";
+export { SIMPLE_GIT_HOOKS_PACKAGE_NAME }
+export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_1 }
+export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_2 }
 
 declare const storageClient: {
     get<T = unknown>(key: string): Promise<T | null>;
@@ -7295,18 +7293,22 @@ export { T_Children as T_Children_alias_2 }
 
 declare type T_Children_2 = ReactNode | ReactNode[] | ReactElement | JSX.Element | null;
 
-declare type T_Command = string | ((context?: I_CommandContext) => string) | {
-    raw: true;
-    cmd: string;
-};
+declare type T_Command = string | I_Command | T_CommandFunction;
 export { T_Command }
 export { T_Command as T_Command_alias_1 }
 export { T_Command as T_Command_alias_2 }
 
 declare type T_Command_2 =
 | string
-| ((context?: I_CommandContext_2) => string)
-| { raw: true; cmd: string };
+| I_Command_2
+| T_CommandFunction_2;
+
+declare type T_CommandFunction = (context?: I_CommandContext) => string;
+export { T_CommandFunction }
+export { T_CommandFunction as T_CommandFunction_alias_1 }
+export { T_CommandFunction as T_CommandFunction_alias_2 }
+
+declare type T_CommandFunction_2 = (context?: I_CommandContext_2) => string;
 
 declare type T_CommandMap = Record<string, T_Command>;
 export { T_CommandMap }
@@ -7602,6 +7604,11 @@ export { TSC_CLI }
 export { TSC_CLI as TSC_CLI_alias_1 }
 export { TSC_CLI as TSC_CLI_alias_2 }
 
+declare const TSC_PACKAGE_NAME = "tsc";
+export { TSC_PACKAGE_NAME }
+export { TSC_PACKAGE_NAME as TSC_PACKAGE_NAME_alias_1 }
+export { TSC_PACKAGE_NAME as TSC_PACKAGE_NAME_alias_2 }
+
 declare const TSCONFIG_JSON = "tsconfig.json";
 export { TSCONFIG_JSON }
 export { TSCONFIG_JSON as TSCONFIG_JSON_alias_1 }
@@ -7611,8 +7618,6 @@ declare const TSX_CLI = "tsx";
 export { TSX_CLI }
 export { TSX_CLI as TSX_CLI_alias_1 }
 export { TSX_CLI as TSX_CLI_alias_2 }
-
-export declare function updatePackage(packageName: string): Promise<void>;
 
 declare function useLoading(): I_LoadingContext_2;
 export { useLoading }
@@ -7649,6 +7654,11 @@ declare const VITEST_CLI = "vitest";
 export { VITEST_CLI }
 export { VITEST_CLI as VITEST_CLI_alias_1 }
 export { VITEST_CLI as VITEST_CLI_alias_2 }
+
+declare const VITEST_PACKAGE_NAME = "vitest";
+export { VITEST_PACKAGE_NAME }
+export { VITEST_PACKAGE_NAME as VITEST_PACKAGE_NAME_alias_1 }
+export { VITEST_PACKAGE_NAME as VITEST_PACKAGE_NAME_alias_2 }
 
 declare function withNextIntl<T extends {
     children: T_Children_2;

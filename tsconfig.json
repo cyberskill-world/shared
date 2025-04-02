@@ -12,6 +12,9 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "paths": {
+            "#public/*": [
+                "./public/*"
+            ],
             "#config/*": [
                 "./src/config/*"
             ],
@@ -20,9 +23,6 @@
             ],
             "#nodejs/*": [
                 "./src/nodejs/*"
-            ],
-            "#public/*": [
-                "./src/public/*"
             ],
             "#react/*": [
                 "./src/react/*"

@@ -6,7 +6,7 @@ import { NODE_MODULES, PACKAGE_JSON, WORKING_DIRECTORY } from '#constants/path.j
 
 import { commandLog } from './command.js';
 import { existsSync, readFileSync } from './fs.js';
-import { join, resolveCyberSkillPath } from './path.js';
+import { join } from './path.js';
 import { storageServer } from './storage-server.js';
 
 const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -14,6 +14,7 @@ const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 export function getPackageJson(packageName: string): {
     path: string;
     file: I_JSON;
+    isCurrentProject: boolean;
 } | false {
     const workingPackageJsonPath = join(WORKING_DIRECTORY, PACKAGE_JSON);
 
@@ -25,6 +26,7 @@ export function getPackageJson(packageName: string): {
                 return {
                     path: workingPackageJsonPath,
                     file: pkg,
+                    isCurrentProject: true,
                 };
             }
         }
@@ -43,6 +45,7 @@ export function getPackageJson(packageName: string): {
                 return {
                     path: externalPackageJsonPath,
                     file: pkg,
+                    isCurrentProject: false,
                 };
             }
         }
@@ -139,16 +142,12 @@ export async function checkPackage(packageName: string): Promise<{
             return result;
         }
 
-        const cyberskillPackageJsonPath = resolveCyberSkillPath(PACKAGE_JSON);
-        const isCurrentProject = packageFound.path === cyberskillPackageJsonPath;
-
         result.file = packageFound.file;
         result.isInstalled = true;
         result.installedPath = packageFound.path;
         result.installedVersion = packageFound.file.version;
-        result.isCurrentProject = isCurrentProject;
-
-        result.latestVersion = isCurrentProject
+        result.isCurrentProject = packageFound.isCurrentProject;
+        result.latestVersion = packageFound.isCurrentProject
             ? packageFound.file.version
             : await getLatestPackageVersion(packageName, true);
 

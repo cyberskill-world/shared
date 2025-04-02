@@ -35,10 +35,14 @@ export interface I_CommandContext {
     isCurrentProject: boolean;
 }
 
+export interface I_Command { raw: boolean; cmd: string }
+
+export type T_CommandFunction = (context?: I_CommandContext) => string;
+
 export type T_Command =
     | string
-    | ((context?: I_CommandContext) => string)
-    | { raw: true; cmd: string };
+    | I_Command
+    | T_CommandFunction;
 
 export type T_CommandMap = Record<string, T_Command>;
 
