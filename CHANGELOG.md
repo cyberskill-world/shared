@@ -1,3 +1,9 @@
+## [1.51.0](https://github.com/cyberskill-world/shared/compare/v1.50.0...v1.51.0) (2025-04-02)
+
+### ✨ Features
+
+* enable minify for tsup ([af0e2a6](https://github.com/cyberskill-world/shared/commit/af0e2a60f3d8397b9716f74744752dc569092b5c))
+
 ## [1.50.0](https://github.com/cyberskill-world/shared/compare/v1.49.0...v1.50.0) (2025-04-01)
 
 ### ✨ Features
