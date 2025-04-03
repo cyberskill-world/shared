@@ -7566,7 +7566,7 @@ export { TSC_CLI }
 export { TSC_CLI as TSC_CLI_alias_1 }
 export { TSC_CLI as TSC_CLI_alias_2 }
 
-declare const TSC_PACKAGE_NAME = "tsc";
+declare const TSC_PACKAGE_NAME = "typescript";
 export { TSC_PACKAGE_NAME }
 export { TSC_PACKAGE_NAME as TSC_PACKAGE_NAME_alias_1 }
 export { TSC_PACKAGE_NAME as TSC_PACKAGE_NAME_alias_2 }
