@@ -1,1 +1,1 @@
-var r=function(r){return r.Error="error",r.Warning="warning",r}(r||{}),E=function(r){return r.PNPM_ADD_AND_EXEC="PNPM_ADD_AND_EXEC",r.PNPM_EXEC="PNPM_EXEC",r.RAW="RAW",r}(E||{});export{E as E_CommandType,r as E_ErrorType};
+var E=function(E){return E.Error="error",E.Warning="warning",E}(E||{}),_=function(E){return E.PNPM_ADD_AND_EXEC="PNPM_ADD_AND_EXEC",E.PNPM_ADD_DEV_AND_EXEC="PNPM_ADD_DEV_AND_EXEC",E.PNPM_EXEC="PNPM_EXEC",E.RAW="RAW",E}(_||{});export{_ as E_CommandType,E as E_ErrorType};

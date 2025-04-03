@@ -77,6 +77,9 @@ function buildCommand(type: E_CommandType, ...args: string[]): string {
 
     switch (type) {
         case E_CommandType.PNPM_ADD_AND_EXEC:
+            return formatCommand(rawCommand(`${PNPM_CLI} add ${first} && ${PNPM_EXEC_CLI} ${second}`)) as string;
+
+        case E_CommandType.PNPM_ADD_DEV_AND_EXEC:
             return formatCommand(rawCommand(`${PNPM_CLI} add -D ${first} && ${PNPM_EXEC_CLI} ${second}`)) as string;
 
         case E_CommandType.PNPM_EXEC:
@@ -88,27 +91,22 @@ function buildCommand(type: E_CommandType, ...args: string[]): string {
 }
 
 export const COMMAND = {
-    SIMPLE_GIT_HOOKS: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, SIMPLE_GIT_HOOKS_PACKAGE_NAME, SIMPLE_GIT_HOOK_CLI),
-    ESLINT_INSPECT: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, ESLINT_INSPECT_PACKAGE_NAME, ESLINT_INSPECT_CLI),
-    NODE_MODULES_INSPECT: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, NODE_MODULES_INSPECT_PACKAGE_NAME, NODE_MODULES_INSPECT_CLI),
-
-    ESLINT_CHECK: buildCommand(E_CommandType.PNPM_EXEC, ESLINT_CLI, PATH.WORKING_DIRECTORY),
-    ESLINT_FIX: buildCommand(E_CommandType.PNPM_EXEC, ESLINT_CLI, `${PATH.WORKING_DIRECTORY} --fix`),
-
+    SIMPLE_GIT_HOOKS: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, SIMPLE_GIT_HOOKS_PACKAGE_NAME, SIMPLE_GIT_HOOK_CLI),
+    ESLINT_INSPECT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_INSPECT_PACKAGE_NAME, ESLINT_INSPECT_CLI),
+    NODE_MODULES_INSPECT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, NODE_MODULES_INSPECT_PACKAGE_NAME, NODE_MODULES_INSPECT_CLI),
+    ESLINT_CHECK: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_CLI, PATH.WORKING_DIRECTORY),
+    ESLINT_FIX: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_CLI, `${PATH.WORKING_DIRECTORY} --fix`),
     TYPESCRIPT_CHECK: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, TSC_PACKAGE_NAME, `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit`),
-
     CONFIGURE_GIT_HOOK: buildCommand(E_CommandType.RAW, `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`),
     BUILD: buildCommand(E_CommandType.RAW, `${PNPM_CLI} run build`),
     STAGE_BUILD_DIRECTORY: buildCommand(E_CommandType.RAW, `${GIT_CLI} add ${BUILD_DIRECTORY}`),
-
     PNPM_INSTALL_STANDARD: buildCommand(E_CommandType.RAW, `${PNPM_CLI} install`),
     PNPM_INSTALL_LEGACY: buildCommand(E_CommandType.RAW, `${PNPM_CLI} install --legacy-peer-deps`),
     PNPM_INSTALL_FORCE: buildCommand(E_CommandType.RAW, `${PNPM_CLI} install --force`),
-
     CYBERSKILL: {
-        TEST_UNIT: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.CYBERSKILL.UNIT_TEST_CONFIG}`),
-        TEST_E2E: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.CYBERSKILL.E2E_TEST_CONFIG}`),
-        COMMIT_LINT: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, COMMIT_LINT_PACKAGE_NAME, `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.CYBERSKILL.COMMITLINT_CONFIG}`),
-        LINT_STAGED: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, LINT_STAGED_PACKAGE_NAME, `${LINT_STAGED_CLI} --config ${PATH.CYBERSKILL.LINT_STAGED_CONFIG}`),
+        TEST_UNIT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.CYBERSKILL.UNIT_TEST_CONFIG}`),
+        TEST_E2E: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.CYBERSKILL.E2E_TEST_CONFIG}`),
+        COMMIT_LINT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, COMMIT_LINT_PACKAGE_NAME, `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.CYBERSKILL.COMMITLINT_CONFIG}`),
+        LINT_STAGED: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, LINT_STAGED_PACKAGE_NAME, `${LINT_STAGED_CLI} --config ${PATH.CYBERSKILL.LINT_STAGED_CONFIG}`),
     },
 };

@@ -5998,6 +5998,7 @@ export declare const default_alias_9: (options: UserConfig) => UserConfig;
 
 declare enum E_CommandType {
     PNPM_ADD_AND_EXEC = "PNPM_ADD_AND_EXEC",
+    PNPM_ADD_DEV_AND_EXEC = "PNPM_ADD_DEV_AND_EXEC",
     PNPM_EXEC = "PNPM_EXEC",
     RAW = "RAW"
 }
