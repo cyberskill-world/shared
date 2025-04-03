@@ -1,3 +1,9 @@
+## [1.53.0](https://github.com/cyberskill-world/shared/compare/v1.52.0...v1.53.0) (2025-04-03)
+
+### ✨ Features
+
+* fix path for test ([77c74b3](https://github.com/cyberskill-world/shared/commit/77c74b3e1ffc9e67781ef91b82d4279ae2e0f1b2))
+
 ## [1.52.0](https://github.com/cyberskill-world/shared/compare/v1.51.0...v1.52.0) (2025-04-03)
 
 ### ✨ Features
