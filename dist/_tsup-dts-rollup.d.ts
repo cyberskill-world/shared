@@ -133,71 +133,23 @@ export { clearAllErrorLists as clearAllErrorLists_alias_1 }
 export { clearAllErrorLists as clearAllErrorLists_alias_2 }
 
 declare const COMMAND: {
-    SIMPLE_GIT_HOOKS: {
-        raw: boolean;
-        cmd: string;
-    };
-    ESLINT_INSPECT: {
-        raw: boolean;
-        cmd: string;
-    };
-    NODE_MODULES_INSPECT: {
-        raw: boolean;
-        cmd: string;
-    };
-    ESLINT_CHECK: {
-        raw: boolean;
-        cmd: string;
-    };
-    ESLINT_FIX: {
-        raw: boolean;
-        cmd: string;
-    };
-    TYPESCRIPT_CHECK: {
-        raw: boolean;
-        cmd: string;
-    };
-    CONFIGURE_GIT_HOOK: {
-        raw: boolean;
-        cmd: string;
-    };
-    BUILD: {
-        raw: boolean;
-        cmd: string;
-    };
-    STAGE_BUILD_DIRECTORY: {
-        raw: boolean;
-        cmd: string;
-    };
-    PNPM_INSTALL_STANDARD: {
-        raw: boolean;
-        cmd: string;
-    };
-    PNPM_INSTALL_LEGACY: {
-        raw: boolean;
-        cmd: string;
-    };
-    PNPM_INSTALL_FORCE: {
-        raw: boolean;
-        cmd: string;
-    };
+    SIMPLE_GIT_HOOKS: string;
+    ESLINT_INSPECT: string;
+    NODE_MODULES_INSPECT: string;
+    ESLINT_CHECK: string;
+    ESLINT_FIX: string;
+    TYPESCRIPT_CHECK: string;
+    CONFIGURE_GIT_HOOK: string;
+    BUILD: string;
+    STAGE_BUILD_DIRECTORY: string;
+    PNPM_INSTALL_STANDARD: string;
+    PNPM_INSTALL_LEGACY: string;
+    PNPM_INSTALL_FORCE: string;
     CYBERSKILL: {
-        TEST_UNIT: {
-            raw: boolean;
-            cmd: string;
-        };
-        TEST_E2E: {
-            raw: boolean;
-            cmd: string;
-        };
-        COMMIT_LINT: {
-            raw: boolean;
-            cmd: string;
-        };
-        LINT_STAGED: {
-            raw: boolean;
-            cmd: string;
-        };
+        TEST_UNIT: string;
+        TEST_E2E: string;
+        COMMIT_LINT: string;
+        LINT_STAGED: string;
     };
 };
 export { COMMAND }
@@ -6043,6 +5995,15 @@ export declare const default_alias_7: {
 export declare const default_alias_8: (options: UserConfig) => UserConfig;
 
 export declare const default_alias_9: (options: UserConfig) => UserConfig;
+
+declare enum E_CommandType {
+    PNPM_ADD_AND_EXEC = "pnpmAddAndExec",
+    PNPM_EXEC = "pnpmExec",
+    RAW = "raw"
+}
+export { E_CommandType }
+export { E_CommandType as E_CommandType_alias_1 }
+export { E_CommandType as E_CommandType_alias_2 }
 
 declare enum E_ErrorType {
     Error = "error",

@@ -70,6 +70,7 @@ export { T_CommandFunction } from './_tsup-dts-rollup.js';
 export { T_Command } from './_tsup-dts-rollup.js';
 export { T_CommandMap } from './_tsup-dts-rollup.js';
 export { T_CommandMapInput } from './_tsup-dts-rollup.js';
+export { E_CommandType } from './_tsup-dts-rollup.js';
 export { I_Config } from './_tsup-dts-rollup.js';
 export { I_JSON } from './_tsup-dts-rollup.js';
 export { I_GraphqlCodegenConfig } from './_tsup-dts-rollup.js';

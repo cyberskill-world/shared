@@ -1,1 +1,1 @@
-var r=function(r){return r.Error="error",r.Warning="warning",r}(r||{});export{r as E_ErrorType};
+var r=function(r){return r.Error="error",r.Warning="warning",r}(r||{}),n=function(r){return r.PNPM_ADD_AND_EXEC="pnpmAddAndExec",r.PNPM_EXEC="pnpmExec",r.RAW="raw",r}(n||{});export{n as E_CommandType,r as E_ErrorType};

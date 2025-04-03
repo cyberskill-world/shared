@@ -47,3 +47,9 @@ export type T_Command =
 export type T_CommandMap = Record<string, T_Command>;
 
 export type T_CommandMapInput = T_CommandMap | ((ctx: I_CommandContext) => T_CommandMap);
+
+export enum E_CommandType  {
+    PNPM_ADD_AND_EXEC = 'pnpmAddAndExec',
+    PNPM_EXEC = 'pnpmExec',
+    RAW = 'raw',
+}

@@ -44,7 +44,7 @@ export function appendFileSync(filePath: string, data: string | object, options:
 }
 
 export function rmSync(filePaths: string[]) {
-    filePaths.forEach(filePath => {
+    filePaths.forEach((filePath) => {
         if (existsSync(filePath)) {
             fs.rmSync(filePath, { recursive: true, force: true });
         }

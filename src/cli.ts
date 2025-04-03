@@ -3,17 +3,15 @@ import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
-import type { T_Command } from '#typescript/command.js';
-
 import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
-import { clearAllErrorLists, commandLog, executeCommand, formatCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
+import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
 import { appendFileSync, existsSync, readFileSync, rmSync, writeFileSync } from '#utils/fs.js';
 import { checkPackage } from '#utils/package.js';
 
-async function runCommand(description: string, command: T_Command) {
+async function runCommand(description: string, command: string) {
     commandLog.info(`${description}...`);
-    await executeCommand(formatCommand(command) as string);
+    await executeCommand(command);
     commandLog.success(`${description} completed successfully.`);
 }
 
@@ -130,11 +128,11 @@ async function installDependencies() {
 
     for (const { command, message } of strategies) {
         try {
-            await runCommand(`${message} using: ${command.cmd}`, command);
+            await runCommand(`${message} using: ${command}`, command);
             return;
         }
         catch (error) {
-            commandLog.warning(`Installation attempt failed: ${command.cmd}`);
+            commandLog.warning(`Installation attempt failed: ${command}`);
             commandLog.error(`Details: ${(error as Error).message}`);
         }
     }

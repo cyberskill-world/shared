@@ -2,6 +2,8 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 
 import type { I_GraphqlCodegenConfig } from '#typescript/graphql-codegen.js';
 
+import { COMMAND } from '#constants/path.js';
+
 export function createGraphqlCodegenConfig({
     uri,
     from,
@@ -30,7 +32,7 @@ export function createGraphqlCodegenConfig({
             },
         },
         hooks: {
-            afterAllFileWrite: ['pnpm exec cyberskill lint:fix'],
+            afterAllFileWrite: [COMMAND.ESLINT_FIX],
         },
     };
 }

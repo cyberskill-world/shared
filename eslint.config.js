@@ -6,5 +6,5 @@ export default configs.merge('eslint', config, {
     rules: {
         'react-refresh/only-export-components': 'off',
     },
-    ignores: ['.tsup', 'src/public/favicon/manifest.json'],
+    ignores: ['.tsup', 'public/favicon/manifest.json'],
 });

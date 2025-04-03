@@ -16,6 +16,7 @@ export { T_CommandFunction_alias_2 as T_CommandFunction } from '../_tsup-dts-rol
 export { T_Command_alias_2 as T_Command } from '../_tsup-dts-rollup.js';
 export { T_CommandMap_alias_2 as T_CommandMap } from '../_tsup-dts-rollup.js';
 export { T_CommandMapInput_alias_2 as T_CommandMapInput } from '../_tsup-dts-rollup.js';
+export { E_CommandType_alias_2 as E_CommandType } from '../_tsup-dts-rollup.js';
 export { I_Config_alias_2 as I_Config } from '../_tsup-dts-rollup.js';
 export { I_JSON_alias_2 as I_JSON } from '../_tsup-dts-rollup.js';
 export { I_GraphqlCodegenConfig_alias_2 as I_GraphqlCodegenConfig } from '../_tsup-dts-rollup.js';
