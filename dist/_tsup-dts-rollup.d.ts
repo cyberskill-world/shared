@@ -5997,9 +5997,9 @@ export declare const default_alias_8: (options: UserConfig) => UserConfig;
 export declare const default_alias_9: (options: UserConfig) => UserConfig;
 
 declare enum E_CommandType {
-    PNPM_ADD_AND_EXEC = "pnpmAddAndExec",
-    PNPM_EXEC = "pnpmExec",
-    RAW = "raw"
+    PNPM_ADD_AND_EXEC = "PNPM_ADD_AND_EXEC",
+    PNPM_EXEC = "PNPM_EXEC",
+    RAW = "RAW"
 }
 export { E_CommandType }
 export { E_CommandType as E_CommandType_alias_1 }
@@ -6870,6 +6870,7 @@ declare const PATH: {
         LINT_STAGED_CONFIG: string;
         COMMITLINT_CONFIG: string;
         UNIT_TEST_CONFIG: string;
+        UNIT_TEST_SETUP_CONFIG: string;
         E2E_TEST_CONFIG: string;
     };
 };

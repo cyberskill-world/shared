@@ -59,6 +59,7 @@ export const PATH = {
         LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/lint-staged/base.js`),
         COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/commitlint/base.js`),
         UNIT_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/vitest/react/unit.js`),
+        UNIT_TEST_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/vitest/react/unit.setup.js`),
         E2E_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/vitest/react/e2e.js`),
     },
 };
