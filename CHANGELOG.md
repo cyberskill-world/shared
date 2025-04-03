@@ -1,3 +1,9 @@
+## [1.55.0](https://github.com/cyberskill-world/shared/compare/v1.54.0...v1.55.0) (2025-04-03)
+
+### ✨ Features
+
+* move typescript to dependencies ([6b7366b](https://github.com/cyberskill-world/shared/commit/6b7366b915aed621a51a1f2dfe70ad5794878888))
+
 ## [1.54.0](https://github.com/cyberskill-world/shared/compare/v1.53.0...v1.54.0) (2025-04-03)
 
 ### ✨ Features
