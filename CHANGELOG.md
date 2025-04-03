@@ -1,3 +1,9 @@
+## [1.52.0](https://github.com/cyberskill-world/shared/compare/v1.51.0...v1.52.0) (2025-04-03)
+
+### ✨ Features
+
+* fix graphql-codegen ([0205599](https://github.com/cyberskill-world/shared/commit/0205599e7bcb2667dc4a95764c552277e5d6e932))
+
 ## [1.51.0](https://github.com/cyberskill-world/shared/compare/v1.50.0...v1.51.0) (2025-04-02)
 
 ### ✨ Features
