@@ -1,3 +1,9 @@
+## [1.54.0](https://github.com/cyberskill-world/shared/compare/v1.53.0...v1.54.0) (2025-04-03)
+
+### ✨ Features
+
+* remove tsc ([31d8621](https://github.com/cyberskill-world/shared/commit/31d862111a8eaf2bf7f4c00b447a32ccd40c16e4))
+
 ## [1.53.0](https://github.com/cyberskill-world/shared/compare/v1.52.0...v1.53.0) (2025-04-03)
 
 ### ✨ Features
