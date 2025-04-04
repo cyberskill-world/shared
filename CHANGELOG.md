@@ -1,3 +1,9 @@
+## [1.57.0](https://github.com/cyberskill-world/shared/compare/v1.56.0...v1.57.0) (2025-04-04)
+
+### ✨ Features
+
+* enhance testing ([f96ca16](https://github.com/cyberskill-world/shared/commit/f96ca16a6b91d1e2fb890ec50323fe1dcd5c59de))
+
 ## [1.56.0](https://github.com/cyberskill-world/shared/compare/v1.55.0...v1.56.0) (2025-04-04)
 
 ### ✨ Features
