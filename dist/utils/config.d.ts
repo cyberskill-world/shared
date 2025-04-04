@@ -1,1 +1,1 @@
-export { deepMerge_alias_1 as deepMerge } from '../_tsup-dts-rollup.js';
+export { mergeConfigs_alias_1 as mergeConfigs } from '../_tsup-dts-rollup.js';

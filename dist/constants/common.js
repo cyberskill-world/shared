@@ -1,0 +1,1 @@
+var r=process.env.DEBUG==="true";export{r as DEBUG};

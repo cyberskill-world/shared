@@ -1,3 +1,4 @@
+export { DEBUG_alias_2 as DEBUG } from '../_tsup-dts-rollup.cjs';
 export { HOOK_alias_1 as HOOK } from '../_tsup-dts-rollup.cjs';
 export { WORKING_DIRECTORY_alias_1 as WORKING_DIRECTORY } from '../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_PACKAGE_NAME_alias_1 as CYBERSKILL_PACKAGE_NAME } from '../_tsup-dts-rollup.cjs';
@@ -14,6 +15,7 @@ export { GIT_HOOK_alias_1 as GIT_HOOK } from '../_tsup-dts-rollup.cjs';
 export { GIT_COMMIT_EDITMSG_alias_1 as GIT_COMMIT_EDITMSG } from '../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_DIRECTORY_alias_1 as CYBERSKILL_DIRECTORY } from '../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_CLI_alias_1 as CYBERSKILL_CLI } from '../_tsup-dts-rollup.cjs';
+export { ESLINT_PACKAGE_NAME_alias_1 as ESLINT_PACKAGE_NAME } from '../_tsup-dts-rollup.cjs';
 export { ESLINT_CLI_alias_1 as ESLINT_CLI } from '../_tsup-dts-rollup.cjs';
 export { VITEST_PACKAGE_NAME_alias_1 as VITEST_PACKAGE_NAME } from '../_tsup-dts-rollup.cjs';
 export { VITEST_CLI_alias_1 as VITEST_CLI } from '../_tsup-dts-rollup.cjs';

@@ -3,6 +3,7 @@ import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
+import { DEBUG } from '#constants/common.js';
 import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
 import { clearAllErrorLists, commandLog, executeCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
@@ -11,6 +12,11 @@ import { checkPackage } from '#utils/package.js';
 
 async function runCommand(description: string, command: string) {
     commandLog.info(`${description}...`);
+
+    if (DEBUG) {
+        commandLog.info(`Executing command: ${command}`);
+    }
+
     await executeCommand(command);
     commandLog.success(`${description} completed successfully.`);
 }

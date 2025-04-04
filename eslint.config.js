@@ -1,8 +1,7 @@
-/* eslint-disable antfu/no-import-dist */
-import config from './dist/configs/eslint/nodejs.js';
-import configs from './dist/configs/index.js';
+// eslint-disable-next-line antfu/no-import-dist
+import { mergeConfigs } from './dist/utils/index.js';
 
-export default configs.merge('eslint', config, {
+export default mergeConfigs('eslint', {
     rules: {
         'react-refresh/only-export-components': 'off',
     },

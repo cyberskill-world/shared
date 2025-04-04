@@ -1,46 +1,62 @@
-import type { I_Config } from '#typescript/config.js';
+import antfu from '@antfu/eslint-config';
 
-export function deepMerge(...configs: (I_Config | I_Config[])[]): I_Config {
-    const merge = (target: Partial<I_Config>, source: I_Config): I_Config => {
-        const result = { ...target };
+import type { T_Object } from '#typescript/common.js';
+import type { T_ConfigHandler, T_ConfigType } from '#typescript/config.js';
 
-        Object.keys(source).forEach((key) => {
-            if (!Object.hasOwnProperty.call(source, key)) {
-                return;
-            }
+import eslintBaseConfig from '#configs/eslint/base.js';
+import { E_ConfigType } from '#typescript/config.js';
 
-            const sourceValue = source[key];
-            const targetValue = result[key];
+import { deepMerge } from './common.js';
 
-            if (Array.isArray(sourceValue)) {
-                result[key] = [
-                    ...new Set([
-                        ...(Array.isArray(targetValue) ? targetValue : []),
-                        ...sourceValue,
-                    ]),
-                ];
-            }
-            else if (
-                typeof sourceValue === 'object'
-                && sourceValue !== null
-                && !Array.isArray(sourceValue)
-            ) {
-                result[key] = merge(
-                    typeof targetValue === 'object' && targetValue !== null && !Array.isArray(targetValue)
-                        ? targetValue
-                        : {},
-                    sourceValue,
-                );
-            }
-            else {
-                result[key] = sourceValue;
-            }
-        });
+const handleESLint: T_ConfigHandler = (...configs) => {
+    const { ignores, ...rest } = deepMerge(eslintBaseConfig, ...configs);
 
-        return result as I_Config;
-    };
+    const normalizedIgnores
+        = Array.isArray(ignores) && ignores.every(item => typeof item === 'string')
+            ? { ignores }
+            : undefined;
 
-    return configs
-        .flatMap(config => (Array.isArray(config) ? config : [config]))
-        .reduce((acc, config) => merge(acc, config), {} as I_Config);
+    const configArray = [
+        rest,
+        ...(normalizedIgnores ? [normalizedIgnores] : []),
+    ];
+
+    return antfu(
+        {
+            stylistic: {
+                semi: true,
+                indent: 4,
+                quotes: 'single',
+            },
+            formatters: {
+                css: true,
+                html: true,
+                markdown: 'prettier',
+            },
+            yaml: false,
+            react: true,
+        },
+        ...configArray,
+    );
+};
+
+const passThroughHandler: T_ConfigHandler = (...configs) => {
+    return deepMerge(...configs);
+};
+
+const configHandlers: Record<E_ConfigType, T_ConfigHandler> = {
+    [E_ConfigType.ESLINT]: handleESLint,
+    [E_ConfigType.COMMITLINT]: passThroughHandler,
+    [E_ConfigType.LINT_STAGED]: passThroughHandler,
+    [E_ConfigType.VITEST]: passThroughHandler,
+};
+
+export function mergeConfigs(type: T_ConfigType, ...configs: T_Object[]) {
+    const handler = configHandlers[type];
+
+    if (!handler) {
+        throw new Error(`Unknown config type: ${type}`);
+    }
+
+    return handler(...configs);
 }

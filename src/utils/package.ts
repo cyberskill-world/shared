@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import type { I_JSON } from '#typescript/fs.js';
+import type { T_Object } from '#typescript/common.js';
 
 import { NODE_MODULES, PACKAGE_JSON, WORKING_DIRECTORY } from '#constants/path.js';
 
@@ -13,7 +13,7 @@ const CACHE_EXPIRATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export function getPackageJson(packageName: string): {
     path: string;
-    file: I_JSON;
+    file: T_Object;
     isCurrentProject: boolean;
 } | false {
     const workingPackageJsonPath = join(WORKING_DIRECTORY, PACKAGE_JSON);
@@ -124,7 +124,7 @@ export async function checkPackage(packageName: string): Promise<{
     installedPath: string;
     installedVersion: string;
     latestVersion: string;
-    file: I_JSON;
+    file: T_Object;
 }> {
     const result = {
         isInstalled: false,
@@ -145,10 +145,10 @@ export async function checkPackage(packageName: string): Promise<{
         result.file = packageFound.file;
         result.isInstalled = true;
         result.installedPath = packageFound.path;
-        result.installedVersion = packageFound.file.version;
+        result.installedVersion = packageFound.file.version as string;
         result.isCurrentProject = packageFound.isCurrentProject;
         result.latestVersion = packageFound.isCurrentProject
-            ? packageFound.file.version
+            ? packageFound.file.version as string
             : await getLatestPackageVersion(packageName, true);
 
         return result;

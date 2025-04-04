@@ -13,5 +13,6 @@ export default [
                 internalPattern: ['^#.*', '^@/.*'],
             }],
         },
+        ignores: ['build', 'dist'],
     },
 ];

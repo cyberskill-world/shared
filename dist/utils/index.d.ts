@@ -1,7 +1,9 @@
 export { isJson_alias_2 as isJson } from '../_tsup-dts-rollup.js';
+export { isPlainObject_alias_2 as isPlainObject } from '../_tsup-dts-rollup.js';
+export { deepMerge_alias_2 as deepMerge } from '../_tsup-dts-rollup.js';
 export { regexSearchMapper_alias_2 as regexSearchMapper } from '../_tsup-dts-rollup.js';
 export { removeAccent_alias_2 as removeAccent } from '../_tsup-dts-rollup.js';
-export { deepMerge_alias_2 as deepMerge } from '../_tsup-dts-rollup.js';
+export { mergeConfigs_alias_2 as mergeConfigs } from '../_tsup-dts-rollup.js';
 export { serializer_alias_1 as serializer } from '../_tsup-dts-rollup.js';
 export { storageClient_alias_1 as storageClient } from '../_tsup-dts-rollup.js';
 export { generateSlug_alias_1 as generateSlug } from '../_tsup-dts-rollup.js';

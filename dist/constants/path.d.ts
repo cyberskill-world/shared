@@ -14,6 +14,7 @@ export { GIT_HOOK_alias_2 as GIT_HOOK } from '../_tsup-dts-rollup.js';
 export { GIT_COMMIT_EDITMSG_alias_2 as GIT_COMMIT_EDITMSG } from '../_tsup-dts-rollup.js';
 export { CYBERSKILL_DIRECTORY_alias_2 as CYBERSKILL_DIRECTORY } from '../_tsup-dts-rollup.js';
 export { CYBERSKILL_CLI_alias_2 as CYBERSKILL_CLI } from '../_tsup-dts-rollup.js';
+export { ESLINT_PACKAGE_NAME_alias_2 as ESLINT_PACKAGE_NAME } from '../_tsup-dts-rollup.js';
 export { ESLINT_CLI_alias_2 as ESLINT_CLI } from '../_tsup-dts-rollup.js';
 export { VITEST_PACKAGE_NAME_alias_2 as VITEST_PACKAGE_NAME } from '../_tsup-dts-rollup.js';
 export { VITEST_CLI_alias_2 as VITEST_CLI } from '../_tsup-dts-rollup.js';

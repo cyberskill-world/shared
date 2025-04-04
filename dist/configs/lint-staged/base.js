@@ -1,1 +1,1 @@
-var e={"*":["pnpm exec cyberskill lint:fix"]};export{e as default};
+var a={"*":["eslint --fix"]};export{a as default};

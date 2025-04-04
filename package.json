@@ -19,40 +19,15 @@
             "import": "./dist/index.js",
             "require": "./dist/index.cjs"
         },
-        "./configs": {
-            "types": "./dist/configs/index.d.ts",
-            "import": "./dist/configs/index.js",
-            "require": "./dist/configs/index.cjs"
-        },
         "./configs/commitlint": {
-            "types": "./dist/configs/commitlint/index.d.ts",
+            "types": "./dist/configs/commitlint/base.d.ts",
             "import": "./dist/configs/commitlint/base.js",
             "require": "./dist/configs/commitlint/base.cjs"
         },
         "./configs/eslint": {
-            "types": "./dist/configs/eslint/index.d.ts",
+            "types": "./dist/configs/eslint/base.d.ts",
             "import": "./dist/configs/eslint/base.js",
             "require": "./dist/configs/eslint/base.cjs"
-        },
-        "./configs/eslint/nestjs": {
-            "types": "./dist/configs/eslint/nestjs.d.ts",
-            "import": "./dist/configs/eslint/nestjs.js",
-            "require": "./dist/configs/eslint/nestjs.cjs"
-        },
-        "./configs/eslint/nextjs": {
-            "types": "./dist/configs/eslint/nextjs.d.ts",
-            "import": "./dist/configs/eslint/nextjs.js",
-            "require": "./dist/configs/eslint/nextjs.cjs"
-        },
-        "./configs/eslint/nodejs": {
-            "types": "./dist/configs/eslint/nodejs.d.ts",
-            "import": "./dist/configs/eslint/nodejs.js",
-            "require": "./dist/configs/eslint/nodejs.cjs"
-        },
-        "./configs/eslint/vite-react": {
-            "types": "./dist/configs/eslint/vite-react.d.ts",
-            "import": "./dist/configs/eslint/vite-react.js",
-            "require": "./dist/configs/eslint/vite-react.cjs"
         },
         "./configs/graphql": {
             "types": "./dist/configs/graphql/index.d.ts",
@@ -65,7 +40,7 @@
             "require": "./dist/configs/i18n/react/index.cjs"
         },
         "./configs/lint-staged": {
-            "types": "./dist/configs/lint-staged/index.d.ts",
+            "types": "./dist/configs/lint-staged/base.d.ts",
             "import": "./dist/configs/lint-staged/base.js",
             "require": "./dist/configs/lint-staged/base.cjs"
         },
@@ -162,7 +137,7 @@
     "dependencies": {
         "@antfu/eslint-config": "4.11.0",
         "@apollo/client": "3.13.5",
-        "@eslint-react/eslint-plugin": "1.40.2",
+        "@eslint-react/eslint-plugin": "1.40.3",
         "@graphql-codegen/cli": "5.0.5",
         "@graphql-codegen/client-preset": "4.8.0",
         "@graphql-codegen/typescript-react-apollo": "4.3.2",
@@ -178,7 +153,6 @@
         "classnames": "2.5.1",
         "crypto-js": "4.2.0",
         "date-fns": "4.1.0",
-        "eslint": "9.23.0",
         "eslint-config-next": "15.2.4",
         "eslint-plugin-format": "1.0.1",
         "eslint-plugin-react-hooks": "5.2.0",
@@ -191,7 +165,7 @@
         "localforage": "1.10.0",
         "modern-normalize": "3.0.1",
         "mongodb": "6.15.0",
-        "mongoose": "8.13.1",
+        "mongoose": "8.13.2",
         "mongoose-aggregate-paginate-v2": "1.1.4",
         "mongoose-paginate-v2": "1.9.0",
         "next-intl": "4.0.2",
@@ -202,7 +176,7 @@
         "react": "19.1.0",
         "react-dom": "19.1.0",
         "react-i18next": "15.4.1",
-        "sass": "1.86.2",
+        "sass": "1.86.3",
         "slugify": "1.6.6",
         "tsup": "8.4.0",
         "tsx": "4.19.3",
@@ -229,8 +203,9 @@
         "@types/unorm": "1.3.31",
         "@types/uuid": "10.0.0",
         "@types/yargs": "17.0.33",
+        "eslint": "9.23.0",
         "lint-staged": "15.5.0",
-        "node-modules-inspector": "0.6.0",
+        "node-modules-inspector": "0.6.2",
         "simple-git-hooks": "2.12.1"
     }
 }

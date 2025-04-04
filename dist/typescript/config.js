@@ -1,0 +1,1 @@
+var t=function(t){return t.ESLINT="eslint",t.COMMITLINT="commitlint",t.LINT_STAGED="lint-staged",t.VITEST="vitest",t}(t||{});export{t as E_ConfigType};

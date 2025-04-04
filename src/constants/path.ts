@@ -23,6 +23,7 @@ export const GIT_COMMIT_EDITMSG = '.git/COMMIT_EDITMSG';
 export const CYBERSKILL_DIRECTORY = join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
 
 export const CYBERSKILL_CLI = 'cyberskill';
+export const ESLINT_PACKAGE_NAME = 'eslint';
 export const ESLINT_CLI = 'eslint';
 export const VITEST_PACKAGE_NAME = 'vitest';
 export const VITEST_CLI = 'vitest';
@@ -82,9 +83,6 @@ function buildCommand(type: E_CommandType, ...args: string[]): string {
         case E_CommandType.PNPM_ADD_DEV_AND_EXEC:
             return formatCommand(rawCommand(`${PNPM_CLI} add -D ${first} && ${PNPM_EXEC_CLI} ${second}`)) as string;
 
-        case E_CommandType.PNPM_EXEC:
-            return formatCommand(rawCommand(`${PNPM_EXEC_CLI} ${first} ${second || ''}`.trim())) as string;
-
         case E_CommandType.RAW:
             return formatCommand(rawCommand(first)) as string;
     }
@@ -94,8 +92,8 @@ export const COMMAND = {
     SIMPLE_GIT_HOOKS: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, SIMPLE_GIT_HOOKS_PACKAGE_NAME, SIMPLE_GIT_HOOK_CLI),
     ESLINT_INSPECT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_INSPECT_PACKAGE_NAME, ESLINT_INSPECT_CLI),
     NODE_MODULES_INSPECT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, NODE_MODULES_INSPECT_PACKAGE_NAME, NODE_MODULES_INSPECT_CLI),
-    ESLINT_CHECK: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_CLI, PATH.WORKING_DIRECTORY),
-    ESLINT_FIX: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_CLI, `${PATH.WORKING_DIRECTORY} --fix`),
+    ESLINT_CHECK: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY}`),
+    ESLINT_FIX: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix`),
     TYPESCRIPT_CHECK: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, TSC_PACKAGE_NAME, `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit`),
     CONFIGURE_GIT_HOOK: buildCommand(E_CommandType.RAW, `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`),
     BUILD: buildCommand(E_CommandType.RAW, `${PNPM_CLI} run build`),

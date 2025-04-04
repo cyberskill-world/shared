@@ -1,4 +1,3 @@
-export * from './configs/index.js';
 export * from './constants/index.js';
 export * from './nodejs/index.js';
 export * from './react/index.js';

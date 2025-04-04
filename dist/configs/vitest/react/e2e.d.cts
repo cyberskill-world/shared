@@ -1,1 +1,1 @@
-export { default_alias_8 as default } from '../../../_tsup-dts-rollup.cjs';
+export { default_alias_3 as default } from '../../../_tsup-dts-rollup.cjs';

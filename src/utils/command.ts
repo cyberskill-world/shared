@@ -9,13 +9,12 @@ import * as util from 'node:util';
 
 import type { I_BoxedLogOptions, I_CommandContext, I_ErrorEntry, I_EslintError, T_Command, T_CommandMapInput } from '#typescript/command.js';
 
+import { DEBUG } from '#constants/common.js';
 import { CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '#constants/path.js';
 import { E_ErrorType } from '#typescript/command.js';
 
 import { checkPackage } from './package.js';
 import { storageServer } from './storage-server.js';
-
-const DEBUG = process.env.DEBUG === 'true';
 
 const execPromise = util.promisify(exec);
 
