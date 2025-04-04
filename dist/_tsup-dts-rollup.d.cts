@@ -1390,7 +1390,8 @@ declare enum E_ConfigType {
     ESLINT = "eslint",
     COMMITLINT = "commitlint",
     LINT_STAGED = "lint-staged",
-    VITEST = "vitest"
+    VITEST_REACT_E2E = "vitest-react-e2e",
+    VITEST_REACT_UNIT = "vitest-react-unit"
 }
 export { E_ConfigType }
 export { E_ConfigType as E_ConfigType_alias_1 }
@@ -1400,7 +1401,8 @@ declare enum E_ConfigType_2 {
     ESLINT = 'eslint',
     COMMITLINT = 'commitlint',
     LINT_STAGED = 'lint-staged',
-    VITEST = 'vitest',
+    VITEST_REACT_E2E = 'vitest-react-e2e',
+    VITEST_REACT_UNIT = 'vitest-react-unit',
 }
 
 declare enum E_ErrorType {
@@ -2268,6 +2270,11 @@ declare const PATH: {
 export { PATH }
 export { PATH as PATH_alias_1 }
 export { PATH as PATH_alias_2 }
+
+declare const PLAYWRIGHT_PACKAGE_NAME = "playwright";
+export { PLAYWRIGHT_PACKAGE_NAME }
+export { PLAYWRIGHT_PACKAGE_NAME as PLAYWRIGHT_PACKAGE_NAME_alias_1 }
+export { PLAYWRIGHT_PACKAGE_NAME as PLAYWRIGHT_PACKAGE_NAME_alias_2 }
 
 declare const PNPM_CLI = "pnpm";
 export { PNPM_CLI }

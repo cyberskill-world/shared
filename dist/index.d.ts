@@ -18,6 +18,7 @@ export { CYBERSKILL_CLI } from './_tsup-dts-rollup.js';
 export { ESLINT_PACKAGE_NAME } from './_tsup-dts-rollup.js';
 export { ESLINT_CLI } from './_tsup-dts-rollup.js';
 export { VITEST_PACKAGE_NAME } from './_tsup-dts-rollup.js';
+export { PLAYWRIGHT_PACKAGE_NAME } from './_tsup-dts-rollup.js';
 export { VITEST_CLI } from './_tsup-dts-rollup.js';
 export { COMMIT_LINT_PACKAGE_NAME } from './_tsup-dts-rollup.js';
 export { COMMIT_LINT_CLI } from './_tsup-dts-rollup.js';
