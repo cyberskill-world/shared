@@ -1,3 +1,9 @@
+## [1.56.0](https://github.com/cyberskill-world/shared/compare/v1.55.0...v1.56.0) (2025-04-04)
+
+### ✨ Features
+
+* enhance lint ([6e1394d](https://github.com/cyberskill-world/shared/commit/6e1394d9b9eebc782bc71c4693ffcd4164fa3cb8))
+
 ## [1.55.0](https://github.com/cyberskill-world/shared/compare/v1.54.0...v1.55.0) (2025-04-03)
 
 ### ✨ Features
