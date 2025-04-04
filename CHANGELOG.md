@@ -1,3 +1,9 @@
+## [1.58.0](https://github.com/cyberskill-world/shared/compare/v1.57.0...v1.58.0) (2025-04-04)
+
+### ✨ Features
+
+* move config from util to configs ([6d8a3fa](https://github.com/cyberskill-world/shared/commit/6d8a3fad5fb92668ea77b0582f4ee8844c40a0b6))
+
 ## [1.57.0](https://github.com/cyberskill-world/shared/compare/v1.56.0...v1.57.0) (2025-04-04)
 
 ### ✨ Features
