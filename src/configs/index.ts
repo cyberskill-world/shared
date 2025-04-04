@@ -9,8 +9,7 @@ import eslintBaseConfig from '#configs/eslint/base.js';
 import vitestReactE2EConfig from '#configs/vitest/react/e2e.js';
 import vitestReactUnitConfig from '#configs/vitest/react/unit.js';
 import { E_ConfigType } from '#typescript/config.js';
-
-import { deepMerge } from './common.js';
+import { deepMerge } from '#utils/common.js';
 
 const passThroughHandler: T_ConfigHandler = (...configs) => {
     return deepMerge(...configs);

@@ -2086,10 +2086,7 @@ export { LoadingProvider }
 export { LoadingProvider as LoadingProvider_alias_1 }
 export { LoadingProvider as LoadingProvider_alias_2 }
 
-declare function mergeConfigs(type: T_ConfigType_2, ...configs: T_Object_2[]): T_Object_2;
-export { mergeConfigs }
-export { mergeConfigs as mergeConfigs_alias_1 }
-export { mergeConfigs as mergeConfigs_alias_2 }
+export declare function mergeConfigs(type: T_ConfigType_2, ...configs: T_Object_2[]): T_Object_2;
 
 declare const mongo: {
     getDateTime(now?: Date): string;
