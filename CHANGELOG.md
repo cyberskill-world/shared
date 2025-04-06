@@ -1,3 +1,9 @@
+## [1.62.0](https://github.com/cyberskill-world/shared/compare/v1.61.0...v1.62.0) (2025-04-06)
+
+### ✨ Features
+
+* add consola ([cfd2a8e](https://github.com/cyberskill-world/shared/commit/cfd2a8ea8d911653323820cba4cf2ced17990baa))
+
 ## [1.61.0](https://github.com/cyberskill-world/shared/compare/v1.60.0...v1.61.0) (2025-04-06)
 
 ### ✨ Features
