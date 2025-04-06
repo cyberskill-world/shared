@@ -1,43 +1,6 @@
-import type { ChalkInstance } from 'chalk';
+import { consola } from 'consola/browser';
 
-import chalk from 'chalk';
-import consola from 'consola';
-import { GraphQLError } from 'graphql';
-
-import type { I_IssueEntry } from '#typescript/command.js';
-import type { I_Log, T_ThrowError } from '#typescript/log.js';
-
-import { DEBUG } from '#constants/common.js';
-import { RESPONSE_STATUS } from '#constants/response-status.js';
-
-export function throwError({
-    message,
-    status = RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
-    type = 'graphql',
-}: T_ThrowError): never {
-    const responseMessage
-        = message ?? status.MESSAGE ?? 'Internal server error';
-
-    if (type === 'graphql') {
-        throw new GraphQLError(responseMessage, {
-            extensions: { code: status.CODE },
-        });
-    }
-
-    else {
-        throw new Error(responseMessage);
-    }
-}
-
-if (!DEBUG) {
-    consola.level = 4;
-}
-
-function chalkKeyword(color: string): ChalkInstance {
-    const chalkColor = chalk[color as keyof typeof chalk];
-
-    return typeof chalkColor === 'function' ? (chalkColor as ChalkInstance) : chalk.green;
-}
+import type { I_Log } from '#typescript/log.js';
 
 export const log: I_Log = {
     silent: consola.silent,
@@ -54,24 +17,4 @@ export const log: I_Log = {
     debug: consola.debug,
     trace: consola.trace,
     verbose: consola.verbose,
-    printBoxedLog(title: string, issues: I_IssueEntry[], color = 'red') {
-        if (!issues?.length) {
-            consola.box(chalk.green(title));
-            return;
-        }
-
-        issues.forEach(({ file, position, rule, message }) => {
-            consola.log(`${chalk.gray('File:')} ${chalk.blue(`${file}${position ? `:${position}` : ''}`)}`);
-
-            if (rule) {
-                consola.log(`   ${chalkKeyword(color)('Rule:')} ${rule}`);
-            }
-
-            consola.log(`   ${chalkKeyword(color)('Message:')} ${message}`);
-        });
-
-        consola.box(chalkKeyword(color)(`${title} : ${issues.length}`));
-
-        consola.log(chalk.gray('─'.repeat(40)));
-    },
 };

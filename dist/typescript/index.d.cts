@@ -24,6 +24,7 @@ export { I_GraphqlCodegenConfig_alias_2 as I_GraphqlCodegenConfig } from '../_ts
 export { I_LoadingProps_alias_1 as I_LoadingProps } from '../_tsup-dts-rollup.cjs';
 export { T_ThrowError_alias_1 as T_ThrowError } from '../_tsup-dts-rollup.cjs';
 export { I_Log_alias_1 as I_Log } from '../_tsup-dts-rollup.cjs';
+export { I_Log_NodeJS_alias_1 as I_Log_NodeJS } from '../_tsup-dts-rollup.cjs';
 export { C_Db_alias_1 as C_Db } from '../_tsup-dts-rollup.cjs';
 export { T_Filter_alias_1 as T_Filter } from '../_tsup-dts-rollup.cjs';
 export { T_InsertOneResult_alias_1 as T_InsertOneResult } from '../_tsup-dts-rollup.cjs';

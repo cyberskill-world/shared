@@ -5,7 +5,7 @@ import type { T_Object } from '#typescript/common.js';
 import { NODE_MODULES, PACKAGE_JSON, WORKING_DIRECTORY } from '#constants/path.js';
 
 import { existsSync, readFileSync } from './fs.js';
-import { log } from './log.js';
+import { logNodeJS as log } from './log-nodejs.js';
 import { join } from './path.js';
 import { storageServer } from './storage-server.js';
 

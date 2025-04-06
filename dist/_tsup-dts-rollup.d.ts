@@ -1867,7 +1867,6 @@ declare interface I_Log {
     debug: typeof consola['debug'];
     trace: typeof consola['trace'];
     verbose: typeof consola['verbose'];
-    printBoxedLog: (title: string, issues: I_IssueEntry[], color?: string) => void;
 }
 export { I_Log }
 export { I_Log as I_Log_alias_1 }
@@ -1888,6 +1887,16 @@ declare interface I_Log_2 {
     debug: typeof consola['debug'];
     trace: typeof consola['trace'];
     verbose: typeof consola['verbose'];
+}
+
+declare interface I_Log_NodeJS extends I_Log {
+    printBoxedLog: (title: string, issues: I_IssueEntry[], color?: string) => void;
+}
+export { I_Log_NodeJS }
+export { I_Log_NodeJS as I_Log_NodeJS_alias_1 }
+export { I_Log_NodeJS as I_Log_NodeJS_alias_2 }
+
+declare interface I_Log_NodeJS_2 extends I_Log_2 {
     printBoxedLog: (
     title: string,
     issues: I_IssueEntry_2[],
@@ -2145,6 +2154,11 @@ declare const log: I_Log_2;
 export { log }
 export { log as log_alias_1 }
 export { log as log_alias_2 }
+
+declare const logNodeJS: I_Log_NodeJS_2;
+export { logNodeJS }
+export { logNodeJS as logNodeJS_alias_1 }
+export { logNodeJS as logNodeJS_alias_2 }
 
 export declare function mergeConfigs(type: T_ConfigType_2, ...configs: T_Object_2[]): T_Object_2;
 

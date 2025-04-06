@@ -4,7 +4,7 @@ import process from 'node:process';
 
 import { CYBERSKILL_STORAGE } from '#constants/path.js';
 
-import { log } from './log.js';
+import { logNodeJS as log } from './log-nodejs.js';
 import { join } from './path.js';
 
 export function getStorageDir() {

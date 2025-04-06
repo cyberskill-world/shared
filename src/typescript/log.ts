@@ -26,6 +26,9 @@ export interface I_Log {
     debug: typeof consola['debug'];
     trace: typeof consola['trace'];
     verbose: typeof consola['verbose'];
+}
+
+export interface I_Log_NodeJS extends I_Log {
     printBoxedLog: (
         title: string,
         issues: I_IssueEntry[],

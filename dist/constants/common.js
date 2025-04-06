@@ -1,1 +1,1 @@
-function e(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}import o from"node:process";var n=(typeof window==="undefined"?"undefined":e(window))<"u",r=o.env.DEBUG==="true";export{r as DEBUG,n as IS_BROWSER};
+function e(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}var o=(typeof window==="undefined"?"undefined":e(window))<"u";export{o as IS_BROWSER};

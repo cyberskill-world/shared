@@ -5,12 +5,12 @@ import yargs from 'yargs/yargs';
 
 import type { I_IssueEntry } from '#typescript/command.js';
 
-import { DEBUG } from '#constants/common.js';
+import { DEBUG } from '#constants/common-nodejs.js';
 import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '#constants/path.js';
 import { E_IssueType } from '#typescript/command.js';
 import { clearAllErrorLists, executeCommand, getStoredErrorLists, resolveCommands } from '#utils/command.js';
 import { appendFileSync, existsSync, readFileSync, rmSync, writeFileSync } from '#utils/fs.js';
-import { log } from '#utils/log.js';
+import { logNodeJS as log } from '#utils/log-nodejs.js';
 import { checkPackage } from '#utils/package.js';
 
 import pkg from '../package.json' with { type: 'json' };

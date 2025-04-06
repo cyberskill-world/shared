@@ -4,11 +4,11 @@ import * as util from 'node:util';
 
 import type { I_CommandContext, I_EslintError, I_IssueEntry, T_Command, T_CommandMapInput } from '#typescript/command.js';
 
-import { DEBUG } from '#constants/common.js';
+import { DEBUG } from '#constants/common-nodejs.js';
 import { CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '#constants/path.js';
 import { E_IssueType } from '#typescript/command.js';
 
-import { log } from './log.js';
+import { logNodeJS as log } from './log-nodejs.js';
 import { checkPackage } from './package.js';
 import { storageServer } from './storage-server.js';
 
