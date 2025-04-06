@@ -1,27 +1,32 @@
-import { useMemo, type ComponentType } from 'react';
+/* eslint-disable no-console */
+import type { FetchResult, Operation } from '@apollo/client';
+import type { Observable } from '@apollo/client/utilities';
+import type { ComponentType } from 'react';
 
 import {
     ApolloClient,
+    ApolloError,
     ApolloLink,
     ApolloProvider as ApolloProviderDefault,
+    from,
     HttpLink,
     InMemoryCache,
     split,
-    from,
-    FetchResult,
-    ApolloError,
 } from '@apollo/client';
-import { toast, Toaster } from 'react-hot-toast';
-import { FaQuestion } from "react-icons/fa6";
-import type { Operation } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import { getMainDefinition, Observable } from '@apollo/client/utilities';
-import { createClient } from 'graphql-ws';
-import { RetryLink } from "@apollo/client/link/retry";
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
+import { RetryLink } from '@apollo/client/link/retry';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { createClient } from 'graphql-ws';
+import { useMemo } from 'react';
+import { toast, Toaster } from 'react-hot-toast';
+import { FaQuestion } from 'react-icons/fa6';
+
 import type { I_ApolloOptions, I_ApolloProviderProps } from '#typescript/apollo.js';
-import { GRAPHQL_URI_DEFAULT, IS_DEV } from '#constants/common.js';
+
+import { GRAPHQL_URI_DEFAULT } from '#constants/graphql.js';
+
 import { ApolloErrorViewerModal, ApolloErrorViewerProvider, showGlobalApolloError } from './apollo-error.js';
 
 class DevLoggerLink extends ApolloLink {
@@ -32,11 +37,9 @@ class DevLoggerLink extends ApolloLink {
         this.count += 1;
 
         return forward(operation).map((result) => {
-            if (IS_DEV) {
-                const duration = Date.now() - start;
-                const name = operation.operationName || 'Unnamed';
-                console.info(`[Apollo] #${this.count}: ${name} (${duration}ms)`);
-            }
+            const duration = Date.now() - start;
+            const name = operation.operationName || 'Unnamed';
+            console.info(`[Apollo] #${this.count}: ${name} (${duration}ms)`);
 
             return result;
         });
@@ -54,7 +57,7 @@ function createApolloLinks(options?: I_ApolloOptions) {
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message, locations, path }) => {
                 console.error(
-                    `[GraphQL error] ${opName}: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`
+                    `[GraphQL error] ${opName}: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`,
                 );
             });
         }
@@ -62,7 +65,7 @@ function createApolloLinks(options?: I_ApolloOptions) {
         if (protocolErrors) {
             protocolErrors.forEach(({ message, extensions }) => {
                 console.error(
-                    `[Protocol error]: ${message}, Extensions: ${JSON.stringify(extensions)}`
+                    `[Protocol error]: ${message}, Extensions: ${JSON.stringify(extensions)}`,
                 );
             });
         }
@@ -72,11 +75,11 @@ function createApolloLinks(options?: I_ApolloOptions) {
         }
 
         if (graphQLErrors || protocolErrors || networkError) {
-            const message =
-                graphQLErrors?.[0]?.message ||
-                protocolErrors?.[0]?.message ||
-                networkError?.message ||
-                'Unexpected error';
+            const message
+                = graphQLErrors?.[0]?.message
+                    || protocolErrors?.[0]?.message
+                    || networkError?.message
+                    || 'Unexpected error';
             const error = new ApolloError({
                 graphQLErrors: graphQLErrors || [],
                 protocolErrors: protocolErrors || [],
@@ -90,7 +93,13 @@ function createApolloLinks(options?: I_ApolloOptions) {
 
             toast.custom((t: { id: string }) => (
                 <div className="bg-slate-800 text-white px-4 py-3 rounded shadow-md flex flex-col gap-2 w-full max-w-sm">
-                    <div className="text-sm font-medium">🚨 {opName} — {message}</div>
+                    <div className="text-sm font-medium">
+                        🚨
+                        {opName}
+                        {' '}
+                        —
+                        {message}
+                    </div>
                     <FaQuestion
                         onClick={() => {
                             setTimeout(() => {
@@ -110,7 +119,7 @@ function createApolloLinks(options?: I_ApolloOptions) {
 
     const removeTypenameLink = removeTypenameFromVariables();
 
-    if (IS_DEV && !uri) {
+    if (!uri) {
         console.warn(`[Apollo] No GraphQL URI provided — using "${GRAPHQL_URI_DEFAULT}" as default`);
     }
 
@@ -119,7 +128,7 @@ function createApolloLinks(options?: I_ApolloOptions) {
         credentials: 'include',
     });
 
-    if (IS_DEV && !wsUrl) {
+    if (!wsUrl) {
         console.warn('[Apollo] No WebSocket URL provided — subscriptions will use HTTP only');
     }
 
@@ -129,27 +138,27 @@ function createApolloLinks(options?: I_ApolloOptions) {
 
     const splitLink = wsLink instanceof ApolloLink
         ? split(
-            ({ query }) => {
-                const def = getMainDefinition(query);
+                ({ query }) => {
+                    const def = getMainDefinition(query);
 
-                return def.kind === 'OperationDefinition' && def.operation === 'subscription';
-            },
-            wsLink,
-            httpLink,
-        )
+                    return def.kind === 'OperationDefinition' && def.operation === 'subscription';
+                },
+                wsLink,
+                httpLink,
+            )
         : httpLink;
 
-    if (IS_DEV && splitLink === httpLink && wsUrl) {
+    if (splitLink === httpLink && wsUrl) {
         console.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');
     }
 
     return [
-        devLoggerLink,          // 🪵 custom logger
-        errorLink,              // ⚠️ Apollo's error handling
-        retryLink,              // 🔁 retry on failure
-        removeTypenameLink,     // 🧼 cleans up __typename
+        devLoggerLink, // 🪵 custom logger
+        errorLink, // ⚠️ Apollo's error handling
+        retryLink, // 🔁 retry on failure
+        removeTypenameLink, // 🧼 cleans up __typename
         ...(customLinks ?? []), // 🔗 custom links
-        splitLink,              // 📡 HTTP vs WS routing
+        splitLink, // 📡 HTTP vs WS routing
     ];
 }
 

@@ -1,7 +1,6 @@
-export { DEBUG_alias_2 as DEBUG } from '../_tsup-dts-rollup.cjs';
-export { IS_DEV_alias_2 as IS_DEV } from '../_tsup-dts-rollup.cjs';
-export { GRAPHQL_URI_DEFAULT_alias_2 as GRAPHQL_URI_DEFAULT } from '../_tsup-dts-rollup.cjs';
 export { IS_BROWSER_alias_2 as IS_BROWSER } from '../_tsup-dts-rollup.cjs';
+export { DEBUG_alias_2 as DEBUG } from '../_tsup-dts-rollup.cjs';
+export { GRAPHQL_URI_DEFAULT_alias_2 as GRAPHQL_URI_DEFAULT } from '../_tsup-dts-rollup.cjs';
 export { HOOK_alias_1 as HOOK } from '../_tsup-dts-rollup.cjs';
 export { WORKING_DIRECTORY_alias_1 as WORKING_DIRECTORY } from '../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_PACKAGE_NAME_alias_1 as CYBERSKILL_PACKAGE_NAME } from '../_tsup-dts-rollup.cjs';

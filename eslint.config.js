@@ -1,5 +1,5 @@
 // eslint-disable-next-line antfu/no-import-dist
-import { mergeConfigs } from './dist/utils/index.js';
+import { mergeConfigs } from './dist/configs/index.js';
 
 export default mergeConfigs('eslint', {
     rules: {

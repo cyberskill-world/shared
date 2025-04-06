@@ -5,7 +5,7 @@ import type { AggregatePaginateResult } from 'mongoose';
 import { ApolloCache } from '@apollo/client';
 import { ApolloClient } from '@apollo/client';
 import { ApolloClientOptions } from '@apollo/client';
-import { ApolloError } from '@apollo/client';
+import type { ApolloError } from '@apollo/client';
 import type { ApolloLink } from '@apollo/client';
 import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
@@ -46,7 +46,7 @@ import type { ProjectionType } from 'mongoose';
 import type { QueryOptions } from 'mongoose';
 import type { QueryWithHelpers } from 'mongoose';
 import type { ReactElement } from 'react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import { TFunction } from 'i18next';
@@ -73,7 +73,7 @@ export { ApolloClientOptions }
 export { ApolloClientOptions as ApolloClientOptions_alias_1 }
 export { ApolloClientOptions as ApolloClientOptions_alias_2 }
 
-declare const ApolloErrorScreen: ({ error, refetch }: ApolloErrorScreenProps_2) => JSX_2.Element;
+declare function ApolloErrorScreen({ error, refetch }: ApolloErrorScreenProps_2): JSX_2.Element;
 export { ApolloErrorScreen }
 export { ApolloErrorScreen as ApolloErrorScreen_alias_1 }
 export { ApolloErrorScreen as ApolloErrorScreen_alias_2 }
@@ -1537,7 +1537,7 @@ export { GIT_IGNORE }
 export { GIT_IGNORE as GIT_IGNORE_alias_1 }
 export { GIT_IGNORE as GIT_IGNORE_alias_2 }
 
-declare const GRAPHQL_URI_DEFAULT: string;
+declare const GRAPHQL_URI_DEFAULT = "/graphql";
 export { GRAPHQL_URI_DEFAULT }
 export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_1 }
 export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_2 }
@@ -2099,11 +2099,6 @@ declare const IS_BROWSER: boolean;
 export { IS_BROWSER }
 export { IS_BROWSER as IS_BROWSER_alias_1 }
 export { IS_BROWSER as IS_BROWSER_alias_2 }
-
-declare const IS_DEV: boolean;
-export { IS_DEV }
-export { IS_DEV as IS_DEV_alias_1 }
-export { IS_DEV as IS_DEV_alias_2 }
 
 declare function isJson(str: string): boolean;
 export { isJson }

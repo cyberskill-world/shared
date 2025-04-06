@@ -4,8 +4,8 @@ import type { I_CommandContext } from '#typescript/command.js';
 
 import { E_CommandType } from '#typescript/command.js';
 import { formatCommand, rawCommand } from '#utils/command.js';
-import { join, resolveWorkingPath } from '#utils/path.js';
 import { existsSync } from '#utils/fs.js';
+import { join, resolveWorkingPath } from '#utils/path.js';
 
 export const WORKING_DIRECTORY = process.env.INIT_CWD || process.cwd();
 
