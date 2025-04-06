@@ -1,3 +1,9 @@
+## [1.63.0](https://github.com/cyberskill-world/shared/compare/v1.62.0...v1.63.0) (2025-04-06)
+
+### ✨ Features
+
+* split log separate between browser and nodejs ([dd4bc83](https://github.com/cyberskill-world/shared/commit/dd4bc836bd9ee017c9c30b5e5a3574fdef6864f3))
+
 ## [1.62.0](https://github.com/cyberskill-world/shared/compare/v1.61.0...v1.62.0) (2025-04-06)
 
 ### ✨ Features
