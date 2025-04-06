@@ -1,3 +1,9 @@
+## [1.59.0](https://github.com/cyberskill-world/shared/compare/v1.58.0...v1.59.0) (2025-04-06)
+
+### ✨ Features
+
+* add toast to apollo provider ([6a5138c](https://github.com/cyberskill-world/shared/commit/6a5138cdeb17d36671394b4ad59169ff74dc20ba))
+
 ## [1.58.0](https://github.com/cyberskill-world/shared/compare/v1.57.0...v1.58.0) (2025-04-04)
 
 ### ✨ Features
