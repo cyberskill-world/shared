@@ -1,3 +1,9 @@
+## [1.61.0](https://github.com/cyberskill-world/shared/compare/v1.60.0...v1.61.0) (2025-04-06)
+
+### ✨ Features
+
+* enhance error modal ([e50caff](https://github.com/cyberskill-world/shared/commit/e50caff9ce36e1ac660e729b7bc21595fc0c9ffe))
+
 ## [1.60.0](https://github.com/cyberskill-world/shared/compare/v1.59.0...v1.60.0) (2025-04-06)
 
 ### ✨ Features
