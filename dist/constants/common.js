@@ -1,1 +1,1 @@
-var r=process.env.DEBUG==="true";export{r as DEBUG};
+function e(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}var o=process.env.DEBUG==="true",n=process.env.NODE_ENV!=="production",r=process.env.GRAPHQL_URI_DEFAULT||"/graphql",s=(typeof window==="undefined"?"undefined":e(window))<"u";export{o as DEBUG,r as GRAPHQL_URI_DEFAULT,s as IS_BROWSER,n as IS_DEV};

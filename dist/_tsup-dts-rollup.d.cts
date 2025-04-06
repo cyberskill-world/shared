@@ -5,6 +5,8 @@ import type { AggregatePaginateResult } from 'mongoose';
 import { ApolloCache } from '@apollo/client';
 import { ApolloClient } from '@apollo/client';
 import { ApolloClientOptions } from '@apollo/client';
+import { ApolloError } from '@apollo/client';
+import type { ApolloLink } from '@apollo/client';
 import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
@@ -29,6 +31,7 @@ import { Model } from 'mongoose';
 import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import type mongooseRaw from 'mongoose';
+import type { NormalizedCacheObject } from '@apollo/client';
 import type { OptionalUnlessRequiredId } from 'mongodb';
 import type { PaginateModel } from 'mongoose';
 import type { PaginateOptions } from 'mongoose';
@@ -43,7 +46,7 @@ import type { ProjectionType } from 'mongoose';
 import type { QueryOptions } from 'mongoose';
 import type { QueryWithHelpers } from 'mongoose';
 import type { ReactElement } from 'react';
-import type { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import { TFunction } from 'i18next';
@@ -69,6 +72,33 @@ export { ApolloClient as ApolloClient_alias_2 }
 export { ApolloClientOptions }
 export { ApolloClientOptions as ApolloClientOptions_alias_1 }
 export { ApolloClientOptions as ApolloClientOptions_alias_2 }
+
+declare const ApolloErrorScreen: ({ error, refetch }: ApolloErrorScreenProps_2) => JSX_2.Element;
+export { ApolloErrorScreen }
+export { ApolloErrorScreen as ApolloErrorScreen_alias_1 }
+export { ApolloErrorScreen as ApolloErrorScreen_alias_2 }
+
+export declare interface ApolloErrorScreenProps {
+    error: ApolloError;
+    refetch?: () => void;
+}
+
+declare interface ApolloErrorScreenProps_2 {
+    error: ApolloError;
+    refetch?: () => void;
+}
+
+declare function ApolloErrorViewerModal(): JSX_2.Element | null;
+export { ApolloErrorViewerModal }
+export { ApolloErrorViewerModal as ApolloErrorViewerModal_alias_1 }
+export { ApolloErrorViewerModal as ApolloErrorViewerModal_alias_2 }
+
+declare function ApolloErrorViewerProvider({ children }: {
+    children: ReactNode;
+}): JSX_2.Element;
+export { ApolloErrorViewerProvider }
+export { ApolloErrorViewerProvider as ApolloErrorViewerProvider_alias_1 }
+export { ApolloErrorViewerProvider as ApolloErrorViewerProvider_alias_2 }
 
 declare function ApolloProvider({ isNextJS, options, children, client: CustomClient, provider: CustomProvider, cache: CustomCache, }: I_ApolloProviderProps_2): JSX_2.Element;
 export { ApolloProvider }
@@ -1507,6 +1537,11 @@ export { GIT_IGNORE }
 export { GIT_IGNORE as GIT_IGNORE_alias_1 }
 export { GIT_IGNORE as GIT_IGNORE_alias_2 }
 
+declare const GRAPHQL_URI_DEFAULT: string;
+export { GRAPHQL_URI_DEFAULT }
+export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_1 }
+export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_2 }
+
 declare function HOOK({ isCurrentProject }: Partial<I_CommandContext_2>): {
     'pre-push'?: {
         raw: boolean;
@@ -1519,29 +1554,45 @@ export { HOOK }
 export { HOOK as HOOK_alias_1 }
 export { HOOK as HOOK_alias_2 }
 
-declare interface I_ApolloOptions extends Omit<ApolloClientOptions<unknown>, 'cache'> {
+export declare interface I_ApolloErrorViewerContext {
+    error: ApolloError | null;
+    showError: (error: ApolloError) => void;
+    hideError: () => void;
+}
+
+declare interface I_ApolloErrorViewerContext_2 {
+    error: ApolloError | null;
+    showError: (error: ApolloError) => void;
+    hideError: () => void;
+}
+
+declare interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCacheObject>, 'cache'> {
     uri?: string;
     wsUrl?: string;
-    cache?: ApolloCache<unknown>;
+    cache?: ApolloCache<NormalizedCacheObject>;
+    customLinks?: ApolloLink[];
+    ssrMode?: boolean;
 }
 export { I_ApolloOptions }
 export { I_ApolloOptions as I_ApolloOptions_alias_1 }
 export { I_ApolloOptions as I_ApolloOptions_alias_2 }
 
-declare interface I_ApolloOptions_2 extends Omit<ApolloClientOptions<unknown>, 'cache'> {
+declare interface I_ApolloOptions_2 extends Omit<ApolloClientOptions<NormalizedCacheObject>, 'cache'> {
     uri?: string;
     wsUrl?: string;
-    cache?: ApolloCache<unknown>;
+    cache?: ApolloCache<NormalizedCacheObject>;
+    customLinks?: ApolloLink[];
+    ssrMode?: boolean;
 }
 
 declare interface I_ApolloProviderProps {
     children: T_Children;
     isNextJS?: boolean;
     options?: I_ApolloOptions;
-    client?: ApolloClient<unknown>;
-    makeClient?: () => ApolloClient<unknown>;
+    client?: ApolloClient<NormalizedCacheObject>;
+    makeClient?: () => ApolloClient<NormalizedCacheObject>;
     provider?: ComponentType<I_ApolloProviderProps>;
-    cache?: ApolloCache<unknown>;
+    cache?: ApolloCache<NormalizedCacheObject>;
 }
 export { I_ApolloProviderProps }
 export { I_ApolloProviderProps as I_ApolloProviderProps_alias_1 }
@@ -1551,10 +1602,10 @@ declare interface I_ApolloProviderProps_2 {
     children: T_Children_2;
     isNextJS?: boolean;
     options?: I_ApolloOptions_2;
-    client?: ApolloClient<unknown>;
-    makeClient?: () => ApolloClient<unknown>;
+    client?: ApolloClient<NormalizedCacheObject>;
+    makeClient?: () => ApolloClient<NormalizedCacheObject>;
     provider?: ComponentType<I_ApolloProviderProps_2>;
-    cache?: ApolloCache<unknown>;
+    cache?: ApolloCache<NormalizedCacheObject>;
 }
 
 declare interface I_BoxedLogOptions {
@@ -2044,6 +2095,16 @@ export { initNodePersist }
 export { initNodePersist as initNodePersist_alias_1 }
 export { initNodePersist as initNodePersist_alias_2 }
 
+declare const IS_BROWSER: boolean;
+export { IS_BROWSER }
+export { IS_BROWSER as IS_BROWSER_alias_1 }
+export { IS_BROWSER as IS_BROWSER_alias_2 }
+
+declare const IS_DEV: boolean;
+export { IS_DEV }
+export { IS_DEV as IS_DEV_alias_1 }
+export { IS_DEV as IS_DEV_alias_2 }
+
 declare function isJson(str: string): boolean;
 export { isJson }
 export { isJson as isJson_alias_1 }
@@ -2313,6 +2374,11 @@ declare function regexSearchMapper(str: string): string;
 export { regexSearchMapper }
 export { regexSearchMapper as regexSearchMapper_alias_1 }
 export { regexSearchMapper as regexSearchMapper_alias_2 }
+
+declare function registerApolloErrorViewerCallback(fn: (err: ApolloError) => void): void;
+export { registerApolloErrorViewerCallback }
+export { registerApolloErrorViewerCallback as registerApolloErrorViewerCallback_alias_1 }
+export { registerApolloErrorViewerCallback as registerApolloErrorViewerCallback_alias_2 }
 
 declare function removeAccent(str: string): string;
 export { removeAccent }
@@ -2599,6 +2665,11 @@ declare const serializer: I_Serializer_2<unknown>;
 export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
+
+declare function showGlobalApolloError(error: ApolloError): void;
+export { showGlobalApolloError }
+export { showGlobalApolloError as showGlobalApolloError_alias_1 }
+export { showGlobalApolloError as showGlobalApolloError_alias_2 }
 
 declare const SIMPLE_GIT_HOOK_CLI = "simple-git-hooks";
 export { SIMPLE_GIT_HOOK_CLI }
@@ -2994,6 +3065,11 @@ declare const TSX_CLI = "tsx";
 export { TSX_CLI }
 export { TSX_CLI as TSX_CLI_alias_1 }
 export { TSX_CLI as TSX_CLI_alias_2 }
+
+declare function useApolloErrorViewer(): I_ApolloErrorViewerContext_2;
+export { useApolloErrorViewer }
+export { useApolloErrorViewer as useApolloErrorViewer_alias_1 }
+export { useApolloErrorViewer as useApolloErrorViewer_alias_2 }
 
 declare function useLoading(): I_LoadingContext_2;
 export { useLoading }

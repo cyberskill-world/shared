@@ -5,6 +5,7 @@ import type { I_CommandContext } from '#typescript/command.js';
 import { E_CommandType } from '#typescript/command.js';
 import { formatCommand, rawCommand } from '#utils/command.js';
 import { join, resolveWorkingPath } from '#utils/path.js';
+import { existsSync } from '#utils/fs.js';
 
 export const WORKING_DIRECTORY = process.env.INIT_CWD || process.cwd();
 
@@ -77,12 +78,14 @@ export function HOOK({ isCurrentProject }: Partial<I_CommandContext>) {
 function buildCommand(type: E_CommandType, ...args: string[]): string {
     const [first, second] = args;
 
+    const isPackageInstalled = type === E_CommandType.RAW ? true : existsSync(join(PATH.NODE_MODULES, first));
+
     switch (type) {
         case E_CommandType.PNPM_ADD_AND_EXEC:
-            return formatCommand(rawCommand(`${PNPM_CLI} add ${first} && ${PNPM_EXEC_CLI} ${second}`)) as string;
+            return formatCommand(rawCommand(`${!isPackageInstalled ? `${PNPM_CLI} add ${first} && ` : ''}${PNPM_EXEC_CLI} ${second}`)) as string;
 
         case E_CommandType.PNPM_ADD_DEV_AND_EXEC:
-            return formatCommand(rawCommand(`${PNPM_CLI} add -D ${first} && ${PNPM_EXEC_CLI} ${second}`)) as string;
+            return formatCommand(rawCommand(`${!isPackageInstalled ? `${PNPM_CLI} add -D ${first} && ` : ''}${PNPM_EXEC_CLI} ${second}`)) as string;
 
         case E_CommandType.RAW:
             return formatCommand(rawCommand(first)) as string;
