@@ -1,3 +1,9 @@
+## [1.60.0](https://github.com/cyberskill-world/shared/compare/v1.59.0...v1.60.0) (2025-04-06)
+
+### ✨ Features
+
+* correct eslint call ([835661e](https://github.com/cyberskill-world/shared/commit/835661ef4c073f8a86a9516dfe543252e023e95a))
+
 ## [1.59.0](https://github.com/cyberskill-world/shared/compare/v1.58.0...v1.59.0) (2025-04-06)
 
 ### ✨ Features
