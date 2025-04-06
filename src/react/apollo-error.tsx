@@ -2,6 +2,7 @@ import type { ApolloError } from '@apollo/client';
 import type { ReactNode } from 'react';
 
 import { createContext, use, useEffect, useMemo, useState } from 'react';
+import { FaRepeat } from 'react-icons/fa6';
 
 import type { I_ApolloErrorViewerContext } from '#typescript/apollo-error.js';
 
@@ -70,7 +71,7 @@ export function ApolloErrorViewerModal() {
     const { error, hideError } = context;
 
     return (
-        <div className={styles['modal-backdrop']} onClick={hideError}>
+        <div className={styles['modal-backdrop']}>
             <div className={styles['modal-content']}>
                 <button
                     type="button"
@@ -80,22 +81,12 @@ export function ApolloErrorViewerModal() {
                     ✕
                 </button>
 
-                <div className={styles['error-title']}>🚨 Something went wrong</div>
-                <p className={styles['error-text']}>
-                    A problem occurred while communicating with the server.
-                </p>
-
+                <div className={styles['error-title']}>{error.message}</div>
                 <div className={styles['error-details']}>
-                    <pre className="main">
-                        <strong>Main Error:</strong>
-                        {' '}
-                        {error.message}
-                    </pre>
-
                     {error.networkError && (
                         <pre className="network">
                             <strong>Network Error:</strong>
-                            {' '}
+                            &nbsp;
                             {error.networkError.message}
                         </pre>
                     )}
@@ -136,7 +127,7 @@ export function ApolloErrorViewerModal() {
                     {error.extraInfo && (
                         <pre className="extra">
                             <strong>Extra Info:</strong>
-                            {' '}
+                            &nbsp;
                             {JSON.stringify(error.extraInfo, null, 4)}
                         </pre>
                     )}
@@ -147,7 +138,7 @@ export function ApolloErrorViewerModal() {
                     className={styles['btn-retry']}
                     onClick={() => window.location.reload()}
                 >
-                    🔄 Retry
+                    <FaRepeat />
                 </button>
             </div>
         </div>

@@ -37,6 +37,7 @@
                 "./src/utils/*"
             ]
         },
+        "resolveJsonModule": true,
         "allowJs": true,
         "checkJs": false,
         "strict": true,

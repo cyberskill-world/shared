@@ -78,15 +78,15 @@ export function HOOK({ isCurrentProject }: Partial<I_CommandContext>) {
 function buildCommand(type: E_CommandType, ...args: string[]): string {
     const [first, second] = args;
 
-    const isPackageInstalled = type === E_CommandType.RAW ? true : existsSync(join(PATH.NODE_MODULES, first));
+    const isPackageInstalled = type === E_CommandType.RAW ? true : existsSync(...first.split(' ').map(pkg => join(PATH.NODE_MODULES, pkg)));
 
     switch (type) {
-        case E_CommandType.PNPM_ADD_AND_EXEC:
+        case E_CommandType.PNPM_ADD_AND_EXEC: {
             return formatCommand(rawCommand(`${!isPackageInstalled ? `${PNPM_CLI} add ${first} && ` : ''}${PNPM_EXEC_CLI} ${second}`)) as string;
-
-        case E_CommandType.PNPM_ADD_DEV_AND_EXEC:
+        }
+        case E_CommandType.PNPM_ADD_DEV_AND_EXEC: {
             return formatCommand(rawCommand(`${!isPackageInstalled ? `${PNPM_CLI} add -D ${first} && ` : ''}${PNPM_EXEC_CLI} ${second}`)) as string;
-
+        }
         case E_CommandType.RAW:
             return formatCommand(rawCommand(first)) as string;
     }

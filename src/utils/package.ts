@@ -4,8 +4,8 @@ import type { T_Object } from '#typescript/common.js';
 
 import { NODE_MODULES, PACKAGE_JSON, WORKING_DIRECTORY } from '#constants/path.js';
 
-import { commandLog } from './command.js';
 import { existsSync, readFileSync } from './fs.js';
+import { log } from './log.js';
 import { join } from './path.js';
 import { storageServer } from './storage-server.js';
 
@@ -31,7 +31,7 @@ export function getPackageJson(packageName: string): {
             }
         }
         catch (error) {
-            commandLog.warning(`Failed to read local package.json: ${(error as Error).message}`);
+            log.warn(`Failed to read local package.json: ${(error as Error).message}`);
         }
     }
 
@@ -50,7 +50,7 @@ export function getPackageJson(packageName: string): {
             }
         }
         catch (error) {
-            commandLog.warning(`Failed to read node_modules package.json for ${packageName}: ${(error as Error).message}`);
+            log.warn(`Failed to read node_modules package.json for ${packageName}: ${(error as Error).message}`);
         }
     }
 
@@ -106,10 +106,10 @@ export async function getLatestPackageVersion(packageName: string, forceRefresh 
         return latestVersion;
     }
     catch (error) {
-        commandLog.error(`Error fetching latest version for ${packageName}: ${(error as Error).message}`);
+        log.error(`Error fetching latest version for ${packageName}: ${(error as Error).message}`);
 
         if (cached) {
-            commandLog.warning(`Falling back to cached version for ${packageName}: ${cached.version}`);
+            log.warn(`Falling back to cached version for ${packageName}: ${cached.version}`);
 
             return cached.version;
         }
@@ -154,7 +154,7 @@ export async function checkPackage(packageName: string): Promise<{
         return result;
     }
     catch (error) {
-        commandLog.error(`Error checking package "${packageName}": ${(error as Error).message}`);
+        log.error(`Error checking package "${packageName}": ${(error as Error).message}`);
         return result;
     }
 }

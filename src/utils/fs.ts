@@ -2,7 +2,9 @@ import * as fs from 'node:fs';
 
 import type { T_Object } from '#typescript/common.js';
 
-export const existsSync = (filePath: string) => fs.existsSync(filePath);
+export function existsSync(...paths: string[]) {
+    return paths.every(path => fs.existsSync(path));
+}
 
 export function readFileSync(filePath: string, options: { asJson: true }): T_Object;
 export function readFileSync(filePath: string, options?: { asJson?: false }): string;
@@ -43,8 +45,8 @@ export function appendFileSync(filePath: string, data: string | T_Object, option
     fs.appendFileSync(filePath, content, 'utf-8');
 }
 
-export function rmSync(filePaths: string[]) {
-    filePaths.forEach((filePath) => {
+export function rmSync(...paths: string[]) {
+    paths.forEach((filePath) => {
         if (existsSync(filePath)) {
             fs.rmSync(filePath, { recursive: true, force: true });
         }

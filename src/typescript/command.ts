@@ -1,10 +1,10 @@
-export enum E_ErrorType {
+export enum E_IssueType {
     Error = 'error',
     Warning = 'warning',
 }
 
-export interface I_ErrorEntry {
-    type: E_ErrorType;
+export interface I_IssueEntry {
+    type: E_IssueType;
     file: string;
     message: string;
     position?: string;
@@ -20,14 +20,6 @@ export interface I_EslintError {
         message: string;
         ruleId: string;
     }>;
-}
-
-export interface I_BoxedLogOptions {
-    color?: string;
-    padding?: number;
-    margin?: number;
-    borderStyle?: 'round' | 'single' | 'double' | 'bold';
-    titleColor?: string;
 }
 
 export interface I_CommandContext {

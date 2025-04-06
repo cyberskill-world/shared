@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import type { I_Serializer } from '#typescript/serializer.js';
 
+import { log } from '#utils/log.js';
 import { serializer as defaultSerializer } from '#utils/serializer.js';
 import { storageClient } from '#utils/storage-client.js';
 
@@ -36,7 +37,7 @@ export function useStorage<T>(
                 }
             }
             catch (error) {
-                console.error(`Error loading value for key "${key}":`, error);
+                log.error(`Error loading value for key "${key}":`, error);
 
                 if (isMounted) {
                     setValue(initialValue);
@@ -68,7 +69,7 @@ export function useStorage<T>(
                 }
             }
             catch (error) {
-                console.error(`Error saving value for key "${key}":`, error);
+                log.error(`Error saving value for key "${key}":`, error);
             }
         };
 
@@ -90,7 +91,7 @@ export function useStorage<T>(
             setValue(undefined);
         }
         catch (error) {
-            console.error(`Error removing key "${key}":`, error);
+            log.error(`Error removing key "${key}":`, error);
         }
     }, [key]);
 

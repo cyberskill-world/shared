@@ -4,13 +4,13 @@ export { executeCommand_alias_2 as executeCommand } from '../_tsup-dts-rollup.js
 export { rawCommand_alias_2 as rawCommand } from '../_tsup-dts-rollup.js';
 export { formatCommand_alias_2 as formatCommand } from '../_tsup-dts-rollup.js';
 export { resolveCommands_alias_2 as resolveCommands } from '../_tsup-dts-rollup.js';
-export { commandLog_alias_2 as commandLog } from '../_tsup-dts-rollup.js';
+export { existsSync_alias_2 as existsSync } from '../_tsup-dts-rollup.js';
 export { readFileSync_alias_2 as readFileSync } from '../_tsup-dts-rollup.js';
 export { writeFileSync_alias_2 as writeFileSync } from '../_tsup-dts-rollup.js';
 export { appendFileSync_alias_2 as appendFileSync } from '../_tsup-dts-rollup.js';
 export { rmSync_alias_2 as rmSync } from '../_tsup-dts-rollup.js';
-export { existsSync_alias_2 as existsSync } from '../_tsup-dts-rollup.js';
-export { throwResponse_alias_1 as throwResponse } from '../_tsup-dts-rollup.js';
+export { throwError_alias_1 as throwError } from '../_tsup-dts-rollup.js';
+export { log_alias_1 as log } from '../_tsup-dts-rollup.js';
 export { getPackageJson_alias_1 as getPackageJson } from '../_tsup-dts-rollup.js';
 export { getLatestPackageVersion_alias_1 as getLatestPackageVersion } from '../_tsup-dts-rollup.js';
 export { checkPackage_alias_1 as checkPackage } from '../_tsup-dts-rollup.js';

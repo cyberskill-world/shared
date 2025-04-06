@@ -1,12 +1,14 @@
 import localForage from 'localforage';
 
+import { log } from './log.js';
+
 export const storageClient = {
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
             return await localForage.getItem<T>(key);
         }
         catch (error) {
-            console.error(`❌ [Storage:get] Error getting key "${key}":`, error);
+            log.error(`[Storage:get] Error getting key "${key}":`, error);
             return null;
         }
     },
@@ -15,7 +17,7 @@ export const storageClient = {
             await localForage.setItem(key, value);
         }
         catch (error) {
-            console.error(`❌ [Storage:set] Error setting key "${key}":`, error);
+            log.error(`[Storage:set] Error setting key "${key}":`, error);
         }
     },
     async remove(key: string): Promise<void> {
@@ -23,7 +25,7 @@ export const storageClient = {
             await localForage.removeItem(key);
         }
         catch (error) {
-            console.error(`❌ [Storage:remove] Error removing key "${key}":`, error);
+            log.error(`[Storage:remove] Error removing key "${key}":`, error);
         }
     },
     async keys(): Promise<string[]> {
@@ -32,7 +34,7 @@ export const storageClient = {
             return keys ?? [];
         }
         catch (error) {
-            console.error(`❌ [Storage:keys] Error getting keys:`, error);
+            log.error(`[Storage:keys] Error getting keys:`, error);
             return [];
         }
     },

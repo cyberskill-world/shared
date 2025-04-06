@@ -1,14 +1,20 @@
+import type { ChalkInstance } from 'chalk';
+
+import chalk from 'chalk';
+import consola from 'consola';
 import { GraphQLError } from 'graphql';
 
-import type { T_ThrowResponseArgs } from '#typescript/log.js';
+import type { I_IssueEntry } from '#typescript/command.js';
+import type { I_Log, T_ThrowError } from '#typescript/log.js';
 
+import { DEBUG } from '#constants/common.js';
 import { RESPONSE_STATUS } from '#constants/response-status.js';
 
-export function throwResponse({
+export function throwError({
     message,
     status = RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
     type = 'graphql',
-}: T_ThrowResponseArgs): never {
+}: T_ThrowError): never {
     const responseMessage
         = message ?? status.MESSAGE ?? 'Internal server error';
 
@@ -22,3 +28,50 @@ export function throwResponse({
         throw new Error(responseMessage);
     }
 }
+
+if (!DEBUG) {
+    consola.level = 4;
+}
+
+function chalkKeyword(color: string): ChalkInstance {
+    const chalkColor = chalk[color as keyof typeof chalk];
+
+    return typeof chalkColor === 'function' ? (chalkColor as ChalkInstance) : chalk.green;
+}
+
+export const log: I_Log = {
+    silent: consola.silent,
+    level: consola.level,
+    fatal: consola.fatal,
+    error: consola.error,
+    warn: consola.warn,
+    log: consola.log,
+    info: consola.info,
+    success: consola.success,
+    ready: consola.ready,
+    start: consola.start,
+    box: consola.box,
+    debug: consola.debug,
+    trace: consola.trace,
+    verbose: consola.verbose,
+    printBoxedLog(title: string, issues: I_IssueEntry[], color = 'red') {
+        if (!issues?.length) {
+            consola.box(chalk.green(title));
+            return;
+        }
+
+        issues.forEach(({ file, position, rule, message }) => {
+            consola.log(`${chalk.gray('File:')} ${chalk.blue(`${file}${position ? `:${position}` : ''}`)}`);
+
+            if (rule) {
+                consola.log(`   ${chalkKeyword(color)('Rule:')} ${rule}`);
+            }
+
+            consola.log(`   ${chalkKeyword(color)('Message:')} ${message}`);
+        });
+
+        consola.box(chalkKeyword(color)(`${title} : ${issues.length}`));
+
+        consola.log(chalk.gray('─'.repeat(40)));
+    },
+};

@@ -1,7 +1,6 @@
-export { E_ErrorType_alias_1 as E_ErrorType } from '../_tsup-dts-rollup.cjs';
-export { I_ErrorEntry_alias_1 as I_ErrorEntry } from '../_tsup-dts-rollup.cjs';
+export { E_IssueType_alias_1 as E_IssueType } from '../_tsup-dts-rollup.cjs';
+export { I_IssueEntry_alias_1 as I_IssueEntry } from '../_tsup-dts-rollup.cjs';
 export { I_EslintError_alias_1 as I_EslintError } from '../_tsup-dts-rollup.cjs';
-export { I_BoxedLogOptions_alias_1 as I_BoxedLogOptions } from '../_tsup-dts-rollup.cjs';
 export { I_CommandContext_alias_1 as I_CommandContext } from '../_tsup-dts-rollup.cjs';
 export { I_Command_alias_1 as I_Command } from '../_tsup-dts-rollup.cjs';
 export { T_CommandFunction_alias_1 as T_CommandFunction } from '../_tsup-dts-rollup.cjs';

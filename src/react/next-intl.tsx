@@ -6,6 +6,8 @@ import { createContext, use, useMemo } from 'react';
 import type { I_NextIntlContextType, I_NextIntlLanguage, T_NextIntlMessageList } from '#typescript/next-intl.js';
 import type { T_Children } from '#typescript/react.js';
 
+import { log } from '#utils/log.js';
+
 import { useStorage } from './storage.js';
 
 // #region -------------- NextIntlContext --------------
@@ -37,7 +39,7 @@ export function withNextIntl<T extends { children: T_Children }>(Component: Comp
         const timeZone = languages.find(lang => lang.value === currentLanguage?.value)?.timezone;
 
         if (!messages) {
-            console.warn(`Missing messages for language: ${currentLanguage?.value || defaultLang}`);
+            log.warn(`Missing messages for language: ${currentLanguage?.value || defaultLang}`);
             return null;
         }
 

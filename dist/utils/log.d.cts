@@ -1,1 +1,2 @@
-export { throwResponse_alias_2 as throwResponse } from '../_tsup-dts-rollup.cjs';
+export { throwError_alias_2 as throwError } from '../_tsup-dts-rollup.cjs';
+export { log_alias_2 as log } from '../_tsup-dts-rollup.cjs';

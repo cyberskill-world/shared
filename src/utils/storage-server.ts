@@ -4,6 +4,7 @@ import process from 'node:process';
 
 import { CYBERSKILL_STORAGE } from '#constants/path.js';
 
+import { log } from './log.js';
 import { join } from './path.js';
 
 export function getStorageDir() {
@@ -32,7 +33,7 @@ export const storageServer = {
             return result ?? null;
         }
         catch (error) {
-            console.error(`❌ [Storage:get] Error getting key "${key}":`, error);
+            log.error(`[Storage:get] Error getting key "${key}":`, error);
             return null;
         }
     },
@@ -42,7 +43,7 @@ export const storageServer = {
             await nodePersist.setItem(key, value);
         }
         catch (error) {
-            console.error(`❌ [Storage:set] Error setting key "${key}":`, error);
+            log.error(`[Storage:set] Error setting key "${key}":`, error);
         }
     },
     async remove(key: string): Promise<void> {
@@ -51,7 +52,7 @@ export const storageServer = {
             await nodePersist.removeItem(key);
         }
         catch (error) {
-            console.error(`❌ [Storage:remove] Error removing key "${key}":`, error);
+            log.error(`[Storage:remove] Error removing key "${key}":`, error);
         }
     },
     async keys(): Promise<string[]> {
@@ -60,14 +61,14 @@ export const storageServer = {
             const keys = await nodePersist.keys();
 
             if (!Array.isArray(keys)) {
-                console.warn(`⚠️ [Storage:keys] Invalid keys response:`, keys);
+                log.warn(`[Storage:keys] Invalid keys response:`, keys);
                 return [];
             }
 
             return keys;
         }
         catch (error) {
-            console.error(`❌ [Storage:keys] Error getting keys:`, error);
+            log.error(`[Storage:keys] Error getting keys:`, error);
             return [];
         }
     },
@@ -77,7 +78,7 @@ export const storageServer = {
             return `${storagePath} (key: ${key})`;
         }
         catch (error) {
-            console.error(`❌ [Storage:getLogLink] Error getting log link:`, error);
+            log.error(`[Storage:getLogLink] Error getting log link:`, error);
             return null;
         }
     },

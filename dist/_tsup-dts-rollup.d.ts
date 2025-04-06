@@ -11,6 +11,7 @@ import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
 import type { ComponentType } from 'react';
+import type consola from 'consola';
 import { Context } from 'react';
 import { Db } from 'mongodb';
 import type { DeleteResult } from 'mongodb';
@@ -170,17 +171,6 @@ declare const COMMAND: {
 export { COMMAND }
 export { COMMAND as COMMAND_alias_1 }
 export { COMMAND as COMMAND_alias_2 }
-
-declare const commandLog: {
-    success: (message: string) => void;
-    error: (message: string) => void;
-    warning: (message: string) => void;
-    info: (message: string) => void;
-    printBoxedLog: typeof printBoxedLog;
-};
-export { commandLog }
-export { commandLog as commandLog_alias_1 }
-export { commandLog as commandLog_alias_2 }
 
 declare const COMMIT_LINT_CLI = "commitlint";
 export { COMMIT_LINT_CLI }
@@ -1420,15 +1410,15 @@ declare enum E_ConfigType_2 {
     VITEST_REACT_UNIT = 'vitest-react-unit',
 }
 
-declare enum E_ErrorType {
+declare enum E_IssueType {
     Error = "error",
     Warning = "warning"
 }
-export { E_ErrorType }
-export { E_ErrorType as E_ErrorType_alias_1 }
-export { E_ErrorType as E_ErrorType_alias_2 }
+export { E_IssueType }
+export { E_IssueType as E_IssueType_alias_1 }
+export { E_IssueType as E_IssueType_alias_2 }
 
-declare enum E_ErrorType_2 {
+declare enum E_IssueType_2 {
     Error = 'error',
     Warning = 'warning',
 }
@@ -1458,7 +1448,7 @@ export { executeCommand }
 export { executeCommand as executeCommand_alias_1 }
 export { executeCommand as executeCommand_alias_2 }
 
-declare const existsSync: (filePath: string) => boolean;
+declare function existsSync(...paths: string[]): boolean;
 export { existsSync }
 export { existsSync as existsSync_alias_1 }
 export { existsSync as existsSync_alias_2 }
@@ -1497,7 +1487,7 @@ export { getStorageDir }
 export { getStorageDir as getStorageDir_alias_1 }
 export { getStorageDir as getStorageDir_alias_2 }
 
-declare function getStoredErrorLists(): Promise<I_ErrorEntry_2[]>;
+declare function getStoredErrorLists(): Promise<I_IssueEntry_2[]>;
 export { getStoredErrorLists }
 export { getStoredErrorLists as getStoredErrorLists_alias_1 }
 export { getStoredErrorLists as getStoredErrorLists_alias_2 }
@@ -1593,25 +1583,6 @@ declare interface I_ApolloProviderProps_2 {
     cache?: ApolloCache<NormalizedCacheObject>;
 }
 
-declare interface I_BoxedLogOptions {
-    color?: string;
-    padding?: number;
-    margin?: number;
-    borderStyle?: 'round' | 'single' | 'double' | 'bold';
-    titleColor?: string;
-}
-export { I_BoxedLogOptions }
-export { I_BoxedLogOptions as I_BoxedLogOptions_alias_1 }
-export { I_BoxedLogOptions as I_BoxedLogOptions_alias_2 }
-
-declare interface I_BoxedLogOptions_2 {
-    color?: string;
-    padding?: number;
-    margin?: number;
-    borderStyle?: 'round' | 'single' | 'double' | 'bold';
-    titleColor?: string;
-}
-
 declare interface I_Command {
     raw: boolean;
     cmd: string;
@@ -1678,25 +1649,6 @@ export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_2 }
 
 declare interface I_DeleteOptionsExtended_2 extends Omit<QueryOptions, 'session'> {
     session?: ClientSession;
-}
-
-declare interface I_ErrorEntry {
-    type: E_ErrorType;
-    file: string;
-    message: string;
-    position?: string;
-    rule?: string;
-}
-export { I_ErrorEntry }
-export { I_ErrorEntry as I_ErrorEntry_alias_1 }
-export { I_ErrorEntry as I_ErrorEntry_alias_2 }
-
-declare interface I_ErrorEntry_2 {
-    type: E_ErrorType_2;
-    file: string;
-    message: string;
-    position?: string;
-    rule?: string;
 }
 
 declare interface I_EslintError {
@@ -1847,6 +1799,25 @@ export { I_Input_UpdateOne }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_1 }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_2 }
 
+declare interface I_IssueEntry {
+    type: E_IssueType;
+    file: string;
+    message: string;
+    position?: string;
+    rule?: string;
+}
+export { I_IssueEntry }
+export { I_IssueEntry as I_IssueEntry_alias_1 }
+export { I_IssueEntry as I_IssueEntry_alias_2 }
+
+declare interface I_IssueEntry_2 {
+    type: E_IssueType_2;
+    file: string;
+    message: string;
+    position?: string;
+    rule?: string;
+}
+
 declare interface I_LoadingContext {
     isLoading: boolean;
     isGlobalLoading: boolean;
@@ -1879,6 +1850,49 @@ declare interface I_LoadingProps_2 {
     block?: boolean;
     className?: string;
     message?: string;
+}
+
+declare interface I_Log {
+    silent: typeof consola['silent'];
+    level: typeof consola['level'];
+    fatal: typeof consola['fatal'];
+    error: typeof consola['error'];
+    warn: typeof consola['warn'];
+    log: typeof consola['log'];
+    info: typeof consola['info'];
+    success: typeof consola['success'];
+    ready: typeof consola['ready'];
+    start: typeof consola['start'];
+    box: typeof consola['box'];
+    debug: typeof consola['debug'];
+    trace: typeof consola['trace'];
+    verbose: typeof consola['verbose'];
+    printBoxedLog: (title: string, issues: I_IssueEntry[], color?: string) => void;
+}
+export { I_Log }
+export { I_Log as I_Log_alias_1 }
+export { I_Log as I_Log_alias_2 }
+
+declare interface I_Log_2 {
+    silent: typeof consola['silent'];
+    level: typeof consola['level'];
+    fatal: typeof consola['fatal'];
+    error: typeof consola['error'];
+    warn: typeof consola['warn'];
+    log: typeof consola['log'];
+    info: typeof consola['info'];
+    success: typeof consola['success'];
+    ready: typeof consola['ready'];
+    start: typeof consola['start'];
+    box: typeof consola['box'];
+    debug: typeof consola['debug'];
+    trace: typeof consola['trace'];
+    verbose: typeof consola['verbose'];
+    printBoxedLog: (
+    title: string,
+    issues: I_IssueEntry_2[],
+    color?: string,
+    ) => void;
 }
 
 declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
@@ -2127,6 +2141,11 @@ export { LoadingProvider }
 export { LoadingProvider as LoadingProvider_alias_1 }
 export { LoadingProvider as LoadingProvider_alias_2 }
 
+declare const log: I_Log_2;
+export { log }
+export { log as log_alias_1 }
+export { log as log_alias_2 }
+
 export declare function mergeConfigs(type: T_ConfigType_2, ...configs: T_Object_2[]): T_Object_2;
 
 declare const mongo: {
@@ -2328,8 +2347,6 @@ declare const PNPM_LOCK_YAML = "pnpm-lock.yaml";
 export { PNPM_LOCK_YAML }
 export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_1 }
 export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_2 }
-
-declare function printBoxedLog<T extends string | I_ErrorEntry_2[]>(title: string, content: T, { color, padding, margin, borderStyle, titleColor, }?: I_BoxedLogOptions_2): void;
 
 declare function rawCommand(cmd: string): {
     raw: boolean;
@@ -2636,7 +2653,7 @@ export { RESPONSE_STATUS }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_1 }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_2 }
 
-declare function rmSync(filePaths: string[]): void;
+declare function rmSync(...paths: string[]): void;
 export { rmSync }
 export { rmSync as rmSync_alias_1 }
 export { rmSync as rmSync_alias_2 }
@@ -2979,7 +2996,7 @@ export { T_QueryWithHelpers as T_QueryWithHelpers_alias_2 }
 
 declare type T_QueryWithHelpers_2<T> = QueryWithHelpers<T, T>;
 
-declare interface T_ThrowResponseArgs {
+declare interface T_ThrowError {
     message?: string;
     status?: {
         CODE: string | number;
@@ -2987,11 +3004,11 @@ declare interface T_ThrowResponseArgs {
     };
     type?: 'graphql' | 'rest';
 }
-export { T_ThrowResponseArgs }
-export { T_ThrowResponseArgs as T_ThrowResponseArgs_alias_1 }
-export { T_ThrowResponseArgs as T_ThrowResponseArgs_alias_2 }
+export { T_ThrowError }
+export { T_ThrowError as T_ThrowError_alias_1 }
+export { T_ThrowError as T_ThrowError_alias_2 }
 
-declare interface T_ThrowResponseArgs_2 {
+declare interface T_ThrowError_2 {
     message?: string;
     status?: {
         CODE: string | number;
@@ -3021,10 +3038,10 @@ export { T_WithId as T_WithId_alias_2 }
 
 declare type T_WithId_2<T> = WithId<T>;
 
-declare function throwResponse({ message, status, type, }: T_ThrowResponseArgs_2): never;
-export { throwResponse }
-export { throwResponse as throwResponse_alias_1 }
-export { throwResponse as throwResponse_alias_2 }
+declare function throwError({ message, status, type, }: T_ThrowError_2): never;
+export { throwError }
+export { throwError as throwError_alias_1 }
+export { throwError as throwError_alias_2 }
 
 declare const TSC_CLI = "tsc";
 export { TSC_CLI }

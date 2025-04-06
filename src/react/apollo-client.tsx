@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import type { FetchResult, Operation } from '@apollo/client';
 import type { Observable } from '@apollo/client/utilities';
 import type { ComponentType } from 'react';
@@ -25,6 +24,7 @@ import { FaQuestion } from 'react-icons/fa6';
 import type { I_ApolloOptions, I_ApolloProviderProps } from '#typescript/apollo.js';
 
 import { GRAPHQL_URI_DEFAULT } from '#constants/graphql.js';
+import { log } from '#utils/log.js';
 
 import { ApolloErrorViewerModal, ApolloErrorViewerProvider, showGlobalApolloError } from './apollo-error.js';
 
@@ -38,7 +38,7 @@ class DevLoggerLink extends ApolloLink {
         return forward(operation).map((result) => {
             const duration = Date.now() - start;
             const name = operation.operationName || 'Unnamed';
-            console.info(`[Apollo] #${this.count}: ${name} (${duration}ms)`);
+            log.info(`[Apollo] #${this.count}: ${name} (${duration}ms)`);
 
             return result;
         });
@@ -55,7 +55,7 @@ function createApolloLinks(options?: I_ApolloOptions) {
 
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message, locations, path }) => {
-                console.error(
+                log.error(
                     `[GraphQL error] ${opName}: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`,
                 );
             });
@@ -63,14 +63,14 @@ function createApolloLinks(options?: I_ApolloOptions) {
 
         if (protocolErrors) {
             protocolErrors.forEach(({ message, extensions }) => {
-                console.error(
+                log.error(
                     `[Protocol error]: ${message}, Extensions: ${JSON.stringify(extensions)}`,
                 );
             });
         }
 
         if (networkError) {
-            console.error(`[Network error]: ${networkError}`);
+            log.error(`[Network error]: ${networkError}`);
         }
 
         if (graphQLErrors || protocolErrors || networkError) {
@@ -111,17 +111,13 @@ function createApolloLinks(options?: I_ApolloOptions) {
     const removeTypenameLink = removeTypenameFromVariables();
 
     if (!uri) {
-        console.warn(`[Apollo] No GraphQL URI provided — using "${GRAPHQL_URI_DEFAULT}" as default`);
+        log.warn(`[Apollo] No GraphQL URI provided — using "${GRAPHQL_URI_DEFAULT}" as default`);
     }
 
     const httpLink = new HttpLink({
         uri: uri ?? GRAPHQL_URI_DEFAULT,
         credentials: 'include',
     });
-
-    if (!wsUrl) {
-        console.warn('[Apollo] No WebSocket URL provided — subscriptions will use HTTP only');
-    }
 
     const wsLink = wsUrl
         ? new GraphQLWsLink(createClient({ url: wsUrl }))
@@ -140,7 +136,7 @@ function createApolloLinks(options?: I_ApolloOptions) {
         : httpLink;
 
     if (splitLink === httpLink && wsUrl) {
-        console.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');
+        log.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');
     }
 
     return [

@@ -1,104 +1,24 @@
-/* eslint-disable no-console */
-import type { ChalkInstance } from 'chalk';
-
-import boxen from 'boxen';
-import chalk from 'chalk';
 import { exec } from 'node:child_process';
 import process from 'node:process';
 import * as util from 'node:util';
 
-import type { I_BoxedLogOptions, I_CommandContext, I_ErrorEntry, I_EslintError, T_Command, T_CommandMapInput } from '#typescript/command.js';
+import type { I_CommandContext, I_EslintError, I_IssueEntry, T_Command, T_CommandMapInput } from '#typescript/command.js';
 
 import { DEBUG } from '#constants/common.js';
 import { CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '#constants/path.js';
-import { E_ErrorType } from '#typescript/command.js';
+import { E_IssueType } from '#typescript/command.js';
 
+import { log } from './log.js';
 import { checkPackage } from './package.js';
 import { storageServer } from './storage-server.js';
 
 const execPromise = util.promisify(exec);
 
-const { gray, blue } = chalk;
-
-function getTimeStamp() {
-    return gray(`[${new Date().toLocaleTimeString()}]`);
-}
-
-function chalkKeyword(color: string): ChalkInstance {
-    const chalkColor = chalk[color as keyof typeof chalk];
-    return typeof chalkColor === 'function' ? (chalkColor as ChalkInstance) : chalk.green;
-}
-
-function printLog(type: string, color: string, icon: string, message: string) {
-    const chalkColor = chalkKeyword(color);
-    console.log(`${getTimeStamp()} ${chalkColor(`${icon} ${type}`)} ${message}`);
-}
-
-function printBoxedLog<T extends string | I_ErrorEntry[]>(
-    title: string,
-    content: T,
-    {
-        color = 'green',
-        padding = 1,
-        margin = 1,
-        borderStyle = 'round',
-        titleColor = 'bold',
-    }: I_BoxedLogOptions = {},
-) {
-    const chalkColor = chalkKeyword(color);
-    const chalkTitleColor = chalkKeyword(titleColor);
-
-    if (typeof content === 'string') {
-        console.log(
-            boxen(chalkTitleColor(chalkColor(`${title}\n${content}`)), {
-                padding,
-                margin,
-                borderStyle,
-                borderColor: color,
-            }),
-        );
-        return;
-    }
-
-    if (Array.isArray(content) && content.length) {
-        content.forEach(({ file, position, rule, message }) => {
-            console.log(
-                `${getTimeStamp()} ${chalkColor('File:')} ${blue(
-                    `${file}${position ? `:${position}` : ''}`,
-                )}`,
-            );
-
-            if (rule)
-                console.log(`   ${chalkColor('Rule:')} ${chalkColor(rule)}`);
-            console.log(`   ${chalkColor('Message:')} ${chalkColor(message)}`);
-        });
-
-        console.log(
-            boxen(chalkTitleColor(chalkColor(`${title}: ${content.length}`)), {
-                padding,
-                margin,
-                borderStyle,
-                borderColor: color,
-            }),
-        );
-
-        console.log(gray('─'.repeat(40)));
-    }
-}
-
-export const commandLog = {
-    success: (message: string) => printLog('SUCCESS', 'green', '✔', message),
-    error: (message: string) => printLog('ERROR', 'red', '✖', message),
-    warning: (message: string) => printLog('WARNING', 'yellow', '⚠', message),
-    info: (message: string) => printLog('INFO', 'blue', 'ℹ', message),
-    printBoxedLog,
-};
-
 function getErrorListKey(timestamp: number) {
     return `error_list:${timestamp}`;
 }
 
-async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void> {
+async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> {
     if (errorList.length === 0) {
         return;
     }
@@ -116,16 +36,16 @@ async function saveErrorListToStorage(errorList: I_ErrorEntry[]): Promise<void> 
             const logPath = await storageServer.getLogLink(key);
 
             if (logPath) {
-                commandLog.info(`📂 Open the error list manually: ${logPath}`);
+                log.info(`📂 Open the error list manually: ${logPath}`);
             }
         }, 10);
     }
     catch (error) {
-        commandLog.error(`Failed to save errors: ${(error as Error).message}`);
+        log.error(`Failed to save errors: ${(error as Error).message}`);
     }
 }
 
-export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
+export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
     try {
         const keys = await storageServer.keys();
 
@@ -135,7 +55,7 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
 
         const allErrors = await Promise.all(
             errorKeys.map(async (key) => {
-                const entry = await storageServer.get<{ errors: I_ErrorEntry[]; timestamp: number }>(key);
+                const entry = await storageServer.get<{ errors: I_IssueEntry[]; timestamp: number }>(key);
 
                 return entry?.errors || [];
             }),
@@ -144,7 +64,7 @@ export async function getStoredErrorLists(): Promise<I_ErrorEntry[]> {
         return allErrors.flat();
     }
     catch (error) {
-        commandLog.error(`Failed to retrieve stored errors: ${(error as Error).message}`);
+        log.error(`Failed to retrieve stored errors: ${(error as Error).message}`);
 
         return [];
     }
@@ -161,12 +81,12 @@ export async function clearAllErrorLists(): Promise<void> {
         await Promise.all(errorKeys.map(key => storageServer.remove(key)));
     }
     catch (error) {
-        commandLog.error(`Failed to clear error lists: ${(error as Error).message}`);
+        log.error(`Failed to clear error lists: ${(error as Error).message}`);
     }
 }
 
 function parseTextErrors(output: string): void {
-    const errorList: I_ErrorEntry[] = [];
+    const errorList: I_IssueEntry[] = [];
     const unmatchedLines: string[] = [];
     let lastFilePath = '';
     // eslint-disable-next-line regexp/no-super-linear-backtracking
@@ -188,7 +108,7 @@ function parseTextErrors(output: string): void {
                 errorList.push({
                     file: lastFilePath,
                     position: `${eslintMatch[1]}:${eslintMatch[2]}`,
-                    type: eslintMatch[3] === E_ErrorType.Error ? E_ErrorType.Error : E_ErrorType.Warning,
+                    type: eslintMatch[3] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
                     message: eslintMatch[4].trim(),
                     rule: eslintMatch[5].trim(),
                 });
@@ -197,14 +117,14 @@ function parseTextErrors(output: string): void {
                 errorList.push({
                     file: tsMatch[1],
                     position: `${tsMatch[2]}:${tsMatch[3]}`,
-                    type: tsMatch[4] === E_ErrorType.Error ? E_ErrorType.Error : E_ErrorType.Warning,
+                    type: tsMatch[4] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
                     message: tsMatch[5].trim(),
                 });
             }
             else if (commitlintMatch.length) {
                 errorList.push({
                     file: 'commitlint',
-                    type: E_ErrorType.Error,
+                    type: E_IssueType.Error,
                     message: commitlintMatch[1].trim(),
                     rule: commitlintMatch[2].trim(),
                 });
@@ -219,21 +139,21 @@ function parseTextErrors(output: string): void {
         saveErrorListToStorage(errorList);
     }
 
-    if (unmatchedLines.length && DEBUG) {
-        commandLog.warning(`Unmatched lines:`);
-        unmatchedLines.forEach(line => console.log(`  ${line}`));
+    if (DEBUG && unmatchedLines.length) {
+        log.warn(`Unmatched lines:`);
+        unmatchedLines.forEach(line => log.info(`  ${line}`));
     }
 }
 
 function parseCommandOutput(output: string): void {
     try {
         const results: I_EslintError[] = JSON.parse(output);
-        const errorList: I_ErrorEntry[] = [];
+        const errorList: I_IssueEntry[] = [];
 
         results.forEach(({ filePath, messages }) => {
             messages.forEach(({ severity, line, column, ruleId, message }) => {
                 errorList.push({
-                    type: severity === 2 ? E_ErrorType.Error : E_ErrorType.Warning,
+                    type: severity === 2 ? E_IssueType.Error : E_IssueType.Warning,
                     file: filePath,
                     position: `${line}:${column}`,
                     rule: ruleId,
@@ -255,7 +175,7 @@ export async function executeCommand(command: string, parser = parseCommandOutpu
     const controller = new AbortController();
 
     process.on('SIGINT', () => {
-        commandLog.warning('Process interrupted. Terminating...');
+        log.warn('Process interrupted. Terminating...');
         controller.abort();
         process.exit();
     });
@@ -278,7 +198,7 @@ export async function executeCommand(command: string, parser = parseCommandOutpu
         [stdout, stderr].forEach(output => output && parser(output));
 
         if (!stderr && !stdout) {
-            commandLog.error(`Command failed: ${message}`);
+            log.error(`Command failed: ${message}`);
         }
     }
 }
