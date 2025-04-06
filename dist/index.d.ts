@@ -51,7 +51,6 @@ export { useApolloErrorViewer } from './_tsup-dts-rollup.js';
 export { registerApolloErrorViewerCallback } from './_tsup-dts-rollup.js';
 export { showGlobalApolloError } from './_tsup-dts-rollup.js';
 export { ApolloErrorViewerProvider } from './_tsup-dts-rollup.js';
-export { ApolloErrorScreen } from './_tsup-dts-rollup.js';
 export { ApolloErrorViewerModal } from './_tsup-dts-rollup.js';
 export { useLoading } from './_tsup-dts-rollup.js';
 export { Loading } from './_tsup-dts-rollup.js';

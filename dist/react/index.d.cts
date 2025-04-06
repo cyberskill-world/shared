@@ -3,7 +3,6 @@ export { useApolloErrorViewer_alias_2 as useApolloErrorViewer } from '../_tsup-d
 export { registerApolloErrorViewerCallback_alias_2 as registerApolloErrorViewerCallback } from '../_tsup-dts-rollup.cjs';
 export { showGlobalApolloError_alias_2 as showGlobalApolloError } from '../_tsup-dts-rollup.cjs';
 export { ApolloErrorViewerProvider_alias_2 as ApolloErrorViewerProvider } from '../_tsup-dts-rollup.cjs';
-export { ApolloErrorScreen_alias_2 as ApolloErrorScreen } from '../_tsup-dts-rollup.cjs';
 export { ApolloErrorViewerModal_alias_2 as ApolloErrorViewerModal } from '../_tsup-dts-rollup.cjs';
 export { useLoading_alias_1 as useLoading } from '../_tsup-dts-rollup.cjs';
 export { Loading_alias_1 as Loading } from '../_tsup-dts-rollup.cjs';

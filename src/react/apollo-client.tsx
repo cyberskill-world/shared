@@ -15,7 +15,6 @@ import {
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
-import { RetryLink } from '@apollo/client/link/retry';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
@@ -91,15 +90,10 @@ function createApolloLinks(options?: I_ApolloOptions) {
                 },
             });
 
-            toast.custom((t: { id: string }) => (
-                <div className="bg-slate-800 text-white px-4 py-3 rounded shadow-md flex flex-col gap-2 w-full max-w-sm">
-                    <div className="text-sm font-medium">
-                        🚨
-                        {opName}
-                        {' '}
-                        —
-                        {message}
-                    </div>
+            toast.error((t: { id: string }) => (
+                <>
+                    {message}
+                    &nbsp;
                     <FaQuestion
                         onClick={() => {
                             setTimeout(() => {
@@ -108,14 +102,11 @@ function createApolloLinks(options?: I_ApolloOptions) {
 
                             toast.dismiss(t.id);
                         }}
-                        className="text-xs text-blue-400 hover:text-blue-300 underline self-start"
                     />
-                </div>
+                </>
             ));
         }
     });
-
-    const retryLink = new RetryLink();
 
     const removeTypenameLink = removeTypenameFromVariables();
 
@@ -155,7 +146,6 @@ function createApolloLinks(options?: I_ApolloOptions) {
     return [
         devLoggerLink, // 🪵 custom logger
         errorLink, // ⚠️ Apollo's error handling
-        retryLink, // 🔁 retry on failure
         removeTypenameLink, // 🧼 cleans up __typename
         ...(customLinks ?? []), // 🔗 custom links
         splitLink, // 📡 HTTP vs WS routing
@@ -203,7 +193,7 @@ export function ApolloProvider({
                 {renderedApollo}
                 <ApolloErrorViewerModal />
             </ApolloErrorViewerProvider>
-            <Toaster />
+            <Toaster position="top-right" />
         </>
     );
 }

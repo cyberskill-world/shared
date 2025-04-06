@@ -1,8 +1,7 @@
 @use 'sass:map';
 
-/* Common Overlay Styles */
 .overlay {
-    z-index: 50;
+    z-index: 999999;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.8));
     backdrop-filter: blur(10px);
     display: flex;
@@ -13,7 +12,6 @@
     animation: overlay-fade-in 0.5s ease-out;
 }
 
-/* Positioning Modifiers */
 .fullscreen,
 .block {
     @extend .overlay;
@@ -33,7 +31,6 @@
     height: auto;
 }
 
-/* Container for Rings and Message */
 .container {
     display: flex;
     justify-content: center;
@@ -41,7 +38,6 @@
     position: relative;
 }
 
-/* Ring Styles with Responsive Size */
 .ring {
     width: clamp(60px, 10vw, 190px);
     height: clamp(60px, 10vw, 190px);
@@ -51,7 +47,6 @@
     transition: transform 0.3s ease;
 }
 
-/* Optimized Ring Animations */
 $colors: (
     1: rgb(240, 42, 230),
     2: rgb(240, 19, 67),
@@ -66,7 +61,6 @@ $colors: (
     }
 }
 
-/* Message Styling */
 .message {
     color: #524f4f;
     font-weight: bold;
@@ -75,7 +69,6 @@ $colors: (
     font-size: 1rem;
 }
 
-/* Animations */
 @keyframes rotate1 {
     from {
         transform: rotateX(50deg) rotateZ(110deg);

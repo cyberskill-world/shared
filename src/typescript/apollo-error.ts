@@ -5,8 +5,3 @@ export interface I_ApolloErrorViewerContext {
     showError: (error: ApolloError) => void;
     hideError: () => void;
 }
-
-export interface ApolloErrorScreenProps {
-    error: ApolloError;
-    refetch?: () => void;
-}

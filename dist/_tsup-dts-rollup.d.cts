@@ -73,21 +73,6 @@ export { ApolloClientOptions }
 export { ApolloClientOptions as ApolloClientOptions_alias_1 }
 export { ApolloClientOptions as ApolloClientOptions_alias_2 }
 
-declare function ApolloErrorScreen({ error, refetch }: ApolloErrorScreenProps_2): JSX_2.Element;
-export { ApolloErrorScreen }
-export { ApolloErrorScreen as ApolloErrorScreen_alias_1 }
-export { ApolloErrorScreen as ApolloErrorScreen_alias_2 }
-
-export declare interface ApolloErrorScreenProps {
-    error: ApolloError;
-    refetch?: () => void;
-}
-
-declare interface ApolloErrorScreenProps_2 {
-    error: ApolloError;
-    refetch?: () => void;
-}
-
 declare function ApolloErrorViewerModal(): JSX_2.Element | null;
 export { ApolloErrorViewerModal }
 export { ApolloErrorViewerModal as ApolloErrorViewerModal_alias_1 }
