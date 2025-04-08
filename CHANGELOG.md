@@ -1,3 +1,9 @@
+## [1.66.0](https://github.com/cyberskill-world/shared/compare/v1.65.0...v1.66.0) (2025-04-08)
+
+### ✨ Features
+
+* expose toast from react-hot-toast ([381bf4a](https://github.com/cyberskill-world/shared/commit/381bf4a1f83491581b599368f50db049cf51724c))
+
 ## [1.65.0](https://github.com/cyberskill-world/shared/compare/v1.64.0...v1.65.0) (2025-04-08)
 
 ### ✨ Features
