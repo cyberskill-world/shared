@@ -5,6 +5,7 @@ import yargs from 'yargs/yargs';
 
 import type { I_IssueEntry } from '#typescript/command.js';
 
+import { COMMAND_DESCRIPTIONS } from '#constants/cli.js';
 import { DEBUG } from '#constants/common-nodejs.js';
 import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '#constants/path.js';
 import { E_IssueType } from '#typescript/command.js';
@@ -161,7 +162,7 @@ async function installDependencies() {
 }
 
 async function setupPackage(packageName: string, options?: {
-    skipUpdate?: boolean;
+    update?: boolean;
     postInstallActions?: (() => Promise<void>)[];
 }) {
     if (!existsSync(PATH.PACKAGE_JSON)) {
@@ -171,35 +172,15 @@ async function setupPackage(packageName: string, options?: {
     }
 
     try {
-        const {
-            isInstalled,
-            installedVersion,
-            latestVersion,
-            isCurrentProject,
-            installedPath,
-            file,
-        } = await checkPackage(packageName);
+        const { isUpToDate } = await checkPackage(packageName, { update: options?.update });
 
-        const isUpToDate = isCurrentProject || (isInstalled && installedVersion === latestVersion);
-
-        if (!isUpToDate && !options?.skipUpdate) {
-            log.info(`Updating "${packageName}" from ${installedVersion} to ${latestVersion}...`);
-
-            file.dependencies = {
-                ...file.dependencies,
-                [packageName]: latestVersion,
-            };
-
-            writeFileSync(installedPath, file, { isJson: true });
-
+        if (!isUpToDate) {
             await installDependencies();
             await lintFix();
         }
 
-        if (options?.postInstallActions?.length) {
-            for (const action of options.postInstallActions) {
-                await action();
-            }
+        for (const action of options?.postInstallActions ?? []) {
+            await action();
         }
 
         log.success(`"${packageName}" setup completed.`);
@@ -212,6 +193,7 @@ async function setupPackage(packageName: string, options?: {
 
 async function setup() {
     await setupPackage(CYBERSKILL_PACKAGE_NAME, {
+        update: true,
         postInstallActions: [setupGitHook],
     });
 }
@@ -233,19 +215,6 @@ async function testUnit() {
 async function testE2E() {
     await runCommand('Running end-to-end tests', COMMAND.CYBERSKILL.TEST_E2E);
 }
-
-const COMMAND_DESCRIPTIONS = {
-    'lint': 'Check code for linting issues',
-    'lint:fix': 'Fix linting issues automatically',
-    'lint:inspect': 'View active ESLint configuration',
-    'lint-staged': 'Run lint checks on staged files',
-    'commitlint': 'Validate commit message format',
-    'setup': 'Initialize project setup and dependencies',
-    'reset': 'Reset the project and reinstall dependencies',
-    'inspect': 'Analyze installed project dependencies',
-    'test:unit': 'Run unit test suite',
-    'test:e2e': 'Run end-to-end test suite',
-};
 
 (async () => {
     try {

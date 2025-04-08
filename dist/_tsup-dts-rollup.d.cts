@@ -131,14 +131,14 @@ export { C_Model }
 export { C_Model as C_Model_alias_1 }
 export { C_Model as C_Model_alias_2 }
 
-declare function checkPackage(packageName: string): Promise<{
-    isInstalled: boolean;
-    isCurrentProject: boolean;
-    installedPath: string;
-    installedVersion: string;
-    latestVersion: string;
-    file: T_Object_2;
-}>;
+declare const CHECK_PACKAGE_EMPTY_RESULT: I_CheckPackage_2;
+export { CHECK_PACKAGE_EMPTY_RESULT }
+export { CHECK_PACKAGE_EMPTY_RESULT as CHECK_PACKAGE_EMPTY_RESULT_alias_1 }
+export { CHECK_PACKAGE_EMPTY_RESULT as CHECK_PACKAGE_EMPTY_RESULT_alias_2 }
+
+declare function checkPackage(packageName: string, options?: {
+    update?: boolean;
+}): Promise<I_CheckPackage_2>;
 export { checkPackage }
 export { checkPackage as checkPackage_alias_1 }
 export { checkPackage as checkPackage_alias_2 }
@@ -171,6 +171,22 @@ declare const COMMAND: {
 export { COMMAND }
 export { COMMAND as COMMAND_alias_1 }
 export { COMMAND as COMMAND_alias_2 }
+
+declare const COMMAND_DESCRIPTIONS: {
+    lint: string;
+    'lint:fix': string;
+    'lint:inspect': string;
+    'lint-staged': string;
+    commitlint: string;
+    setup: string;
+    reset: string;
+    inspect: string;
+    'test:unit': string;
+    'test:e2e': string;
+};
+export { COMMAND_DESCRIPTIONS }
+export { COMMAND_DESCRIPTIONS as COMMAND_DESCRIPTIONS_alias_1 }
+export { COMMAND_DESCRIPTIONS as COMMAND_DESCRIPTIONS_alias_2 }
 
 declare const COMMIT_LINT_CLI = "commitlint";
 export { COMMIT_LINT_CLI }
@@ -1468,19 +1484,15 @@ export { generateSlug }
 export { generateSlug as generateSlug_alias_1 }
 export { generateSlug as generateSlug_alias_2 }
 
-declare function getLatestPackageVersion(packageName: string, forceRefresh?: boolean): Promise<string>;
+declare function getLatestPackageVersion(packageName: string): Promise<string>;
 export { getLatestPackageVersion }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
 
-declare function getPackageJson(packageName: string): {
-    path: string;
-    file: T_Object_2;
-    isCurrentProject: boolean;
-} | false;
-export { getPackageJson }
-export { getPackageJson as getPackageJson_alias_1 }
-export { getPackageJson as getPackageJson_alias_2 }
+declare function getPackage(packageName: string): I_GetPackage_2 | false;
+export { getPackage }
+export { getPackage as getPackage_alias_1 }
+export { getPackage as getPackage_alias_2 }
 
 declare function getStorageDir(): string;
 export { getStorageDir }
@@ -1529,11 +1541,14 @@ export { HOOK }
 export { HOOK as HOOK_alias_1 }
 export { HOOK as HOOK_alias_2 }
 
-export declare interface I_ApolloErrorViewerContext {
+declare interface I_ApolloErrorViewerContext {
     error: ApolloError | null;
     showError: (error: ApolloError) => void;
     hideError: () => void;
 }
+export { I_ApolloErrorViewerContext }
+export { I_ApolloErrorViewerContext as I_ApolloErrorViewerContext_alias_1 }
+export { I_ApolloErrorViewerContext as I_ApolloErrorViewerContext_alias_2 }
 
 declare interface I_ApolloErrorViewerContext_2 {
     error: ApolloError | null;
@@ -1581,6 +1596,23 @@ declare interface I_ApolloProviderProps_2 {
     makeClient?: () => ApolloClient<NormalizedCacheObject>;
     provider?: ComponentType<I_ApolloProviderProps_2>;
     cache?: ApolloCache<NormalizedCacheObject>;
+}
+
+declare interface I_CheckPackage {
+    isCurrentProject: boolean;
+    installedPath: string;
+    file: T_PackageJson;
+    isUpToDate: boolean;
+}
+export { I_CheckPackage }
+export { I_CheckPackage as I_CheckPackage_alias_1 }
+export { I_CheckPackage as I_CheckPackage_alias_2 }
+
+declare interface I_CheckPackage_2 {
+    isCurrentProject: boolean;
+    installedPath: string;
+    file: T_PackageJson_2;
+    isUpToDate: boolean;
 }
 
 declare interface I_Command {
@@ -1690,6 +1722,25 @@ declare interface I_GenericDocument_2 extends Partial<C_Document_2> {
     isDel: boolean;
     createdAt: string | Date;
     updatedAt: string | Date;
+}
+
+declare interface I_GetPackage {
+    path: string;
+    file: T_PackageJson;
+    isCurrentProject: boolean;
+    isDepend: boolean;
+    isDevDepend: boolean;
+}
+export { I_GetPackage }
+export { I_GetPackage as I_GetPackage_alias_1 }
+export { I_GetPackage as I_GetPackage_alias_2 }
+
+declare interface I_GetPackage_2 {
+    path: string;
+    file: T_PackageJson_2;
+    isCurrentProject: boolean;
+    isDepend: boolean;
+    isDevDepend: boolean;
 }
 
 declare interface I_GraphqlCodegenConfig {
@@ -2922,6 +2973,25 @@ declare type T_OptionalUnlessRequiredId<T> = OptionalUnlessRequiredId<T>;
 export { T_OptionalUnlessRequiredId }
 export { T_OptionalUnlessRequiredId as T_OptionalUnlessRequiredId_alias_1 }
 export { T_OptionalUnlessRequiredId as T_OptionalUnlessRequiredId_alias_2 }
+
+declare interface T_PackageJson {
+    name?: string;
+    version?: string;
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    [key: string]: any;
+}
+export { T_PackageJson }
+export { T_PackageJson as T_PackageJson_alias_1 }
+export { T_PackageJson as T_PackageJson_alias_2 }
+
+declare interface T_PackageJson_2 {
+    name?: string;
+    version?: string;
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    [key: string]: any;
+}
 
 declare type T_PaginateOptions = PaginateOptions;
 export { T_PaginateOptions }

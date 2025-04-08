@@ -1,4 +1,5 @@
 export * from './api-response.js';
+export * from './apollo-error.js';
 export * from './apollo.js';
 export * from './command.js';
 export * from './common.js';
@@ -8,6 +9,7 @@ export * from './loading.js';
 export * from './log.js';
 export * from './mongo.js';
 export * from './next-intl.js';
+export * from './package.js';
 export * from './react.js';
 export * from './serializer.js';
 export * from './string.js';

@@ -1,6 +1,7 @@
 export { I_ReturnSuccess_alias_2 as I_ReturnSuccess } from '../_tsup-dts-rollup.js';
 export { I_ReturnFailure_alias_2 as I_ReturnFailure } from '../_tsup-dts-rollup.js';
 export { I_Return_alias_2 as I_Return } from '../_tsup-dts-rollup.js';
+export { I_ApolloErrorViewerContext_alias_2 as I_ApolloErrorViewerContext } from '../_tsup-dts-rollup.js';
 export { I_ApolloOptions_alias_2 as I_ApolloOptions } from '../_tsup-dts-rollup.js';
 export { I_ApolloProviderProps_alias_2 as I_ApolloProviderProps } from '../_tsup-dts-rollup.js';
 export { ApolloCache_alias_2 as ApolloCache } from '../_tsup-dts-rollup.js';
@@ -84,6 +85,9 @@ export { I_Input_DeleteMany_alias_1 as I_Input_DeleteMany } from '../_tsup-dts-r
 export { I_NextIntlLanguage_alias_1 as I_NextIntlLanguage } from '../_tsup-dts-rollup.js';
 export { I_NextIntlContextType_alias_1 as I_NextIntlContextType } from '../_tsup-dts-rollup.js';
 export { T_NextIntlMessageList_alias_1 as T_NextIntlMessageList } from '../_tsup-dts-rollup.js';
+export { T_PackageJson_alias_1 as T_PackageJson } from '../_tsup-dts-rollup.js';
+export { I_GetPackage_alias_1 as I_GetPackage } from '../_tsup-dts-rollup.js';
+export { I_CheckPackage_alias_1 as I_CheckPackage } from '../_tsup-dts-rollup.js';
 export { T_Children_alias_1 as T_Children } from '../_tsup-dts-rollup.js';
 export { I_LoadingContext_alias_1 as I_LoadingContext } from '../_tsup-dts-rollup.js';
 export { I_Serializer_alias_1 as I_Serializer } from '../_tsup-dts-rollup.js';

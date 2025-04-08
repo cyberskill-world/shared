@@ -11,7 +11,7 @@ export { appendFileSync_alias_2 as appendFileSync } from '../_tsup-dts-rollup.cj
 export { rmSync_alias_2 as rmSync } from '../_tsup-dts-rollup.cjs';
 export { throwError_alias_1 as throwError } from '../_tsup-dts-rollup.cjs';
 export { logNodeJS_alias_1 as logNodeJS } from '../_tsup-dts-rollup.cjs';
-export { getPackageJson_alias_1 as getPackageJson } from '../_tsup-dts-rollup.cjs';
+export { getPackage_alias_1 as getPackage } from '../_tsup-dts-rollup.cjs';
 export { getLatestPackageVersion_alias_1 as getLatestPackageVersion } from '../_tsup-dts-rollup.cjs';
 export { checkPackage_alias_1 as checkPackage } from '../_tsup-dts-rollup.cjs';
 export { resolveWorkingPath_alias_1 as resolveWorkingPath } from '../_tsup-dts-rollup.cjs';
