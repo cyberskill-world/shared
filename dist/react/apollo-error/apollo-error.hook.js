@@ -1,0 +1,1 @@
+import{use as r}from"react";import{createContext as o}from"react";var e=o(void 0);function t(){var o=r(e);if(!o)throw new Error("useApolloError must be used within ApolloErrorProvider");return o}export{t as useApolloError};

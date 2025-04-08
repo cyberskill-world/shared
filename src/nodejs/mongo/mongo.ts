@@ -1,0 +1,727 @@
+import type mongooseRaw from 'mongoose';
+
+import { format } from 'date-fns';
+import { Document } from 'mongoose';
+import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
+import mongoosePaginate from 'mongoose-paginate-v2';
+import { v4 as uuidv4 } from 'uuid';
+
+import { RESPONSE_STATUS } from '#constants/response-status.js';
+import { generateShortId, generateSlug } from '#utils/string/index.js';
+import { validate } from '#utils/validate/index.js';
+
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_Return, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_CreateSlugQueryResponse, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+
+export { aggregatePaginate, mongoosePaginate };
+
+export const mongo = {
+    getDateTime(now = new Date()): string {
+        return format(now, 'yyyy-MM-dd HH:mm:ss.SSS');
+    },
+    createGenericFields({
+        returnDateAs = 'string',
+    }: { returnDateAs?: 'string' | 'date' } = {}): I_GenericDocument {
+        const now = returnDateAs === 'string' ? mongo.getDateTime() : new Date();
+
+        return {
+            id: uuidv4(),
+            isDel: false,
+            createdAt: now,
+            updatedAt: now,
+        };
+    },
+    applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) {
+        plugins
+            .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
+            .forEach(plugin => schema.plugin(plugin));
+    },
+    applyMiddlewares<T extends Partial<C_Document>>(
+        schema: T_MongooseShema<T>,
+        middlewares: I_MongooseModelMiddleware<T>[],
+    ) {
+        middlewares.forEach(({ method, pre, post }) => {
+            if (method && pre) {
+                schema.pre(method as RegExp, pre);
+            }
+
+            if (method && post) {
+                schema.post(method as RegExp, post);
+            }
+        });
+    },
+    createGenericSchema(mongoose: typeof mongooseRaw) {
+        return new mongoose.Schema<I_GenericDocument>(
+            {
+                id: { type: String, default: uuidv4, required: true, unique: true },
+                isDel: { type: Boolean, default: false, required: true },
+            },
+            { timestamps: true },
+        );
+    },
+    createSchema<T extends Partial<C_Document>>({
+        mongoose,
+        schema,
+        virtuals = [],
+        standalone = false,
+    }: I_CreateSchemaOptions<T>): T_MongooseShema<T> {
+        const createdSchema = new mongoose.Schema<T>(schema, { strict: true });
+
+        virtuals.forEach(({ name, options, get }) => {
+            const virtualInstance = createdSchema.virtual(name as string, options);
+            if (get)
+                virtualInstance.get(get);
+        });
+
+        if (!standalone) {
+            createdSchema.add(mongo.createGenericSchema(mongoose));
+        }
+
+        return createdSchema;
+    },
+    createModel<T extends Partial<C_Document>>({
+        mongoose: currentMongooseInstance,
+        name,
+        schema,
+        pagination = false,
+        aggregate = false,
+        virtuals = [],
+        middlewares = [],
+    }: I_CreateModelOptions<T>): I_ExtendedModel<T> {
+        if (!name) {
+            throw new Error('Model name is required.');
+        }
+
+        if (currentMongooseInstance.models[name]) {
+            return currentMongooseInstance.models[name] as I_ExtendedModel<T>;
+        }
+
+        const createdSchema = mongo.createSchema({ mongoose: currentMongooseInstance, schema, virtuals });
+
+        mongo.applyPlugins<T>(createdSchema, [
+            pagination && mongoosePaginate,
+            aggregate && aggregatePaginate,
+        ]);
+
+        mongo.applyMiddlewares<T>(createdSchema, middlewares);
+
+        return currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
+    },
+    createSlugQuery<T>(
+        slug: string,
+        filters: T_FilterQuery<T> = {},
+        id?: string,
+    ): T_CreateSlugQueryResponse<T> {
+        return {
+            ...filters,
+            ...(id && { id: { $ne: id } }),
+            $or: [
+                { slug },
+                { slugHistory: slug },
+            ],
+        };
+    },
+    validator: {
+        isEmpty<T>(): (this: T, value: unknown) => Promise<boolean> {
+            return async function (this: T, value: unknown): Promise<boolean> {
+                return !validate.isEmpty(value);
+            };
+        },
+        isUnique<T extends { constructor: { findOne: (query: Record<string, unknown>) => Promise<unknown> } }>(fields: string[]) {
+            return async function (this: T, value: unknown): Promise<boolean> {
+                if (!Array.isArray(fields) || fields.length === 0) {
+                    throw new Error('Fields must be a non-empty array of strings.');
+                }
+
+                const query = { $or: fields.map(field => ({ [field]: value })) };
+                const existingDocument = await this.constructor.findOne(query);
+
+                return !existingDocument;
+            };
+        },
+        matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean> {
+            return async function (value: string): Promise<boolean> {
+                if (!Array.isArray(regexArray) || regexArray.some(r => !(r instanceof RegExp))) {
+                    throw new Error('regexArray must be an array of valid RegExp objects.');
+                }
+
+                return regexArray.every(regex => regex.test(value));
+            };
+        },
+    },
+};
+
+export class MongoController<D extends Partial<C_Document>> {
+    private collection: C_Collection<D>;
+
+    constructor(db: C_Db, collectionName: string) {
+        this.collection = db.collection<D>(collectionName);
+    }
+
+    async createOne(document: D): Promise<{
+        success: boolean;
+        message: string;
+        result?: T_InsertOneResult<D>;
+    }> {
+        try {
+            const finalDocument = {
+                ...mongo.createGenericFields(),
+                ...document,
+            };
+
+            const result = await this.collection.insertOne(finalDocument as unknown as T_OptionalUnlessRequiredId<D>);
+
+            return {
+                success: true,
+                message: 'Document created successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async createMany(documents: D[]): Promise<{
+        success: boolean;
+        message: string;
+        result?: T_InsertManyResult<D>;
+    }> {
+        try {
+            const finalDocuments = documents.map(document => ({
+                ...mongo.createGenericFields(),
+                ...document,
+            }));
+
+            const result = await this.collection.insertMany(finalDocuments as unknown as T_OptionalUnlessRequiredId<D>[]);
+
+            if (result.insertedCount === 0) {
+                return {
+                    success: false,
+                    message: 'No documents were inserted',
+                };
+            }
+            return {
+                success: true,
+                message: `${result.insertedCount} documents created successfully`,
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async findOne(filter: T_Filter<D>): Promise<{
+        success: boolean;
+        message: string;
+        result?: T_WithId<D> | null;
+    }> {
+        try {
+            const result = await this.collection.findOne(filter);
+
+            if (!result) {
+                return { success: false, message: 'Document not found' };
+            }
+            return { success: true, message: 'Document found', result };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async findAll(
+        filter: T_Filter<D> = {},
+    ): Promise<{ success: boolean; message: string; result?: T_WithId<D>[] }> {
+        try {
+            const result = await this.collection.find(filter).toArray();
+
+            return {
+                success: true,
+                message: 'Documents retrieved successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async count(
+        filter: T_Filter<D> = {},
+    ): Promise<{ success: boolean; message: string; result?: number }> {
+        try {
+            const result = await this.collection.countDocuments(filter);
+
+            return {
+                success: true,
+                message: `Count retrieved successfully`,
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async updateOne(
+        filter: T_Filter<D>,
+        update: Partial<D>,
+    ): Promise<{ success: boolean; message: string; result?: T_UpdateResult }> {
+        try {
+            const result = await this.collection.updateOne(filter, {
+                $set: update,
+            });
+
+            if (result.matchedCount === 0) {
+                return {
+                    success: false,
+                    message: 'No documents matched the filter',
+                };
+            }
+            return {
+                success: true,
+                message: 'Document updated successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async updateMany(
+        filter: T_Filter<D>,
+        update: Partial<D>,
+    ): Promise<{ success: boolean; message: string; result?: T_UpdateResult }> {
+        try {
+            const result = await this.collection.updateMany(filter, {
+                $set: update,
+            });
+
+            if (result.matchedCount === 0) {
+                return {
+                    success: false,
+                    message: 'No documents matched the filter',
+                };
+            }
+            return {
+                success: true,
+                message: 'Documents updated successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async deleteOne(
+        filter: T_Filter<D>,
+    ): Promise<{ success: boolean; message: string; result?: T_DeleteResult }> {
+        try {
+            const result = await this.collection.deleteOne(filter);
+
+            if (result.deletedCount === 0) {
+                return {
+                    success: false,
+                    message: 'No documents matched the filter',
+                };
+            }
+            return {
+                success: true,
+                message: 'Document deleted successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+
+    async deleteMany(
+        filter: T_Filter<D>,
+    ): Promise<{ success: boolean; message: string; result?: T_DeleteResult }> {
+        try {
+            const result = await this.collection.deleteMany(filter);
+
+            if (result.deletedCount === 0) {
+                return {
+                    success: false,
+                    message: 'No documents matched the filter',
+                };
+            }
+            return {
+                success: true,
+                message: 'Documents deleted successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message };
+        }
+    }
+}
+
+export class MongooseController<T extends Partial<C_Document>> {
+    constructor(private model: I_ExtendedModel<T>) { }
+
+    private getModelName(): string {
+        return this.model.modelName;
+    }
+
+    async findOne(
+        filter: T_FilterQuery<T> = {},
+        projection: T_ProjectionType<T> = {},
+        options: T_QueryOptions<T> = {},
+        populate?: T_Input_Populate,
+    ): Promise<I_Return<T>> {
+        try {
+            const query = this.model.findOne(filter, projection, options);
+
+            if (populate) {
+                query.populate(populate as T_PopulateOptions);
+            }
+
+            const result = await query.exec();
+
+            if (!result) {
+                return {
+                    success: false,
+                    message: `No ${this.getModelName()} found.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
+                };
+            }
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async findAll(
+        filter: T_FilterQuery<T> = {},
+        projection: T_ProjectionType<T> = {},
+        options: T_QueryOptions<T> = {},
+        populate?: T_Input_Populate,
+    ): Promise<I_Return<T[]>> {
+        try {
+            const query = this.model.find(filter, projection, options);
+
+            if (populate) {
+                query.populate(populate as T_PopulateOptions);
+            }
+
+            const result = await query.exec();
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async findPaging(
+        filter: T_FilterQuery<T> = {},
+        options: T_PaginateOptionsWithPopulate = {},
+    ): Promise<I_Return<T_PaginateResult<T>>> {
+        try {
+            const result = await this.model.paginate(filter, options);
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async findPagingAggregate(
+        pipeline: T_PipelineStage[],
+        options: T_PaginateOptionsWithPopulate = {},
+    ): Promise<I_Return<T_AggregatePaginateResult<T>>> {
+        try {
+            const result = await this.model.aggregatePaginate(
+                this.model.aggregate(pipeline),
+                options,
+            );
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async count(filter: T_FilterQuery<T> = {}): Promise<I_Return<number>> {
+        try {
+            const result = await this.model.countDocuments(filter);
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async createOne(doc: T | Partial<T>): Promise<I_Return<T>> {
+        try {
+            const result = await this.model.create(doc);
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async createMany(
+        docs: (T | Partial<T>)[],
+        options: T_InsertManyOptions = {},
+    ): Promise<I_Return<T[]>> {
+        try {
+            const createdDocuments = await this.model.insertMany(docs, options);
+
+            const result = createdDocuments
+                .map((doc) => {
+                    if (doc instanceof Document) {
+                        return doc.toObject() as T;
+                    }
+
+                    return null;
+                })
+                .filter((doc): doc is T => doc !== null);
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async updateOne(
+        filter: T_FilterQuery<T> = {},
+        update: T_UpdateQuery<T> = {},
+        options: I_UpdateOptionsExtended = {},
+    ): Promise<I_Return<T>> {
+        try {
+            const result = await this.model
+                .findOneAndUpdate(filter, update, {
+                    new: true,
+                    ...options,
+                })
+                .exec();
+
+            if (!result) {
+                return {
+                    success: false,
+                    message: `Failed to update ${this.getModelName()}.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
+                };
+            }
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async updateMany(
+        filter: T_FilterQuery<T> = {},
+        update: T_UpdateQuery<T> = {},
+        options: I_UpdateOptionsExtended = {},
+    ): Promise<I_Return<T_UpdateResult>> {
+        try {
+            const result = await this.model
+                .updateMany(filter, update, options)
+                .exec();
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async deleteOne(
+        filter: T_FilterQuery<T> = {},
+        options: I_DeleteOptionsExtended = {},
+    ): Promise<I_Return<T>> {
+        try {
+            const result = await this.model
+                .findOneAndDelete(filter, options)
+                .exec();
+
+            if (!result) {
+                return {
+                    success: false,
+                    message: `No ${this.getModelName()} found to delete.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
+                };
+            }
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async deleteMany(
+        filter: T_FilterQuery<T> = {},
+        options: I_DeleteOptionsExtended = {},
+    ): Promise<I_Return<T_DeleteResult>> {
+        try {
+            const result = await this.model.deleteMany(filter, options).exec();
+
+            if (result.deletedCount === 0) {
+                return {
+                    success: false,
+                    message: `No documents found to delete.`,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
+                };
+            }
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: (error as Error).message,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async createShortId(id: string, length = 4): Promise<I_Return<string>> {
+        const maxRetries = 10;
+        const existingShortIds = new Set();
+
+        for (let retries = 0; retries < maxRetries; retries++) {
+            const shortId = generateShortId(id, retries + length);
+
+            if (!existingShortIds.has(shortId)) {
+                existingShortIds.add(shortId);
+
+                const shortIdExists = await this.model.exists({ shortId });
+
+                if (!shortIdExists) {
+                    return { success: true, result: shortId };
+                }
+            }
+        }
+
+        return {
+            success: false,
+            message: 'Failed to create a unique shortId',
+            code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+        };
+    }
+
+    async createSlug(
+        fieldName: string,
+        fields: T,
+        filters: T_FilterQuery<T> = {},
+    ): Promise<I_Return<string | { [key: string]: string }>> {
+        try {
+            const fieldValue = fields[fieldName as keyof T];
+
+            const createUniqueSlug = async (slug: string): Promise<string> => {
+                let existingDoc = await this.model.findOne(
+                    mongo.createSlugQuery<T>(slug, filters, fields.id),
+                );
+
+                if (!existingDoc)
+                    return slug;
+
+                let suffix = 1;
+                let uniqueSlug;
+
+                do {
+                    uniqueSlug = `${slug}-${suffix}`;
+                    existingDoc = await this.model.findOne(
+                        mongo.createSlugQuery<T>(uniqueSlug, filters, fields.id),
+                    );
+                    suffix++;
+                } while (existingDoc);
+
+                return uniqueSlug;
+            };
+
+            if (typeof fieldValue === 'object') {
+                const slugResults: { [key: string]: string } = {};
+
+                for (const lang in fieldValue) {
+                    const slug = generateSlug(fieldValue[lang] as string);
+                    slugResults[lang] = await createUniqueSlug(slug);
+                }
+
+                return { success: true, result: slugResults };
+            }
+            else {
+                const slug = generateSlug(fieldValue as string);
+                const uniqueSlug = await createUniqueSlug(slug);
+
+                return { success: true, result: uniqueSlug };
+            }
+        }
+        catch (error) {
+            return {
+                success: false,
+                message: `Failed to create a unique slug: ${(error as Error).message}`,
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+    }
+
+    async aggregate(pipeline: T_PipelineStage[]): Promise<I_Return<T[]>> {
+        try {
+            const result = await this.model.aggregate<T>(pipeline);
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return { success: false, message: (error as Error).message, code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE };
+        }
+    }
+}

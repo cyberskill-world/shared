@@ -1,0 +1,5 @@
+export { I_ApolloOptions_alias_2 as I_ApolloOptions } from '../../_tsup-dts-rollup.js';
+export { I_ApolloProviderProps_alias_2 as I_ApolloProviderProps } from '../../_tsup-dts-rollup.js';
+export { ApolloCache_alias_2 as ApolloCache } from '../../_tsup-dts-rollup.js';
+export { ApolloClient_alias_2 as ApolloClient } from '../../_tsup-dts-rollup.js';
+export { ApolloClientOptions_alias_2 as ApolloClientOptions } from '../../_tsup-dts-rollup.js';
