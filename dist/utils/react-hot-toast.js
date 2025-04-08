@@ -1,0 +1,1 @@
+import{toast as t,Toaster as a}from"react-hot-toast";export{a as Toaster,t as toast};

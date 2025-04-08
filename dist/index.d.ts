@@ -186,6 +186,8 @@ export { deepMerge } from './_tsup-dts-rollup.js';
 export { regexSearchMapper } from './_tsup-dts-rollup.js';
 export { removeAccent } from './_tsup-dts-rollup.js';
 export { log } from './_tsup-dts-rollup.js';
+export { toast } from './_tsup-dts-rollup.js';
+export { Toaster } from './_tsup-dts-rollup.js';
 export { serializer } from './_tsup-dts-rollup.js';
 export { storageClient } from './_tsup-dts-rollup.js';
 export { generateSlug } from './_tsup-dts-rollup.js';

@@ -101,6 +101,7 @@ export function ApolloErrorViewerModal() {
                     >
                         <FaRepeat />
                     </button>
+                    {' '}
                     {error.message}
                 </div>
                 <div className={styles['error-details']}>

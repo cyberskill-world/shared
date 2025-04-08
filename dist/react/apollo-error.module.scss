@@ -39,6 +39,21 @@
             font-size: 1.75rem;
             font-weight: bold;
             margin-bottom: 1rem;
+
+            .btn-retry {
+                background: linear-gradient(to right, #3b82f6, #06b6d4);
+                color: white;
+                font-weight: 600;
+                padding: 0.5rem 1.5rem;
+                border-radius: 0.75rem;
+                transition: background 0.3s ease;
+                border: none;
+                cursor: pointer;
+    
+                &:hover {
+                    background: linear-gradient(to right, #2563eb, #0891b2);
+                }
+            }
         }
 
         .error-details {
@@ -84,21 +99,6 @@
                 padding-left: 1rem;
                 color: #fda4af;
                 list-style: disc;
-            }
-        }
-
-        .btn-retry {
-            background: linear-gradient(to right, #3b82f6, #06b6d4);
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1.5rem;
-            border-radius: 0.75rem;
-            transition: background 0.3s ease;
-            border: none;
-            cursor: pointer;
-
-            &:hover {
-                background: linear-gradient(to right, #2563eb, #0891b2);
             }
         }
     }

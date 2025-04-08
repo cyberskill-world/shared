@@ -18,13 +18,13 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
 import { useMemo } from 'react';
-import { toast, Toaster } from 'react-hot-toast';
 import { FaInfo } from 'react-icons/fa6';
 
 import type { I_ApolloOptions, I_ApolloProviderProps } from '#typescript/apollo.js';
 
 import { GRAPHQL_URI_DEFAULT } from '#constants/graphql.js';
 import { log } from '#utils/log.js';
+import { toast, Toaster } from '#utils/react-hot-toast.js';
 
 import { ApolloErrorViewerModal, ApolloErrorViewerProvider, showGlobalApolloError } from './apollo-error.js';
 

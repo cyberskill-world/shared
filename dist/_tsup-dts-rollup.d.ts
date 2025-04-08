@@ -52,6 +52,8 @@ import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
+import { toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import type { UpdateQuery } from 'mongoose';
 import type { UpdateResult } from 'mongodb';
 import type { UserConfig } from 'vite';
@@ -3126,6 +3128,14 @@ declare function throwError({ message, status, type, }: T_ThrowError_2): never;
 export { throwError }
 export { throwError as throwError_alias_1 }
 export { throwError as throwError_alias_2 }
+
+export { toast }
+export { toast as toast_alias_1 }
+export { toast as toast_alias_2 }
+
+export { Toaster }
+export { Toaster as Toaster_alias_1 }
+export { Toaster as Toaster_alias_2 }
 
 declare const TSC_CLI = "tsc";
 export { TSC_CLI }
