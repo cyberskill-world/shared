@@ -1418,9 +1418,6 @@ export declare const default_alias_1: {
         };
     };
     rules: {
-        'no-console': string;
-        'no-debugger': string;
-        'no-alert': string;
         'perfectionist/sort-imports': (string | {
             internalPattern: string[];
         })[];

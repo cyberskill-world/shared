@@ -6,9 +6,6 @@ export default [
             globals: { ...globals.node, ...globals.browser },
         },
         rules: {
-            'no-console': 'warn',
-            'no-debugger': 'warn',
-            'no-alert': 'warn',
             'perfectionist/sort-imports': ['error', {
                 internalPattern: ['^#.*', '^@/.*'],
             }],
