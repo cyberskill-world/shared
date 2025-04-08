@@ -32,9 +32,7 @@ export function registerApolloErrorViewerCallback(fn: (err: ApolloError) => void
 }
 
 export function showGlobalApolloError(error: ApolloError) {
-    if (showErrorCallback) {
-        showErrorCallback(error);
-    }
+    showErrorCallback?.(error);
 }
 // #endregion
 
@@ -64,11 +62,26 @@ export function ApolloErrorViewerProvider({ children }: { children: ReactNode })
 export function ApolloErrorViewerModal() {
     const context = use(ApolloErrorViewerContext);
 
-    if (!context || !context.error) {
+    const error = context?.error;
+
+    if (!error) {
         return null;
     }
 
-    const { error, hideError } = context;
+    const renderErrorList = (label: string, list?: readonly { message: string }[]) =>
+        list?.length
+            ? (
+                    <div>
+                        <strong>
+                            {label}
+                            :
+                        </strong>
+                        <ul>
+                            {list.map(e => <li key={e.message}>{e.message}</li>)}
+                        </ul>
+                    </div>
+                )
+            : null;
 
     return (
         <div className={styles['modal-backdrop']}>
@@ -76,70 +89,39 @@ export function ApolloErrorViewerModal() {
                 <button
                     type="button"
                     className={styles['btn-close']}
-                    onClick={hideError}
+                    onClick={context.hideError}
                 >
                     ✕
                 </button>
-
-                <div className={styles['error-title']}>{error.message}</div>
+                <div className={styles['error-title']}>
+                    <button
+                        type="button"
+                        className={styles['btn-retry']}
+                        onClick={() => window.location.reload()}
+                    >
+                        <FaRepeat />
+                    </button>
+                    {error.message}
+                </div>
                 <div className={styles['error-details']}>
                     {error.networkError && (
                         <pre className="network">
                             <strong>Network Error:</strong>
-                            &nbsp;
+                            {' '}
                             {error.networkError.message}
                         </pre>
                     )}
-
-                    {error.graphQLErrors?.length > 0 && (
-                        <div>
-                            <strong>GraphQL Errors:</strong>
-                            <ul>
-                                {error.graphQLErrors.map(e => (
-                                    <li key={e.message}>{e.message}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-
-                    {error.protocolErrors?.length > 0 && (
-                        <div>
-                            <strong>Protocol Errors:</strong>
-                            <ul>
-                                {error.protocolErrors.map(e => (
-                                    <li key={e.message}>{e.message}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-
-                    {error.clientErrors?.length > 0 && (
-                        <div>
-                            <strong>Client Errors:</strong>
-                            <ul>
-                                {error.clientErrors.map(e => (
-                                    <li key={e.message}>{e.message}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-
+                    {renderErrorList('GraphQL Errors', [...error.graphQLErrors])}
+                    {renderErrorList('Protocol Errors', [...error.protocolErrors])}
+                    {renderErrorList('Client Errors', [...error.clientErrors])}
                     {error.extraInfo && (
                         <pre className="extra">
                             <strong>Extra Info:</strong>
-                            &nbsp;
+                            {' '}
                             {JSON.stringify(error.extraInfo, null, 4)}
                         </pre>
                     )}
                 </div>
-
-                <button
-                    type="button"
-                    className={styles['btn-retry']}
-                    onClick={() => window.location.reload()}
-                >
-                    <FaRepeat />
-                </button>
             </div>
         </div>
     );
