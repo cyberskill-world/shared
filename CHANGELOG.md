@@ -1,3 +1,9 @@
+## [1.64.0](https://github.com/cyberskill-world/shared/compare/v1.63.0...v1.64.0) (2025-04-08)
+
+### ✨ Features
+
+* enhance package util ([561acbf](https://github.com/cyberskill-world/shared/commit/561acbf6a7818bda7ca7ae95dfec0630932b243f))
+
 ## [1.63.0](https://github.com/cyberskill-world/shared/compare/v1.62.0...v1.63.0) (2025-04-06)
 
 ### ✨ Features
