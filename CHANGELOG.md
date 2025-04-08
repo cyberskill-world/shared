@@ -1,3 +1,9 @@
+## [1.67.0](https://github.com/cyberskill-world/shared/compare/v1.66.0...v1.67.0) (2025-04-08)
+
+### ✨ Features
+
+* modulize whole project ([e809013](https://github.com/cyberskill-world/shared/commit/e80901330886ff6586ade10fe1e62d87288dd327))
+
 ## [1.66.0](https://github.com/cyberskill-world/shared/compare/v1.65.0...v1.66.0) (2025-04-08)
 
 ### ✨ Features
