@@ -1,3 +1,9 @@
+## [1.65.0](https://github.com/cyberskill-world/shared/compare/v1.64.0...v1.65.0) (2025-04-08)
+
+### ✨ Features
+
+* enhance apollo-error ([fccb65a](https://github.com/cyberskill-world/shared/commit/fccb65a8d3d8c603071fae7133380ae955b715cc))
+
 ## [1.64.0](https://github.com/cyberskill-world/shared/compare/v1.63.0...v1.64.0) (2025-04-08)
 
 ### ✨ Features
