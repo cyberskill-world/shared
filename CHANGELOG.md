@@ -1,3 +1,9 @@
+## [1.68.0](https://github.com/cyberskill-world/shared/compare/v1.67.0...v1.68.0) (2025-04-08)
+
+### ✨ Features
+
+* expose i18next ([a6c09f4](https://github.com/cyberskill-world/shared/commit/a6c09f443dcddb65f0405426846c9d8830fbb4c3))
+
 ## [1.67.0](https://github.com/cyberskill-world/shared/compare/v1.66.0...v1.67.0) (2025-04-08)
 
 ### ✨ Features
