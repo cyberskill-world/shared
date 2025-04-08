@@ -1,3 +1,9 @@
+## [1.69.0](https://github.com/cyberskill-world/shared/compare/v1.68.0...v1.69.0) (2025-04-08)
+
+### ✨ Features
+
+* remove warn lint rules ([b6dbaab](https://github.com/cyberskill-world/shared/commit/b6dbaab41fe03f8d66869fc14d4e84cc6e7eef5e))
+
 ## [1.68.0](https://github.com/cyberskill-world/shared/compare/v1.67.0...v1.68.0) (2025-04-08)
 
 ### ✨ Features
