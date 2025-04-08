@@ -59,6 +59,7 @@ import { Toaster } from 'react-hot-toast';
 import type { UpdateQuery } from 'mongoose';
 import type { UpdateResult } from 'mongodb';
 import type { UserConfig } from 'vite';
+import { useTranslation } from 'react-i18next';
 import { useTranslations } from 'next-intl';
 import type { WithId } from 'mongodb';
 
@@ -2044,11 +2045,11 @@ declare interface I_VirtualOptions {
     options?: I_VirtualNestedOptions;
 }
 
-declare function initI18Next(options: InitOptions): Promise<TFunction<"translation", undefined>>;
-export { initI18Next }
-export { initI18Next as initI18Next_alias_1 }
-export { initI18Next as initI18Next_alias_2 }
-export { initI18Next as initI18Next_alias_3 }
+declare function initI18next(options: InitOptions): Promise<TFunction<"translation", undefined>>;
+export { initI18next }
+export { initI18next as initI18next_alias_1 }
+export { initI18next as initI18next_alias_2 }
+export { initI18next as initI18next_alias_3 }
 
 declare const IS_BROWSER: boolean;
 export { IS_BROWSER }
@@ -3057,6 +3058,12 @@ export { useStorage }
 export { useStorage as useStorage_alias_1 }
 export { useStorage as useStorage_alias_2 }
 export { useStorage as useStorage_alias_3 }
+
+declare const useTranslateI18next: typeof useTranslation;
+export { useTranslateI18next }
+export { useTranslateI18next as useTranslateI18next_alias_1 }
+export { useTranslateI18next as useTranslateI18next_alias_2 }
+export { useTranslateI18next as useTranslateI18next_alias_3 }
 
 declare const useTranslateNextIntl: typeof useTranslations;
 export { useTranslateNextIntl }

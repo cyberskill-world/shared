@@ -11,7 +11,8 @@ export { useApolloError_alias_1 as useApolloError } from '../_tsup-dts-rollup.cj
 export { showGlobalApolloError_alias_1 as showGlobalApolloError } from '../_tsup-dts-rollup.cjs';
 export { ApolloErrorProvider_alias_1 as ApolloErrorProvider } from '../_tsup-dts-rollup.cjs';
 export { I_ApolloErrorContext_alias_1 as I_ApolloErrorContext } from '../_tsup-dts-rollup.cjs';
-export { initI18Next_alias_1 as initI18Next } from '../_tsup-dts-rollup.cjs';
+export { useTranslateI18next_alias_1 as useTranslateI18next } from '../_tsup-dts-rollup.cjs';
+export { initI18next_alias_1 as initI18next } from '../_tsup-dts-rollup.cjs';
 export { Loading_alias_1 as Loading } from '../_tsup-dts-rollup.cjs';
 export { LoadingContext_alias_1 as LoadingContext } from '../_tsup-dts-rollup.cjs';
 export { useLoading_alias_1 as useLoading } from '../_tsup-dts-rollup.cjs';

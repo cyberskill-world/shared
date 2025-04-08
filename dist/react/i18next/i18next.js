@@ -1,1 +1,0 @@
-import t from"i18next";import{initReactI18next as i}from"react-i18next";function e(e){return t.use(i).init(e)}export{e as initI18Next};

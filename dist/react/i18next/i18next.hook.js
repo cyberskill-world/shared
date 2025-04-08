@@ -1,0 +1,1 @@
+import{useTranslation as a}from"react-i18next";var e=a;export{e as useTranslateI18next};
