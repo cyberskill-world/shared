@@ -1,3 +1,9 @@
+## [1.71.0](https://github.com/cyberskill-world/shared/compare/v1.70.0...v1.71.0) (2025-04-09)
+
+### ✨ Features
+
+* move back graphql-codegen to configs ([fb126b0](https://github.com/cyberskill-world/shared/commit/fb126b0cb20272d75d11c4ec3de99b34a5dacc87))
+
 ## [1.70.0](https://github.com/cyberskill-world/shared/compare/v1.69.0...v1.70.0) (2025-04-09)
 
 ### ✨ Features
