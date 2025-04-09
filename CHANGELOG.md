@@ -1,3 +1,9 @@
+## [1.72.0](https://github.com/cyberskill-world/shared/compare/v1.71.0...v1.72.0) (2025-04-09)
+
+### ✨ Features
+
+* fix apollo provider to adapt nextjs ([fbb1e39](https://github.com/cyberskill-world/shared/commit/fbb1e39a6d94ae39bc68d2d4974f8f84649279e7))
+
 ## [1.71.0](https://github.com/cyberskill-world/shared/compare/v1.70.0...v1.71.0) (2025-04-09)
 
 ### ✨ Features
