@@ -13,6 +13,7 @@ export function createGraphqlCodegenConfig({
     withHooks,
     withMutationFn,
     withRefetchFn,
+    federation,
 }: I_GraphqlCodegenConfig): CodegenConfig {
     const configOptions = {
         ...(withComponent && { withComponent }),
@@ -20,6 +21,7 @@ export function createGraphqlCodegenConfig({
         ...(withHooks && { withHooks }),
         ...(withMutationFn && { withMutationFn }),
         ...(withRefetchFn && { withRefetchFn }),
+        ...(federation && { config: { federation: true } }),
     };
 
     return {

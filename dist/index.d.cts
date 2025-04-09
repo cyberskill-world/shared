@@ -159,6 +159,8 @@ export { useApolloError } from './_tsup-dts-rollup.cjs';
 export { showGlobalApolloError } from './_tsup-dts-rollup.cjs';
 export { ApolloErrorProvider } from './_tsup-dts-rollup.cjs';
 export { I_ApolloErrorContext } from './_tsup-dts-rollup.cjs';
+export { I_GraphqlCodegenConfig } from './_tsup-dts-rollup.cjs';
+export { createGraphqlCodegenConfig } from './_tsup-dts-rollup.cjs';
 export { useTranslateI18next } from './_tsup-dts-rollup.cjs';
 export { initI18next } from './_tsup-dts-rollup.cjs';
 export { Loading } from './_tsup-dts-rollup.cjs';

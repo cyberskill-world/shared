@@ -7,4 +7,5 @@ export interface I_GraphqlCodegenConfig {
     withHooks?: boolean;
     withMutationFn?: boolean;
     withRefetchFn?: boolean;
+    federation?: boolean;
 }

@@ -225,9 +225,11 @@ export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_1 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_2 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_3 }
 
-declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, }: I_GraphqlCodegenConfig): CodegenConfig;
+declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, federation, }: I_GraphqlCodegenConfig): CodegenConfig;
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
+export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_2 }
+export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_3 }
 
 declare const CYBERSKILL_CLI = "cyberskill";
 export { CYBERSKILL_CLI }
@@ -1732,9 +1734,12 @@ declare interface I_GraphqlCodegenConfig {
     withHooks?: boolean;
     withMutationFn?: boolean;
     withRefetchFn?: boolean;
+    federation?: boolean;
 }
 export { I_GraphqlCodegenConfig }
 export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_1 }
+export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_2 }
+export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_3 }
 
 declare interface I_Input_CreateMany<T> {
     docs: T[];
