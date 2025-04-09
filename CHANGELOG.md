@@ -1,3 +1,9 @@
+## [1.70.0](https://github.com/cyberskill-world/shared/compare/v1.69.0...v1.70.0) (2025-04-09)
+
+### ✨ Features
+
+* move graphql-codegen to react ([088631d](https://github.com/cyberskill-world/shared/commit/088631d0987192c0f4cef8d62727fd3c08158b2b))
+
 ## [1.69.0](https://github.com/cyberskill-world/shared/compare/v1.68.0...v1.69.0) (2025-04-08)
 
 ### ✨ Features
