@@ -167,11 +167,11 @@ export function ApolloProvider({
 
     const link = useMemo(() => from(createApolloLinks({ uri, wsUrl, customLinks })), [uri, wsUrl, customLinks]);
 
-    const client = useMemo(() => new ApolloClient({
+    const client = useMemo(() => new Client({
         link,
         cache: CustomCache instanceof InMemoryCache ? CustomCache : new InMemoryCache(),
         ...apolloOptions,
-    }), [link, CustomCache, apolloOptions]);
+    }), [Client, link, CustomCache, apolloOptions]);
 
     const renderedApollo = isNextJS
         ? <Provider makeClient={() => client}>{children}</Provider>
