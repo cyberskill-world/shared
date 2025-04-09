@@ -1,6 +1,5 @@
 export * from './apollo-client/index.js';
 export * from './apollo-error/index.js';
-export * from './graphql-codegen/index.js';
 export * from './i18next/index.js';
 export * from './loading/index.js';
 export * from './log/index.js';

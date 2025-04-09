@@ -34,6 +34,11 @@
             "import": "./dist/configs/eslint/index.js",
             "require": "./dist/configs/eslint/index.cjs"
         },
+        "./configs/graphql-codegen": {
+            "types": "./dist/configs/graphql-codegen/index.d.ts",
+            "import": "./dist/configs/graphql-codegen/index.js",
+            "require": "./dist/configs/graphql-codegen/index.cjs"
+        },
         "./configs/lint-staged": {
             "types": "./dist/configs/lint-staged/index.d.ts",
             "import": "./dist/configs/lint-staged/index.js",
@@ -113,11 +118,6 @@
             "types": "./dist/react/apollo-error/index.d.ts",
             "import": "./dist/react/apollo-error/index.js",
             "require": "./dist/react/apollo-error/index.cjs"
-        },
-        "./react/graphql-codegen": {
-            "types": "./dist/react/graphql-codegen/index.d.ts",
-            "import": "./dist/react/graphql-codegen/index.js",
-            "require": "./dist/react/graphql-codegen/index.cjs"
         },
         "./react/i18next": {
             "types": "./dist/react/i18next/index.d.ts",

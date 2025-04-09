@@ -272,11 +272,14 @@ export { deepMerge as deepMerge_alias_1 }
 export { deepMerge as deepMerge_alias_2 }
 export { deepMerge as deepMerge_alias_3 }
 
-export declare const default_alias: {
+declare const _default: {
     extends: string[];
 };
+export { _default as commitlintConfig }
+export { _default as commitlintConfig_alias_1 }
+export { _default as default_alias }
 
-export declare const default_alias_1: {
+declare const _default_2: {
     languageOptions: {
         globals: {
             AbortController: false;
@@ -1426,10 +1429,16 @@ export declare const default_alias_1: {
     };
     ignores: string[];
 }[];
+export { _default_2 as default_alias_1 }
+export { _default_2 as eslintConfig }
+export { _default_2 as eslintConfig_alias_1 }
 
-export declare const default_alias_2: {
+declare const _default_3: {
     '*': string[];
 };
+export { _default_3 as default_alias_2 }
+export { _default_3 as lintStagedConfig }
+export { _default_3 as lintStagedConfig_alias_1 }
 
 declare enum E_CommandType {
     PNPM_ADD_AND_EXEC = "PNPM_ADD_AND_EXEC",
