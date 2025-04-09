@@ -1,3 +1,9 @@
+## [1.73.0](https://github.com/cyberskill-world/shared/compare/v1.72.0...v1.73.0) (2025-04-09)
+
+### ✨ Features
+
+* enhance apollo provider ([fc13977](https://github.com/cyberskill-world/shared/commit/fc139777663457707a910831f40640b66e07a3f5))
+
 ## [1.72.0](https://github.com/cyberskill-world/shared/compare/v1.71.0...v1.72.0) (2025-04-09)
 
 ### ✨ Features
