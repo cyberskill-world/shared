@@ -167,21 +167,19 @@ export function ApolloProvider({
 
     const link = useMemo(() => from(createApolloLinks({ uri, wsUrl, customLinks })), [uri, wsUrl, customLinks]);
 
+    const cache = useMemo(() => (
+        CustomCache instanceof InMemoryCache ? CustomCache : new InMemoryCache()
+    ), [CustomCache]);
+
     const client = useMemo(() => new Client({
         link,
-        cache: CustomCache instanceof InMemoryCache ? CustomCache : new InMemoryCache(),
+        cache,
         ...apolloOptions,
-    }), [Client, link, CustomCache, apolloOptions]);
+    }), [Client, link, cache, apolloOptions]);
 
     const renderedApollo = isNextJS
         ? <Provider makeClient={() => client}>{children}</Provider>
         : <Provider client={client}>{children}</Provider>;
-
-    if (isNextJS) {
-        return (
-            <Provider makeClient={() => client}>{children}</Provider>
-        );
-    }
 
     return (
         <>
