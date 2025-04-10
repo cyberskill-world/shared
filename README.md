@@ -65,17 +65,16 @@ pnpm install @cyberskill/shared
 ## 📂 **Project Structure**
 
 ```plaintext
-src/
-├── configs/        → App configuration files
-├── constants/      → Static values used across the app
-├── nodejs/         → NodeJS modules
 ├── public/         → Static assets (images, fonts, etc.)
-├── react/          → ReactJS modules
-├── styles/         → Global and component-specific styles
-├── typescript/     → TypeScript types and interfaces
-├── utils/          → Utility functions and helpers
-├── cli.ts          → CLI commands and setup logic
-└── index.ts        → Entry point for the app
+├──src/
+    ├── configs/        → App configuration files
+    ├── constants/      → Static values used across the app
+    ├── nodejs/         → NodeJS modules
+    ├── react/          → ReactJS modules
+    ├── styles/         → Global and component-specific styles
+    ├── typescript/     → TypeScript types and interfaces
+    ├── utils/          → Utility functions and helpers
+    └── index.ts        → Entry point for the app
 ```
 
 ---

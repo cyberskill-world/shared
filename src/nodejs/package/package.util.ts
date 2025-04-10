@@ -155,8 +155,6 @@ export async function setupPackages(packages: string[], options?: {
         for (const action of options?.postInstallActions ?? []) {
             await action();
         }
-
-        log.success(`"${packages.join(', ')}" setup completed.`);
     }
     catch (error) {
         log.error(`Failed to setup "${packages.join(', ')}": ${(error as Error).message}`);
