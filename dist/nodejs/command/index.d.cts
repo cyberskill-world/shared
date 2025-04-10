@@ -8,7 +8,7 @@ export { T_CommandMapInput_alias_3 as T_CommandMapInput } from '../../_tsup-dts-
 export { E_CommandType_alias_3 as E_CommandType } from '../../_tsup-dts-rollup.cjs';
 export { getStoredErrorLists_alias_3 as getStoredErrorLists } from '../../_tsup-dts-rollup.cjs';
 export { clearAllErrorLists_alias_3 as clearAllErrorLists } from '../../_tsup-dts-rollup.cjs';
-export { executeCommand_alias_3 as executeCommand } from '../../_tsup-dts-rollup.cjs';
 export { rawCommand_alias_3 as rawCommand } from '../../_tsup-dts-rollup.cjs';
 export { formatCommand_alias_3 as formatCommand } from '../../_tsup-dts-rollup.cjs';
 export { resolveCommands_alias_3 as resolveCommands } from '../../_tsup-dts-rollup.cjs';
+export { runCommand_alias_3 as runCommand } from '../../_tsup-dts-rollup.cjs';

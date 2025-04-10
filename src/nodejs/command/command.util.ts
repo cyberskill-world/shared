@@ -171,7 +171,7 @@ function parseCommandOutput(output: string): void {
     }
 }
 
-export async function executeCommand(command: string, parser = parseCommandOutput): Promise<void> {
+async function executeCommand(command: string, parser = parseCommandOutput): Promise<void> {
     const controller = new AbortController();
 
     process.on('SIGINT', () => {
@@ -247,4 +247,21 @@ export async function resolveCommands(input: T_CommandMapInput, context: Partial
     return Object.fromEntries(
         Object.entries(commands).map(([key, cmd]) => [key, formatCommand(cmd, ctx)]),
     );
+}
+
+export async function runCommand(label: string, command: string) {
+    try {
+        log.start(`${label}`);
+
+        if (DEBUG) {
+            log.info(`→ ${command}`);
+        }
+
+        await executeCommand(command);
+        log.success(`${label} done.`);
+    }
+    catch (err) {
+        log.error(`${label} failed: ${(err as Error).message}`);
+        throw err;
+    }
 }

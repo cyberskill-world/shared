@@ -3,7 +3,7 @@ import process from 'node:process';
 import type { I_CommandContext } from '../command/index.js';
 
 import { E_CommandType, formatCommand, rawCommand } from '../command/index.js';
-import { existsSync } from '../fs/index.js';
+import { setupPackages } from '../package/index.js';
 import { join, resolveWorkingPath } from './path.util.js';
 
 export const WORKING_DIRECTORY = process.env.INIT_CWD || process.cwd();
@@ -58,13 +58,11 @@ export const PATH = {
     PACKAGE_LOCK_JSON: resolveWorkingPath(PACKAGE_LOCK_JSON),
     PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
     NODE_MODULES: resolveWorkingPath(NODE_MODULES),
-    CYBERSKILL: {
-        LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/lint-staged/base.js`),
-        COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/commitlint/base.js`),
-        UNIT_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.js`),
-        UNIT_TEST_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.setup.js`),
-        E2E_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.e2e.js`),
-    },
+    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/lint-staged/base.js`),
+    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/commitlint/base.js`),
+    UNIT_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.js`),
+    UNIT_TEST_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.setup.js`),
+    E2E_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.e2e.js`),
 };
 
 export function HOOK({ isCurrentProject }: Partial<I_CommandContext>) {
@@ -75,40 +73,44 @@ export function HOOK({ isCurrentProject }: Partial<I_CommandContext>) {
     };
 }
 
-function buildCommand(type: E_CommandType, ...args: string[]): string {
+async function buildCommand(type: E_CommandType, ...args: string[]): Promise<string> {
     const [first, second] = args;
 
-    const isPackageInstalled = type === E_CommandType.RAW ? true : existsSync(...first.split(' ').map(pkg => join(PATH.NODE_MODULES, pkg)));
-
     switch (type) {
-        case E_CommandType.PNPM_ADD_AND_EXEC: {
-            return formatCommand(rawCommand(`${!isPackageInstalled ? `${PNPM_CLI} add ${first} && ` : ''}${PNPM_EXEC_CLI} ${second}`)) as string;
+        case E_CommandType.CLI: {
+            await setupPackages(first.split(' '), {
+                update: true,
+            });
+            return formatCommand(rawCommand(`${PNPM_EXEC_CLI} ${second}`)) as string;
         }
-        case E_CommandType.PNPM_ADD_DEV_AND_EXEC: {
-            return formatCommand(rawCommand(`${!isPackageInstalled ? `${PNPM_CLI} add -D ${first} && ` : ''}${PNPM_EXEC_CLI} ${second}`)) as string;
-        }
-        case E_CommandType.RAW:
+        case E_CommandType.RAW: {
             return formatCommand(rawCommand(first)) as string;
+        }
+        default: {
+            throw new Error('Unsupported command type');
+        }
     }
 }
 
-export const COMMAND = {
-    SIMPLE_GIT_HOOKS: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, SIMPLE_GIT_HOOKS_PACKAGE_NAME, SIMPLE_GIT_HOOK_CLI),
-    ESLINT_INSPECT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_INSPECT_PACKAGE_NAME, ESLINT_INSPECT_CLI),
-    NODE_MODULES_INSPECT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, NODE_MODULES_INSPECT_PACKAGE_NAME, NODE_MODULES_INSPECT_CLI),
-    ESLINT_CHECK: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY}`),
-    ESLINT_FIX: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix`),
-    TYPESCRIPT_CHECK: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, TSC_PACKAGE_NAME, `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit`),
-    CONFIGURE_GIT_HOOK: buildCommand(E_CommandType.RAW, `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`),
-    BUILD: buildCommand(E_CommandType.RAW, `${PNPM_CLI} run build`),
-    STAGE_BUILD_DIRECTORY: buildCommand(E_CommandType.RAW, `${GIT_CLI} add ${BUILD_DIRECTORY}`),
-    PNPM_INSTALL_STANDARD: buildCommand(E_CommandType.RAW, `${PNPM_CLI} install`),
-    PNPM_INSTALL_LEGACY: buildCommand(E_CommandType.RAW, `${PNPM_CLI} install --legacy-peer-deps`),
-    PNPM_INSTALL_FORCE: buildCommand(E_CommandType.RAW, `${PNPM_CLI} install --force`),
-    CYBERSKILL: {
-        TEST_UNIT: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.CYBERSKILL.UNIT_TEST_CONFIG}`),
-        TEST_E2E: buildCommand(E_CommandType.PNPM_ADD_AND_EXEC, `${VITEST_PACKAGE_NAME} ${PLAYWRIGHT_PACKAGE_NAME}`, `${VITEST_CLI} --config ${PATH.CYBERSKILL.E2E_TEST_CONFIG}`),
-        COMMIT_LINT: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, COMMIT_LINT_PACKAGE_NAME, `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.CYBERSKILL.COMMITLINT_CONFIG}`),
-        LINT_STAGED: buildCommand(E_CommandType.PNPM_ADD_DEV_AND_EXEC, LINT_STAGED_PACKAGE_NAME, `${LINT_STAGED_CLI} --config ${PATH.CYBERSKILL.LINT_STAGED_CONFIG}`),
-    },
+function commandFactory(type: E_CommandType, ...args: string[]): () => Promise<string> {
+    return async () => buildCommand(type, ...args);
+}
+
+export const command = {
+    simpleGitHooks: commandFactory(E_CommandType.CLI, SIMPLE_GIT_HOOKS_PACKAGE_NAME, SIMPLE_GIT_HOOK_CLI),
+    eslintInspect: commandFactory(E_CommandType.CLI, ESLINT_INSPECT_PACKAGE_NAME, ESLINT_INSPECT_CLI),
+    nodeModulesInspect: commandFactory(E_CommandType.CLI, NODE_MODULES_INSPECT_PACKAGE_NAME, NODE_MODULES_INSPECT_CLI),
+    eslintCheck: commandFactory(E_CommandType.CLI, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY}`),
+    eslintFix: commandFactory(E_CommandType.CLI, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix`),
+    typescriptCheck: commandFactory(E_CommandType.CLI, TSC_PACKAGE_NAME, `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit`),
+    configureGitHook: commandFactory(E_CommandType.RAW, `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`),
+    testUnit: commandFactory(E_CommandType.CLI, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.UNIT_TEST_CONFIG}`),
+    testE2e: commandFactory(E_CommandType.CLI, `${VITEST_PACKAGE_NAME} ${PLAYWRIGHT_PACKAGE_NAME}`, `${VITEST_CLI} --config ${PATH.E2E_TEST_CONFIG}`),
+    commitLint: commandFactory(E_CommandType.CLI, COMMIT_LINT_PACKAGE_NAME, `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.COMMITLINT_CONFIG}`),
+    lintStaged: commandFactory(E_CommandType.CLI, LINT_STAGED_PACKAGE_NAME, `${LINT_STAGED_CLI} --config ${PATH.LINT_STAGED_CONFIG}`),
+    stageBuildDirectory: commandFactory(E_CommandType.RAW, `${GIT_CLI} add ${BUILD_DIRECTORY}`),
+    build: commandFactory(E_CommandType.RAW, `${PNPM_CLI} run build`),
+    pnpmInstallStandard: commandFactory(E_CommandType.RAW, `${PNPM_CLI} install`),
+    pnpmInstallLegacy: commandFactory(E_CommandType.RAW, `${PNPM_CLI} install --legacy-peer-deps`),
+    pnpmInstallForce: commandFactory(E_CommandType.RAW, `${PNPM_CLI} install --force`),
 };

@@ -37,4 +37,4 @@ export { ESLINT_INSPECT_CLI_alias_3 as ESLINT_INSPECT_CLI } from '../../_tsup-dt
 export { NODE_MODULES_INSPECT_PACKAGE_NAME_alias_3 as NODE_MODULES_INSPECT_PACKAGE_NAME } from '../../_tsup-dts-rollup.js';
 export { NODE_MODULES_INSPECT_CLI_alias_3 as NODE_MODULES_INSPECT_CLI } from '../../_tsup-dts-rollup.js';
 export { PATH_alias_3 as PATH } from '../../_tsup-dts-rollup.js';
-export { COMMAND_alias_3 as COMMAND } from '../../_tsup-dts-rollup.js';
+export { command_alias_3 as command } from '../../_tsup-dts-rollup.js';

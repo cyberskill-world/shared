@@ -171,47 +171,28 @@ export { clearAllErrorLists as clearAllErrorLists_alias_1 }
 export { clearAllErrorLists as clearAllErrorLists_alias_2 }
 export { clearAllErrorLists as clearAllErrorLists_alias_3 }
 
-declare const COMMAND: {
-    SIMPLE_GIT_HOOKS: string;
-    ESLINT_INSPECT: string;
-    NODE_MODULES_INSPECT: string;
-    ESLINT_CHECK: string;
-    ESLINT_FIX: string;
-    TYPESCRIPT_CHECK: string;
-    CONFIGURE_GIT_HOOK: string;
-    BUILD: string;
-    STAGE_BUILD_DIRECTORY: string;
-    PNPM_INSTALL_STANDARD: string;
-    PNPM_INSTALL_LEGACY: string;
-    PNPM_INSTALL_FORCE: string;
-    CYBERSKILL: {
-        TEST_UNIT: string;
-        TEST_E2E: string;
-        COMMIT_LINT: string;
-        LINT_STAGED: string;
-    };
+declare const command: {
+    simpleGitHooks: () => Promise<string>;
+    eslintInspect: () => Promise<string>;
+    nodeModulesInspect: () => Promise<string>;
+    eslintCheck: () => Promise<string>;
+    eslintFix: () => Promise<string>;
+    typescriptCheck: () => Promise<string>;
+    configureGitHook: () => Promise<string>;
+    testUnit: () => Promise<string>;
+    testE2e: () => Promise<string>;
+    commitLint: () => Promise<string>;
+    lintStaged: () => Promise<string>;
+    stageBuildDirectory: () => Promise<string>;
+    build: () => Promise<string>;
+    pnpmInstallStandard: () => Promise<string>;
+    pnpmInstallLegacy: () => Promise<string>;
+    pnpmInstallForce: () => Promise<string>;
 };
-export { COMMAND }
-export { COMMAND as COMMAND_alias_1 }
-export { COMMAND as COMMAND_alias_2 }
-export { COMMAND as COMMAND_alias_3 }
-
-declare const COMMAND_DESCRIPTIONS: {
-    lint: string;
-    'lint:fix': string;
-    'lint:inspect': string;
-    'lint-staged': string;
-    commitlint: string;
-    setup: string;
-    reset: string;
-    inspect: string;
-    'test:unit': string;
-    'test:e2e': string;
-};
-export { COMMAND_DESCRIPTIONS }
-export { COMMAND_DESCRIPTIONS as COMMAND_DESCRIPTIONS_alias_1 }
-export { COMMAND_DESCRIPTIONS as COMMAND_DESCRIPTIONS_alias_2 }
-export { COMMAND_DESCRIPTIONS as COMMAND_DESCRIPTIONS_alias_3 }
+export { command }
+export { command as command_alias_1 }
+export { command as command_alias_2 }
+export { command as command_alias_3 }
 
 declare const COMMIT_LINT_CLI = "commitlint";
 export { COMMIT_LINT_CLI }
@@ -1441,8 +1422,7 @@ export { _default_3 as lintStagedConfig }
 export { _default_3 as lintStagedConfig_alias_1 }
 
 declare enum E_CommandType {
-    PNPM_ADD_AND_EXEC = "PNPM_ADD_AND_EXEC",
-    PNPM_ADD_DEV_AND_EXEC = "PNPM_ADD_DEV_AND_EXEC",
+    CLI = "CLI",
     RAW = "RAW"
 }
 export { E_CommandType }
@@ -1493,12 +1473,6 @@ export { ESLINT_PACKAGE_NAME }
 export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_1 }
 export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_2 }
 export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_3 }
-
-declare function executeCommand(command: string, parser?: typeof parseCommandOutput): Promise<void>;
-export { executeCommand }
-export { executeCommand as executeCommand_alias_1 }
-export { executeCommand as executeCommand_alias_2 }
-export { executeCommand as executeCommand_alias_3 }
 
 declare function existsSync(...paths: string[]): boolean;
 export { existsSync }
@@ -2062,6 +2036,12 @@ export { initI18next as initI18next_alias_1 }
 export { initI18next as initI18next_alias_2 }
 export { initI18next as initI18next_alias_3 }
 
+declare function installDependencies(): Promise<void>;
+export { installDependencies }
+export { installDependencies as installDependencies_alias_1 }
+export { installDependencies as installDependencies_alias_2 }
+export { installDependencies as installDependencies_alias_3 }
+
 declare const IS_BROWSER: boolean;
 export { IS_BROWSER }
 export { IS_BROWSER as IS_BROWSER_alias_1 }
@@ -2293,8 +2273,6 @@ export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_1 }
 export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_2 }
 export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_3 }
 
-declare function parseCommandOutput(output: string): void;
-
 declare const PATH: {
     CYBERSKILL_DIRECTORY: string;
     WORKING_DIRECTORY: string;
@@ -2307,13 +2285,11 @@ declare const PATH: {
     PACKAGE_LOCK_JSON: string;
     PNPM_LOCK_YAML: string;
     NODE_MODULES: string;
-    CYBERSKILL: {
-        LINT_STAGED_CONFIG: string;
-        COMMITLINT_CONFIG: string;
-        UNIT_TEST_CONFIG: string;
-        UNIT_TEST_SETUP_CONFIG: string;
-        E2E_TEST_CONFIG: string;
-    };
+    LINT_STAGED_CONFIG: string;
+    COMMITLINT_CONFIG: string;
+    UNIT_TEST_CONFIG: string;
+    UNIT_TEST_SETUP_CONFIG: string;
+    E2E_TEST_CONFIG: string;
 };
 export { PATH }
 export { PATH as PATH_alias_1 }
@@ -2657,11 +2633,26 @@ export { rmSync as rmSync_alias_1 }
 export { rmSync as rmSync_alias_2 }
 export { rmSync as rmSync_alias_3 }
 
+declare function runCommand(label: string, command: string): Promise<void>;
+export { runCommand }
+export { runCommand as runCommand_alias_1 }
+export { runCommand as runCommand_alias_2 }
+export { runCommand as runCommand_alias_3 }
+
 declare const serializer: I_Serializer<unknown>;
 export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
 export { serializer as serializer_alias_3 }
+
+declare function setupPackages(packages: string[], options?: {
+    update?: boolean;
+    postInstallActions?: (() => Promise<void>)[];
+}): Promise<void>;
+export { setupPackages }
+export { setupPackages as setupPackages_alias_1 }
+export { setupPackages as setupPackages_alias_2 }
+export { setupPackages as setupPackages_alias_3 }
 
 declare function showGlobalApolloError(error: ApolloError_2): void;
 export { showGlobalApolloError }

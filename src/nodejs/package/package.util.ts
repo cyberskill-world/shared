@@ -2,45 +2,42 @@ import fetch from 'node-fetch';
 
 import type { I_CheckPackage, I_GetPackage, T_PackageJson } from './package.type.js';
 
+import { runCommand } from '../command/index.js';
 import { existsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { logNodeJS as log } from '../log/index.js';
-import { join, PACKAGE_JSON, WORKING_DIRECTORY } from '../path/index.js';
+import { command, join, PACKAGE_JSON, PATH, WORKING_DIRECTORY } from '../path/index.js';
 import { CHECK_PACKAGE_EMPTY_RESULT } from './package.constant.js';
 
-const cache: Record<string, I_GetPackage | false> = {};
-
 export function getPackage(packageName: string): I_GetPackage | false {
-    if (packageName in cache) {
-        return cache[packageName];
-    }
-
     const pkgPath = join(WORKING_DIRECTORY, PACKAGE_JSON);
 
     if (!existsSync(pkgPath)) {
-        return (cache[packageName] = false);
+        return false;
     }
 
     try {
         const file = readFileSync(pkgPath, { asJson: true }) as T_PackageJson;
-        const isCurrentProject = file.name === packageName;
-        const isDepend = !!file.dependencies?.[packageName];
-        const isDevDepend = !!file.devDependencies?.[packageName];
+        const { name, dependencies = {}, devDependencies = {} } = file;
+
+        const isCurrentProject = name === packageName;
+        const isDepend = packageName in dependencies;
+        const isDevDepend = packageName in devDependencies;
 
         if (isCurrentProject || isDepend || isDevDepend) {
-            return (cache[packageName] = {
+            return {
                 path: pkgPath,
                 file,
                 isCurrentProject,
                 isDepend,
                 isDevDepend,
-            });
+            };
         }
 
-        return (cache[packageName] = false);
+        return false;
     }
     catch (err) {
         log.warn(`Failed to read package.json: ${(err as Error).message}`);
-        return (cache[packageName] = false);
+        return false;
     }
 }
 
@@ -75,31 +72,29 @@ export async function checkPackage(
 
         const { path, file, isCurrentProject, isDepend, isDevDepend } = pkg;
 
-        let installedVersion = '0.0.0';
+        const dependencies = file.dependencies ?? {};
+        const devDependencies = file.devDependencies ?? {};
 
-        if (isCurrentProject && file.version) {
-            installedVersion = file.version;
-        }
-        else if (isDepend && file.dependencies?.[packageName]) {
-            installedVersion = file.dependencies?.[packageName];
-        }
-        else if (isDevDepend && file.devDependencies?.[packageName]) {
-            installedVersion = file.devDependencies?.[packageName];
-        }
+        const installedVersion = isCurrentProject
+            ? file.version ?? '0.0.0'
+            : isDepend
+                ? dependencies[packageName] ?? '0.0.0'
+                : isDevDepend
+                    ? devDependencies[packageName] ?? '0.0.0'
+                    : '0.0.0';
 
         const latestVersion = isCurrentProject ? installedVersion : await getLatestPackageVersion(packageName);
         const isUpToDate = isCurrentProject || installedVersion === latestVersion;
 
         if (!isUpToDate && options?.update) {
-            if (isDepend) {
-                file.dependencies = { ...(file.dependencies || {}), [packageName]: latestVersion };
-            }
-            else if (isDevDepend) {
-                file.devDependencies = { ...(file.devDependencies || {}), [packageName]: latestVersion };
-            }
+            const section = isDepend ? 'dependencies' : isDevDepend ? 'devDependencies' : null;
 
-            log.info(`Updating package "${packageName}" to version ${latestVersion}`);
-            writeFileSync(path, file, { isJson: true });
+            if (section && file[section]?.[packageName] !== latestVersion) {
+                file[section] = file[section] ?? {};
+                file[section]![packageName] = latestVersion;
+                writeFileSync(path, file, { isJson: true });
+                log.info(`Updated "${packageName}" to version ${latestVersion}`);
+            }
         }
 
         return {
@@ -112,5 +107,59 @@ export async function checkPackage(
     catch (error) {
         log.error(`Error checking package "${packageName}": ${(error as Error).message}`);
         return { ...CHECK_PACKAGE_EMPTY_RESULT };
+    }
+}
+
+export async function installDependencies() {
+    const strategies = [
+        { command: () => command.pnpmInstallStandard(), message: 'Installing dependencies (standard)' },
+        { command: () => command.pnpmInstallLegacy(), message: 'Retrying with legacy peer dependencies' },
+        { command: () => command.pnpmInstallForce(), message: 'Retrying with force install' },
+    ];
+
+    for (const { command, message } of strategies) {
+        try {
+            const cmd = await command();
+            await runCommand(`${message} using: ${cmd}`, cmd);
+            return;
+        }
+        catch (error) {
+            log.warn(`Installation attempt failed: ${message}`);
+            log.error(`Details: ${(error as Error).message}`);
+        }
+    }
+
+    throw new Error('All dependency installation strategies failed.');
+}
+
+export async function setupPackages(packages: string[], options?: {
+    update?: boolean;
+    postInstallActions?: (() => Promise<void>)[];
+}) {
+    if (!existsSync(PATH.PACKAGE_JSON)) {
+        log.error('package.json not found. Aborting setup.');
+
+        return;
+    }
+
+    try {
+        const uniquePackages = [...new Set(packages)].sort();
+        const result = await Promise.all(uniquePackages.map(pkg =>
+            checkPackage(pkg, { update: options?.update }),
+        ));
+
+        if (!result.every(pkg => pkg.isUpToDate)) {
+            await installDependencies();
+        }
+
+        for (const action of options?.postInstallActions ?? []) {
+            await action();
+        }
+
+        log.success(`"${packages.join(', ')}" setup completed.`);
+    }
+    catch (error) {
+        log.error(`Failed to setup "${packages.join(', ')}": ${(error as Error).message}`);
+        throw error;
     }
 }

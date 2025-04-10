@@ -13,7 +13,7 @@ export function vitestUnit(options: UserConfig) {
             environment: 'jsdom',
             pool: 'vmThreads',
             include: ['**/*.test.unit.?(c|m)[jt]s?(x)'],
-            setupFiles: [PATH.CYBERSKILL.UNIT_TEST_SETUP_CONFIG],
+            setupFiles: [PATH.UNIT_TEST_SETUP_CONFIG],
         },
         ...options,
     });

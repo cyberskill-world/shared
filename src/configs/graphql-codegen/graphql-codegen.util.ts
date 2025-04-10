@@ -1,6 +1,6 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
-import { COMMAND } from '#nodejs/path/index.js';
+import { ESLINT_CLI, PATH } from '#nodejs/path/index.js';
 
 import type { I_GraphqlCodegenConfig } from './graphql-codegen.type.js';
 
@@ -34,7 +34,7 @@ export function createGraphqlCodegenConfig({
             },
         },
         hooks: {
-            afterAllFileWrite: [COMMAND.ESLINT_FIX],
+            afterAllFileWrite: [`${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix`],
         },
     };
 }

@@ -1,4 +1,3 @@
-export { COMMAND_DESCRIPTIONS_alias_1 as COMMAND_DESCRIPTIONS } from '../_tsup-dts-rollup.js';
 export { I_EslintError_alias_1 as I_EslintError } from '../_tsup-dts-rollup.js';
 export { I_CommandContext_alias_1 as I_CommandContext } from '../_tsup-dts-rollup.js';
 export { I_Command_alias_1 as I_Command } from '../_tsup-dts-rollup.js';
@@ -9,10 +8,10 @@ export { T_CommandMapInput_alias_1 as T_CommandMapInput } from '../_tsup-dts-rol
 export { E_CommandType_alias_1 as E_CommandType } from '../_tsup-dts-rollup.js';
 export { getStoredErrorLists_alias_1 as getStoredErrorLists } from '../_tsup-dts-rollup.js';
 export { clearAllErrorLists_alias_1 as clearAllErrorLists } from '../_tsup-dts-rollup.js';
-export { executeCommand_alias_1 as executeCommand } from '../_tsup-dts-rollup.js';
 export { rawCommand_alias_1 as rawCommand } from '../_tsup-dts-rollup.js';
 export { formatCommand_alias_1 as formatCommand } from '../_tsup-dts-rollup.js';
 export { resolveCommands_alias_1 as resolveCommands } from '../_tsup-dts-rollup.js';
+export { runCommand_alias_1 as runCommand } from '../_tsup-dts-rollup.js';
 export { existsSync_alias_1 as existsSync } from '../_tsup-dts-rollup.js';
 export { readFileSync_alias_1 as readFileSync } from '../_tsup-dts-rollup.js';
 export { writeFileSync_alias_1 as writeFileSync } from '../_tsup-dts-rollup.js';
@@ -95,6 +94,8 @@ export { I_CheckPackage_alias_1 as I_CheckPackage } from '../_tsup-dts-rollup.js
 export { getPackage_alias_1 as getPackage } from '../_tsup-dts-rollup.js';
 export { getLatestPackageVersion_alias_1 as getLatestPackageVersion } from '../_tsup-dts-rollup.js';
 export { checkPackage_alias_1 as checkPackage } from '../_tsup-dts-rollup.js';
+export { installDependencies_alias_1 as installDependencies } from '../_tsup-dts-rollup.js';
+export { setupPackages_alias_1 as setupPackages } from '../_tsup-dts-rollup.js';
 export { HOOK_alias_1 as HOOK } from '../_tsup-dts-rollup.js';
 export { WORKING_DIRECTORY_alias_1 as WORKING_DIRECTORY } from '../_tsup-dts-rollup.js';
 export { CYBERSKILL_PACKAGE_NAME_alias_1 as CYBERSKILL_PACKAGE_NAME } from '../_tsup-dts-rollup.js';
@@ -134,7 +135,7 @@ export { ESLINT_INSPECT_CLI_alias_1 as ESLINT_INSPECT_CLI } from '../_tsup-dts-r
 export { NODE_MODULES_INSPECT_PACKAGE_NAME_alias_1 as NODE_MODULES_INSPECT_PACKAGE_NAME } from '../_tsup-dts-rollup.js';
 export { NODE_MODULES_INSPECT_CLI_alias_1 as NODE_MODULES_INSPECT_CLI } from '../_tsup-dts-rollup.js';
 export { PATH_alias_1 as PATH } from '../_tsup-dts-rollup.js';
-export { COMMAND_alias_1 as COMMAND } from '../_tsup-dts-rollup.js';
+export { command_alias_1 as command } from '../_tsup-dts-rollup.js';
 export { resolveWorkingPath_alias_1 as resolveWorkingPath } from '../_tsup-dts-rollup.js';
 export { resolve_alias_1 as resolve } from '../_tsup-dts-rollup.js';
 export { join_alias_1 as join } from '../_tsup-dts-rollup.js';

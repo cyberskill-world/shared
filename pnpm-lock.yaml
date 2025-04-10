@@ -217,8 +217,8 @@ importers:
         specifier: 15.5.0
         version: 15.5.0
       node-modules-inspector:
-        specifier: 0.6.5
-        version: 0.6.5
+        specifier: 0.6.6
+        version: 0.6.6
       simple-git-hooks:
         specifier: 2.12.1
         version: 2.12.1
@@ -4582,12 +4582,12 @@ packages:
   node-mock-http@1.0.0:
     resolution: {integrity: sha512-0uGYQ1WQL1M5kKvGRXWQ3uZCHtLTO8hln3oBjIusM75WoesZ909uQJs/Hb946i2SS+Gsrhkaa6iAO17jRIv6DQ==}
 
-  node-modules-inspector@0.6.5:
-    resolution: {integrity: sha512-R0otnpdXf6tLTZMGsu6RBOTO+/U4mfl5l82P2chtrHKcypoDL+lBwGiMKSxIzzABQdo1awNERhXZdNVbRUxTCg==}
+  node-modules-inspector@0.6.6:
+    resolution: {integrity: sha512-XysmsxLo7esEPujoQ3HLNumtu13bnOrSU5DXTuOYEDM4CCuzwel3pdYmqTzFhYzKH6QsruYJvVy3pL+TwFId7A==}
     hasBin: true
 
-  node-modules-tools@0.6.5:
-    resolution: {integrity: sha512-NpiLv6KTYBzDXWF9rn21QztJdxKVmiXXiAXbyrFSQLIZomAv97n1Ta5YeJtWOyXMdIQexW05EwVp5cTJHRVopQ==}
+  node-modules-tools@0.6.6:
+    resolution: {integrity: sha512-6BfQQKeVIiBS0AxDvOkH5GuyQpyr/Y9j26JpmNnaLGXNj8wpCsGQXbavJCQQL7/yuBf4OBwKf9pTT9xVZgnYxQ==}
 
   node-persist@4.0.4:
     resolution: {integrity: sha512-8sPAz/7tw1mCCc8xBG4f0wi+flHkSSgQeX998iQ75Pu27evA6UUWCjSE7xnrYTg2q33oU5leJ061EKPDv6BocQ==}
@@ -11374,7 +11374,7 @@ snapshots:
 
   node-mock-http@1.0.0: {}
 
-  node-modules-inspector@0.6.5:
+  node-modules-inspector@0.6.6:
     dependencies:
       ansis: 3.17.0
       birpc: 2.3.0
@@ -11385,7 +11385,7 @@ snapshots:
       launch-editor: 2.10.0
       mlly: 1.7.4
       mrmime: 2.0.1
-      node-modules-tools: 0.6.5
+      node-modules-tools: 0.6.6
       ohash: 2.0.11
       open: 10.1.0
       p-limit: 6.2.0
@@ -11418,7 +11418,7 @@ snapshots:
       - uploadthing
       - utf-8-validate
 
-  node-modules-tools@0.6.5:
+  node-modules-tools@0.6.6:
     dependencies:
       js-yaml: 4.1.0
       p-limit: 6.2.0

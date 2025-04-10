@@ -3,38 +3,18 @@ import process from 'node:process';
 import { hideBin } from 'yargs/helpers';
 import yargs from 'yargs/yargs';
 
-import { DEBUG } from '#constants/nodejs.js';
-
 import type { I_IssueEntry } from '../log/index.js';
 
 import pkg from '../../../package.json' with { type: 'json' };
-import { COMMAND_DESCRIPTIONS } from '../cli/index.js';
-import { clearAllErrorLists, executeCommand, getStoredErrorLists, resolveCommands } from '../command/index.js';
+import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
 import { appendFileSync, existsSync, readFileSync, rmSync, writeFileSync } from '../fs/index.js';
 import { E_IssueType, logNodeJS as log } from '../log/index.js';
-import { checkPackage } from '../package/index.js';
-import { COMMAND, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
-
-async function runCommand(label: string, command: string) {
-    try {
-        log.start(`${label}`);
-
-        if (DEBUG) {
-            log.info(`→ ${command}`);
-        }
-
-        await executeCommand(command);
-        log.success(`${label} done.`);
-    }
-    catch (err) {
-        log.error(`${label} failed: ${(err as Error).message}`);
-        throw err;
-    }
-}
+import { checkPackage, installDependencies, setupPackages } from '../package/index.js';
+import { command, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
 async function checkTypescript() {
     if (existsSync(PATH.TS_CONFIG)) {
-        await runCommand('Performing TypeScript validation', COMMAND.TYPESCRIPT_CHECK);
+        await runCommand('Performing TypeScript validation', await command.typescriptCheck());
     }
     else {
         log.warn('No TypeScript configuration found. Skipping type check.');
@@ -43,10 +23,10 @@ async function checkTypescript() {
 
 async function checkEslint(fix = false) {
     if (fix) {
-        await runCommand('Running ESLint with auto-fix', COMMAND.ESLINT_FIX);
+        await runCommand('Running ESLint with auto-fix', await command.eslintFix());
     }
     else {
-        await runCommand('Running ESLint check', COMMAND.ESLINT_CHECK);
+        await runCommand('Running ESLint check', await command.eslintCheck());
     }
 }
 
@@ -79,8 +59,8 @@ async function lintStaged() {
 
     if (isCurrentProject) {
         try {
-            await runCommand(`Building package: ${CYBERSKILL_PACKAGE_NAME}`, COMMAND.BUILD);
-            await runCommand('Staging build artifacts', COMMAND.STAGE_BUILD_DIRECTORY);
+            await runCommand(`Building package: ${CYBERSKILL_PACKAGE_NAME}`, await command.build());
+            await runCommand('Staging build artifacts', await command.stageBuildDirectory());
         }
         catch (error) {
             log.error(`Error building and staging ${CYBERSKILL_PACKAGE_NAME}: ${(error as Error).message}`);
@@ -88,12 +68,12 @@ async function lintStaged() {
         }
     }
 
-    await runCommand('Executing lint-staged', COMMAND.CYBERSKILL.LINT_STAGED);
+    await runCommand('Executing lint-staged', await command.lintStaged());
     showCheckResult();
 }
 
 async function inspectLint() {
-    await runCommand('Inspecting ESLint configuration', COMMAND.ESLINT_INSPECT);
+    await runCommand('Inspecting ESLint configuration', await command.eslintInspect());
 }
 
 async function lintCheck() {
@@ -110,12 +90,12 @@ async function lintFix() {
 
 async function commitLint() {
     await clearAllErrorLists();
-    await runCommand('Validating commit message', COMMAND.CYBERSKILL.COMMIT_LINT);
+    await runCommand('Validating commit message', await command.commitLint());
     showCheckResult();
 }
 
 async function setupGitHook() {
-    await runCommand('Configuring Git hooks', COMMAND.CONFIGURE_GIT_HOOK);
+    await runCommand('Configuring Git hooks', await command.configureGitHook());
 
     rmSync(PATH.GIT_HOOK);
 
@@ -136,62 +116,11 @@ async function setupGitHook() {
         writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
     }
 
-    await runCommand('Setting up simple-git-hooks', COMMAND.SIMPLE_GIT_HOOKS);
-}
-
-async function installDependencies() {
-    const strategies = [
-        { command: COMMAND.PNPM_INSTALL_STANDARD, message: 'Installing dependencies (standard)' },
-        { command: COMMAND.PNPM_INSTALL_LEGACY, message: 'Retrying with legacy peer dependencies' },
-        { command: COMMAND.PNPM_INSTALL_FORCE, message: 'Retrying with force install' },
-    ];
-
-    for (const { command, message } of strategies) {
-        try {
-            await runCommand(`${message} using: ${command}`, command);
-            return;
-        }
-        catch (error) {
-            log.warn(`Installation attempt failed: ${command}`);
-            log.error(`Details: ${(error as Error).message}`);
-        }
-    }
-
-    throw new Error('All dependency installation strategies failed.');
-}
-
-async function setupPackage(packageName: string, options?: {
-    update?: boolean;
-    postInstallActions?: (() => Promise<void>)[];
-}) {
-    if (!existsSync(PATH.PACKAGE_JSON)) {
-        log.error('package.json not found. Aborting setup.');
-
-        return;
-    }
-
-    try {
-        const { isUpToDate } = await checkPackage(packageName, { update: options?.update });
-
-        if (!isUpToDate) {
-            await installDependencies();
-            await lintFix();
-        }
-
-        for (const action of options?.postInstallActions ?? []) {
-            await action();
-        }
-
-        log.success(`"${packageName}" setup completed.`);
-    }
-    catch (error) {
-        log.error(`Failed to setup "${packageName}": ${(error as Error).message}`);
-        throw error;
-    }
+    await runCommand('Setting up simple-git-hooks', await command.simpleGitHooks());
 }
 
 async function setup() {
-    await setupPackage(CYBERSKILL_PACKAGE_NAME, {
+    await setupPackages([CYBERSKILL_PACKAGE_NAME], {
         update: true,
         postInstallActions: [setupGitHook],
     });
@@ -204,15 +133,15 @@ async function reset() {
 }
 
 async function inspect() {
-    await runCommand('Inspecting project dependencies', COMMAND.NODE_MODULES_INSPECT);
+    await runCommand('Inspecting project dependencies', await command.nodeModulesInspect());
 }
 
 async function testUnit() {
-    await runCommand('Running unit tests', COMMAND.CYBERSKILL.TEST_UNIT);
+    await runCommand('Running unit tests', await command.testUnit());
 }
 
 async function testE2E() {
-    await runCommand('Running end-to-end tests', COMMAND.CYBERSKILL.TEST_E2E);
+    await runCommand('Running end-to-end tests', await command.testE2e());
 }
 
 (async () => {
@@ -220,16 +149,16 @@ async function testE2E() {
         await yargs(hideBin(process.argv))
             .scriptName(CYBERSKILL_CLI)
             .usage('$0 <command> [options]')
-            .command('lint', COMMAND_DESCRIPTIONS.lint, lintCheck)
-            .command('lint:fix', COMMAND_DESCRIPTIONS['lint:fix'], lintFix)
-            .command('lint:inspect', COMMAND_DESCRIPTIONS['lint:inspect'], inspectLint)
-            .command('lint-staged', COMMAND_DESCRIPTIONS['lint-staged'], lintStaged)
-            .command('commitlint', COMMAND_DESCRIPTIONS.commitlint, commitLint)
-            .command('setup', COMMAND_DESCRIPTIONS.setup, setup)
-            .command('reset', COMMAND_DESCRIPTIONS.reset, reset)
-            .command('inspect', COMMAND_DESCRIPTIONS.inspect, inspect)
-            .command('test:unit', COMMAND_DESCRIPTIONS['test:unit'], testUnit)
-            .command('test:e2e', COMMAND_DESCRIPTIONS['test:e2e'], testE2E)
+            .command('lint', 'Check code for linting issues', lintCheck)
+            .command('lint:fix', 'Fix linting issues automatically', lintFix)
+            .command('lint:inspect', 'View active ESLint configuration', inspectLint)
+            .command('lint-staged', 'Run lint checks on staged files', lintStaged)
+            .command('commitlint', 'Validate commit message format', commitLint)
+            .command('setup', 'Initialize project setup and dependencies', setup)
+            .command('reset', 'Reset the project and reinstall dependencies', reset)
+            .command('inspect', 'Analyze installed project dependencies', inspect)
+            .command('test:unit', 'Run unit test suite', testUnit)
+            .command('test:e2e', 'Run end-to-end test suite', testE2E)
             .demandCommand(1, 'Please specify a valid command.')
             .strict()
             .help()
