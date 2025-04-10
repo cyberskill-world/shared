@@ -1,3 +1,9 @@
+## [1.77.0](https://github.com/cyberskill-world/shared/compare/v1.76.0...v1.77.0) (2025-04-10)
+
+### ✨ Features
+
+* add wiki to public ([06e8e01](https://github.com/cyberskill-world/shared/commit/06e8e01c1e648f1b99c70df1e4804bc2db52017f))
+
 ## [1.76.0](https://github.com/cyberskill-world/shared/compare/v1.75.0...v1.76.0) (2025-04-10)
 
 ### ✨ Features
