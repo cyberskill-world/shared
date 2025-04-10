@@ -1,3 +1,9 @@
+## [1.74.0](https://github.com/cyberskill-world/shared/compare/v1.73.0...v1.74.0) (2025-04-10)
+
+### ✨ Features
+
+* update libs ([c40f863](https://github.com/cyberskill-world/shared/commit/c40f863a8077e1492aad5479a9d01ee0199feb80))
+
 ## [1.73.0](https://github.com/cyberskill-world/shared/compare/v1.72.0...v1.73.0) (2025-04-09)
 
 ### ✨ Features
