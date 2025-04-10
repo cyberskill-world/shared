@@ -1,3 +1,9 @@
+## [1.75.0](https://github.com/cyberskill-world/shared/compare/v1.74.0...v1.75.0) (2025-04-10)
+
+### ✨ Features
+
+* refactor commands ([e5b0c25](https://github.com/cyberskill-world/shared/commit/e5b0c256f6fa3060ce264995e7d67e9b769d22e1))
+
 ## [1.74.0](https://github.com/cyberskill-world/shared/compare/v1.73.0...v1.74.0) (2025-04-10)
 
 ### ✨ Features
