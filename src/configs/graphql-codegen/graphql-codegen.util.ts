@@ -24,7 +24,6 @@ export function createGraphqlCodegenConfig({
                     preset: 'client',
                     config: {
                         useTypeImports: true,
-                        avoidOptionals: true,
                     },
                 },
             }),
