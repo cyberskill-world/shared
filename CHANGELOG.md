@@ -1,3 +1,9 @@
+## [1.79.0](https://github.com/cyberskill-world/shared/compare/v1.78.0...v1.79.0) (2025-04-11)
+
+### ✨ Features
+
+* remove avoidOptionals ([28afbaf](https://github.com/cyberskill-world/shared/commit/28afbaf633fc769ebe1f0b11cfc9b2e7c43af656))
+
 ## [1.78.0](https://github.com/cyberskill-world/shared/compare/v1.77.0...v1.78.0) (2025-04-11)
 
 ### ✨ Features
