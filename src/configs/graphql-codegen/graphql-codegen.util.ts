@@ -1,6 +1,6 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
-import { ESLINT_CLI, PATH } from '#nodejs/path/index.js';
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
 
 import type { I_GraphqlCodegenConfig } from './graphql-codegen.type.js';
 
@@ -8,33 +8,29 @@ export function createGraphqlCodegenConfig({
     uri,
     from,
     to,
-    withComponent,
-    withHOC,
-    withHooks,
-    withMutationFn,
-    withRefetchFn,
-    federation,
+    target = 'client',
 }: I_GraphqlCodegenConfig): CodegenConfig {
-    const configOptions = {
-        ...(withComponent && { withComponent }),
-        ...(withHOC && { withHOC }),
-        ...(withHooks && { withHooks }),
-        ...(withMutationFn && { withMutationFn }),
-        ...(withRefetchFn && { withRefetchFn }),
-        ...(federation && { config: { federation: true } }),
-    };
+    const isClient = target === 'client';
+    const isServer = target === 'server';
 
     return {
         schema: uri,
-        documents: [from],
+        ignoreNoDocuments: true,
+        overwrite: true,
+        ...(isClient && { documents: [from] }),
         generates: {
-            [to]: {
-                plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
-                ...(Object.keys(configOptions).length > 0 && { config: configOptions }),
-            },
-        },
-        hooks: {
-            afterAllFileWrite: [`${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix`],
+            ...(isClient && {
+                [to]: {
+                    preset: 'client',
+                    config: {
+                        useTypeImports: true,
+                        avoidOptionals: true,
+                    },
+                },
+            }),
+            ...(isServer && {
+                [to]: defineConfig(),
+            }),
         },
     };
 }

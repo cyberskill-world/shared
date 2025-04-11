@@ -206,7 +206,7 @@ export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_1 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_2 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_3 }
 
-declare function createGraphqlCodegenConfig({ uri, from, to, withComponent, withHOC, withHooks, withMutationFn, withRefetchFn, federation, }: I_GraphqlCodegenConfig): CodegenConfig;
+declare function createGraphqlCodegenConfig({ uri, from, to, target, }: I_GraphqlCodegenConfig): CodegenConfig;
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_2 }
@@ -1712,12 +1712,7 @@ declare interface I_GraphqlCodegenConfig {
     uri: string;
     from: string;
     to: string;
-    withComponent?: boolean;
-    withHOC?: boolean;
-    withHooks?: boolean;
-    withMutationFn?: boolean;
-    withRefetchFn?: boolean;
-    federation?: boolean;
+    target: 'client' | 'server';
 }
 export { I_GraphqlCodegenConfig }
 export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_1 }
