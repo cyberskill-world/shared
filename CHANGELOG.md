@@ -1,3 +1,9 @@
+## [1.78.0](https://github.com/cyberskill-world/shared/compare/v1.77.0...v1.78.0) (2025-04-11)
+
+### ✨ Features
+
+* new graphql style ([74ee074](https://github.com/cyberskill-world/shared/commit/74ee074a93f06fa72d43258512d4d5cd7c995c30))
+
 ## [1.77.0](https://github.com/cyberskill-world/shared/compare/v1.76.0...v1.77.0) (2025-04-10)
 
 ### ✨ Features
