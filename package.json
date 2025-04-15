@@ -167,7 +167,8 @@
     },
     "files": [
         "dist",
-        "public"
+        "public",
+        "tsconfig.base.json"
     ],
     "scripts": {
         "build": "tsup",

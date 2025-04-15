@@ -1,7 +1,7 @@
 {
     "name": "@cyberskill/shared",
     "type": "module",
-    "version": "1.81.0",
+    "version": "1.82.0",
     "description": "CyberSkill Shared",
     "author": "Stephen Cheng",
     "license": "MIT",
@@ -167,7 +167,8 @@
     },
     "files": [
         "dist",
-        "public"
+        "public",
+        "tsconfig.base.json"
     ],
     "scripts": {
         "build": "tsup",
