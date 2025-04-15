@@ -26,7 +26,6 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "useUnknownInCatchVariables": true,
-        "inlineSources": true,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
