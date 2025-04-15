@@ -1,1 +1,1 @@
-import t from"i18next";import{initReactI18next as i}from"react-i18next";function n(n){return t.use(i).init(n)}export{n as initI18next};
+var t=Object.defineProperty;var e=function(e,n){return t(e,"name",{value:n,configurable:!0})};import n from"i18next";import{initReactI18next as i}from"react-i18next";function r(t){return n.use(i).init(t)}e(r,"initI18next");export{r as initI18next};

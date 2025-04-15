@@ -1,1 +1,1 @@
-import{use as r}from"react";import{createContext as e}from"react";var o=e(void 0);function t(){var e=r(o);if(!e)throw new Error("useLoading must be used within a LoadingProvider");return e}export{t as useLoading};
+var r=Object.defineProperty;var e=function(e,a){return r(e,"name",{value:a,configurable:!0})};import{use as a}from"react";import{createContext as o}from"react";var t=o(void 0);function n(){var r=a(t);if(!r)throw new Error("useLoading must be used within a LoadingProvider");return r}e(n,"useLoading");export{n as useLoading};

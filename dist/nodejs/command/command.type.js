@@ -1,1 +1,1 @@
-var n=function(n){return n.CLI="CLI",n.RAW="RAW",n}(n||{});export{n as E_CommandType};
+var n=function(n){return n.CLI="CLI",n.RAW="RAW",n}({});export{n as E_CommandType};

@@ -1,1 +1,1 @@
-import{useTranslation as t}from"react-i18next";var e=t;import n from"i18next";import{initReactI18next as i}from"react-i18next";function r(t){return n.use(i).init(t)}export{r as initI18next,e as useTranslateI18next};
+var t=Object.defineProperty;var e=function(e,n){return t(e,"name",{value:n,configurable:!0})};import{useTranslation as n}from"react-i18next";var r=n;import i from"i18next";import{initReactI18next as a}from"react-i18next";function o(t){return i.use(a).init(t)}e(o,"initI18next");export{o as initI18next,r as useTranslateI18next};

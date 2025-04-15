@@ -1,1 +1,1 @@
-var l=null;function o(o){l=o}function r(o){l===null||l===void 0?void 0:l(o)}export{o as setGlobalApolloErrorCallback,r as showGlobalApolloError};
+var l=Object.defineProperty;var o=function(o,r){return l(o,"name",{value:r,configurable:!0})};var r=null;function a(l){r=l}o(a,"setGlobalApolloErrorCallback");function e(l){r===null||r===void 0?void 0:r(l)}o(e,"showGlobalApolloError");export{a as setGlobalApolloErrorCallback,e as showGlobalApolloError};

@@ -1,1 +1,1 @@
-var t=function(t){return t.ESLINT="eslint",t.COMMITLINT="commitlint",t.LINT_STAGED="lint-staged",t.VITEST_REACT_E2E="vitest-react-e2e",t.VITEST_REACT_UNIT="vitest-react-unit",t}(t||{});export{t as E_ConfigType};
+var t=function(t){return t.ESLINT="eslint",t.COMMITLINT="commitlint",t.LINT_STAGED="lint-staged",t.VITEST_REACT_E2E="vitest-react-e2e",t.VITEST_REACT_UNIT="vitest-react-unit",t}({});export{t as E_ConfigType};

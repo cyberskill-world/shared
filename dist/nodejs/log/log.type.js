@@ -1,1 +1,1 @@
-var r=function(r){return r.Error="error",r.Warning="warning",r}(r||{});export{r as E_IssueType};
+var r=function(r){return r.Error="error",r.Warning="warning",r}({});export{r as E_IssueType};

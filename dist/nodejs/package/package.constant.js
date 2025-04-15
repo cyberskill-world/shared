@@ -1,1 +1,1 @@
-var t={isCurrentProject:!1,installedPath:"",file:{},isUpToDate:!1};export{t as CHECK_PACKAGE_EMPTY_RESULT};
+var e={isCurrentProject:!1,installedPath:"",file:{},isUpToDate:!1};export{e as CHECK_PACKAGE_EMPTY_RESULT};
