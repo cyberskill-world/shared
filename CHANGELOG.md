@@ -1,3 +1,9 @@
+## [1.90.0](https://github.com/cyberskill-world/shared/compare/v1.89.0...v1.90.0) (2025-04-15)
+
+### ✨ Features
+
+* remove inlineSources ([98e2b7d](https://github.com/cyberskill-world/shared/commit/98e2b7dd058f950afbaa0da6e23e9390a78d194b))
+
 ## [1.89.0](https://github.com/cyberskill-world/shared/compare/v1.88.0...v1.89.0) (2025-04-15)
 
 ### ✨ Features
