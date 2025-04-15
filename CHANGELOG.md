@@ -1,3 +1,9 @@
+## [1.80.0](https://github.com/cyberskill-world/shared/compare/v1.79.0...v1.80.0) (2025-04-15)
+
+### ✨ Features
+
+* maximum typescript strict ([7f2901c](https://github.com/cyberskill-world/shared/commit/7f2901c4bd5cae09e73886715f11a7df82480823))
+
 ## [1.79.0](https://github.com/cyberskill-world/shared/compare/v1.78.0...v1.79.0) (2025-04-11)
 
 ### ✨ Features
