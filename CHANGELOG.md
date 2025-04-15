@@ -1,3 +1,9 @@
+## [1.86.0](https://github.com/cyberskill-world/shared/compare/v1.85.0...v1.86.0) (2025-04-15)
+
+### ✨ Features
+
+* update tsconfig to work with nestjs ([960d6b5](https://github.com/cyberskill-world/shared/commit/960d6b53fc8b1af0e0971f93ec7e36c14683d0a5))
+
 ## [1.85.0](https://github.com/cyberskill-world/shared/compare/v1.84.0...v1.85.0) (2025-04-15)
 
 ### ✨ Features
