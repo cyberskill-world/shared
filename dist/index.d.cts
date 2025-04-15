@@ -175,6 +175,7 @@ export { I_LoadingContext } from './_tsup-dts-rollup.cjs';
 export { I_LoadingProps } from './_tsup-dts-rollup.cjs';
 export { I_Log } from './_tsup-dts-rollup.cjs';
 export { log } from './_tsup-dts-rollup.cjs';
+export { NEXT_INTL_DEFAULT_LANGUAGE } from './_tsup-dts-rollup.cjs';
 export { NextIntlContext } from './_tsup-dts-rollup.cjs';
 export { withNextIntl } from './_tsup-dts-rollup.cjs';
 export { useNextIntl } from './_tsup-dts-rollup.cjs';

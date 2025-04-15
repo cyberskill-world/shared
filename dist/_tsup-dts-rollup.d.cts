@@ -29,13 +29,14 @@ import type { InsertManyResult } from 'mongodb';
 import type { InsertOneResult } from 'mongodb';
 import type { JSX } from 'react';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
-import type { Locale } from 'date-fns';
+import { Locale } from 'date-fns';
 import { Model } from 'mongoose';
 import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import type mongooseRaw from 'mongoose';
 import type { NormalizedCacheObject } from '@apollo/client';
 import type { OptionalUnlessRequiredId } from 'mongodb';
+import { Options } from 'tsup';
 import type { PaginateModel } from 'mongoose';
 import type { PaginateOptions } from 'mongoose';
 import type { PaginateResult } from 'mongoose';
@@ -58,6 +59,7 @@ import { toast } from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
 import type { UpdateQuery } from 'mongoose';
 import type { UpdateResult } from 'mongodb';
+import type { UriFunction } from '@apollo/client';
 import type { UserConfig } from 'vite';
 import { useTranslation } from 'react-i18next';
 import { useTranslations } from 'next-intl';
@@ -258,7 +260,7 @@ declare const _default: {
 };
 export { _default as commitlintConfig }
 export { _default as commitlintConfig_alias_1 }
-export { _default as default_alias }
+export { _default as default_alias_1 }
 
 declare const _default_2: {
     languageOptions: {
@@ -1410,16 +1412,18 @@ declare const _default_2: {
     };
     ignores: string[];
 }[];
-export { _default_2 as default_alias_1 }
+export { _default_2 as default_alias_2 }
 export { _default_2 as eslintConfig }
 export { _default_2 as eslintConfig_alias_1 }
 
 declare const _default_3: {
     '*': string[];
 };
-export { _default_3 as default_alias_2 }
+export { _default_3 as default_alias_3 }
 export { _default_3 as lintStagedConfig }
 export { _default_3 as lintStagedConfig_alias_1 }
+
+export declare const default_alias: Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>);
 
 declare enum E_CommandType {
     CLI = "CLI",
@@ -1550,7 +1554,7 @@ declare function HOOK({ isCurrentProject }: Partial<I_CommandContext>): {
     'pre-push'?: {
         raw: boolean;
         cmd: string;
-    } | undefined;
+    };
     'pre-commit': string;
     'commit-msg': string;
 };
@@ -1570,7 +1574,7 @@ export { I_ApolloErrorContext as I_ApolloErrorContext_alias_2 }
 export { I_ApolloErrorContext as I_ApolloErrorContext_alias_3 }
 
 declare interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCacheObject>, 'cache'> {
-    uri?: string;
+    uri?: string | UriFunction;
     wsUrl?: string;
     cache?: ApolloCache<NormalizedCacheObject>;
     customLinks?: ApolloLink[];
@@ -1916,7 +1920,7 @@ export { I_MongooseOptions as I_MongooseOptions_alias_3 }
 
 declare interface I_NextIntlContext {
     languages: I_NextIntlLanguage[];
-    currentLanguage?: I_NextIntlLanguage;
+    currentLanguage: I_NextIntlLanguage;
     setCurrentLanguage: (newLang: I_NextIntlLanguage) => void;
 }
 export { I_NextIntlContext }
@@ -2225,6 +2229,23 @@ export { mongoosePaginate }
 export { mongoosePaginate as mongoosePaginate_alias_1 }
 export { mongoosePaginate as mongoosePaginate_alias_2 }
 export { mongoosePaginate as mongoosePaginate_alias_3 }
+
+declare const NEXT_INTL_DEFAULT_LANGUAGE: {
+    label: string;
+    value: string;
+    flag: string;
+    adapterLocale: Locale;
+    icon: string;
+    numberFormat: {
+        code: string;
+        currency: string;
+    };
+    timezone: string;
+};
+export { NEXT_INTL_DEFAULT_LANGUAGE }
+export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_1 }
+export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_2 }
+export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_3 }
 
 declare const NextIntlContext: Context<I_NextIntlContext | undefined>;
 export { NextIntlContext }
@@ -2892,7 +2913,8 @@ export { T_PaginateOptions as T_PaginateOptions_alias_1 }
 export { T_PaginateOptions as T_PaginateOptions_alias_2 }
 export { T_PaginateOptions as T_PaginateOptions_alias_3 }
 
-declare interface T_PaginateOptionsWithPopulate extends T_PaginateOptions, T_PopulateOption {
+declare interface T_PaginateOptionsWithPopulate extends T_PaginateOptions, Omit<T_PopulateOption, 'populate'> {
+    populate?: T_Input_Populate;
 }
 export { T_PaginateOptionsWithPopulate }
 export { T_PaginateOptionsWithPopulate as T_PaginateOptionsWithPopulate_alias_1 }

@@ -1,3 +1,4 @@
+export { NEXT_INTL_DEFAULT_LANGUAGE_alias_2 as NEXT_INTL_DEFAULT_LANGUAGE } from '../../_tsup-dts-rollup.cjs';
 export { NextIntlContext_alias_2 as NextIntlContext } from '../../_tsup-dts-rollup.cjs';
 export { withNextIntl_alias_2 as withNextIntl } from '../../_tsup-dts-rollup.cjs';
 export { useNextIntl_alias_2 as useNextIntl } from '../../_tsup-dts-rollup.cjs';

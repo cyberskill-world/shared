@@ -7,9 +7,6 @@
 # debug
 npm-debug.log*
 
-# Ignore TypeScript build artifacts
-tsconfig.tsbuildinfo
-
 # local env files
 .env
 

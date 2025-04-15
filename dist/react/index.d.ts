@@ -21,6 +21,7 @@ export { I_LoadingContext_alias_1 as I_LoadingContext } from '../_tsup-dts-rollu
 export { I_LoadingProps_alias_1 as I_LoadingProps } from '../_tsup-dts-rollup.js';
 export { I_Log_alias_1 as I_Log } from '../_tsup-dts-rollup.js';
 export { log_alias_1 as log } from '../_tsup-dts-rollup.js';
+export { NEXT_INTL_DEFAULT_LANGUAGE_alias_1 as NEXT_INTL_DEFAULT_LANGUAGE } from '../_tsup-dts-rollup.js';
 export { NextIntlContext_alias_1 as NextIntlContext } from '../_tsup-dts-rollup.js';
 export { withNextIntl_alias_1 as withNextIntl } from '../_tsup-dts-rollup.js';
 export { useNextIntl_alias_1 as useNextIntl } from '../_tsup-dts-rollup.js';
