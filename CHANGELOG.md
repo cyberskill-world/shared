@@ -1,3 +1,9 @@
+## [1.84.0](https://github.com/cyberskill-world/shared/compare/v1.83.0...v1.84.0) (2025-04-15)
+
+### ✨ Features
+
+* move tsconfig to public ([34d681b](https://github.com/cyberskill-world/shared/commit/34d681b5df693c1ff1a82d7bef5cbcbafd07cbb0))
+
 ## [1.83.0](https://github.com/cyberskill-world/shared/compare/v1.82.0...v1.83.0) (2025-04-15)
 
 ### ✨ Features
