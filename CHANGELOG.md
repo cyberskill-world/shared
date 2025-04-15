@@ -1,3 +1,9 @@
+## [1.83.0](https://github.com/cyberskill-world/shared/compare/v1.82.0...v1.83.0) (2025-04-15)
+
+### ✨ Features
+
+* move tsconfig.base.json to root ([a7981c8](https://github.com/cyberskill-world/shared/commit/a7981c86d6db15cf0e78e762f310eb402b0ecb08))
+
 ## [1.82.0](https://github.com/cyberskill-world/shared/compare/v1.81.0...v1.82.0) (2025-04-15)
 
 ### ✨ Features
