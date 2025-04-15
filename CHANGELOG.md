@@ -1,3 +1,9 @@
+## [1.82.0](https://github.com/cyberskill-world/shared/compare/v1.81.0...v1.82.0) (2025-04-15)
+
+### ✨ Features
+
+* remove export tsconfig ([b0a6b3d](https://github.com/cyberskill-world/shared/commit/b0a6b3d37eab93ace61f51cb4bc870aa9f65c667))
+
 ## [1.81.0](https://github.com/cyberskill-world/shared/compare/v1.80.0...v1.81.0) (2025-04-15)
 
 ### ✨ Features
