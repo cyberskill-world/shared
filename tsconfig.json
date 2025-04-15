@@ -1,7 +1,6 @@
 {
     "extends": "./public/tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES6",
         "baseUrl": ".",
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
@@ -31,11 +30,10 @@
                 "./src/utils/*"
             ]
         },
-        "declaration": true,
-        "declarationMap": true,
-        "inlineSources": true,
-        "noEmit": true,
-        "sourceMap": true
+        "noEmit": true
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx"]
+    "include": ["src/**/*"],
+    "exclude": [
+        "node_modules"
+    ]
 }

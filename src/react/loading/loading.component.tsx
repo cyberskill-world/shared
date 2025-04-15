@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import React from 'react';
 
 import type { I_LoadingProps } from './loading.type.js';
 

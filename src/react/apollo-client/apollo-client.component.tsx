@@ -17,7 +17,7 @@ import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { createClient } from 'graphql-ws';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { FaInfo } from 'react-icons/fa6';
 
 import type { I_ApolloOptions, I_ApolloProviderProps } from './apollo-client.type.js';

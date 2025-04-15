@@ -28,7 +28,6 @@ import type { InsertManyOptions } from 'mongoose';
 import type { InsertManyResult } from 'mongodb';
 import type { InsertOneResult } from 'mongodb';
 import type { JSX } from 'react';
-import { JSX as JSX_2 } from 'react/jsx-runtime';
 import { Locale } from 'date-fns/locale';
 import type { Locale as Locale_2 } from 'date-fns';
 import { Model } from 'mongoose';
@@ -49,6 +48,7 @@ import type { PreSaveMiddlewareFunction } from 'mongoose';
 import type { ProjectionType } from 'mongoose';
 import type { QueryOptions } from 'mongoose';
 import type { QueryWithHelpers } from 'mongoose';
+import { default as React_2 } from 'react';
 import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
 import type { Schema } from 'mongoose';
@@ -85,7 +85,7 @@ export { ApolloClientOptions as ApolloClientOptions_alias_1 }
 export { ApolloClientOptions as ApolloClientOptions_alias_2 }
 export { ApolloClientOptions as ApolloClientOptions_alias_3 }
 
-declare function ApolloError(): JSX_2.Element | null;
+declare function ApolloError(): React_2.JSX.Element | null;
 export { ApolloError }
 export { ApolloError as ApolloError_alias_1 }
 export { ApolloError as ApolloError_alias_2 }
@@ -99,13 +99,13 @@ export { ApolloErrorContext as ApolloErrorContext_alias_3 }
 
 declare function ApolloErrorProvider({ children }: {
     children: ReactNode;
-}): JSX_2.Element;
+}): React_2.JSX.Element;
 export { ApolloErrorProvider }
 export { ApolloErrorProvider as ApolloErrorProvider_alias_1 }
 export { ApolloErrorProvider as ApolloErrorProvider_alias_2 }
 export { ApolloErrorProvider as ApolloErrorProvider_alias_3 }
 
-declare function ApolloProvider({ isNextJS, options, children, client: CustomClient, provider: CustomProvider, cache: CustomCache, }: I_ApolloProviderProps): JSX_2.Element;
+declare function ApolloProvider({ isNextJS, options, children, client: CustomClient, provider: CustomProvider, cache: CustomCache, }: I_ApolloProviderProps): React_2.JSX.Element;
 export { ApolloProvider }
 export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
@@ -2074,7 +2074,7 @@ export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_1 }
 export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_2 }
 export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_3 }
 
-declare function Loading({ full, block, className, message, ...rest }: I_LoadingProps): JSX_2.Element;
+declare function Loading({ full, block, className, message, ...rest }: I_LoadingProps): React_2.JSX.Element;
 export { Loading }
 export { Loading as Loading_alias_1 }
 export { Loading as Loading_alias_2 }
@@ -2086,7 +2086,7 @@ export { LoadingContext as LoadingContext_alias_1 }
 export { LoadingContext as LoadingContext_alias_2 }
 export { LoadingContext as LoadingContext_alias_3 }
 
-declare function LoadingProvider({ children }: I_Children_2): JSX_2.Element;
+declare function LoadingProvider({ children }: I_Children_2): React_2.JSX.Element;
 export { LoadingProvider }
 export { LoadingProvider as LoadingProvider_alias_1 }
 export { LoadingProvider as LoadingProvider_alias_2 }
@@ -2251,7 +2251,7 @@ export { NextIntlContext as NextIntlContext_alias_1 }
 export { NextIntlContext as NextIntlContext_alias_2 }
 export { NextIntlContext as NextIntlContext_alias_3 }
 
-declare function NextIntlProvider({ children, languages, messages, }: I_NextIntlProviderProps): JSX_2.Element;
+declare function NextIntlProvider({ children, languages, messages, }: I_NextIntlProviderProps): React_2.JSX.Element;
 export { NextIntlProvider }
 export { NextIntlProvider as NextIntlProvider_alias_1 }
 export { NextIntlProvider as NextIntlProvider_alias_2 }
@@ -3130,7 +3130,7 @@ declare function withNextIntl<T extends I_Children_2>(Component: ComponentType<T
     (props: T & {
         languages: I_NextIntlLanguage[];
         messages: T_NextIntlMessageList;
-    }): JSX_2.Element | null;
+    }): React_2.JSX.Element | null;
     displayName: string;
 };
 export { withNextIntl }

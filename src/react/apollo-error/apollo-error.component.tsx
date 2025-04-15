@@ -1,4 +1,4 @@
-import { use } from 'react';
+import React, { use } from 'react';
 import { FaRepeat } from 'react-icons/fa6';
 
 import { ApolloErrorContext } from './apollo-error.context.js';

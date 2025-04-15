@@ -1,7 +1,7 @@
 import type { ApolloError } from '@apollo/client';
 import type { ReactNode } from 'react';
 
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { ApolloErrorContext } from './apollo-error.context.js';
 import { setGlobalApolloErrorCallback } from './apollo-error.util.js';
