@@ -1,1 +1,1 @@
-import t from"@testing-library/jest-dom/matchers";import{cleanup as r}from"@testing-library/react";import{afterEach as e,expect as a}from"vitest";a.extend(t);e(function(){r()});
+import*as t from"@testing-library/jest-dom/matchers";import{cleanup as r}from"@testing-library/react";import{afterEach as e,expect as a}from"vitest";a.extend(t);e(function(){r()});
