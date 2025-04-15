@@ -1,7 +1,7 @@
 {
     "name": "@cyberskill/shared",
     "type": "module",
-    "version": "1.80.0",
+    "version": "1.81.0",
     "description": "CyberSkill Shared",
     "author": "Stephen Cheng",
     "license": "MIT",
@@ -44,7 +44,6 @@
             "import": "./dist/configs/lint-staged/index.js",
             "require": "./dist/configs/lint-staged/index.cjs"
         },
-        "./configs/tsconfig": "./dist/configs/tsconfig/tsconfig.base.json",
         "./constants": {
             "types": "./dist/constants/index.d.ts",
             "import": "./dist/constants/index.js",

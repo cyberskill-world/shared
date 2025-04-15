@@ -27,7 +27,12 @@
             "#utils/*": [
                 "./src/utils/*"
             ]
-        }
+        },
+        "declaration": true,
+        "declarationMap": true,
+        "inlineSources": true,
+        "noEmit": true,
+        "sourceMap": true
     },
     "include": ["**/*.ts", "**/*.tsx"]
 }
