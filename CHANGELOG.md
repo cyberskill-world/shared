@@ -1,3 +1,9 @@
+## [1.88.0](https://github.com/cyberskill-world/shared/compare/v1.87.0...v1.88.0) (2025-04-15)
+
+### ✨ Features
+
+* remove sourcemap ([a8e3d87](https://github.com/cyberskill-world/shared/commit/a8e3d8774c403081958837d5660897f615e018fa))
+
 ## [1.87.0](https://github.com/cyberskill-world/shared/compare/v1.86.0...v1.87.0) (2025-04-15)
 
 ### ✨ Features
