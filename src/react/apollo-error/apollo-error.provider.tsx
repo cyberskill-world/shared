@@ -4,18 +4,13 @@ import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { ApolloErrorContext } from './apollo-error.context.js';
-
-let showErrorCallback: ((err: ApolloError) => void) | null = null;
-
-export function showGlobalApolloError(error: ApolloError) {
-    showErrorCallback?.(error);
-}
+import { setGlobalApolloErrorCallback } from './apollo-error.util.js';
 
 export function ApolloErrorProvider({ children }: { children: ReactNode }) {
     const [error, setError] = useState<ApolloError | null>(null);
 
     useEffect(() => {
-        showErrorCallback = setError;
+        setGlobalApolloErrorCallback(setError);
     }, []);
 
     const contextValue = useMemo(() => ({

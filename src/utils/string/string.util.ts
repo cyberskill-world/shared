@@ -3,7 +3,7 @@ import slugifyRaw from 'slugify';
 
 import type { I_SlugifyOptions } from './string.type.js';
 
-const slugify = slugifyRaw;
+const slugify = slugifyRaw.default || slugifyRaw;
 
 export function generateSlug(str = '', options?: I_SlugifyOptions): string {
     const { lower = true, locale = 'vi', ...rest } = options || {};

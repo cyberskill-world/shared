@@ -20,23 +20,23 @@ import type { ErrorHandlingMiddlewareFunction } from 'mongoose';
 import type { ErrorHandlingMiddlewareWithOption } from 'mongoose';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
-import { I_ApolloErrorContext as I_ApolloErrorContext_2 } from './apollo-error.type.js';
+import { I_ApolloErrorContext as I_ApolloErrorContext_2 } from './apollo-error.type.ts';
 import { I_Command as I_Command_2 } from './command.type.js';
-import { I_LoadingContext as I_LoadingContext_2 } from './loading.type.js';
+import { I_LoadingContext as I_LoadingContext_2 } from './loading.type.ts';
 import type { InitOptions } from 'i18next';
 import type { InsertManyOptions } from 'mongoose';
 import type { InsertManyResult } from 'mongodb';
 import type { InsertOneResult } from 'mongodb';
 import type { JSX } from 'react';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
-import { Locale } from 'date-fns';
+import { Locale } from 'date-fns/locale';
+import type { Locale as Locale_2 } from 'date-fns';
 import { Model } from 'mongoose';
 import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import type mongooseRaw from 'mongoose';
 import type { NormalizedCacheObject } from '@apollo/client';
 import type { OptionalUnlessRequiredId } from 'mongodb';
-import { Options } from 'tsup';
 import type { PaginateModel } from 'mongoose';
 import type { PaginateOptions } from 'mongoose';
 import type { PaginateResult } from 'mongoose';
@@ -260,7 +260,7 @@ declare const _default: {
 };
 export { _default as commitlintConfig }
 export { _default as commitlintConfig_alias_1 }
-export { _default as default_alias_1 }
+export { _default as default_alias }
 
 declare const _default_2: {
     languageOptions: {
@@ -1412,18 +1412,16 @@ declare const _default_2: {
     };
     ignores: string[];
 }[];
-export { _default_2 as default_alias_2 }
+export { _default_2 as default_alias_1 }
 export { _default_2 as eslintConfig }
 export { _default_2 as eslintConfig_alias_1 }
 
 declare const _default_3: {
     '*': string[];
 };
-export { _default_3 as default_alias_3 }
+export { _default_3 as default_alias_2 }
 export { _default_3 as lintStagedConfig }
 export { _default_3 as lintStagedConfig_alias_1 }
-
-export declare const default_alias: Options | Options[] | ((overrideOptions: Options) => Options | Options[] | Promise<Options | Options[]>);
 
 declare enum E_CommandType {
     CLI = "CLI",
@@ -1932,7 +1930,7 @@ declare interface I_NextIntlLanguage {
     label: string;
     value: string;
     flag: string;
-    adapterLocale: Locale;
+    adapterLocale: Locale_2;
     icon: string;
     numberFormat: {
         code: string;
@@ -2660,6 +2658,12 @@ export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
 export { serializer as serializer_alias_3 }
+
+declare function setGlobalApolloErrorCallback(callback: (err: ApolloError_2) => void): void;
+export { setGlobalApolloErrorCallback }
+export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_1 }
+export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_2 }
+export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_3 }
 
 declare function setupPackages(packages: string[], options?: {
     update?: boolean;

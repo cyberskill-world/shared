@@ -1,0 +1,1 @@
+var l=null;function o(o){l=o}function r(o){l===null||l===void 0?void 0:l(o)}export{o as setGlobalApolloErrorCallback,r as showGlobalApolloError};

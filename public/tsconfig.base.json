@@ -1,11 +1,8 @@
 {
     "compilerOptions": {
-        "target": "ES2022",
         "jsx": "react-jsx",
         "lib": ["ES2022", "DOM", "DOM.Iterable"],
         "useDefineForClassFields": true,
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
         "resolveJsonModule": true,
         "allowImportingTsExtensions": true,
         "allowJs": true,

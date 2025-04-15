@@ -7,26 +7,26 @@ import styles from './loading.module.scss';
 export function Loading({ full = false, block = false, className = '', message = 'Loading', ...rest }: I_LoadingProps) {
     function _renderLoading() {
         return (
-            <div className={styles.container} {...rest}>
-                <div className={styles.ring}></div>
-                <div className={styles.ring}></div>
-                <div className={styles.ring}></div>
-                <div className={styles.ring}></div>
-                {message && <div className={styles.message}>{message}</div>}
+            <div className={styles['container']} {...rest}>
+                <div className={styles['ring']}></div>
+                <div className={styles['ring']}></div>
+                <div className={styles['ring']}></div>
+                <div className={styles['ring']}></div>
+                {message && <div className={styles['message']}>{message}</div>}
             </div>
         );
     }
 
     if (full) {
         return (
-            <div className={cn(styles.fullscreen, className)}>
+            <div className={cn(styles['fullscreen'], className)}>
                 {_renderLoading()}
             </div>
         );
     }
     else if (block) {
         return (
-            <div className={cn(styles.block, className)}>
+            <div className={cn(styles['block'], className)}>
                 {_renderLoading()}
             </div>
         );

@@ -1,7 +1,10 @@
 {
-    "extends": "./tsconfig.base.json",
+    "extends": "./public/tsconfig.base.json",
     "compilerOptions": {
+        "target": "ES6",
         "baseUrl": ".",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "paths": {
             "#public/*": [
                 "./public/*"
@@ -34,5 +37,5 @@
         "noEmit": true,
         "sourceMap": true
     },
-    "include": ["**/*.ts", "**/*.tsx"]
+    "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
