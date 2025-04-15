@@ -1,3 +1,9 @@
+## [1.85.0](https://github.com/cyberskill-world/shared/compare/v1.84.0...v1.85.0) (2025-04-15)
+
+### ✨ Features
+
+* disable fragment masking for graphql-codegen ([a6cd81b](https://github.com/cyberskill-world/shared/commit/a6cd81bfa15975bffe223e58be1586fcc5f0998a))
+
 ## [1.84.0](https://github.com/cyberskill-world/shared/compare/v1.83.0...v1.84.0) (2025-04-15)
 
 ### ✨ Features
