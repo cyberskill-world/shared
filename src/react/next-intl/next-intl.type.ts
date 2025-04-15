@@ -18,7 +18,7 @@ export interface I_NextIntlLanguage {
 
 export interface I_NextIntlContext {
     languages: I_NextIntlLanguage[];
-    currentLanguage?: I_NextIntlLanguage;
+    currentLanguage: I_NextIntlLanguage;
     setCurrentLanguage: (newLang: I_NextIntlLanguage) => void;
 }
 

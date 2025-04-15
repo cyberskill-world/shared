@@ -145,7 +145,7 @@ export async function setupPackages(packages: string[], options?: {
     try {
         const uniquePackages = [...new Set(packages)].sort();
         const result = await Promise.all(uniquePackages.map(pkg =>
-            checkPackage(pkg, { update: options?.update }),
+            checkPackage(pkg, { ...(options?.update && { update: options.update }) }),
         ));
 
         if (!result.every(pkg => pkg.isUpToDate)) {

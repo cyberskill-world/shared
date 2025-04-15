@@ -30,7 +30,7 @@ import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
 class DevLoggerLink extends ApolloLink {
     private count = 0;
 
-    request(operation: Operation, forward: (op: Operation) => Observable<FetchResult>) {
+    override request(operation: Operation, forward: (op: Operation) => Observable<FetchResult>) {
         const start = Date.now();
         this.count += 1;
 
@@ -44,8 +44,8 @@ class DevLoggerLink extends ApolloLink {
     }
 }
 
-function createApolloLinks(options?: I_ApolloOptions) {
-    const { uri, wsUrl, customLinks } = options || {};
+function createApolloLinks(options: I_ApolloOptions) {
+    const { uri, wsUrl, customLinks } = options;
 
     const devLoggerLink = new DevLoggerLink();
 
@@ -165,7 +165,11 @@ export function ApolloProvider({
 
     const Provider = (CustomProvider || ApolloProviderDefault) as ComponentType<I_ApolloProviderProps>;
 
-    const link = useMemo(() => from(createApolloLinks({ uri, wsUrl, customLinks })), [uri, wsUrl, customLinks]);
+    const link = useMemo(() => from(createApolloLinks({
+        uri: uri ?? GRAPHQL_URI_DEFAULT,
+        wsUrl: wsUrl ?? '',
+        customLinks: customLinks ?? [],
+    })), [uri, wsUrl, customLinks]);
 
     const cache = useMemo(() => (
         CustomCache instanceof InMemoryCache ? CustomCache : new InMemoryCache()

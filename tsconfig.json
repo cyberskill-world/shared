@@ -1,16 +1,7 @@
 {
+    "extends": "./src/configs/tsconfig/tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES6",
-        "jsx": "react-jsx",
-        "lib": [
-            "ESNext",
-            "DOM",
-            "DOM.Iterable"
-        ],
         "baseUrl": ".",
-        "rootDir": "src",
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
         "paths": {
             "#public/*": [
                 "./public/*"
@@ -36,23 +27,7 @@
             "#utils/*": [
                 "./src/utils/*"
             ]
-        },
-        "resolveJsonModule": true,
-        "allowJs": true,
-        "checkJs": false,
-        "strict": true,
-        "declaration": true,
-        "declarationDir": "./dist",
-        "inlineSources": true,
-        "outDir": "dist",
-        "sourceMap": true,
-        "sourceRoot": "/",
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "skipLibCheck": true
+        }
     },
-    "include": [
-        "src",
-        "global.d.ts"
-    ]
+    "include": ["**/*.ts", "**/*.tsx"]
 }

@@ -113,12 +113,12 @@ pnpm run dev
 
 ### Quy Ước Đặt Tên Type Trong GraphQL
 
-| Loại          | Tiền Tố | Ví Dụ                   |
-| ------------- | ------- | ---------------------   |
-| **Type**      | `T_`    | `type T_User`           |
-| **Input**     | `Input_`| `input Input_CreateUser`|
-| **Interface** | `I_`    | `input I_User`          |
-| **Union**     | `U_`    | `input U_SearchResult`  |
+| Loại          | Tiền Tố  | Ví Dụ                    |
+| ------------- | -------- | ------------------------ |
+| **Type**      | `T_`     | `type T_User`            |
+| **Input**     | `Input_` | `input Input_CreateUser` |
+| **Interface** | `I_`     | `input I_User`           |
+| **Union**     | `U_`     | `input U_SearchResult`   |
 
 ### Quy Ước Đặt Tên Biến Môi Trường
 
@@ -155,11 +155,11 @@ import { formatDate } from '#shared/utils'; // Module nội bộ
 
 ### Quy Ước Đặt Commit Message
 
-| Loại Commit       | Cú Pháp                 | Ví Dụ                                      |
-| ----------------- | ----------------------- | ------------------------------------------ |
-| **Tính năng mới** | `feat(module): message` | `feat(user): add user login form`          |
-| **Sửa lỗi**       | `fix(module): message`  | `fix(auth): incorrect password validation` |
-| **Dọn dẹp**       | `chore(module): message`| `chore(product): refactor product filter`  |
+| Loại Commit       | Cú Pháp                  | Ví Dụ                                      |
+| ----------------- | ------------------------ | ------------------------------------------ |
+| **Tính năng mới** | `feat(module): message`  | `feat(user): add user login form`          |
+| **Sửa lỗi**       | `fix(module): message`   | `fix(auth): incorrect password validation` |
+| **Dọn dẹp**       | `chore(module): message` | `chore(product): refactor product filter`  |
 
 ## Quy Trình Làm Việc Với Git
 

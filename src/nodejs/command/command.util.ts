@@ -109,24 +109,24 @@ function parseTextErrors(output: string): void {
                     file: lastFilePath,
                     position: `${eslintMatch[1]}:${eslintMatch[2]}`,
                     type: eslintMatch[3] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
-                    message: eslintMatch[4].trim(),
-                    rule: eslintMatch[5].trim(),
+                    message: eslintMatch?.[4]?.trim() ?? '',
+                    rule: eslintMatch?.[5]?.trim() ?? '',
                 });
             }
             else if (tsMatch.length) {
                 errorList.push({
-                    file: tsMatch[1],
+                    file: tsMatch?.[1] ?? '',
                     position: `${tsMatch[2]}:${tsMatch[3]}`,
                     type: tsMatch[4] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
-                    message: tsMatch[5].trim(),
+                    message: tsMatch?.[5]?.trim() ?? '',
                 });
             }
             else if (commitlintMatch.length) {
                 errorList.push({
                     file: 'commitlint',
                     type: E_IssueType.Error,
-                    message: commitlintMatch[1].trim(),
-                    rule: commitlintMatch[2].trim(),
+                    message: commitlintMatch?.[1]?.trim() ?? '',
+                    rule: commitlintMatch?.[2]?.trim() ?? '',
                 });
             }
             else {

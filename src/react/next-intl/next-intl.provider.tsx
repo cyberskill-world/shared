@@ -5,6 +5,7 @@ import type { I_Children } from '#typescript/react.js';
 import type { I_NextIntlLanguage, I_NextIntlProviderProps } from './next-intl.type.js';
 
 import { useStorage } from '../storage/index.js';
+import { NEXT_INTL_DEFAULT_LANGUAGE } from './next-intl.constant.js';
 import { NextIntlContext } from './next-intl.context.js';
 import { withNextIntl } from './next-intl.hoc.js';
 
@@ -19,10 +20,10 @@ export function NextIntlProvider({
     languages,
     messages,
 }: I_NextIntlProviderProps) {
-    const { value, set } = useStorage<I_NextIntlLanguage>('lang', languages?.[0] ?? {});
+    const { value, set } = useStorage<I_NextIntlLanguage>('lang', languages[0]);
 
     const contextValue = useMemo(
-        () => ({ languages, currentLanguage: value, setCurrentLanguage: set }),
+        () => ({ languages, currentLanguage: value ?? NEXT_INTL_DEFAULT_LANGUAGE, setCurrentLanguage: set }),
         [languages, set, value],
     );
 

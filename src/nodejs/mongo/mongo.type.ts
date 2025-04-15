@@ -169,7 +169,9 @@ export type T_Input_Populate = string | string[] | T_PopulateOptions | T_Populat
 
 export interface T_PaginateOptionsWithPopulate
     extends T_PaginateOptions,
-    T_PopulateOption { }
+    Omit<T_PopulateOption, 'populate'> {
+    populate?: T_Input_Populate;
+}
 
 export type T_CreateSlugQueryResponse<T> = T_FilterQuery<T> & {
     $or: Array<{ slug: string } | { slugHistory: string }>;

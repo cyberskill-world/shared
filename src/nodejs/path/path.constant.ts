@@ -76,6 +76,10 @@ export function HOOK({ isCurrentProject }: Partial<I_CommandContext>) {
 async function buildCommand(type: E_CommandType, ...args: string[]): Promise<string> {
     const [first, second] = args;
 
+    if (!first) {
+        throw new Error('\'first\' argument is undefined');
+    }
+
     switch (type) {
         case E_CommandType.CLI: {
             await setupPackages(first.split(' '), {
