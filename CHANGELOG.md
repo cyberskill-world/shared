@@ -1,3 +1,9 @@
+## [1.81.0](https://github.com/cyberskill-world/shared/compare/v1.80.0...v1.81.0) (2025-04-15)
+
+### ✨ Features
+
+* correct tsconfig ([2332fed](https://github.com/cyberskill-world/shared/commit/2332fedcddbc6d57f81ba2f1ae342d53b86de44e))
+
 ## [1.80.0](https://github.com/cyberskill-world/shared/compare/v1.79.0...v1.80.0) (2025-04-15)
 
 ### ✨ Features
