@@ -1,3 +1,9 @@
+## [1.87.0](https://github.com/cyberskill-world/shared/compare/v1.86.0...v1.87.0) (2025-04-15)
+
+### ✨ Features
+
+* correct jsx to react ([502ce2c](https://github.com/cyberskill-world/shared/commit/502ce2ca440408bd8e81854329f0c3353ba4228e))
+
 ## [1.86.0](https://github.com/cyberskill-world/shared/compare/v1.85.0...v1.86.0) (2025-04-15)
 
 ### ✨ Features
