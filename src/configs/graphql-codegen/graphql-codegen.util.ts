@@ -22,6 +22,10 @@ export function createGraphqlCodegenConfig({
             ...(isClient && {
                 [to]: {
                     preset: 'client',
+                    presetConfig: {
+                        fragmentMasking: false,
+                        persistedDocuments: true,
+                    },
                     config: {
                         useTypeImports: true,
                     },
