@@ -1,3 +1,9 @@
+## [1.92.0](https://github.com/cyberskill-world/shared/compare/v1.91.0...v1.92.0) (2025-04-16)
+
+### ✨ Features
+
+* exit code 1 when lint fail ([eb0b092](https://github.com/cyberskill-world/shared/commit/eb0b09242ca360c8dd1a6eb574b3aecfde542242))
+
 ## [1.91.0](https://github.com/cyberskill-world/shared/compare/v1.90.0...v1.91.0) (2025-04-15)
 
 ### ✨ Features
