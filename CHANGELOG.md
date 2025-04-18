@@ -1,3 +1,9 @@
+## [1.93.0](https://github.com/cyberskill-world/shared/compare/v1.92.0...v1.93.0) (2025-04-18)
+
+### ✨ Features
+
+* add express, apollo-server, ws ([7c78c8f](https://github.com/cyberskill-world/shared/commit/7c78c8fcf0afc1ef492239ce714df55b303f1018))
+
 ## [1.92.0](https://github.com/cyberskill-world/shared/compare/v1.91.0...v1.92.0) (2025-04-16)
 
 ### ✨ Features
