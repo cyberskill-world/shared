@@ -1,5 +1,6 @@
 export { I_ApolloServerOptions_alias_1 as I_ApolloServerOptions } from '../_tsup-dts-rollup.cjs';
 export { createApolloServer_alias_1 as createApolloServer } from '../_tsup-dts-rollup.cjs';
+export { expressMiddleware_alias_1 as expressMiddleware } from '../_tsup-dts-rollup.cjs';
 export { I_EslintError_alias_1 as I_EslintError } from '../_tsup-dts-rollup.cjs';
 export { I_CommandContext_alias_1 as I_CommandContext } from '../_tsup-dts-rollup.cjs';
 export { I_Command_alias_1 as I_Command } from '../_tsup-dts-rollup.cjs';
@@ -18,6 +19,8 @@ export { I_ExpressOptions_alias_1 as I_ExpressOptions } from '../_tsup-dts-rollu
 export { I_CorsOptions_alias_1 as I_CorsOptions } from '../_tsup-dts-rollup.cjs';
 export { createCors_alias_1 as createCors } from '../_tsup-dts-rollup.cjs';
 export { createExpress_alias_1 as createExpress } from '../_tsup-dts-rollup.cjs';
+export { SessionOptions_alias_1 as SessionOptions } from '../_tsup-dts-rollup.cjs';
+export { express_alias_1 as express } from '../_tsup-dts-rollup.cjs';
 export { existsSync_alias_1 as existsSync } from '../_tsup-dts-rollup.cjs';
 export { readFileSync_alias_1 as readFileSync } from '../_tsup-dts-rollup.cjs';
 export { writeFileSync_alias_1 as writeFileSync } from '../_tsup-dts-rollup.cjs';

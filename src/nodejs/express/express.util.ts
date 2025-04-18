@@ -8,6 +8,8 @@ import session from 'express-session';
 
 import type { I_CorsOptions, I_ExpressOptions } from './express.type.js';
 
+export type { SessionOptions } from 'express-session';
+
 export function createCors(options: I_CorsOptions) {
     return cors<cors.CorsRequest>({
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
@@ -42,3 +44,5 @@ export function createExpress(options: I_ExpressOptions): Application {
 
     return app;
 }
+
+export { express };

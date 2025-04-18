@@ -22,6 +22,8 @@ import { Disposable as Disposable_2 } from 'graphql-ws';
 import { Document as Document_2 } from 'mongoose';
 import type { ErrorHandlingMiddlewareFunction } from 'mongoose';
 import type { ErrorHandlingMiddlewareWithOption } from 'mongoose';
+import express from 'express';
+import { expressMiddleware } from '@apollo/server/express4';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
 import type { GraphQLSchema } from 'graphql';
@@ -59,7 +61,7 @@ import type { ReactNode } from 'react';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import type { Server } from 'node:http';
-import type { SessionOptions } from 'express-session';
+import { SessionOptions } from 'express-session';
 import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
 import { toast } from 'react-hot-toast';
@@ -1518,6 +1520,16 @@ export { existsSync as existsSync_alias_1 }
 export { existsSync as existsSync_alias_2 }
 export { existsSync as existsSync_alias_3 }
 
+export { express }
+export { express as express_alias_1 }
+export { express as express_alias_2 }
+export { express as express_alias_3 }
+
+export { expressMiddleware }
+export { expressMiddleware as expressMiddleware_alias_1 }
+export { expressMiddleware as expressMiddleware_alias_2 }
+export { expressMiddleware as expressMiddleware_alias_3 }
+
 declare function formatCommand(command: T_Command, context?: I_CommandContext): string | I_Command_2;
 export { formatCommand }
 export { formatCommand as formatCommand_alias_1 }
@@ -2747,6 +2759,11 @@ export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
 export { serializer as serializer_alias_3 }
+
+export { SessionOptions }
+export { SessionOptions as SessionOptions_alias_1 }
+export { SessionOptions as SessionOptions_alias_2 }
+export { SessionOptions as SessionOptions_alias_3 }
 
 declare function setGlobalApolloErrorCallback(callback: (err: ApolloError_2) => void): void;
 export { setGlobalApolloErrorCallback }
