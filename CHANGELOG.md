@@ -1,3 +1,9 @@
+## [1.94.0](https://github.com/cyberskill-world/shared/compare/v1.93.0...v1.94.0) (2025-04-18)
+
+### ✨ Features
+
+* change express version to 4 ([70a28b5](https://github.com/cyberskill-world/shared/commit/70a28b54fb86dcad1548e0752cdb96413001a8fa))
+
 ## [1.93.0](https://github.com/cyberskill-world/shared/compare/v1.92.0...v1.93.0) (2025-04-18)
 
 ### ✨ Features
