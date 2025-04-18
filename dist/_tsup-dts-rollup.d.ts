@@ -7,19 +7,24 @@ import { ApolloClient } from '@apollo/client';
 import { ApolloClientOptions } from '@apollo/client';
 import type { ApolloError as ApolloError_2 } from '@apollo/client';
 import type { ApolloLink } from '@apollo/client';
+import { ApolloServer } from '@apollo/server';
+import type { Application } from 'express';
 import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
 import type { ComponentType } from 'react';
 import type consola from 'consola';
 import { Context } from 'react';
+import cors from 'cors';
 import { Db } from 'mongodb';
 import type { DeleteResult } from 'mongodb';
+import { Disposable as Disposable_2 } from 'graphql-ws';
 import { Document as Document_2 } from 'mongoose';
 import type { ErrorHandlingMiddlewareFunction } from 'mongoose';
 import type { ErrorHandlingMiddlewareWithOption } from 'mongoose';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
+import type { GraphQLSchema } from 'graphql';
 import { I_ApolloErrorContext as I_ApolloErrorContext_2 } from './apollo-error.type.js';
 import { I_Command as I_Command_2 } from './command.type.js';
 import { I_LoadingContext as I_LoadingContext_2 } from './loading.type.js';
@@ -53,6 +58,8 @@ import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
+import type { Server } from 'node:http';
+import type { SessionOptions } from 'express-session';
 import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
 import { toast } from 'react-hot-toast';
@@ -63,6 +70,7 @@ import type { UriFunction } from '@apollo/client';
 import type { UserConfig } from 'vite';
 import { useTranslation } from 'react-i18next';
 import { useTranslations } from 'next-intl';
+import { WebSocketServer } from 'ws';
 import type { WithId } from 'mongodb';
 
 export { aggregatePaginate }
@@ -208,11 +216,39 @@ export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_1 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_2 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_3 }
 
+declare function createApolloServer(options: I_ApolloServerOptions): ApolloServer;
+export { createApolloServer }
+export { createApolloServer as createApolloServer_alias_1 }
+export { createApolloServer as createApolloServer_alias_2 }
+export { createApolloServer as createApolloServer_alias_3 }
+
+declare function createCors(options: I_CorsOptions): (req: cors.CorsRequest, res: {
+    statusCode?: number | undefined;
+    setHeader(key: string, value: string): any;
+    end(): any;
+}, next: (err?: any) => any) => void;
+export { createCors }
+export { createCors as createCors_alias_1 }
+export { createCors as createCors_alias_2 }
+export { createCors as createCors_alias_3 }
+
+declare function createExpress(options: I_ExpressOptions): Application;
+export { createExpress }
+export { createExpress as createExpress_alias_1 }
+export { createExpress as createExpress_alias_2 }
+export { createExpress as createExpress_alias_3 }
+
 declare function createGraphqlCodegenConfig({ uri, from, to, target, }: I_GraphqlCodegenConfig): CodegenConfig;
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_2 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_3 }
+
+declare function createWSServer(options: I_WSOptions): WebSocketServer;
+export { createWSServer }
+export { createWSServer as createWSServer_alias_1 }
+export { createWSServer as createWSServer_alias_2 }
+export { createWSServer as createWSServer_alias_3 }
 
 declare const CYBERSKILL_CLI = "cyberskill";
 export { CYBERSKILL_CLI }
@@ -1596,6 +1632,17 @@ export { I_ApolloProviderProps as I_ApolloProviderProps_alias_1 }
 export { I_ApolloProviderProps as I_ApolloProviderProps_alias_2 }
 export { I_ApolloProviderProps as I_ApolloProviderProps_alias_3 }
 
+declare interface I_ApolloServerOptions {
+    server: Server;
+    schema: GraphQLSchema;
+    isDev?: boolean;
+    drainServer?: () => Promise<void>;
+}
+export { I_ApolloServerOptions }
+export { I_ApolloServerOptions as I_ApolloServerOptions_alias_1 }
+export { I_ApolloServerOptions as I_ApolloServerOptions_alias_2 }
+export { I_ApolloServerOptions as I_ApolloServerOptions_alias_3 }
+
 declare interface I_CheckPackage {
     isCurrentProject: boolean;
     installedPath: string;
@@ -1635,6 +1682,15 @@ export { I_CommandContext }
 export { I_CommandContext as I_CommandContext_alias_1 }
 export { I_CommandContext as I_CommandContext_alias_2 }
 export { I_CommandContext as I_CommandContext_alias_3 }
+
+declare interface I_CorsOptions {
+    isDev?: boolean;
+    corsWhitelist?: string[];
+}
+export { I_CorsOptions }
+export { I_CorsOptions as I_CorsOptions_alias_1 }
+export { I_CorsOptions as I_CorsOptions_alias_2 }
+export { I_CorsOptions as I_CorsOptions_alias_3 }
 
 declare interface I_CreateModelOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
     schema: T_Input_MongooseSchema<T>;
@@ -1680,6 +1736,15 @@ export { I_EslintError as I_EslintError_alias_1 }
 export { I_EslintError as I_EslintError_alias_2 }
 export { I_EslintError as I_EslintError_alias_3 }
 
+declare interface I_ExpressOptions {
+    staticFolder: string;
+    sessionOptions?: SessionOptions;
+}
+export { I_ExpressOptions }
+export { I_ExpressOptions as I_ExpressOptions_alias_1 }
+export { I_ExpressOptions as I_ExpressOptions_alias_2 }
+export { I_ExpressOptions as I_ExpressOptions_alias_3 }
+
 declare interface I_ExtendedModel<T extends Partial<C_Document>> extends Model<T>, PaginateModel<T>, AggregatePaginateModel<T> {
 }
 export { I_ExtendedModel }
@@ -1720,6 +1785,15 @@ export { I_GraphqlCodegenConfig }
 export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_1 }
 export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_2 }
 export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_3 }
+
+declare interface I_GraphqlWSOptions {
+    schema: GraphQLSchema;
+    server: WebSocketServer;
+}
+export { I_GraphqlWSOptions }
+export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_1 }
+export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_2 }
+export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_3 }
 
 declare interface I_Input_CreateMany<T> {
     docs: T[];
@@ -2026,6 +2100,21 @@ declare interface I_VirtualOptions {
     justOne?: boolean;
     options?: I_VirtualNestedOptions;
 }
+
+declare interface I_WSOptions {
+    server: Server;
+    path: string;
+}
+export { I_WSOptions }
+export { I_WSOptions as I_WSOptions_alias_1 }
+export { I_WSOptions as I_WSOptions_alias_2 }
+export { I_WSOptions as I_WSOptions_alias_3 }
+
+declare function initGraphQLWS(options: I_GraphqlWSOptions): Disposable_2;
+export { initGraphQLWS }
+export { initGraphQLWS as initGraphQLWS_alias_1 }
+export { initGraphQLWS as initGraphQLWS_alias_2 }
+export { initGraphQLWS as initGraphQLWS_alias_3 }
 
 declare function initI18next(options: InitOptions): Promise<TFunction<"translation", undefined>>;
 export { initI18next }
