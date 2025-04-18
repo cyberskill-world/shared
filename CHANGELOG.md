@@ -1,3 +1,9 @@
+## [1.95.0](https://github.com/cyberskill-world/shared/compare/v1.94.0...v1.95.0) (2025-04-18)
+
+### ✨ Features
+
+* export necessary express middleware ([181c2fe](https://github.com/cyberskill-world/shared/commit/181c2fea77e3ad2cf45146281c2ce5687ce75bbf))
+
 ## [1.94.0](https://github.com/cyberskill-world/shared/compare/v1.93.0...v1.94.0) (2025-04-18)
 
 ### ✨ Features
