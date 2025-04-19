@@ -13,17 +13,13 @@ dotenv.config();
 export function getEnv(): I_Environment {
     const processEnv = {
         DEBUG: process.env.DEBUG || false,
-        CWD: process.env.CWD,
-        CYBERSKILL_STORAGE_DIRECTORY: process.env.CYBERSKILL_STORAGE_DIRECTORY || CYBERSKILL_STORAGE_DIRECTORY,
+        CWD: process.env.CWD || process.cwd(),
+        CYBERSKILL_STORAGE_DIRECTORY: process.env.CYBERSKILL_STORAGE_DIRECTORY || path.join(os.homedir(), CYBERSKILL_STORAGE_DIRECTORY),
     };
 
     return cleanEnv(processEnv, {
         DEBUG: bool(),
-        CWD: str({
-            default: process.cwd(),
-        }),
-        CYBERSKILL_STORAGE_DIRECTORY: str({
-            default: path.join(os.homedir(), CYBERSKILL_STORAGE_DIRECTORY),
-        }),
+        CWD: str(),
+        CYBERSKILL_STORAGE_DIRECTORY: str(),
     });
 }
