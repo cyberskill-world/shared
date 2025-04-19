@@ -62,6 +62,7 @@ import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
 import { Request as Request_2 } from 'express';
 import { Response as Response_2 } from 'express';
+import { Router } from 'express';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import type { Server } from 'node:http';
@@ -2793,6 +2794,11 @@ export { rmSync }
 export { rmSync as rmSync_alias_1 }
 export { rmSync as rmSync_alias_2 }
 export { rmSync as rmSync_alias_3 }
+
+export { Router }
+export { Router as Router_alias_1 }
+export { Router as Router_alias_2 }
+export { Router as Router_alias_3 }
 
 declare function runCommand(label: string, command: string): Promise<void>;
 export { runCommand }

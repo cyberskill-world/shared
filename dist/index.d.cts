@@ -32,6 +32,7 @@ export { runCommand } from './_tsup-dts-rollup.cjs';
 export { NextFunction } from './_tsup-dts-rollup.cjs';
 export { Request } from './_tsup-dts-rollup.cjs';
 export { Response } from './_tsup-dts-rollup.cjs';
+export { Router } from './_tsup-dts-rollup.cjs';
 export { Session } from './_tsup-dts-rollup.cjs';
 export { I_ExpressOptions } from './_tsup-dts-rollup.cjs';
 export { I_CorsOptions } from './_tsup-dts-rollup.cjs';
