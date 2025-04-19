@@ -1,3 +1,9 @@
+## [1.99.0](https://github.com/cyberskill-world/shared/compare/v1.98.0...v1.99.0) (2025-04-19)
+
+### ✨ Features
+
+* expose express typescript ([103b712](https://github.com/cyberskill-world/shared/commit/103b712d6032e41f3b564f40d0c7fec02de22a67))
+
 ## [1.98.0](https://github.com/cyberskill-world/shared/compare/v1.97.0...v1.98.0) (2025-04-19)
 
 ### ✨ Features
