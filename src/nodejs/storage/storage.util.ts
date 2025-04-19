@@ -1,19 +1,15 @@
 import nodePersist from 'node-persist';
-import os from 'node:os';
-import process from 'node:process';
+
+import { getEnv } from '#configs/env/index.js';
 
 import { logNodeJS as log } from '../log/index.js';
-import { CYBERSKILL_STORAGE, join } from '../path/index.js';
 
-function getStorageDir() {
-    return process.env.CYBERSKILL_STORAGE_DIR
-        || join(os.homedir(), CYBERSKILL_STORAGE);
-}
+const env = getEnv();
 
 async function initNodePersist() {
     if (!nodePersist.defaultInstance) {
         await nodePersist.init({
-            dir: getStorageDir(),
+            dir: env.CYBERSKILL_STORAGE_DIR,
             stringify: JSON.stringify,
             parse: JSON.parse,
             encoding: 'utf8',
@@ -28,6 +24,7 @@ export const storageNodeJS = {
         try {
             await initNodePersist();
             const result = await nodePersist.getItem(key);
+
             return result ?? null;
         }
         catch (error) {
@@ -72,7 +69,8 @@ export const storageNodeJS = {
     },
     async getLogLink(key: string): Promise<string | null> {
         try {
-            const storagePath = getStorageDir();
+            const storagePath = env.CYBERSKILL_STORAGE_DIR;
+
             return `${storagePath} (key: ${key})`;
         }
         catch (error) {

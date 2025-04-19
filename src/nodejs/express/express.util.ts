@@ -8,12 +8,10 @@ import session from 'express-session';
 
 import type { I_CorsOptions, I_ExpressOptions } from './express.type.js';
 
-export type { SessionOptions } from 'express-session';
-
 export function createCors(options: I_CorsOptions) {
     return cors<cors.CorsRequest>({
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-            if (options.isDev || options.corsWhitelist?.includes(origin ?? '')) {
+            if (options.isDev || options.whiteList?.includes(origin ?? '')) {
                 callback(null, true);
             }
             else {

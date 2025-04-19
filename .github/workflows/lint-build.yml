@@ -1,0 +1,54 @@
+name: CI - Lint & Build
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - main
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+
+jobs:
+  lint-build:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🚀 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: 🧰 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🗂️ Cache build output
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/dist
+          key: ${{ runner.os }}-dist-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-dist-
+
+      - name: 📝 Setup environment variables
+        run: cp .env.example .env
+
+      - name: 🧹 Run ESLint
+        run: pnpm lint
+
+      - name: 🏗️ Build project
+        run: pnpm build

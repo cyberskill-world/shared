@@ -1,15 +1,19 @@
 import fetch from 'node-fetch';
 
+import { getEnv } from '#configs/env/index.js';
+
 import type { I_CheckPackage, I_GetPackage, T_PackageJson } from './package.type.js';
 
 import { runCommand } from '../command/index.js';
 import { existsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { logNodeJS as log } from '../log/index.js';
-import { command, join, PACKAGE_JSON, PATH, WORKING_DIRECTORY } from '../path/index.js';
+import { command, join, PACKAGE_JSON, PATH } from '../path/index.js';
 import { CHECK_PACKAGE_EMPTY_RESULT } from './package.constant.js';
 
 export function getPackage(packageName: string): I_GetPackage | false {
-    const pkgPath = join(WORKING_DIRECTORY, PACKAGE_JSON);
+    const env = getEnv();
+
+    const pkgPath = join(env.CWD, PACKAGE_JSON);
 
     if (!existsSync(pkgPath)) {
         return false;

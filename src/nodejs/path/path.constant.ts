@@ -1,4 +1,4 @@
-import process from 'node:process';
+import { getEnv } from '#configs/env/index.js';
 
 import type { I_CommandContext } from '../command/index.js';
 
@@ -6,10 +6,10 @@ import { E_CommandType, formatCommand, rawCommand } from '../command/index.js';
 import { setupPackages } from '../package/index.js';
 import { join, resolveWorkingPath } from './path.util.js';
 
-export const WORKING_DIRECTORY = process.env.INIT_CWD || process.cwd();
+const env = getEnv();
 
+export const WORKING_DIRECTORY = env.CWD;
 export const CYBERSKILL_PACKAGE_NAME = '@cyberskill/shared';
-export const CYBERSKILL_STORAGE = '.cyberskill-storage';
 export const NODE_MODULES = 'node_modules';
 export const BUILD_DIRECTORY = 'dist';
 export const PACKAGE_JSON = 'package.json';
@@ -45,6 +45,8 @@ export const ESLINT_INSPECT_PACKAGE_NAME = '@eslint/config-inspector';
 export const ESLINT_INSPECT_CLI = 'eslint-config-inspector';
 export const NODE_MODULES_INSPECT_PACKAGE_NAME = 'node-modules-inspector';
 export const NODE_MODULES_INSPECT_CLI = 'node-modules-inspector';
+export const MIGRATE_MONGO_PACKAGE_NAME = 'migrate-mongo';
+export const MIGRATE_MONGO_CLI = 'migrate-mongo';
 
 export const PATH = {
     CYBERSKILL_DIRECTORY,
@@ -110,6 +112,9 @@ export const command = {
     configureGitHook: commandFactory(E_CommandType.RAW, `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`),
     testUnit: commandFactory(E_CommandType.CLI, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.UNIT_TEST_CONFIG}`),
     testE2e: commandFactory(E_CommandType.CLI, `${VITEST_PACKAGE_NAME} ${PLAYWRIGHT_PACKAGE_NAME}`, `${VITEST_CLI} --config ${PATH.E2E_TEST_CONFIG}`),
+    mongoMigrateCreate: (migrateName: string) => commandFactory(E_CommandType.CLI, `${MIGRATE_MONGO_PACKAGE_NAME}`, `${MIGRATE_MONGO_CLI} create ${migrateName}`)(),
+    mongoMigrateUp: commandFactory(E_CommandType.CLI, `${MIGRATE_MONGO_PACKAGE_NAME}`, `${MIGRATE_MONGO_CLI} up`),
+    mongoMigrateDown: commandFactory(E_CommandType.CLI, `${MIGRATE_MONGO_PACKAGE_NAME}`, `${MIGRATE_MONGO_CLI} down`),
     commitLint: commandFactory(E_CommandType.CLI, COMMIT_LINT_PACKAGE_NAME, `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.COMMITLINT_CONFIG}`),
     lintStaged: commandFactory(E_CommandType.CLI, LINT_STAGED_PACKAGE_NAME, `${LINT_STAGED_CLI} --config ${PATH.LINT_STAGED_CONFIG}`),
     stageBuildDirectory: commandFactory(E_CommandType.RAW, `${GIT_CLI} add ${BUILD_DIRECTORY}`),

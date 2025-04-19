@@ -1,7 +1,6 @@
 export { HOOK_alias_3 as HOOK } from '../../_tsup-dts-rollup.js';
 export { WORKING_DIRECTORY_alias_3 as WORKING_DIRECTORY } from '../../_tsup-dts-rollup.js';
 export { CYBERSKILL_PACKAGE_NAME_alias_3 as CYBERSKILL_PACKAGE_NAME } from '../../_tsup-dts-rollup.js';
-export { CYBERSKILL_STORAGE_alias_3 as CYBERSKILL_STORAGE } from '../../_tsup-dts-rollup.js';
 export { NODE_MODULES_alias_3 as NODE_MODULES } from '../../_tsup-dts-rollup.js';
 export { BUILD_DIRECTORY_alias_3 as BUILD_DIRECTORY } from '../../_tsup-dts-rollup.js';
 export { PACKAGE_JSON_alias_3 as PACKAGE_JSON } from '../../_tsup-dts-rollup.js';
@@ -36,5 +35,7 @@ export { ESLINT_INSPECT_PACKAGE_NAME_alias_3 as ESLINT_INSPECT_PACKAGE_NAME } fr
 export { ESLINT_INSPECT_CLI_alias_3 as ESLINT_INSPECT_CLI } from '../../_tsup-dts-rollup.js';
 export { NODE_MODULES_INSPECT_PACKAGE_NAME_alias_3 as NODE_MODULES_INSPECT_PACKAGE_NAME } from '../../_tsup-dts-rollup.js';
 export { NODE_MODULES_INSPECT_CLI_alias_3 as NODE_MODULES_INSPECT_CLI } from '../../_tsup-dts-rollup.js';
+export { MIGRATE_MONGO_PACKAGE_NAME_alias_3 as MIGRATE_MONGO_PACKAGE_NAME } from '../../_tsup-dts-rollup.js';
+export { MIGRATE_MONGO_CLI_alias_3 as MIGRATE_MONGO_CLI } from '../../_tsup-dts-rollup.js';
 export { PATH_alias_3 as PATH } from '../../_tsup-dts-rollup.js';
 export { command_alias_3 as command } from '../../_tsup-dts-rollup.js';

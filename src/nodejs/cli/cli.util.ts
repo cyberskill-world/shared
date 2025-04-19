@@ -148,6 +148,18 @@ async function testE2E() {
     await runCommand('Running end-to-end tests', await command.testE2e());
 }
 
+async function mongoMigrateCreate(migrationName: string) {
+    await runCommand('Creating MongoDB migration', await command.mongoMigrateCreate(migrationName));
+}
+
+async function mongoMigrateUp() {
+    await runCommand('Running MongoDB migrations', await command.mongoMigrateUp());
+}
+
+async function mongoMigrateDown() {
+    await runCommand('Rolling back MongoDB migration', await command.mongoMigrateDown());
+}
+
 (async () => {
     try {
         await yargs(hideBin(process.argv))
@@ -163,6 +175,21 @@ async function testE2E() {
             .command('inspect', 'Analyze installed project dependencies', inspect)
             .command('test:unit', 'Run unit test suite', testUnit)
             .command('test:e2e', 'Run end-to-end test suite', testE2E)
+            .command('mongo:migrate:create <name>', 'Create a MongoDB migration', y =>
+                y.positional('name', {
+                    describe: 'Migration name',
+                    type: 'string',
+                }), async (argv) => {
+                if (!argv.name) {
+                    log.error('Migration name is required.');
+
+                    return;
+                }
+
+                await mongoMigrateCreate(argv.name);
+            })
+            .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
+            .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
             .demandCommand(1, 'Please specify a valid command.')
             .strict()
             .help()

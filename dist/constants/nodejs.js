@@ -1,1 +1,0 @@
-import r from"node:process";var e=r.env.DEBUG==="true";export{e as DEBUG};

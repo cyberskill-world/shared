@@ -7,5 +7,5 @@ export interface I_ExpressOptions {
 
 export interface I_CorsOptions {
     isDev?: boolean;
-    corsWhitelist?: string[];
+    whiteList?: string[];
 }

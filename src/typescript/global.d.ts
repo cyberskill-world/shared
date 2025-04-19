@@ -11,11 +11,3 @@ declare module '*.module.scss' {
     export default classes;
 }
 declare module '*.scss';
-
-declare namespace NodeJS {
-    interface ProcessEnv {
-        INIT_CWD: string;
-        DEBUG: string;
-        CYBERSKILL_STORAGE_DIR: string;
-    }
-}

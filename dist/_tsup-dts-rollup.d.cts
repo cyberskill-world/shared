@@ -13,6 +13,7 @@ import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
 import type { ComponentType } from 'react';
+import { config } from 'migrate-mongo';
 import type consola from 'consola';
 import { Context } from 'react';
 import cors from 'cors';
@@ -61,7 +62,7 @@ import type { ReactNode } from 'react';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import type { Server } from 'node:http';
-import { SessionOptions } from 'express-session';
+import type { SessionOptions } from 'express-session';
 import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
 import { toast } from 'react-hot-toast';
@@ -193,6 +194,9 @@ declare const command: {
     configureGitHook: () => Promise<string>;
     testUnit: () => Promise<string>;
     testE2e: () => Promise<string>;
+    mongoMigrateCreate: (migrateName: string) => Promise<string>;
+    mongoMigrateUp: () => Promise<string>;
+    mongoMigrateDown: () => Promise<string>;
     commitLint: () => Promise<string>;
     lintStaged: () => Promise<string>;
     stageBuildDirectory: () => Promise<string>;
@@ -276,16 +280,11 @@ export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_1 }
 export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_2 }
 export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_3 }
 
-declare const CYBERSKILL_STORAGE = ".cyberskill-storage";
-export { CYBERSKILL_STORAGE }
-export { CYBERSKILL_STORAGE as CYBERSKILL_STORAGE_alias_1 }
-export { CYBERSKILL_STORAGE as CYBERSKILL_STORAGE_alias_2 }
-export { CYBERSKILL_STORAGE as CYBERSKILL_STORAGE_alias_3 }
-
-declare const DEBUG: boolean;
-export { DEBUG }
-export { DEBUG as DEBUG_alias_1 }
-export { DEBUG as DEBUG_alias_2 }
+declare const CYBERSKILL_STORAGE_DIRECTORY = ".cyberskill-storage";
+export { CYBERSKILL_STORAGE_DIRECTORY }
+export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_1 }
+export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_2 }
+export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_3 }
 
 declare function deepMerge(...object: T_Object_2[]): T_Object_2;
 export { deepMerge }
@@ -1548,6 +1547,18 @@ export { generateSlug as generateSlug_alias_1 }
 export { generateSlug as generateSlug_alias_2 }
 export { generateSlug as generateSlug_alias_3 }
 
+declare function getCyberSkillDirectory(): string;
+export { getCyberSkillDirectory }
+export { getCyberSkillDirectory as getCyberSkillDirectory_alias_1 }
+export { getCyberSkillDirectory as getCyberSkillDirectory_alias_2 }
+export { getCyberSkillDirectory as getCyberSkillDirectory_alias_3 }
+
+declare function getEnv(): I_Environment;
+export { getEnv }
+export { getEnv as getEnv_alias_1 }
+export { getEnv as getEnv_alias_2 }
+export { getEnv as getEnv_alias_3 }
+
 declare function getLatestPackageVersion(packageName: string): Promise<string>;
 export { getLatestPackageVersion }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
@@ -1697,7 +1708,7 @@ export { I_CommandContext as I_CommandContext_alias_3 }
 
 declare interface I_CorsOptions {
     isDev?: boolean;
-    corsWhitelist?: string[];
+    whiteList?: string[];
 }
 export { I_CorsOptions }
 export { I_CorsOptions as I_CorsOptions_alias_1 }
@@ -1732,6 +1743,16 @@ export { I_DeleteOptionsExtended }
 export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_1 }
 export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_2 }
 export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_3 }
+
+declare interface I_Environment {
+    DEBUG: boolean;
+    CWD: string;
+    CYBERSKILL_STORAGE_DIR: string;
+}
+export { I_Environment }
+export { I_Environment as I_Environment_alias_1 }
+export { I_Environment as I_Environment_alias_2 }
+export { I_Environment as I_Environment_alias_3 }
 
 declare interface I_EslintError {
     filePath: string;
@@ -2209,6 +2230,18 @@ declare function mergeConfigs(type: T_ConfigType, ...configs: T_Object_2[]): T_O
 export { mergeConfigs }
 export { mergeConfigs as mergeConfigs_alias_1 }
 export { mergeConfigs as mergeConfigs_alias_2 }
+
+declare const MIGRATE_MONGO_CLI = "migrate-mongo";
+export { MIGRATE_MONGO_CLI }
+export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_1 }
+export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_2 }
+export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_3 }
+
+declare const MIGRATE_MONGO_PACKAGE_NAME = "migrate-mongo";
+export { MIGRATE_MONGO_PACKAGE_NAME }
+export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_1 }
+export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_2 }
+export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_3 }
 
 declare const mongo: {
     getDateTime(now?: Date): string;
@@ -2760,16 +2793,17 @@ export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
 export { serializer as serializer_alias_3 }
 
-export { SessionOptions }
-export { SessionOptions as SessionOptions_alias_1 }
-export { SessionOptions as SessionOptions_alias_2 }
-export { SessionOptions as SessionOptions_alias_3 }
-
 declare function setGlobalApolloErrorCallback(callback: (err: ApolloError_2) => void): void;
 export { setGlobalApolloErrorCallback }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_1 }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_2 }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_3 }
+
+declare function setMongoMigrateConfig(options: config.Config): void;
+export { setMongoMigrateConfig }
+export { setMongoMigrateConfig as setMongoMigrateConfig_alias_1 }
+export { setMongoMigrateConfig as setMongoMigrateConfig_alias_2 }
+export { setMongoMigrateConfig as setMongoMigrateConfig_alias_3 }
 
 declare function setupPackages(packages: string[], options?: {
     update?: boolean;

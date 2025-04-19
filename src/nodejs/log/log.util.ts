@@ -4,10 +4,12 @@ import chalk from 'chalk';
 import consola from 'consola';
 import { GraphQLError } from 'graphql';
 
-import { DEBUG } from '#constants/nodejs.js';
+import { getEnv } from '#configs/env/index.js';
 import { RESPONSE_STATUS } from '#constants/response-status.js';
 
 import type { I_IssueEntry, I_Log_NodeJS, T_ThrowError } from './log.type.js';
+
+const env = getEnv();
 
 export function throwError({
     message,
@@ -28,7 +30,7 @@ export function throwError({
     }
 }
 
-if (!DEBUG) {
+if (!env.DEBUG) {
     consola.level = 4;
 }
 

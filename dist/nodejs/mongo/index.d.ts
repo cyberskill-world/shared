@@ -1,3 +1,4 @@
+export { setMongoMigrateConfig_alias_2 as setMongoMigrateConfig } from '../../_tsup-dts-rollup.js';
 export { aggregatePaginate_alias_2 as aggregatePaginate } from '../../_tsup-dts-rollup.js';
 export { mongoosePaginate_alias_2 as mongoosePaginate } from '../../_tsup-dts-rollup.js';
 export { mongo_alias_2 as mongo } from '../../_tsup-dts-rollup.js';

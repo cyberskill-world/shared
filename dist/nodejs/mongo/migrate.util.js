@@ -1,0 +1,1 @@
+var o=Object.defineProperty;var e=function(e,n){return o(e,"name",{value:n,configurable:!0})};import{config as n}from"migrate-mongo";function r(o){n.set(o)}e(r,"setMongoMigrateConfig");export{r as setMongoMigrateConfig};

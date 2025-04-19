@@ -2,7 +2,7 @@ import { exec } from 'node:child_process';
 import process from 'node:process';
 import * as util from 'node:util';
 
-import { DEBUG } from '#constants/nodejs.js';
+import { getEnv } from '#configs/env/index.js';
 
 import type { I_IssueEntry } from '../log/index.js';
 import type { I_CommandContext, I_EslintError, T_Command, T_CommandMapInput } from './command.type.js';
@@ -12,6 +12,7 @@ import { checkPackage } from '../package/index.js';
 import { CYBERSKILL_CLI, CYBERSKILL_CLI_PATH, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '../path/index.js';
 import { storageNodeJS } from '../storage/index.js';
 
+const env = getEnv();
 const execPromise = util.promisify(exec);
 
 function getErrorListKey(timestamp: number) {
@@ -139,7 +140,7 @@ function parseTextErrors(output: string): void {
         saveErrorListToStorage(errorList);
     }
 
-    if (DEBUG && unmatchedLines.length) {
+    if (env.DEBUG && unmatchedLines.length) {
         log.warn(`Unmatched lines:`);
         unmatchedLines.forEach(line => log.info(`  ${line}`));
     }
@@ -253,7 +254,7 @@ export async function runCommand(label: string, command: string) {
     try {
         log.start(`${label}`);
 
-        if (DEBUG) {
+        if (env.DEBUG) {
             log.info(`→ ${command}`);
         }
 
