@@ -163,7 +163,6 @@ export { command } from './_tsup-dts-rollup.js';
 export { resolveWorkingPath } from './_tsup-dts-rollup.js';
 export { resolve } from './_tsup-dts-rollup.js';
 export { join } from './_tsup-dts-rollup.js';
-export { getCyberSkillDirectory } from './_tsup-dts-rollup.js';
 export { storageNodeJS } from './_tsup-dts-rollup.js';
 export { createWSServer } from './_tsup-dts-rollup.js';
 export { initGraphQLWS } from './_tsup-dts-rollup.js';

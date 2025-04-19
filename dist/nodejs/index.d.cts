@@ -149,7 +149,6 @@ export { command_alias_1 as command } from '../_tsup-dts-rollup.cjs';
 export { resolveWorkingPath_alias_1 as resolveWorkingPath } from '../_tsup-dts-rollup.cjs';
 export { resolve_alias_1 as resolve } from '../_tsup-dts-rollup.cjs';
 export { join_alias_1 as join } from '../_tsup-dts-rollup.cjs';
-export { getCyberSkillDirectory_alias_1 as getCyberSkillDirectory } from '../_tsup-dts-rollup.cjs';
 export { storageNodeJS_alias_1 as storageNodeJS } from '../_tsup-dts-rollup.cjs';
 export { createWSServer_alias_1 as createWSServer } from '../_tsup-dts-rollup.cjs';
 export { initGraphQLWS_alias_1 as initGraphQLWS } from '../_tsup-dts-rollup.cjs';

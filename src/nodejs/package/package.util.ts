@@ -10,9 +10,9 @@ import { logNodeJS as log } from '../log/index.js';
 import { command, join, PACKAGE_JSON, PATH } from '../path/index.js';
 import { CHECK_PACKAGE_EMPTY_RESULT } from './package.constant.js';
 
-export function getPackage(packageName: string): I_GetPackage | false {
-    const env = getEnv();
+const env = getEnv();
 
+export function getPackage(packageName: string): I_GetPackage | false {
     const pkgPath = join(env.CWD, PACKAGE_JSON);
 
     if (!existsSync(pkgPath)) {

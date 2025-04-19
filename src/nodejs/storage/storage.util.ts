@@ -9,7 +9,7 @@ const env = getEnv();
 async function initNodePersist() {
     if (!nodePersist.defaultInstance) {
         await nodePersist.init({
-            dir: env.CYBERSKILL_STORAGE_DIR,
+            dir: env.CYBERSKILL_STORAGE_DIRECTORY,
             stringify: JSON.stringify,
             parse: JSON.parse,
             encoding: 'utf8',
@@ -69,7 +69,7 @@ export const storageNodeJS = {
     },
     async getLogLink(key: string): Promise<string | null> {
         try {
-            const storagePath = env.CYBERSKILL_STORAGE_DIR;
+            const storagePath = env.CYBERSKILL_STORAGE_DIRECTORY;
 
             return `${storagePath} (key: ${key})`;
         }

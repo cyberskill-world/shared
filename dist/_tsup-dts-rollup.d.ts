@@ -1547,12 +1547,6 @@ export { generateSlug as generateSlug_alias_1 }
 export { generateSlug as generateSlug_alias_2 }
 export { generateSlug as generateSlug_alias_3 }
 
-declare function getCyberSkillDirectory(): string;
-export { getCyberSkillDirectory }
-export { getCyberSkillDirectory as getCyberSkillDirectory_alias_1 }
-export { getCyberSkillDirectory as getCyberSkillDirectory_alias_2 }
-export { getCyberSkillDirectory as getCyberSkillDirectory_alias_3 }
-
 declare function getEnv(): I_Environment;
 export { getEnv }
 export { getEnv as getEnv_alias_1 }
@@ -1747,7 +1741,7 @@ export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_3 }
 declare interface I_Environment {
     DEBUG: boolean;
     CWD: string;
-    CYBERSKILL_STORAGE_DIR: string;
+    CYBERSKILL_STORAGE_DIRECTORY: string;
 }
 export { I_Environment }
 export { I_Environment as I_Environment_alias_1 }

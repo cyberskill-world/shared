@@ -42,4 +42,3 @@ export { command_alias_2 as command } from '../../_tsup-dts-rollup.cjs';
 export { resolveWorkingPath_alias_2 as resolveWorkingPath } from '../../_tsup-dts-rollup.cjs';
 export { resolve_alias_2 as resolve } from '../../_tsup-dts-rollup.cjs';
 export { join_alias_2 as join } from '../../_tsup-dts-rollup.cjs';
-export { getCyberSkillDirectory_alias_2 as getCyberSkillDirectory } from '../../_tsup-dts-rollup.cjs';
