@@ -42,6 +42,7 @@ import { Model } from 'mongoose';
 import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import type mongooseRaw from 'mongoose';
+import { NextFunction } from 'express';
 import type { NormalizedCacheObject } from '@apollo/client';
 import type { OptionalUnlessRequiredId } from 'mongodb';
 import type { PaginateModel } from 'mongoose';
@@ -59,9 +60,12 @@ import type { QueryWithHelpers } from 'mongoose';
 import { default as React_2 } from 'react';
 import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
+import { Request as Request_2 } from 'express';
+import { Response as Response_2 } from 'express';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import type { Server } from 'node:http';
+import { Session } from 'express-session';
 import type { SessionOptions } from 'express-session';
 import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
@@ -2373,6 +2377,11 @@ export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_1 }
 export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_2 }
 export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_3 }
 
+export { NextFunction }
+export { NextFunction as NextFunction_alias_1 }
+export { NextFunction as NextFunction_alias_2 }
+export { NextFunction as NextFunction_alias_3 }
+
 declare const NextIntlContext: Context<I_NextIntlContext | undefined>;
 export { NextIntlContext }
 export { NextIntlContext as NextIntlContext_alias_1 }
@@ -2495,6 +2504,11 @@ export { removeAccent as removeAccent_alias_1 }
 export { removeAccent as removeAccent_alias_2 }
 export { removeAccent as removeAccent_alias_3 }
 
+export { Request_2 as Request }
+export { Request_2 as Request_alias_1 }
+export { Request_2 as Request_alias_2 }
+export { Request_2 as Request_alias_3 }
+
 declare function resolve(...urls: string[]): string;
 export { resolve }
 export { resolve as resolve_alias_1 }
@@ -2514,6 +2528,11 @@ export { resolveWorkingPath }
 export { resolveWorkingPath as resolveWorkingPath_alias_1 }
 export { resolveWorkingPath as resolveWorkingPath_alias_2 }
 export { resolveWorkingPath as resolveWorkingPath_alias_3 }
+
+export { Response_2 as Response }
+export { Response_2 as Response_alias_1 }
+export { Response_2 as Response_alias_2 }
+export { Response_2 as Response_alias_3 }
 
 declare const RESPONSE_STATUS: {
     GRAPHQL_PARSE_FAILED: {
@@ -2786,6 +2805,11 @@ export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
 export { serializer as serializer_alias_3 }
+
+export { Session }
+export { Session as Session_alias_1 }
+export { Session as Session_alias_2 }
+export { Session as Session_alias_3 }
 
 declare function setGlobalApolloErrorCallback(callback: (err: ApolloError_2) => void): void;
 export { setGlobalApolloErrorCallback }
