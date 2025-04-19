@@ -1,3 +1,9 @@
+## [1.96.0](https://github.com/cyberskill-world/shared/compare/v1.95.0...v1.96.0) (2025-04-19)
+
+### ✨ Features
+
+* mongo-migrate ([df7e719](https://github.com/cyberskill-world/shared/commit/df7e7193149af85feea60d1cfe53fce7d23c71b5))
+
 ## [1.95.0](https://github.com/cyberskill-world/shared/compare/v1.94.0...v1.95.0) (2025-04-18)
 
 ### ✨ Features
