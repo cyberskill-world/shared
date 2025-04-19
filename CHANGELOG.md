@@ -1,3 +1,9 @@
+## [1.97.0](https://github.com/cyberskill-world/shared/compare/v1.96.0...v1.97.0) (2025-04-19)
+
+### ✨ Features
+
+* fix default env ([eb430ff](https://github.com/cyberskill-world/shared/commit/eb430ff59009ae5c78e84966ebc59c1e575fb2b2))
+
 ## [1.96.0](https://github.com/cyberskill-world/shared/compare/v1.95.0...v1.96.0) (2025-04-19)
 
 ### ✨ Features
