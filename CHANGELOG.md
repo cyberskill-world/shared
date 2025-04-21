@@ -1,3 +1,9 @@
+## [1.102.0](https://github.com/cyberskill-world/shared/compare/v1.101.0...v1.102.0) (2025-04-21)
+
+### ✨ Features
+
+* mongo migrate ([330aabd](https://github.com/cyberskill-world/shared/commit/330aabd4ab3d4117d576c7997f5b339878f86441))
+
 ## [1.101.0](https://github.com/cyberskill-world/shared/compare/v1.100.0...v1.101.0) (2025-04-19)
 
 ### ✨ Features
