@@ -29,5 +29,6 @@ export type T_CommandMapInput = T_CommandMap | ((ctx: I_CommandContext) => T_Com
 
 export enum E_CommandType {
     CLI = 'CLI',
-    RAW = 'RAW',
+    STRING = 'STRING',
+    FUNCTION = 'FUNCTION',
 }

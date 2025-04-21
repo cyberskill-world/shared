@@ -5,7 +5,7 @@ import { getEnv } from '#configs/env/index.js';
 import type { I_CheckPackage, I_GetPackage, T_PackageJson } from './package.type.js';
 
 import { runCommand } from '../command/index.js';
-import { existsSync, readFileSync, writeFileSync } from '../fs/index.js';
+import { existsSync, readJsonSync, writeJsonSync } from '../fs/index.js';
 import { logNodeJS as log } from '../log/index.js';
 import { command, join, PACKAGE_JSON, PATH } from '../path/index.js';
 import { CHECK_PACKAGE_EMPTY_RESULT } from './package.constant.js';
@@ -20,7 +20,7 @@ export function getPackage(packageName: string): I_GetPackage | false {
     }
 
     try {
-        const file = readFileSync(pkgPath, { asJson: true }) as T_PackageJson;
+        const file = readJsonSync(pkgPath) as T_PackageJson;
         const { name, dependencies = {}, devDependencies = {} } = file;
 
         const isCurrentProject = name === packageName;
@@ -96,7 +96,7 @@ export async function checkPackage(
             if (section && file[section]?.[packageName] !== latestVersion) {
                 file[section] = file[section] ?? {};
                 file[section]![packageName] = latestVersion;
-                writeFileSync(path, file, { isJson: true });
+                writeJsonSync(path, file);
                 log.info(`Updated "${packageName}" to version ${latestVersion}`);
             }
         }

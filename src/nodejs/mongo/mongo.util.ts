@@ -1,16 +1,20 @@
 import type mongooseRaw from 'mongoose';
 
 import { format } from 'date-fns';
+import migrate from 'migrate-mongo';
 import { Document } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { v4 as uuidv4 } from 'uuid';
 
 import { RESPONSE_STATUS } from '#constants/response-status.js';
+import { storageNodeJS as storage } from '#nodejs/storage/index.js';
 import { generateShortId, generateSlug } from '#utils/string/index.js';
 import { validate } from '#utils/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_Return, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_CreateSlugQueryResponse, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_Return, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_CreateSlugQueryResponse, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoMigrateContext, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+
+import { MONGO_MIGRATE_OPTIONS } from './mongo.constant.js';
 
 export { aggregatePaginate, mongoosePaginate };
 
@@ -146,6 +150,59 @@ export const mongo = {
 
                 return regexArray.every(regex => regex.test(value));
             };
+        },
+    },
+    migrate: {
+        withConfig: async <T, NeedDb extends boolean = false>(
+            callback: (ctx: T_MongoMigrateContext<NeedDb>) => Promise<T>,
+            needDb?: NeedDb,
+        ): Promise<T> => {
+            const options = await storage.get(MONGO_MIGRATE_OPTIONS);
+
+            if (!options) {
+                throw new Error('Missing migrate config');
+            }
+
+            migrate.config.set(options);
+
+            if (!needDb) {
+                return callback(undefined as T_MongoMigrateContext<NeedDb>);
+            }
+
+            const { db, client } = await migrate.database.connect();
+
+            try {
+                return await callback({ db, client } as unknown as T_MongoMigrateContext<NeedDb>);
+            }
+            finally {
+                await client.close();
+            }
+        },
+        init: async () => {
+            await migrate.init();
+        },
+        create: async (name: string) => {
+            await mongo.migrate.withConfig(() => migrate.create(name));
+        },
+        up: async () => {
+            await import('ts-node').then(ts => ts.register({ transpileOnly: true }));
+            await mongo.migrate.withConfig(async ({ db, client }) => {
+                await migrate.up(db, client);
+            }, true);
+        },
+        down: async () => {
+            await import('ts-node').then(ts => ts.register({ transpileOnly: true }));
+            await mongo.migrate.withConfig(async ({ db, client }) => {
+                await migrate.down(db, client);
+            }, true);
+        },
+        status: async () => {
+            await mongo.migrate.withConfig(async ({ db }) => {
+                await migrate.status(db);
+            }, true);
+        },
+        config: (options: Partial<migrate.config.Config>) => {
+            storage.set(MONGO_MIGRATE_OPTIONS, options);
         },
     },
 };

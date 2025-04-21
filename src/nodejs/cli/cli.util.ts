@@ -7,7 +7,7 @@ import type { I_IssueEntry } from '../log/index.js';
 
 import pkg from '../../../package.json' with { type: 'json' };
 import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
-import { appendFileSync, existsSync, readFileSync, rmSync, writeFileSync } from '../fs/index.js';
+import { appendFileSync, existsSync, readFileSync, removeSync, writeFileSync, writeJsonSync } from '../fs/index.js';
 import { E_IssueType, logNodeJS as log } from '../log/index.js';
 import { checkPackage, installDependencies, setupPackages } from '../package/index.js';
 import { command, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
@@ -101,23 +101,23 @@ async function commitLint() {
 async function setupGitHook() {
     await runCommand('Configuring Git hooks', await command.configureGitHook());
 
-    rmSync(PATH.GIT_HOOK);
+    removeSync(PATH.GIT_HOOK);
 
     const hooks = await resolveCommands(HOOK);
 
-    writeFileSync(PATH.SIMPLE_GIT_HOOKS_JSON, hooks, { isJson: true });
+    writeJsonSync(PATH.SIMPLE_GIT_HOOKS_JSON, hooks);
 
     const gitIgnoreEntry = `\n${SIMPLE_GIT_HOOK_JSON}\n`;
 
     if (existsSync(PATH.GIT_IGNORE)) {
-        const gitignore = readFileSync(PATH.GIT_IGNORE).split('\n');
+        const gitignore = readFileSync(PATH.GIT_IGNORE, 'utf-8').split('\n');
 
         if (!gitignore.includes(SIMPLE_GIT_HOOK_JSON)) {
-            appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
+            appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry, 'utf-8');
         }
     }
     else {
-        writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
+        writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry, 'utf-8');
     }
 
     await runCommand('Setting up simple-git-hooks', await command.simpleGitHooks());
@@ -131,7 +131,7 @@ async function setup() {
 }
 
 async function reset() {
-    rmSync(PATH.NODE_MODULES, PATH.PNPM_LOCK_YAML);
+    removeSync(PATH.NODE_MODULES, PATH.PNPM_LOCK_YAML);
     await installDependencies();
     await setupGitHook();
 }

@@ -172,7 +172,7 @@ function parseCommandOutput(output: string): void {
     }
 }
 
-async function executeCommand(command: string, parser = parseCommandOutput): Promise<void> {
+async function executeCommand(command: string | void, parser = parseCommandOutput): Promise<void> {
     const controller = new AbortController();
 
     process.on('SIGINT', () => {
@@ -182,12 +182,14 @@ async function executeCommand(command: string, parser = parseCommandOutput): Pro
     });
 
     try {
-        const { stdout, stderr } = await execPromise(command, {
-            maxBuffer: 1024 * 1024 * 100,
-            signal: controller.signal,
-        });
+        if (typeof command === 'string') {
+            const { stdout, stderr } = await execPromise(command, {
+                maxBuffer: 1024 * 1024 * 100,
+                signal: controller.signal,
+            });
 
-        [stdout, stderr].forEach(output => output && parser(output));
+            [stdout, stderr].forEach(output => output && parser(output));
+        }
     }
     catch (error) {
         const { stdout, stderr, message } = error as {
@@ -250,7 +252,7 @@ export async function resolveCommands(input: T_CommandMapInput, context: Partial
     );
 }
 
-export async function runCommand(label: string, command: string) {
+export async function runCommand(label: string, command: string | void) {
     try {
         log.start(`${label}`);
 

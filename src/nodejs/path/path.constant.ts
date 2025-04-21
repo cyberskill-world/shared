@@ -1,4 +1,5 @@
 import { getEnv } from '#configs/env/index.js';
+import { mongo } from '#nodejs/mongo/index.js';
 
 import type { I_CommandContext } from '../command/index.js';
 
@@ -75,9 +76,7 @@ export function HOOK({ isCurrentProject }: Partial<I_CommandContext>) {
     };
 }
 
-async function buildCommand(type: E_CommandType, ...args: string[]): Promise<string> {
-    const [first, second] = args;
-
+async function buildCommand(type: E_CommandType, first: string, second?: string | (() => Promise<void>)): Promise<string | void> {
     if (!first) {
         throw new Error('\'first\' argument is undefined');
     }
@@ -89,8 +88,17 @@ async function buildCommand(type: E_CommandType, ...args: string[]): Promise<str
             });
             return formatCommand(rawCommand(`${PNPM_EXEC_CLI} ${second}`)) as string;
         }
-        case E_CommandType.RAW: {
+        case E_CommandType.STRING: {
             return formatCommand(rawCommand(first)) as string;
+        }
+        case E_CommandType.FUNCTION: {
+            await setupPackages(first.split(' '), {
+                update: true,
+            });
+            if (typeof second === 'function') {
+                return second();
+            }
+            throw new Error('\'second\' argument is not a callable function');
         }
         default: {
             throw new Error('Unsupported command type');
@@ -98,8 +106,8 @@ async function buildCommand(type: E_CommandType, ...args: string[]): Promise<str
     }
 }
 
-function commandFactory(type: E_CommandType, ...args: string[]): () => Promise<string> {
-    return async () => buildCommand(type, ...args);
+function commandFactory(type: E_CommandType, first: string, second?: string | (() => Promise<void>)): () => Promise<string | void> {
+    return async () => buildCommand(type, first, second);
 }
 
 export const command = {
@@ -109,17 +117,17 @@ export const command = {
     eslintCheck: commandFactory(E_CommandType.CLI, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY}`),
     eslintFix: commandFactory(E_CommandType.CLI, ESLINT_PACKAGE_NAME, `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix`),
     typescriptCheck: commandFactory(E_CommandType.CLI, TSC_PACKAGE_NAME, `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit`),
-    configureGitHook: commandFactory(E_CommandType.RAW, `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`),
+    configureGitHook: commandFactory(E_CommandType.STRING, `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`),
     testUnit: commandFactory(E_CommandType.CLI, VITEST_PACKAGE_NAME, `${VITEST_CLI} --config ${PATH.UNIT_TEST_CONFIG}`),
     testE2e: commandFactory(E_CommandType.CLI, `${VITEST_PACKAGE_NAME} ${PLAYWRIGHT_PACKAGE_NAME}`, `${VITEST_CLI} --config ${PATH.E2E_TEST_CONFIG}`),
-    mongoMigrateCreate: (migrateName: string) => commandFactory(E_CommandType.CLI, `${MIGRATE_MONGO_PACKAGE_NAME}`, `${MIGRATE_MONGO_CLI} create ${migrateName}`)(),
-    mongoMigrateUp: commandFactory(E_CommandType.CLI, `${MIGRATE_MONGO_PACKAGE_NAME}`, `${MIGRATE_MONGO_CLI} up`),
-    mongoMigrateDown: commandFactory(E_CommandType.CLI, `${MIGRATE_MONGO_PACKAGE_NAME}`, `${MIGRATE_MONGO_CLI} down`),
+    mongoMigrateCreate: (migrateName: string) => commandFactory(E_CommandType.FUNCTION, `${MIGRATE_MONGO_PACKAGE_NAME}`, () => mongo.migrate.create(migrateName))(),
+    mongoMigrateUp: commandFactory(E_CommandType.FUNCTION, `${MIGRATE_MONGO_PACKAGE_NAME}`, mongo.migrate.up),
+    mongoMigrateDown: commandFactory(E_CommandType.FUNCTION, `${MIGRATE_MONGO_PACKAGE_NAME}`, mongo.migrate.down),
     commitLint: commandFactory(E_CommandType.CLI, COMMIT_LINT_PACKAGE_NAME, `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.COMMITLINT_CONFIG}`),
     lintStaged: commandFactory(E_CommandType.CLI, LINT_STAGED_PACKAGE_NAME, `${LINT_STAGED_CLI} --config ${PATH.LINT_STAGED_CONFIG}`),
-    stageBuildDirectory: commandFactory(E_CommandType.RAW, `${GIT_CLI} add ${BUILD_DIRECTORY}`),
-    build: commandFactory(E_CommandType.RAW, `${PNPM_CLI} run build`),
-    pnpmInstallStandard: commandFactory(E_CommandType.RAW, `${PNPM_CLI} install`),
-    pnpmInstallLegacy: commandFactory(E_CommandType.RAW, `${PNPM_CLI} install --legacy-peer-deps`),
-    pnpmInstallForce: commandFactory(E_CommandType.RAW, `${PNPM_CLI} install --force`),
+    stageBuildDirectory: commandFactory(E_CommandType.STRING, `${GIT_CLI} add ${BUILD_DIRECTORY}`),
+    build: commandFactory(E_CommandType.STRING, `${PNPM_CLI} run build`),
+    pnpmInstallStandard: commandFactory(E_CommandType.STRING, `${PNPM_CLI} install`),
+    pnpmInstallLegacy: commandFactory(E_CommandType.STRING, `${PNPM_CLI} install --legacy-peer-deps`),
+    pnpmInstallForce: commandFactory(E_CommandType.STRING, `${PNPM_CLI} install --force`),
 };

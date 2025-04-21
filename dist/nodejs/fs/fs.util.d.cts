@@ -1,5 +1,12 @@
 export { existsSync_alias_2 as existsSync } from '../../_tsup-dts-rollup.cjs';
+export { removeSync_alias_2 as removeSync } from '../../_tsup-dts-rollup.cjs';
+export { copySync_alias_2 as copySync } from '../../_tsup-dts-rollup.cjs';
 export { readFileSync_alias_2 as readFileSync } from '../../_tsup-dts-rollup.cjs';
 export { writeFileSync_alias_2 as writeFileSync } from '../../_tsup-dts-rollup.cjs';
+export { pathExistsSync_alias_2 as pathExistsSync } from '../../_tsup-dts-rollup.cjs';
 export { appendFileSync_alias_2 as appendFileSync } from '../../_tsup-dts-rollup.cjs';
-export { rmSync_alias_2 as rmSync } from '../../_tsup-dts-rollup.cjs';
+export { copySyncE_alias_2 as copySyncE } from '../../_tsup-dts-rollup.cjs';
+export { removeSyncE_alias_2 as removeSyncE } from '../../_tsup-dts-rollup.cjs';
+export { statSync_alias_2 as statSync } from '../../_tsup-dts-rollup.cjs';
+export { readJsonSync_alias_2 as readJsonSync } from '../../_tsup-dts-rollup.cjs';
+export { writeJsonSync_alias_2 as writeJsonSync } from '../../_tsup-dts-rollup.cjs';

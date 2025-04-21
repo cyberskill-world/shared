@@ -1,54 +1,49 @@
-import * as fs from 'node:fs';
+import fsExtra from 'fs-extra';
+import { extname } from 'node:path';
 
-import type { T_Object } from '#typescript/common.js';
+import type { I_CopySyncOptions } from './fs.type.js';
+
+export const {
+    readFileSync,
+    writeFileSync,
+    pathExistsSync,
+    appendFileSync,
+    copySync: copySyncE,
+    removeSync: removeSyncE,
+    statSync,
+} = fsExtra;
+
+export const readJsonSync: <T = unknown>(file: string, options?: fsExtra.JsonReadOptions) => T = fsExtra.readJsonSync;
+
+export const writeJsonSync: <T = unknown>(file: string, obj: T, options?: fsExtra.JsonWriteOptions | null) => void = fsExtra.writeJsonSync;
 
 export function existsSync(...paths: string[]) {
-    return paths.every(path => fs.existsSync(path));
+    return paths.every(path => pathExistsSync(path));
 }
 
-export function readFileSync(filePath: string, options: { asJson: true }): T_Object;
-export function readFileSync(filePath: string, options?: { asJson?: false }): string;
-export function readFileSync(filePath: string, options?: { asJson?: boolean }): string | T_Object {
-    const content = fs.readFileSync(filePath, 'utf-8');
-
-    if (options?.asJson) {
-        try {
-            const parsed = JSON.parse(content);
-            if (typeof parsed === 'object' && parsed !== null) {
-                return parsed;
-            }
-            throw new Error('Parsed JSON is not an object or array');
-        }
-        catch {
-            throw new Error(`Failed to parse JSON from file: ${filePath}`);
-        }
-    }
-
-    return content;
-}
-
-export function writeFileSync(filePath: string, data: string | T_Object, options: { isJson?: boolean } = {}) {
-    const { isJson = false } = options;
-    const content = isJson && typeof data === 'object'
-        ? JSON.stringify(data, null, 4)
-        : String(data);
-
-    fs.writeFileSync(filePath, content, 'utf-8');
-}
-
-export function appendFileSync(filePath: string, data: string | T_Object, options: { isJson?: boolean } = {}) {
-    const { isJson = false } = options;
-    const content = isJson && typeof data === 'object'
-        ? JSON.stringify(data, null, 4)
-        : String(data);
-
-    fs.appendFileSync(filePath, content, 'utf-8');
-}
-
-export function rmSync(...paths: string[]) {
+export function removeSync(...paths: string[]) {
     paths.forEach((filePath) => {
-        if (existsSync(filePath)) {
-            fs.rmSync(filePath, { recursive: true, force: true });
+        if (pathExistsSync(filePath)) {
+            removeSyncE(filePath);
         }
+    });
+}
+
+export function copySync(src: string, dest: string, options: I_CopySyncOptions = {}): void {
+    const { extensions, ...rest } = options;
+
+    copySyncE(src, dest, {
+        filter: (srcPath: string) => {
+            if (statSync(srcPath).isDirectory()) {
+                return true;
+            }
+
+            if (!extensions || extensions.length === 0) {
+                return true;
+            }
+
+            return extensions.includes(extname(srcPath));
+        },
+        ...rest,
     });
 }

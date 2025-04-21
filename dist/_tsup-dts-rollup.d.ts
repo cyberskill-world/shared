@@ -13,9 +13,9 @@ import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
 import type { ComponentType } from 'react';
-import { config } from 'migrate-mongo';
 import type consola from 'consola';
 import { Context } from 'react';
+import type { CopySyncOptions } from 'node:fs';
 import cors from 'cors';
 import { Db } from 'mongodb';
 import type { DeleteResult } from 'mongodb';
@@ -27,6 +27,7 @@ import express from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
+import fsExtra from 'fs-extra';
 import type { GraphQLSchema } from 'graphql';
 import { I_ApolloErrorContext as I_ApolloErrorContext_2 } from './apollo-error.type.js';
 import { I_Command as I_Command_2 } from './command.type.js';
@@ -38,6 +39,7 @@ import type { InsertOneResult } from 'mongodb';
 import type { JSX } from 'react';
 import { Locale } from 'date-fns/locale';
 import type { Locale as Locale_2 } from 'date-fns';
+import migrate from 'migrate-mongo';
 import { Model } from 'mongoose';
 import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
@@ -127,9 +129,7 @@ export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
 export { ApolloProvider as ApolloProvider_alias_3 }
 
-declare function appendFileSync(filePath: string, data: string | T_Object_2, options?: {
-    isJson?: boolean;
-}): void;
+declare const appendFileSync: typeof fsExtra.appendFileSync;
 export { appendFileSync }
 export { appendFileSync as appendFileSync_alias_1 }
 export { appendFileSync as appendFileSync_alias_2 }
@@ -190,25 +190,25 @@ export { clearAllErrorLists as clearAllErrorLists_alias_2 }
 export { clearAllErrorLists as clearAllErrorLists_alias_3 }
 
 declare const command: {
-    simpleGitHooks: () => Promise<string>;
-    eslintInspect: () => Promise<string>;
-    nodeModulesInspect: () => Promise<string>;
-    eslintCheck: () => Promise<string>;
-    eslintFix: () => Promise<string>;
-    typescriptCheck: () => Promise<string>;
-    configureGitHook: () => Promise<string>;
-    testUnit: () => Promise<string>;
-    testE2e: () => Promise<string>;
-    mongoMigrateCreate: (migrateName: string) => Promise<string>;
-    mongoMigrateUp: () => Promise<string>;
-    mongoMigrateDown: () => Promise<string>;
-    commitLint: () => Promise<string>;
-    lintStaged: () => Promise<string>;
-    stageBuildDirectory: () => Promise<string>;
-    build: () => Promise<string>;
-    pnpmInstallStandard: () => Promise<string>;
-    pnpmInstallLegacy: () => Promise<string>;
-    pnpmInstallForce: () => Promise<string>;
+    simpleGitHooks: () => Promise<string | void>;
+    eslintInspect: () => Promise<string | void>;
+    nodeModulesInspect: () => Promise<string | void>;
+    eslintCheck: () => Promise<string | void>;
+    eslintFix: () => Promise<string | void>;
+    typescriptCheck: () => Promise<string | void>;
+    configureGitHook: () => Promise<string | void>;
+    testUnit: () => Promise<string | void>;
+    testE2e: () => Promise<string | void>;
+    mongoMigrateCreate: (migrateName: string) => Promise<string | void>;
+    mongoMigrateUp: () => Promise<string | void>;
+    mongoMigrateDown: () => Promise<string | void>;
+    commitLint: () => Promise<string | void>;
+    lintStaged: () => Promise<string | void>;
+    stageBuildDirectory: () => Promise<string | void>;
+    build: () => Promise<string | void>;
+    pnpmInstallStandard: () => Promise<string | void>;
+    pnpmInstallLegacy: () => Promise<string | void>;
+    pnpmInstallForce: () => Promise<string | void>;
 };
 export { command }
 export { command as command_alias_1 }
@@ -226,6 +226,18 @@ export { COMMIT_LINT_PACKAGE_NAME }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_1 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_2 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_3 }
+
+declare function copySync(src: string, dest: string, options?: I_CopySyncOptions): void;
+export { copySync }
+export { copySync as copySync_alias_1 }
+export { copySync as copySync_alias_2 }
+export { copySync as copySync_alias_3 }
+
+declare const copySyncE: typeof fsExtra.copySync;
+export { copySyncE }
+export { copySyncE as copySyncE_alias_1 }
+export { copySyncE as copySyncE_alias_2 }
+export { copySyncE as copySyncE_alias_3 }
 
 declare function createApolloServer(options: I_ApolloServerOptions): ApolloServer;
 export { createApolloServer }
@@ -1467,7 +1479,8 @@ export { _default_3 as lintStagedConfig_alias_1 }
 
 declare enum E_CommandType {
     CLI = "CLI",
-    RAW = "RAW"
+    STRING = "STRING",
+    FUNCTION = "FUNCTION"
 }
 export { E_CommandType }
 export { E_CommandType as E_CommandType_alias_1 }
@@ -1704,6 +1717,14 @@ export { I_CommandContext }
 export { I_CommandContext as I_CommandContext_alias_1 }
 export { I_CommandContext as I_CommandContext_alias_2 }
 export { I_CommandContext as I_CommandContext_alias_3 }
+
+declare interface I_CopySyncOptions extends CopySyncOptions {
+    extensions?: string[];
+}
+export { I_CopySyncOptions }
+export { I_CopySyncOptions as I_CopySyncOptions_alias_1 }
+export { I_CopySyncOptions as I_CopySyncOptions_alias_2 }
+export { I_CopySyncOptions as I_CopySyncOptions_alias_3 }
 
 declare interface I_CorsOptions {
     isDev?: boolean;
@@ -1999,6 +2020,11 @@ export { I_Log_NodeJS as I_Log_NodeJS_alias_1 }
 export { I_Log_NodeJS as I_Log_NodeJS_alias_2 }
 export { I_Log_NodeJS as I_Log_NodeJS_alias_3 }
 
+declare interface I_MongoMigrateRawContext {
+    db: mongoose.mongo.Db;
+    client: mongoose.mongo.MongoClient;
+}
+
 declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     method: T_MongooseMiddlewareMethod;
     pre?: T_MongooseMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
@@ -2270,11 +2296,26 @@ declare const mongo: {
         }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
         matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean>;
     };
+    migrate: {
+        withConfig: <T, NeedDb extends boolean = false>(callback: (ctx: T_MongoMigrateContext<NeedDb>) => Promise<T>, needDb?: NeedDb) => Promise<T>;
+        init: () => Promise<void>;
+        create: (name: string) => Promise<void>;
+        up: () => Promise<void>;
+        down: () => Promise<void>;
+        status: () => Promise<void>;
+        config: (options: Partial<migrate.config.Config>) => void;
+    };
 };
 export { mongo }
 export { mongo as mongo_alias_1 }
 export { mongo as mongo_alias_2 }
 export { mongo as mongo_alias_3 }
+
+declare const MONGO_MIGRATE_OPTIONS = "MONGO_MIGRATE_OPTIONS";
+export { MONGO_MIGRATE_OPTIONS }
+export { MONGO_MIGRATE_OPTIONS as MONGO_MIGRATE_OPTIONS_alias_1 }
+export { MONGO_MIGRATE_OPTIONS as MONGO_MIGRATE_OPTIONS_alias_2 }
+export { MONGO_MIGRATE_OPTIONS as MONGO_MIGRATE_OPTIONS_alias_3 }
 
 declare class MongoController<D extends Partial<C_Document>> {
     private collection;
@@ -2448,6 +2489,12 @@ export { PATH as PATH_alias_1 }
 export { PATH as PATH_alias_2 }
 export { PATH as PATH_alias_3 }
 
+declare const pathExistsSync: typeof fsExtra.pathExistsSync;
+export { pathExistsSync }
+export { pathExistsSync as pathExistsSync_alias_1 }
+export { pathExistsSync as pathExistsSync_alias_2 }
+export { pathExistsSync as pathExistsSync_alias_3 }
+
 declare const PLAYWRIGHT_PACKAGE_NAME = "playwright";
 export { PLAYWRIGHT_PACKAGE_NAME }
 export { PLAYWRIGHT_PACKAGE_NAME as PLAYWRIGHT_PACKAGE_NAME_alias_1 }
@@ -2481,17 +2528,17 @@ export { rawCommand as rawCommand_alias_1 }
 export { rawCommand as rawCommand_alias_2 }
 export { rawCommand as rawCommand_alias_3 }
 
-declare function readFileSync(filePath: string, options: {
-    asJson: true;
-}): T_Object_2;
-
-declare function readFileSync(filePath: string, options?: {
-    asJson?: false;
-}): string;
+declare const readFileSync: typeof fsExtra.readFileSync;
 export { readFileSync }
 export { readFileSync as readFileSync_alias_1 }
 export { readFileSync as readFileSync_alias_2 }
 export { readFileSync as readFileSync_alias_3 }
+
+declare const readJsonSync: <T = unknown>(file: string, options?: fsExtra.JsonReadOptions) => T;
+export { readJsonSync }
+export { readJsonSync as readJsonSync_alias_1 }
+export { readJsonSync as readJsonSync_alias_2 }
+export { readJsonSync as readJsonSync_alias_3 }
 
 declare function regexSearchMapper(str: string): string;
 export { regexSearchMapper }
@@ -2504,6 +2551,18 @@ export { removeAccent }
 export { removeAccent as removeAccent_alias_1 }
 export { removeAccent as removeAccent_alias_2 }
 export { removeAccent as removeAccent_alias_3 }
+
+declare function removeSync(...paths: string[]): void;
+export { removeSync }
+export { removeSync as removeSync_alias_1 }
+export { removeSync as removeSync_alias_2 }
+export { removeSync as removeSync_alias_3 }
+
+declare const removeSyncE: typeof fsExtra.removeSync;
+export { removeSyncE }
+export { removeSyncE as removeSyncE_alias_1 }
+export { removeSyncE as removeSyncE_alias_2 }
+export { removeSyncE as removeSyncE_alias_3 }
 
 export { Request_2 as Request }
 export { Request_2 as Request_alias_1 }
@@ -2789,18 +2848,12 @@ export { RESPONSE_STATUS }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_1 }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_2 }
 
-declare function rmSync(...paths: string[]): void;
-export { rmSync }
-export { rmSync as rmSync_alias_1 }
-export { rmSync as rmSync_alias_2 }
-export { rmSync as rmSync_alias_3 }
-
 export { Router }
 export { Router as Router_alias_1 }
 export { Router as Router_alias_2 }
 export { Router as Router_alias_3 }
 
-declare function runCommand(label: string, command: string): Promise<void>;
+declare function runCommand(label: string, command: string | void): Promise<void>;
 export { runCommand }
 export { runCommand as runCommand_alias_1 }
 export { runCommand as runCommand_alias_2 }
@@ -2822,12 +2875,6 @@ export { setGlobalApolloErrorCallback }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_1 }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_2 }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_3 }
-
-declare function setMongoMigrateConfig(options: config.Config): void;
-export { setMongoMigrateConfig }
-export { setMongoMigrateConfig as setMongoMigrateConfig_alias_1 }
-export { setMongoMigrateConfig as setMongoMigrateConfig_alias_2 }
-export { setMongoMigrateConfig as setMongoMigrateConfig_alias_3 }
 
 declare function setupPackages(packages: string[], options?: {
     update?: boolean;
@@ -2861,6 +2908,12 @@ export { SIMPLE_GIT_HOOKS_PACKAGE_NAME }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_1 }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_2 }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_3 }
+
+declare const statSync: fsExtra.StatSyncFn;
+export { statSync }
+export { statSync as statSync_alias_1 }
+export { statSync as statSync_alias_2 }
+export { statSync as statSync_alias_3 }
 
 declare const storage: {
     get<T = unknown>(key: string): Promise<T | null>;
@@ -3007,6 +3060,12 @@ export { T_InsertOneResult }
 export { T_InsertOneResult as T_InsertOneResult_alias_1 }
 export { T_InsertOneResult as T_InsertOneResult_alias_2 }
 export { T_InsertOneResult as T_InsertOneResult_alias_3 }
+
+declare type T_MongoMigrateContext<NeedDb extends boolean> = NeedDb extends true ? I_MongoMigrateRawContext : undefined;
+export { T_MongoMigrateContext }
+export { T_MongoMigrateContext as T_MongoMigrateContext_alias_1 }
+export { T_MongoMigrateContext as T_MongoMigrateContext_alias_2 }
+export { T_MongoMigrateContext as T_MongoMigrateContext_alias_3 }
 
 declare type T_MongooseHookNextFunction = (error?: Error) => void;
 export { T_MongooseHookNextFunction }
@@ -3308,12 +3367,16 @@ export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_1 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_2 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_3 }
 
-declare function writeFileSync(filePath: string, data: string | T_Object_2, options?: {
-    isJson?: boolean;
-}): void;
+declare const writeFileSync: typeof fsExtra.writeFileSync;
 export { writeFileSync }
 export { writeFileSync as writeFileSync_alias_1 }
 export { writeFileSync as writeFileSync_alias_2 }
 export { writeFileSync as writeFileSync_alias_3 }
+
+declare const writeJsonSync: <T = unknown>(file: string, obj: T, options?: fsExtra.JsonWriteOptions | null) => void;
+export { writeJsonSync }
+export { writeJsonSync as writeJsonSync_alias_1 }
+export { writeJsonSync as writeJsonSync_alias_2 }
+export { writeJsonSync as writeJsonSync_alias_3 }
 
 export { }
