@@ -41,6 +41,7 @@ import { Locale } from 'date-fns/locale';
 import type { Locale as Locale_2 } from 'date-fns';
 import migrate from 'migrate-mongo';
 import { Model } from 'mongoose';
+import { MongoClient } from 'mongodb';
 import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import type mongooseRaw from 'mongoose';
@@ -190,25 +191,26 @@ export { clearAllErrorLists as clearAllErrorLists_alias_2 }
 export { clearAllErrorLists as clearAllErrorLists_alias_3 }
 
 declare const command: {
-    simpleGitHooks: () => Promise<string | void>;
-    eslintInspect: () => Promise<string | void>;
-    nodeModulesInspect: () => Promise<string | void>;
-    eslintCheck: () => Promise<string | void>;
-    eslintFix: () => Promise<string | void>;
-    typescriptCheck: () => Promise<string | void>;
-    configureGitHook: () => Promise<string | void>;
-    testUnit: () => Promise<string | void>;
-    testE2e: () => Promise<string | void>;
-    mongoMigrateCreate: (migrateName: string) => Promise<string | void>;
-    mongoMigrateUp: () => Promise<string | void>;
-    mongoMigrateDown: () => Promise<string | void>;
-    commitLint: () => Promise<string | void>;
-    lintStaged: () => Promise<string | void>;
-    stageBuildDirectory: () => Promise<string | void>;
-    build: () => Promise<string | void>;
-    pnpmInstallStandard: () => Promise<string | void>;
-    pnpmInstallLegacy: () => Promise<string | void>;
-    pnpmInstallForce: () => Promise<string | void>;
+    simpleGitHooks: () => Promise<string>;
+    eslintInspect: () => Promise<string>;
+    nodeModulesInspect: () => Promise<string>;
+    eslintCheck: () => Promise<string>;
+    eslintFix: () => Promise<string>;
+    typescriptCheck: () => Promise<string>;
+    configureGitHook: () => Promise<string>;
+    testUnit: () => Promise<string>;
+    testE2e: () => Promise<string>;
+    mongoMigrateCreate: (migrateName: string) => Promise<string>;
+    mongoMigrateUp: () => Promise<string>;
+    mongoMigrateDown: () => Promise<string>;
+    mongoMigrateStatus: () => Promise<string>;
+    commitLint: () => Promise<string>;
+    lintStaged: () => Promise<string>;
+    stageBuildDirectory: () => Promise<string>;
+    build: () => Promise<string>;
+    pnpmInstallStandard: () => Promise<string>;
+    pnpmInstallLegacy: () => Promise<string>;
+    pnpmInstallForce: () => Promise<string>;
 };
 export { command }
 export { command as command_alias_1 }
@@ -260,6 +262,19 @@ export { createExpress }
 export { createExpress as createExpress_alias_1 }
 export { createExpress as createExpress_alias_2 }
 export { createExpress as createExpress_alias_3 }
+
+declare function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>): {
+    'pre-push'?: {
+        raw: boolean;
+        cmd: string;
+    };
+    'pre-commit': string;
+    'commit-msg': string;
+};
+export { createGitHooksConfig }
+export { createGitHooksConfig as createGitHooksConfig_alias_1 }
+export { createGitHooksConfig as createGitHooksConfig_alias_2 }
+export { createGitHooksConfig as createGitHooksConfig_alias_3 }
 
 declare function createGraphqlCodegenConfig({ uri, from, to, target, }: I_GraphqlCodegenConfig): CodegenConfig;
 export { createGraphqlCodegenConfig }
@@ -1619,19 +1634,6 @@ export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_1 }
 export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_2 }
 export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_3 }
 
-declare function HOOK({ isCurrentProject }: Partial<I_CommandContext>): {
-    'pre-push'?: {
-        raw: boolean;
-        cmd: string;
-    };
-    'pre-commit': string;
-    'commit-msg': string;
-};
-export { HOOK }
-export { HOOK as HOOK_alias_1 }
-export { HOOK as HOOK_alias_2 }
-export { HOOK as HOOK_alias_3 }
-
 declare interface I_ApolloErrorContext {
     error: ApolloError_2 | null;
     showError: (error: ApolloError_2) => void;
@@ -2020,11 +2022,6 @@ export { I_Log_NodeJS as I_Log_NodeJS_alias_1 }
 export { I_Log_NodeJS as I_Log_NodeJS_alias_2 }
 export { I_Log_NodeJS as I_Log_NodeJS_alias_3 }
 
-declare interface I_MongoMigrateRawContext {
-    db: mongoose.mongo.Db;
-    client: mongoose.mongo.MongoClient;
-}
-
 declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     method: T_MongooseMiddlewareMethod;
     pre?: T_MongooseMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
@@ -2256,11 +2253,17 @@ export { mergeConfigs }
 export { mergeConfigs as mergeConfigs_alias_1 }
 export { mergeConfigs as mergeConfigs_alias_2 }
 
-declare const MIGRATE_MONGO_CLI = "migrate-mongo";
+declare const MIGRATE_MONGO_CLI = "./node_modules/migrate-mongo/bin/migrate-mongo";
 export { MIGRATE_MONGO_CLI }
 export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_1 }
 export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_2 }
 export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_3 }
+
+declare const MIGRATE_MONGO_CONFIG = ".migrate-mongo.config.js";
+export { MIGRATE_MONGO_CONFIG }
+export { MIGRATE_MONGO_CONFIG as MIGRATE_MONGO_CONFIG_alias_1 }
+export { MIGRATE_MONGO_CONFIG as MIGRATE_MONGO_CONFIG_alias_2 }
+export { MIGRATE_MONGO_CONFIG as MIGRATE_MONGO_CONFIG_alias_3 }
 
 declare const MIGRATE_MONGO_PACKAGE_NAME = "migrate-mongo";
 export { MIGRATE_MONGO_PACKAGE_NAME }
@@ -2297,13 +2300,14 @@ declare const mongo: {
         matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean>;
     };
     migrate: {
-        withConfig: <T, NeedDb extends boolean = false>(callback: (ctx: T_MongoMigrateContext<NeedDb>) => Promise<T>, needDb?: NeedDb) => Promise<T>;
-        init: () => Promise<void>;
-        create: (name: string) => Promise<void>;
-        up: () => Promise<void>;
-        down: () => Promise<void>;
-        status: () => Promise<void>;
-        config: (options: Partial<migrate.config.Config>) => void;
+        setConfig: (options: Partial<migrate.config.Config>) => void;
+        init(): Promise<void>;
+        create(description: string): Promise<string>;
+        up(db: Db, client: MongoClient): Promise<string[]>;
+        down(db: Db, client: MongoClient): Promise<string[]>;
+        status(db: Db): Promise<migrate.MigrationStatus[]>;
+        database: typeof migrate.database;
+        config: typeof migrate.config;
     };
 };
 export { mongo }
@@ -2478,6 +2482,7 @@ declare const PATH: {
     PACKAGE_LOCK_JSON: string;
     PNPM_LOCK_YAML: string;
     NODE_MODULES: string;
+    MIGRATE_MONGO_CONFIG: string;
     LINT_STAGED_CONFIG: string;
     COMMITLINT_CONFIG: string;
     UNIT_TEST_CONFIG: string;
@@ -3060,12 +3065,6 @@ export { T_InsertOneResult }
 export { T_InsertOneResult as T_InsertOneResult_alias_1 }
 export { T_InsertOneResult as T_InsertOneResult_alias_2 }
 export { T_InsertOneResult as T_InsertOneResult_alias_3 }
-
-declare type T_MongoMigrateContext<NeedDb extends boolean> = NeedDb extends true ? I_MongoMigrateRawContext : undefined;
-export { T_MongoMigrateContext }
-export { T_MongoMigrateContext as T_MongoMigrateContext_alias_1 }
-export { T_MongoMigrateContext as T_MongoMigrateContext_alias_2 }
-export { T_MongoMigrateContext as T_MongoMigrateContext_alias_3 }
 
 declare type T_MongooseHookNextFunction = (error?: Error) => void;
 export { T_MongooseHookNextFunction }

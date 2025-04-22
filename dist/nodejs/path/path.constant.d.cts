@@ -1,4 +1,4 @@
-export { HOOK_alias_3 as HOOK } from '../../_tsup-dts-rollup.cjs';
+export { createGitHooksConfig_alias_3 as createGitHooksConfig } from '../../_tsup-dts-rollup.cjs';
 export { WORKING_DIRECTORY_alias_3 as WORKING_DIRECTORY } from '../../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_PACKAGE_NAME_alias_3 as CYBERSKILL_PACKAGE_NAME } from '../../_tsup-dts-rollup.cjs';
 export { NODE_MODULES_alias_3 as NODE_MODULES } from '../../_tsup-dts-rollup.cjs';
@@ -11,6 +11,7 @@ export { SIMPLE_GIT_HOOK_JSON_alias_3 as SIMPLE_GIT_HOOK_JSON } from '../../_tsu
 export { PNPM_LOCK_YAML_alias_3 as PNPM_LOCK_YAML } from '../../_tsup-dts-rollup.cjs';
 export { GIT_HOOK_alias_3 as GIT_HOOK } from '../../_tsup-dts-rollup.cjs';
 export { GIT_COMMIT_EDITMSG_alias_3 as GIT_COMMIT_EDITMSG } from '../../_tsup-dts-rollup.cjs';
+export { MIGRATE_MONGO_CONFIG_alias_3 as MIGRATE_MONGO_CONFIG } from '../../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_DIRECTORY_alias_3 as CYBERSKILL_DIRECTORY } from '../../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_CLI_alias_3 as CYBERSKILL_CLI } from '../../_tsup-dts-rollup.cjs';
 export { CYBERSKILL_CLI_PATH_alias_3 as CYBERSKILL_CLI_PATH } from '../../_tsup-dts-rollup.cjs';

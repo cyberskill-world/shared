@@ -251,10 +251,3 @@ export interface I_ReturnFailure {
 }
 
 export type I_Return<T = void, E = unknown> = I_ReturnSuccess<T, E> | I_ReturnFailure;
-
-interface I_MongoMigrateRawContext {
-    db: mongoose.mongo.Db;
-    client: mongoose.mongo.MongoClient;
-}
-
-export type T_MongoMigrateContext<NeedDb extends boolean> = NeedDb extends true ? I_MongoMigrateRawContext : undefined;

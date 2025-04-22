@@ -10,7 +10,7 @@ import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } 
 import { appendFileSync, existsSync, readFileSync, removeSync, writeFileSync, writeJsonSync } from '../fs/index.js';
 import { E_IssueType, logNodeJS as log } from '../log/index.js';
 import { checkPackage, installDependencies, setupPackages } from '../package/index.js';
-import { command, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, HOOK, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
+import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
 async function checkTypescript() {
     if (existsSync(PATH.TS_CONFIG)) {
@@ -103,7 +103,7 @@ async function setupGitHook() {
 
     removeSync(PATH.GIT_HOOK);
 
-    const hooks = await resolveCommands(HOOK);
+    const hooks = await resolveCommands(createGitHooksConfig);
 
     writeJsonSync(PATH.SIMPLE_GIT_HOOKS_JSON, hooks);
 
@@ -160,6 +160,10 @@ async function mongoMigrateDown() {
     await runCommand('Rolling back MongoDB migration', await command.mongoMigrateDown());
 }
 
+async function mongoMigrateStatus() {
+    await runCommand('Checking MongoDB migration status', await command.mongoMigrateStatus());
+}
+
 (async () => {
     try {
         await yargs(hideBin(process.argv))
@@ -190,6 +194,7 @@ async function mongoMigrateDown() {
             })
             .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
             .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
+            .command('mongo:migrate:status', 'Check MongoDB migration status', mongoMigrateStatus)
             .demandCommand(1, 'Please specify a valid command.')
             .strict()
             .help()
