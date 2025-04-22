@@ -1,3 +1,9 @@
+## [1.104.0](https://github.com/cyberskill-world/shared/compare/v1.103.0...v1.104.0) (2025-04-22)
+
+### ✨ Features
+
+* correct lint ([d6f4f3a](https://github.com/cyberskill-world/shared/commit/d6f4f3accb8dbac8740687f4b586b99309f468c2))
+
 ## [1.103.0](https://github.com/cyberskill-world/shared/compare/v1.102.0...v1.103.0) (2025-04-22)
 
 ### ✨ Features
