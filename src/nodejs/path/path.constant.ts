@@ -115,7 +115,6 @@ export const command = {
     mongoMigrateCreate: (migrateName: string) => commandFactory(E_CommandType.CLI, MIGRATE_MONGO_PACKAGE_NAME, `${TSX_CLI} ${MIGRATE_MONGO_CLI} create ${migrateName} -f ${PATH.MIGRATE_MONGO_CONFIG}`)(),
     mongoMigrateUp: commandFactory(E_CommandType.CLI, MIGRATE_MONGO_PACKAGE_NAME, `${TSX_CLI} ${MIGRATE_MONGO_CLI} up -f ${PATH.MIGRATE_MONGO_CONFIG}`),
     mongoMigrateDown: commandFactory(E_CommandType.CLI, MIGRATE_MONGO_PACKAGE_NAME, `${TSX_CLI} ${MIGRATE_MONGO_CLI} down -f ${PATH.MIGRATE_MONGO_CONFIG}`),
-    mongoMigrateStatus: commandFactory(E_CommandType.CLI, MIGRATE_MONGO_PACKAGE_NAME, `${TSX_CLI} ${MIGRATE_MONGO_CLI} status -f ${PATH.MIGRATE_MONGO_CONFIG}`),
     commitLint: commandFactory(E_CommandType.CLI, COMMIT_LINT_PACKAGE_NAME, `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.COMMITLINT_CONFIG}`),
     lintStaged: commandFactory(E_CommandType.CLI, LINT_STAGED_PACKAGE_NAME, `${LINT_STAGED_CLI} --config ${PATH.LINT_STAGED_CONFIG}`),
     stageBuildDirectory: commandFactory(E_CommandType.STRING, `${GIT_CLI} add ${BUILD_DIRECTORY}`),

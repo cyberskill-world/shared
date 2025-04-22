@@ -160,10 +160,6 @@ async function mongoMigrateDown() {
     await runCommand('Rolling back MongoDB migration', await command.mongoMigrateDown());
 }
 
-async function mongoMigrateStatus() {
-    await runCommand('Checking MongoDB migration status', await command.mongoMigrateStatus());
-}
-
 (async () => {
     try {
         await yargs(hideBin(process.argv))
@@ -194,7 +190,6 @@ async function mongoMigrateStatus() {
             })
             .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
             .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
-            .command('mongo:migrate:status', 'Check MongoDB migration status', mongoMigrateStatus)
             .demandCommand(1, 'Please specify a valid command.')
             .strict()
             .help()

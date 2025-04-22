@@ -203,7 +203,6 @@ declare const command: {
     mongoMigrateCreate: (migrateName: string) => Promise<string>;
     mongoMigrateUp: () => Promise<string>;
     mongoMigrateDown: () => Promise<string>;
-    mongoMigrateStatus: () => Promise<string>;
     commitLint: () => Promise<string>;
     lintStaged: () => Promise<string>;
     stageBuildDirectory: () => Promise<string>;
