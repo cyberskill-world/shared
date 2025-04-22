@@ -1,3 +1,9 @@
+## [1.105.0](https://github.com/cyberskill-world/shared/compare/v1.104.0...v1.105.0) (2025-04-22)
+
+### ✨ Features
+
+* remove migrate-mongo status ([af69875](https://github.com/cyberskill-world/shared/commit/af698750cd284914a0de8f587bb81d8cc68aff84))
+
 ## [1.104.0](https://github.com/cyberskill-world/shared/compare/v1.103.0...v1.104.0) (2025-04-22)
 
 ### ✨ Features
