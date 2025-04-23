@@ -8,12 +8,13 @@ export const {
     lstatSync,
     mkdirSync,
     readFileSync,
-    readJsonSync,
     unlinkSync,
     writeFileSync,
-    writeJsonSync,
     statSync,
 } = fsExtra;
+
+export const readJsonSync: typeof fsExtra.readJsonSync = fsExtra.readJsonSync;
+export const writeJsonSync: typeof fsExtra.writeJsonSync = fsExtra.writeJsonSync;
 
 export function pathExistsSync(...paths: string[]) {
     return paths.every(path => fsExtra.pathExistsSync(path));

@@ -6,7 +6,8 @@ export { appendFileSync_alias_3 as appendFileSync } from '../../_tsup-dts-rollup
 export { lstatSync_alias_3 as lstatSync } from '../../_tsup-dts-rollup.js';
 export { mkdirSync_alias_3 as mkdirSync } from '../../_tsup-dts-rollup.js';
 export { readFileSync_alias_3 as readFileSync } from '../../_tsup-dts-rollup.js';
-export { readJsonSync_alias_3 as readJsonSync } from '../../_tsup-dts-rollup.js';
 export { unlinkSync_alias_3 as unlinkSync } from '../../_tsup-dts-rollup.js';
 export { writeFileSync_alias_3 as writeFileSync } from '../../_tsup-dts-rollup.js';
+export { statSync_alias_3 as statSync } from '../../_tsup-dts-rollup.js';
+export { readJsonSync_alias_3 as readJsonSync } from '../../_tsup-dts-rollup.js';
 export { writeJsonSync_alias_3 as writeJsonSync } from '../../_tsup-dts-rollup.js';

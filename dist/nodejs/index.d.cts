@@ -33,9 +33,10 @@ export { appendFileSync_alias_1 as appendFileSync } from '../_tsup-dts-rollup.cj
 export { lstatSync_alias_1 as lstatSync } from '../_tsup-dts-rollup.cjs';
 export { mkdirSync_alias_1 as mkdirSync } from '../_tsup-dts-rollup.cjs';
 export { readFileSync_alias_1 as readFileSync } from '../_tsup-dts-rollup.cjs';
-export { readJsonSync_alias_1 as readJsonSync } from '../_tsup-dts-rollup.cjs';
 export { unlinkSync_alias_1 as unlinkSync } from '../_tsup-dts-rollup.cjs';
 export { writeFileSync_alias_1 as writeFileSync } from '../_tsup-dts-rollup.cjs';
+export { statSync_alias_1 as statSync } from '../_tsup-dts-rollup.cjs';
+export { readJsonSync_alias_1 as readJsonSync } from '../_tsup-dts-rollup.cjs';
 export { writeJsonSync_alias_1 as writeJsonSync } from '../_tsup-dts-rollup.cjs';
 export { E_IssueType_alias_1 as E_IssueType } from '../_tsup-dts-rollup.cjs';
 export { I_IssueEntry_alias_1 as I_IssueEntry } from '../_tsup-dts-rollup.cjs';

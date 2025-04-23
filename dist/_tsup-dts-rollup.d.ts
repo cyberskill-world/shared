@@ -8,7 +8,6 @@ import { ApolloClientOptions } from '@apollo/client';
 import type { ApolloError as ApolloError_2 } from '@apollo/client';
 import type { ApolloLink } from '@apollo/client';
 import { ApolloServer } from '@apollo/server';
-import { appendFileSync } from 'fs-extra';
 import type { Application } from 'express';
 import type { Buffer as Buffer_2 } from 'node:buffer';
 import type { ClientSession } from 'mongoose';
@@ -29,6 +28,7 @@ import express from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
+import fsExtra from 'fs-extra';
 import type { GraphQLSchema } from 'graphql';
 import { I_ApolloErrorContext as I_ApolloErrorContext_2 } from './apollo-error.type.js';
 import { I_Command as I_Command_2 } from './command.type.js';
@@ -40,9 +40,7 @@ import type { InsertOneResult } from 'mongodb';
 import type { JSX } from 'react';
 import { Locale } from 'date-fns/locale';
 import type { Locale as Locale_2 } from 'date-fns';
-import { lstatSync } from 'fs-extra';
 import migrate from 'migrate-mongo';
-import { mkdirSync } from 'fs-extra';
 import { Model } from 'mongoose';
 import { MongoClient } from 'mongodb';
 import type mongoose from 'mongoose';
@@ -66,8 +64,6 @@ import type { QueryWithHelpers } from 'mongoose';
 import { default as React_2 } from 'react';
 import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
-import { readFileSync } from 'fs-extra';
-import { readJsonSync } from 'fs-extra';
 import { Request as Request_2 } from 'express';
 import { Response as Response_2 } from 'express';
 import { Router } from 'express';
@@ -80,7 +76,6 @@ import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
 import { toast } from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
-import { unlinkSync } from 'fs-extra';
 import type { UpdateQuery } from 'mongoose';
 import type { UpdateResult } from 'mongodb';
 import type { UriFunction } from '@apollo/client';
@@ -89,8 +84,6 @@ import { useTranslation } from 'react-i18next';
 import { useTranslations } from 'next-intl';
 import { WebSocketServer } from 'ws';
 import type { WithId } from 'mongodb';
-import { writeFileSync } from 'fs-extra';
-import { writeJsonSync } from 'fs-extra';
 
 export { aggregatePaginate }
 export { aggregatePaginate as aggregatePaginate_alias_1 }
@@ -138,6 +131,7 @@ export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
 export { ApolloProvider as ApolloProvider_alias_3 }
 
+declare const appendFileSync: typeof fsExtra.appendFileSync;
 export { appendFileSync }
 export { appendFileSync as appendFileSync_alias_1 }
 export { appendFileSync as appendFileSync_alias_2 }
@@ -2309,6 +2303,7 @@ export { logNodeJS as logNodeJS_alias_1 }
 export { logNodeJS as logNodeJS_alias_2 }
 export { logNodeJS as logNodeJS_alias_3 }
 
+declare const lstatSync: fsExtra.StatSyncFn;
 export { lstatSync }
 export { lstatSync as lstatSync_alias_1 }
 export { lstatSync as lstatSync_alias_2 }
@@ -2337,6 +2332,7 @@ export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_1 }
 export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_2 }
 export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_3 }
 
+declare const mkdirSync: typeof fsExtra.mkdirSync;
 export { mkdirSync }
 export { mkdirSync as mkdirSync_alias_1 }
 export { mkdirSync as mkdirSync_alias_2 }
@@ -2604,11 +2600,13 @@ export { rawCommand as rawCommand_alias_1 }
 export { rawCommand as rawCommand_alias_2 }
 export { rawCommand as rawCommand_alias_3 }
 
+declare const readFileSync: typeof fsExtra.readFileSync;
 export { readFileSync }
 export { readFileSync as readFileSync_alias_1 }
 export { readFileSync as readFileSync_alias_2 }
 export { readFileSync as readFileSync_alias_3 }
 
+declare const readJsonSync: typeof fsExtra.readJsonSync;
 export { readJsonSync }
 export { readJsonSync as readJsonSync_alias_1 }
 export { readJsonSync as readJsonSync_alias_2 }
@@ -2986,6 +2984,12 @@ export { SIMPLE_GIT_HOOKS_PACKAGE_NAME }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_1 }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_2 }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_3 }
+
+declare const statSync: fsExtra.StatSyncFn;
+export { statSync }
+export { statSync as statSync_alias_1 }
+export { statSync as statSync_alias_2 }
+export { statSync as statSync_alias_3 }
 
 declare const storage: {
     get<T = unknown>(key: string): Promise<T | null>;
@@ -3375,6 +3379,7 @@ export { TSX_CLI as TSX_CLI_alias_1 }
 export { TSX_CLI as TSX_CLI_alias_2 }
 export { TSX_CLI as TSX_CLI_alias_3 }
 
+declare const unlinkSync: typeof fsExtra.unlinkSync;
 export { unlinkSync }
 export { unlinkSync as unlinkSync_alias_1 }
 export { unlinkSync as unlinkSync_alias_2 }
@@ -3423,11 +3428,17 @@ export { useTranslateNextIntl as useTranslateNextIntl_alias_3 }
 declare const validate: {
     /**
      * Checks if a value is empty.
-     * A value is considered empty if it is:
-     * - null or undefined
-     * - an empty string (after trim)
-     * - an empty array
-     * - an empty object (excluding Date, Map, Set, etc.)
+     * - For strings, it checks if the string is empty or contains only whitespace.
+     * - For arrays, it checks if the array has no elements.
+     * - For objects, it checks if the object has no own properties.
+     * - For Maps and Sets, it checks if they are empty.
+     * - For WeakMaps and WeakSets, it returns true (as they are not enumerable).
+     * - For ArrayBuffer views, it checks if the byte length is 0.
+     * - For Dates, it returns false.
+     * - For null and undefined, it returns true.
+     * - For all other types, it returns false.
+     * @param value - The value to check.
+     * @returns True if the value is empty, false otherwise.
      */
     isEmpty(value: unknown): boolean;
     /**
@@ -3488,11 +3499,13 @@ export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_1 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_2 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_3 }
 
+declare const writeFileSync: typeof fsExtra.writeFileSync;
 export { writeFileSync }
 export { writeFileSync as writeFileSync_alias_1 }
 export { writeFileSync as writeFileSync_alias_2 }
 export { writeFileSync as writeFileSync_alias_3 }
 
+declare const writeJsonSync: typeof fsExtra.writeJsonSync;
 export { writeJsonSync }
 export { writeJsonSync as writeJsonSync_alias_1 }
 export { writeJsonSync as writeJsonSync_alias_2 }
