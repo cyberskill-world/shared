@@ -1,3 +1,11 @@
+## [1.107.0](https://github.com/cyberskill-world/shared/compare/v1.106.0...v1.107.0) (2025-04-23)
+
+### ✨ Features
+
+* give descriptions for utils ([6bfc8c8](https://github.com/cyberskill-world/shared/commit/6bfc8c8606ffd49bb2055be10dea19ec332311d8))
+* give descriptions for utils ([c477d97](https://github.com/cyberskill-world/shared/commit/c477d97464257909048daaf0b5637af6326ef5b5))
+* give descriptions for utils ([c595700](https://github.com/cyberskill-world/shared/commit/c595700664d7ead406cd0fa94a4b7c8410973d6e))
+
 ## [1.106.0](https://github.com/cyberskill-world/shared/compare/v1.105.0...v1.106.0) (2025-04-22)
 
 ### ✨ Features
