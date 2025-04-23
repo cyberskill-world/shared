@@ -7,13 +7,13 @@ import type { I_IssueEntry } from '../log/index.js';
 
 import pkg from '../../../package.json' with { type: 'json' };
 import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
-import { appendFileSync, existsSync, readFileSync, removeSync, writeFileSync, writeJsonSync } from '../fs/index.js';
+import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync, writeJsonSync } from '../fs/index.js';
 import { E_IssueType, logNodeJS as log } from '../log/index.js';
 import { checkPackage, installDependencies, setupPackages } from '../package/index.js';
 import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
 async function checkTypescript() {
-    if (existsSync(PATH.TS_CONFIG)) {
+    if (pathExistsSync(PATH.TS_CONFIG)) {
         await runCommand('Performing TypeScript validation', await command.typescriptCheck());
     }
     else {
@@ -109,7 +109,7 @@ async function setupGitHook() {
 
     const gitIgnoreEntry = `\n${SIMPLE_GIT_HOOK_JSON}\n`;
 
-    if (existsSync(PATH.GIT_IGNORE)) {
+    if (pathExistsSync(PATH.GIT_IGNORE)) {
         const gitignore = readFileSync(PATH.GIT_IGNORE, 'utf-8').split('\n');
 
         if (!gitignore.includes(SIMPLE_GIT_HOOK_JSON)) {

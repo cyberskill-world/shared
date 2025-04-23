@@ -5,7 +5,7 @@ import { getEnv } from '#configs/env/index.js';
 import type { I_CheckPackage, I_GetPackage, T_PackageJson } from './package.type.js';
 
 import { runCommand } from '../command/index.js';
-import { existsSync, readJsonSync, writeJsonSync } from '../fs/index.js';
+import { pathExistsSync, readJsonSync, writeJsonSync } from '../fs/index.js';
 import { logNodeJS as log } from '../log/index.js';
 import { command, join, PACKAGE_JSON, PATH } from '../path/index.js';
 import { CHECK_PACKAGE_EMPTY_RESULT } from './package.constant.js';
@@ -15,7 +15,7 @@ const env = getEnv();
 export function getPackage(packageName: string): I_GetPackage | false {
     const pkgPath = join(env.CWD, PACKAGE_JSON);
 
-    if (!existsSync(pkgPath)) {
+    if (!pathExistsSync(pkgPath)) {
         return false;
     }
 
@@ -140,7 +140,7 @@ export async function setupPackages(packages: string[], options?: {
     update?: boolean;
     postInstallActions?: (() => Promise<void>)[];
 }) {
-    if (!existsSync(PATH.PACKAGE_JSON)) {
+    if (!pathExistsSync(PATH.PACKAGE_JSON)) {
         log.error('package.json not found. Aborting setup.');
 
         return;

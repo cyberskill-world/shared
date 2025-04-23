@@ -13,7 +13,7 @@ import { validate } from '#utils/validate/index.js';
 
 import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_Return, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_CreateSlugQueryResponse, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
-import { appendFileSync, existsSync, readFileSync, writeFileSync } from '../fs/index.js';
+import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 
 export { aggregatePaginate, mongoosePaginate };
@@ -161,7 +161,7 @@ export const mongo = {
 
             const gitIgnoreEntry = `\n${MIGRATE_MONGO_CONFIG}\n`;
 
-            if (existsSync(PATH.GIT_IGNORE)) {
+            if (pathExistsSync(PATH.GIT_IGNORE)) {
                 const gitignore = readFileSync(PATH.GIT_IGNORE, 'utf-8').split('\n');
 
                 if (!gitignore.includes(MIGRATE_MONGO_CONFIG)) {

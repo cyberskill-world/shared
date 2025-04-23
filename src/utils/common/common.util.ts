@@ -18,6 +18,11 @@ const upperCharMap: Record<string, string[]> = Object.entries(charMap).reduce(
     {} as Record<string, string[]>,
 );
 
+/**
+ * Convert a string to a regex pattern that matches the string and its accented variations.
+ * @param str - The string to convert.
+ * @returns The regex pattern as a string.
+ */
 export function regexSearchMapper(str: string) {
     str = unorm.nfkc(str);
     const combinedMap = { ...charMap, ...upperCharMap };
@@ -31,6 +36,11 @@ export function regexSearchMapper(str: string) {
     return str;
 }
 
+/**
+ * Remove accents from a string.
+ * @param str - The string to remove accents from.
+ * @returns The string without accents.
+ */
 export function removeAccent(str: string) {
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }

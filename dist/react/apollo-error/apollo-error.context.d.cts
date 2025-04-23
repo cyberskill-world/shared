@@ -1,1 +1,1 @@
-export { ApolloErrorContext_alias_2 as ApolloErrorContext } from '../../_tsup-dts-rollup.cjs';
+export { ApolloErrorContext_alias_3 as ApolloErrorContext } from '../../_tsup-dts-rollup.cjs';

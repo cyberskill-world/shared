@@ -1,7 +1,25 @@
 export const validate = {
+    /**
+     * Checks if a value is empty.
+     * - For strings, it checks if the string is empty or contains only whitespace.
+     * - For arrays, it checks if the array has no elements.
+     * - For objects, it checks if the object has no own properties.
+     * - For Maps and Sets, it checks if they are empty.
+     * - For WeakMaps and WeakSets, it returns true (as they are not enumerable).
+     * - For ArrayBuffer views, it checks if the byte length is 0.
+     * - For Dates, it returns false.
+     * - For null and undefined, it returns true.
+     * - For all other types, it returns false.
+     * @param value - The value to check.
+     * @returns True if the value is empty, false otherwise.
+     */
     isEmpty(value: unknown): boolean {
         if (value === null || value === undefined) {
             return true;
+        }
+
+        if (typeof value === 'string') {
+            return value.trim().length === 0;
         }
 
         if (Array.isArray(value)) {
@@ -12,13 +30,47 @@ export const validate = {
             if (value instanceof Date) {
                 return false;
             }
+
+            if (value instanceof Map || value instanceof Set) {
+                return value.size === 0;
+            }
+
+            if (value instanceof WeakMap || value instanceof WeakSet) {
+                return true;
+            }
+
+            if (ArrayBuffer.isView(value)) {
+                return value.byteLength === 0;
+            }
+
             return Object.keys(value).length === 0;
         }
 
-        if (typeof value === 'string') {
-            return value.trim().length === 0;
+        return false;
+    },
+    /**
+     * Checks if a string is a valid IP address (IPv4 or IPv6).
+     *
+     * - IPv4: Four octets separated by dots, each between 0–255.
+     * - IPv6: Eight groups of four hex digits, possibly compressed with `::`.
+     *
+     * @param ip - The IP address string to validate.
+     * @returns True if the IP is valid IPv4 or IPv6.
+     */
+    isValidIP(ip: string): boolean {
+        const ipv4Parts = ip.split('.');
+
+        if (ipv4Parts.length === 4 && ipv4Parts.every(octet =>
+            /^\d+$/.test(octet)
+            && Number(octet) >= 0
+            && Number(octet) <= 255,
+        )) {
+            return true;
         }
 
-        return false;
+        // eslint-disable-next-line regexp/no-unused-capturing-group
+        const ipv6Regex = /^(([a-f\d]{1,4}:){7}[a-f\d]{1,4}|((?:[a-f\d]{1,4}:){1,7}:)|((?:[a-f\d]{1,4}:){1,6}:[a-f\d]{1,4})|::)$/i;
+
+        return ipv6Regex.test(ip);
     },
 };

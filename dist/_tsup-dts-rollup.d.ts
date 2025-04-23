@@ -8,7 +8,9 @@ import { ApolloClientOptions } from '@apollo/client';
 import type { ApolloError as ApolloError_2 } from '@apollo/client';
 import type { ApolloLink } from '@apollo/client';
 import { ApolloServer } from '@apollo/server';
+import { appendFileSync } from 'fs-extra';
 import type { Application } from 'express';
+import type { Buffer as Buffer_2 } from 'node:buffer';
 import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
@@ -27,7 +29,6 @@ import express from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import type { Filter } from 'mongodb';
 import type { FilterQuery } from 'mongoose';
-import fsExtra from 'fs-extra';
 import type { GraphQLSchema } from 'graphql';
 import { I_ApolloErrorContext as I_ApolloErrorContext_2 } from './apollo-error.type.js';
 import { I_Command as I_Command_2 } from './command.type.js';
@@ -39,7 +40,9 @@ import type { InsertOneResult } from 'mongodb';
 import type { JSX } from 'react';
 import { Locale } from 'date-fns/locale';
 import type { Locale as Locale_2 } from 'date-fns';
+import { lstatSync } from 'fs-extra';
 import migrate from 'migrate-mongo';
+import { mkdirSync } from 'fs-extra';
 import { Model } from 'mongoose';
 import { MongoClient } from 'mongodb';
 import type mongoose from 'mongoose';
@@ -63,6 +66,8 @@ import type { QueryWithHelpers } from 'mongoose';
 import { default as React_2 } from 'react';
 import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
+import { readFileSync } from 'fs-extra';
+import { readJsonSync } from 'fs-extra';
 import { Request as Request_2 } from 'express';
 import { Response as Response_2 } from 'express';
 import { Router } from 'express';
@@ -75,6 +80,7 @@ import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
 import { toast } from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
+import { unlinkSync } from 'fs-extra';
 import type { UpdateQuery } from 'mongoose';
 import type { UpdateResult } from 'mongodb';
 import type { UriFunction } from '@apollo/client';
@@ -83,6 +89,8 @@ import { useTranslation } from 'react-i18next';
 import { useTranslations } from 'next-intl';
 import { WebSocketServer } from 'ws';
 import type { WithId } from 'mongodb';
+import { writeFileSync } from 'fs-extra';
+import { writeJsonSync } from 'fs-extra';
 
 export { aggregatePaginate }
 export { aggregatePaginate as aggregatePaginate_alias_1 }
@@ -130,7 +138,6 @@ export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
 export { ApolloProvider as ApolloProvider_alias_3 }
 
-declare const appendFileSync: typeof fsExtra.appendFileSync;
 export { appendFileSync }
 export { appendFileSync as appendFileSync_alias_1 }
 export { appendFileSync as appendFileSync_alias_2 }
@@ -234,12 +241,6 @@ export { copySync as copySync_alias_1 }
 export { copySync as copySync_alias_2 }
 export { copySync as copySync_alias_3 }
 
-declare const copySyncE: typeof fsExtra.copySync;
-export { copySyncE }
-export { copySyncE as copySyncE_alias_1 }
-export { copySyncE as copySyncE_alias_2 }
-export { copySyncE as copySyncE_alias_3 }
-
 declare function createApolloServer(options: I_ApolloServerOptions): ApolloServer;
 export { createApolloServer }
 export { createApolloServer as createApolloServer_alias_1 }
@@ -317,7 +318,15 @@ export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_1 }
 export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_2 }
 export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_3 }
 
-declare function deepMerge(...object: T_Object_2[]): T_Object_2;
+/**
+ * Merges multiple objects deeply.
+ * If a property is an array, it will be merged without duplicates.
+ * If a property is an object, it will be merged recursively.
+ * If a property is a primitive, it will be overwritten.
+ * @param objects - The objects to merge.
+ * @returns The merged object.
+ */
+declare function deepMerge(...objects: T_Object_2[]): T_Object_2;
 export { deepMerge }
 export { deepMerge as deepMerge_alias_1 }
 export { deepMerge as deepMerge_alias_2 }
@@ -1545,12 +1554,6 @@ export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_1 }
 export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_2 }
 export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_3 }
 
-declare function existsSync(...paths: string[]): boolean;
-export { existsSync }
-export { existsSync as existsSync_alias_1 }
-export { existsSync as existsSync_alias_2 }
-export { existsSync as existsSync_alias_3 }
-
 export { express }
 export { express as express_alias_1 }
 export { express as express_alias_2 }
@@ -1567,12 +1570,39 @@ export { formatCommand as formatCommand_alias_1 }
 export { formatCommand as formatCommand_alias_2 }
 export { formatCommand as formatCommand_alias_3 }
 
+/**
+ * Generates a random password of a given length.
+ * The password contains a mix of letters, numbers, and special characters.
+ * @param length - The length of the password.
+ * @returns The generated password.
+ */
+declare function generateRandomPassword(length?: number): string;
+export { generateRandomPassword }
+export { generateRandomPassword as generateRandomPassword_alias_1 }
+export { generateRandomPassword as generateRandomPassword_alias_2 }
+export { generateRandomPassword as generateRandomPassword_alias_3 }
+
+/**
+ * Generates a short ID from a UUID.
+ * The ID is a substring of the SHA256 hash of the UUID.
+ * @param uuid - The UUID to be converted.
+ * @param length - The length of the short ID.
+ * @returns The short ID.
+ */
 declare function generateShortId(uuid: string, length?: number): string;
 export { generateShortId }
 export { generateShortId as generateShortId_alias_1 }
 export { generateShortId as generateShortId_alias_2 }
 export { generateShortId as generateShortId_alias_3 }
 
+/**
+ * Generates a slug from a given string.
+ * The slug is a URL-friendly version of the string.
+ * It replaces spaces with hyphens and removes special characters.
+ * @param str - The string to be slugified.
+ * @param options - Options for slugify.
+ * @returns The slugified string.
+ */
 declare function generateSlug(str?: string, options?: I_SlugifyOptions): string;
 export { generateSlug }
 export { generateSlug as generateSlug_alias_1 }
@@ -1584,6 +1614,18 @@ export { getEnv }
 export { getEnv as getEnv_alias_1 }
 export { getEnv as getEnv_alias_2 }
 export { getEnv as getEnv_alias_3 }
+
+/**
+ * Get the file name from a URL.
+ * @param url - The URL to extract the file name from.
+ * @param getExtension - Whether to include the file extension.
+ * @returns The file name.
+ */
+declare function getFileName(url?: string, getExtension?: boolean): string;
+export { getFileName }
+export { getFileName as getFileName_alias_1 }
+export { getFileName as getFileName_alias_2 }
+export { getFileName as getFileName_alias_3 }
 
 declare function getLatestPackageVersion(packageName: string): Promise<string>;
 export { getLatestPackageVersion }
@@ -2107,7 +2149,7 @@ export { I_ReturnSuccess as I_ReturnSuccess_alias_1 }
 export { I_ReturnSuccess as I_ReturnSuccess_alias_2 }
 export { I_ReturnSuccess as I_ReturnSuccess_alias_3 }
 
-declare interface I_Serializer<T> {
+declare interface I_Serializer<T = unknown> {
     serialize: (value: T) => string;
     deserialize: (value: string) => T;
 }
@@ -2116,10 +2158,19 @@ export { I_Serializer as I_Serializer_alias_1 }
 export { I_Serializer as I_Serializer_alias_2 }
 export { I_Serializer as I_Serializer_alias_3 }
 
-declare interface I_Serializer_2<T> {
+declare interface I_Serializer_2<T = unknown> {
     serialize: (value: T) => string;
     deserialize: (value: string) => T;
 }
+
+declare interface I_SerializerTypeWrapper<T extends T_SerializerKnownTypes = T_SerializerKnownTypes> {
+    __type: T;
+    value: unknown;
+}
+export { I_SerializerTypeWrapper }
+export { I_SerializerTypeWrapper as I_SerializerTypeWrapper_alias_1 }
+export { I_SerializerTypeWrapper as I_SerializerTypeWrapper_alias_2 }
+export { I_SerializerTypeWrapper as I_SerializerTypeWrapper_alias_3 }
 
 declare interface I_SlugifyOptions {
     replacement?: string;
@@ -2187,12 +2238,23 @@ export { IS_BROWSER }
 export { IS_BROWSER as IS_BROWSER_alias_1 }
 export { IS_BROWSER as IS_BROWSER_alias_2 }
 
+/**
+ * Check if a string is a valid JSON string.
+ * @param str - The string to check.
+ * @returns True if the string is a valid JSON string, false otherwise.
+ */
 declare function isJson(str: string): boolean;
 export { isJson }
 export { isJson as isJson_alias_1 }
 export { isJson as isJson_alias_2 }
 export { isJson as isJson_alias_3 }
 
+/**
+ * Checks if a value is a plain object.
+ * A plain object is an object that is not an array, null, or a function.
+ * @param val - The value to check.
+ * @returns True if the value is a plain object, false otherwise.
+ */
 declare function isPlainObject(val: unknown): val is T_Object_2;
 export { isPlainObject }
 export { isPlainObject as isPlainObject_alias_1 }
@@ -2247,6 +2309,11 @@ export { logNodeJS as logNodeJS_alias_1 }
 export { logNodeJS as logNodeJS_alias_2 }
 export { logNodeJS as logNodeJS_alias_3 }
 
+export { lstatSync }
+export { lstatSync as lstatSync_alias_1 }
+export { lstatSync as lstatSync_alias_2 }
+export { lstatSync as lstatSync_alias_3 }
+
 declare function mergeConfigs(type: T_ConfigType, ...configs: T_Object_2[]): T_Object_2;
 export { mergeConfigs }
 export { mergeConfigs as mergeConfigs_alias_1 }
@@ -2269,6 +2336,11 @@ export { MIGRATE_MONGO_PACKAGE_NAME }
 export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_1 }
 export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_2 }
 export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_3 }
+
+export { mkdirSync }
+export { mkdirSync as mkdirSync_alias_1 }
+export { mkdirSync as mkdirSync_alias_2 }
+export { mkdirSync as mkdirSync_alias_3 }
 
 declare const mongo: {
     getDateTime(now?: Date): string;
@@ -2493,7 +2565,7 @@ export { PATH as PATH_alias_1 }
 export { PATH as PATH_alias_2 }
 export { PATH as PATH_alias_3 }
 
-declare const pathExistsSync: typeof fsExtra.pathExistsSync;
+declare function pathExistsSync(...paths: string[]): boolean;
 export { pathExistsSync }
 export { pathExistsSync as pathExistsSync_alias_1 }
 export { pathExistsSync as pathExistsSync_alias_2 }
@@ -2532,24 +2604,32 @@ export { rawCommand as rawCommand_alias_1 }
 export { rawCommand as rawCommand_alias_2 }
 export { rawCommand as rawCommand_alias_3 }
 
-declare const readFileSync: typeof fsExtra.readFileSync;
 export { readFileSync }
 export { readFileSync as readFileSync_alias_1 }
 export { readFileSync as readFileSync_alias_2 }
 export { readFileSync as readFileSync_alias_3 }
 
-declare const readJsonSync: <T = unknown>(file: string, options?: fsExtra.JsonReadOptions) => T;
 export { readJsonSync }
 export { readJsonSync as readJsonSync_alias_1 }
 export { readJsonSync as readJsonSync_alias_2 }
 export { readJsonSync as readJsonSync_alias_3 }
 
+/**
+ * Convert a string to a regex pattern that matches the string and its accented variations.
+ * @param str - The string to convert.
+ * @returns The regex pattern as a string.
+ */
 declare function regexSearchMapper(str: string): string;
 export { regexSearchMapper }
 export { regexSearchMapper as regexSearchMapper_alias_1 }
 export { regexSearchMapper as regexSearchMapper_alias_2 }
 export { regexSearchMapper as regexSearchMapper_alias_3 }
 
+/**
+ * Remove accents from a string.
+ * @param str - The string to remove accents from.
+ * @returns The string without accents.
+ */
 declare function removeAccent(str: string): string;
 export { removeAccent }
 export { removeAccent as removeAccent_alias_1 }
@@ -2561,12 +2641,6 @@ export { removeSync }
 export { removeSync as removeSync_alias_1 }
 export { removeSync as removeSync_alias_2 }
 export { removeSync as removeSync_alias_3 }
-
-declare const removeSyncE: typeof fsExtra.removeSync;
-export { removeSyncE }
-export { removeSyncE as removeSyncE_alias_1 }
-export { removeSyncE as removeSyncE_alias_2 }
-export { removeSyncE as removeSyncE_alias_3 }
 
 export { Request_2 as Request }
 export { Request_2 as Request_alias_1 }
@@ -2913,12 +2987,6 @@ export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_1 
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_2 }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_3 }
 
-declare const statSync: fsExtra.StatSyncFn;
-export { statSync }
-export { statSync as statSync_alias_1 }
-export { statSync as statSync_alias_2 }
-export { statSync as statSync_alias_3 }
-
 declare const storage: {
     get<T = unknown>(key: string): Promise<T | null>;
     set<T = unknown>(key: string, value: T): Promise<void>;
@@ -2941,6 +3009,19 @@ export { storageNodeJS }
 export { storageNodeJS as storageNodeJS_alias_1 }
 export { storageNodeJS as storageNodeJS_alias_2 }
 export { storageNodeJS as storageNodeJS_alias_3 }
+
+/**
+ * Extracts a substring between two strings.
+ * @param s - The original string.
+ * @param a - The starting string.
+ * @param b - The ending string.
+ * @returns The substring between the two strings.
+ */
+declare function substringBetween(s: string, a: string, b: string): string;
+export { substringBetween }
+export { substringBetween as substringBetween_alias_1 }
+export { substringBetween as substringBetween_alias_2 }
+export { substringBetween as substringBetween_alias_3 }
 
 declare type T_AggregatePaginateResult<T> = AggregatePaginateResult<T>;
 export { T_AggregatePaginateResult }
@@ -3206,6 +3287,25 @@ export { T_QueryWithHelpers as T_QueryWithHelpers_alias_1 }
 export { T_QueryWithHelpers as T_QueryWithHelpers_alias_2 }
 export { T_QueryWithHelpers as T_QueryWithHelpers_alias_3 }
 
+declare type T_SerializerKnownTypes = 'Date' | 'Map' | 'Set' | 'RegExp' | 'BigInt' | 'Buffer';
+export { T_SerializerKnownTypes }
+export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_1 }
+export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_2 }
+export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_3 }
+
+declare interface T_SerializerValueMap {
+    Date: Date;
+    Map: Map<unknown, unknown>;
+    Set: Set<unknown>;
+    RegExp: RegExp;
+    BigInt: bigint;
+    Buffer: Buffer_2;
+}
+export { T_SerializerValueMap }
+export { T_SerializerValueMap as T_SerializerValueMap_alias_1 }
+export { T_SerializerValueMap as T_SerializerValueMap_alias_2 }
+export { T_SerializerValueMap as T_SerializerValueMap_alias_3 }
+
 declare interface T_ThrowError {
     message?: string;
     status?: {
@@ -3275,6 +3375,11 @@ export { TSX_CLI as TSX_CLI_alias_1 }
 export { TSX_CLI as TSX_CLI_alias_2 }
 export { TSX_CLI as TSX_CLI_alias_3 }
 
+export { unlinkSync }
+export { unlinkSync as unlinkSync_alias_1 }
+export { unlinkSync as unlinkSync_alias_2 }
+export { unlinkSync as unlinkSync_alias_3 }
+
 declare function useApolloError(): I_ApolloErrorContext_2;
 export { useApolloError }
 export { useApolloError as useApolloError_alias_1 }
@@ -3316,7 +3421,25 @@ export { useTranslateNextIntl as useTranslateNextIntl_alias_2 }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_3 }
 
 declare const validate: {
+    /**
+     * Checks if a value is empty.
+     * A value is considered empty if it is:
+     * - null or undefined
+     * - an empty string (after trim)
+     * - an empty array
+     * - an empty object (excluding Date, Map, Set, etc.)
+     */
     isEmpty(value: unknown): boolean;
+    /**
+     * Checks if a string is a valid IP address (IPv4 or IPv6).
+     *
+     * - IPv4: Four octets separated by dots, each between 0–255.
+     * - IPv6: Eight groups of four hex digits, possibly compressed with `::`.
+     *
+     * @param ip - The IP address string to validate.
+     * @returns True if the IP is valid IPv4 or IPv6.
+     */
+    isValidIP(ip: string): boolean;
 };
 export { validate }
 export { validate as validate_alias_1 }
@@ -3365,13 +3488,11 @@ export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_1 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_2 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_3 }
 
-declare const writeFileSync: typeof fsExtra.writeFileSync;
 export { writeFileSync }
 export { writeFileSync as writeFileSync_alias_1 }
 export { writeFileSync as writeFileSync_alias_2 }
 export { writeFileSync as writeFileSync_alias_3 }
 
-declare const writeJsonSync: <T = unknown>(file: string, obj: T, options?: fsExtra.JsonWriteOptions | null) => void;
 export { writeJsonSync }
 export { writeJsonSync as writeJsonSync_alias_1 }
 export { writeJsonSync as writeJsonSync_alias_2 }

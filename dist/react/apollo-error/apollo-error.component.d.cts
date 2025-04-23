@@ -1,1 +1,1 @@
-export { ApolloError_alias_2 as ApolloError } from '../../_tsup-dts-rollup.cjs';
+export { ApolloError_alias_3 as ApolloError } from '../../_tsup-dts-rollup.cjs';
