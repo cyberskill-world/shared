@@ -2600,6 +2600,12 @@ export { rawCommand as rawCommand_alias_1 }
 export { rawCommand as rawCommand_alias_2 }
 export { rawCommand as rawCommand_alias_3 }
 
+declare const readdirSync: typeof fsExtra.readdirSync;
+export { readdirSync }
+export { readdirSync as readdirSync_alias_1 }
+export { readdirSync as readdirSync_alias_2 }
+export { readdirSync as readdirSync_alias_3 }
+
 declare const readFileSync: typeof fsExtra.readFileSync;
 export { readFileSync }
 export { readFileSync as readFileSync_alias_1 }

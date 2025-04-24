@@ -29,12 +29,13 @@ export { I_CopySyncOptions_alias_1 as I_CopySyncOptions } from '../_tsup-dts-rol
 export { pathExistsSync_alias_1 as pathExistsSync } from '../_tsup-dts-rollup.js';
 export { removeSync_alias_1 as removeSync } from '../_tsup-dts-rollup.js';
 export { copySync_alias_1 as copySync } from '../_tsup-dts-rollup.js';
-export { appendFileSync_alias_1 as appendFileSync } from '../_tsup-dts-rollup.js';
 export { lstatSync_alias_1 as lstatSync } from '../_tsup-dts-rollup.js';
+export { readdirSync_alias_1 as readdirSync } from '../_tsup-dts-rollup.js';
 export { mkdirSync_alias_1 as mkdirSync } from '../_tsup-dts-rollup.js';
 export { readFileSync_alias_1 as readFileSync } from '../_tsup-dts-rollup.js';
-export { unlinkSync_alias_1 as unlinkSync } from '../_tsup-dts-rollup.js';
 export { writeFileSync_alias_1 as writeFileSync } from '../_tsup-dts-rollup.js';
+export { appendFileSync_alias_1 as appendFileSync } from '../_tsup-dts-rollup.js';
+export { unlinkSync_alias_1 as unlinkSync } from '../_tsup-dts-rollup.js';
 export { statSync_alias_1 as statSync } from '../_tsup-dts-rollup.js';
 export { readJsonSync_alias_1 as readJsonSync } from '../_tsup-dts-rollup.js';
 export { writeJsonSync_alias_1 as writeJsonSync } from '../_tsup-dts-rollup.js';

@@ -208,7 +208,7 @@
         "@graphql-codegen/client-preset": "4.8.0",
         "@microsoft/api-extractor": "7.52.5",
         "@next/eslint-plugin-next": "15.3.1",
-        "@swc/core": "1.11.21",
+        "@swc/core": "1.11.22",
         "@testing-library/jest-dom": "6.6.3",
         "@testing-library/react": "16.3.0",
         "@vitejs/plugin-react-swc": "3.9.0",
@@ -262,7 +262,7 @@
         "typescript": "5.8.3",
         "unorm": "1.6.0",
         "uuid": "11.1.0",
-        "vite": "6.3.2",
+        "vite": "6.3.3",
         "vitest": "3.1.2",
         "vitest-browser-react": "0.1.1",
         "ws": "8.18.1",
@@ -293,6 +293,6 @@
         "eslint": "9.25.1",
         "lint-staged": "15.5.1",
         "node-modules-inspector": "0.6.6",
-        "simple-git-hooks": "2.12.1"
+        "simple-git-hooks": "2.13.0"
     }
 }

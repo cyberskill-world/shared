@@ -4,12 +4,13 @@ import { extname } from 'node:path';
 import type { I_CopySyncOptions } from './fs.type.js';
 
 export const {
-    appendFileSync,
     lstatSync,
+    readdirSync,
     mkdirSync,
     readFileSync,
-    unlinkSync,
     writeFileSync,
+    appendFileSync,
+    unlinkSync,
     statSync,
 } = fsExtra;
 
