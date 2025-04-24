@@ -1,3 +1,9 @@
+## [1.109.0](https://github.com/cyberskill-world/shared/compare/v1.108.0...v1.109.0) (2025-04-24)
+
+### ✨ Features
+
+* export more from path and fs ([453b3f9](https://github.com/cyberskill-world/shared/commit/453b3f989ba9eba69a562431ecbc0d3f62717c47))
+
 ## [1.108.0](https://github.com/cyberskill-world/shared/compare/v1.107.0...v1.108.0) (2025-04-24)
 
 ### ✨ Features
