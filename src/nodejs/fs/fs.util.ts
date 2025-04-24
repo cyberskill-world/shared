@@ -3,6 +3,8 @@ import { extname } from 'node:path';
 
 import type { I_CopySyncOptions } from './fs.type.js';
 
+export const fs = fsExtra;
+
 export const {
     lstatSync,
     readdirSync,

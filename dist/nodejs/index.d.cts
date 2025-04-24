@@ -29,6 +29,7 @@ export { I_CopySyncOptions_alias_1 as I_CopySyncOptions } from '../_tsup-dts-rol
 export { pathExistsSync_alias_1 as pathExistsSync } from '../_tsup-dts-rollup.cjs';
 export { removeSync_alias_1 as removeSync } from '../_tsup-dts-rollup.cjs';
 export { copySync_alias_1 as copySync } from '../_tsup-dts-rollup.cjs';
+export { fs_alias_1 as fs } from '../_tsup-dts-rollup.cjs';
 export { lstatSync_alias_1 as lstatSync } from '../_tsup-dts-rollup.cjs';
 export { readdirSync_alias_1 as readdirSync } from '../_tsup-dts-rollup.cjs';
 export { mkdirSync_alias_1 as mkdirSync } from '../_tsup-dts-rollup.cjs';
@@ -164,6 +165,7 @@ export { command_alias_1 as command } from '../_tsup-dts-rollup.cjs';
 export { resolveWorkingPath_alias_1 as resolveWorkingPath } from '../_tsup-dts-rollup.cjs';
 export { resolve_alias_1 as resolve } from '../_tsup-dts-rollup.cjs';
 export { join_alias_1 as join } from '../_tsup-dts-rollup.cjs';
+export { path_alias_1 as path } from '../_tsup-dts-rollup.cjs';
 export { storageNodeJS_alias_1 as storageNodeJS } from '../_tsup-dts-rollup.cjs';
 export { createWSServer_alias_1 as createWSServer } from '../_tsup-dts-rollup.cjs';
 export { initGraphQLWS_alias_1 as initGraphQLWS } from '../_tsup-dts-rollup.cjs';

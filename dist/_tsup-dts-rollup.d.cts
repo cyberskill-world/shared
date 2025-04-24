@@ -52,6 +52,7 @@ import type { OptionalUnlessRequiredId } from 'mongodb';
 import type { PaginateModel } from 'mongoose';
 import type { PaginateOptions } from 'mongoose';
 import type { PaginateResult } from 'mongoose';
+import pathNodeJS from 'node:path';
 import type { PipelineStage } from 'mongoose';
 import type { PopulateOption } from 'mongoose';
 import type { PopulateOptions } from 'mongoose';
@@ -1564,6 +1565,12 @@ export { formatCommand as formatCommand_alias_1 }
 export { formatCommand as formatCommand_alias_2 }
 export { formatCommand as formatCommand_alias_3 }
 
+declare const fs: typeof fsExtra;
+export { fs }
+export { fs as fs_alias_1 }
+export { fs as fs_alias_2 }
+export { fs as fs_alias_3 }
+
 /**
  * Generates a random password of a given length.
  * The password contains a mix of letters, numbers, and special characters.
@@ -2560,6 +2567,12 @@ export { PATH }
 export { PATH as PATH_alias_1 }
 export { PATH as PATH_alias_2 }
 export { PATH as PATH_alias_3 }
+
+declare const path: pathNodeJS.PlatformPath;
+export { path }
+export { path as path_alias_1 }
+export { path as path_alias_2 }
+export { path as path_alias_3 }
 
 declare function pathExistsSync(...paths: string[]): boolean;
 export { pathExistsSync }

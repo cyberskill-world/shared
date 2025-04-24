@@ -1,8 +1,10 @@
-import { join as pathJoin, resolve as pathResolve } from 'node:path';
+import pathNodeJS, { join as pathJoin, resolve as pathResolve } from 'node:path';
 
 import { getEnv } from '#configs/env/index.js';
 
 const env = getEnv();
+
+export const path = pathNodeJS;
 
 export function resolveWorkingPath(...urls: string[]): string {
     return pathResolve(env.CWD, ...urls);

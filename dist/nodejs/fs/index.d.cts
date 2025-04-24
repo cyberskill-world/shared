@@ -2,6 +2,7 @@ export { I_CopySyncOptions_alias_3 as I_CopySyncOptions } from '../../_tsup-dts-
 export { pathExistsSync_alias_3 as pathExistsSync } from '../../_tsup-dts-rollup.cjs';
 export { removeSync_alias_3 as removeSync } from '../../_tsup-dts-rollup.cjs';
 export { copySync_alias_3 as copySync } from '../../_tsup-dts-rollup.cjs';
+export { fs_alias_3 as fs } from '../../_tsup-dts-rollup.cjs';
 export { lstatSync_alias_3 as lstatSync } from '../../_tsup-dts-rollup.cjs';
 export { readdirSync_alias_3 as readdirSync } from '../../_tsup-dts-rollup.cjs';
 export { mkdirSync_alias_3 as mkdirSync } from '../../_tsup-dts-rollup.cjs';
