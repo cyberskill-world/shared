@@ -1,3 +1,9 @@
+## [1.108.0](https://github.com/cyberskill-world/shared/compare/v1.107.0...v1.108.0) (2025-04-24)
+
+### ✨ Features
+
+* add readdirSync to fs ([f4e0c59](https://github.com/cyberskill-world/shared/commit/f4e0c59e1fafb900fa7c773d9dace5daba77dd7b))
+
 ## [1.107.0](https://github.com/cyberskill-world/shared/compare/v1.106.0...v1.107.0) (2025-04-23)
 
 ### ✨ Features
