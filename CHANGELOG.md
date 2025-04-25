@@ -1,3 +1,9 @@
+## [1.110.0](https://github.com/cyberskill-world/shared/compare/v1.109.0...v1.110.0) (2025-04-25)
+
+### ✨ Features
+
+* enhance createSlug ([f9a74cc](https://github.com/cyberskill-world/shared/commit/f9a74ccde677f8601e74d7d3bfef8126a2d4eaa0))
+
 ## [1.109.0](https://github.com/cyberskill-world/shared/compare/v1.108.0...v1.109.0) (2025-04-24)
 
 ### ✨ Features
