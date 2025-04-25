@@ -173,10 +173,6 @@ export interface T_PaginateOptionsWithPopulate
     populate?: T_Input_Populate;
 }
 
-export type T_CreateSlugQueryResponse<T> = T_FilterQuery<T> & {
-    $or: Array<{ slug: string } | { slugHistory: string }>;
-} & { id?: { $ne: string } };
-
 export interface I_Input_FindOne<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
     projection?: T_ProjectionType<T>;

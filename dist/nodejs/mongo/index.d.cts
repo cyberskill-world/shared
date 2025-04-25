@@ -42,7 +42,6 @@ export { I_MongooseModelMiddleware_alias_2 as I_MongooseModelMiddleware } from '
 export { I_CreateModelOptions_alias_2 as I_CreateModelOptions } from '../../_tsup-dts-rollup.cjs';
 export { T_Input_Populate_alias_2 as T_Input_Populate } from '../../_tsup-dts-rollup.cjs';
 export { T_PaginateOptionsWithPopulate_alias_2 as T_PaginateOptionsWithPopulate } from '../../_tsup-dts-rollup.cjs';
-export { T_CreateSlugQueryResponse_alias_2 as T_CreateSlugQueryResponse } from '../../_tsup-dts-rollup.cjs';
 export { I_Input_FindOne_alias_2 as I_Input_FindOne } from '../../_tsup-dts-rollup.cjs';
 export { I_Input_FindAll_alias_2 as I_Input_FindAll } from '../../_tsup-dts-rollup.cjs';
 export { I_Input_FindPaging_alias_2 as I_Input_FindPaging } from '../../_tsup-dts-rollup.cjs';

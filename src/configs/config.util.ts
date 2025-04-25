@@ -1,5 +1,3 @@
-import type { UserConfig } from 'vite';
-
 import antfu from '@antfu/eslint-config';
 
 import type { T_Object } from '#typescript/common.js';
@@ -12,12 +10,12 @@ import type { T_ConfigHandler, T_ConfigType } from './config.type.js';
 import { E_ConfigType } from './config.type.js';
 import eslintBaseConfig from './eslint/index.js';
 
-const passThroughHandler: T_ConfigHandler = (...configs) => {
-    return deepMerge(...configs);
-};
-
 const handleESLint: T_ConfigHandler = (...configs) => {
-    const { ignores, ...rest } = deepMerge(eslintBaseConfig, ...configs);
+    const mergedConfig = deepMerge(
+        eslintBaseConfig as unknown as T_Object,
+        ...configs.map(config => config as T_Object),
+    ) as T_Object;
+    const { ignores, ...rest } = mergedConfig;
 
     const normalizedIgnores
         = Array.isArray(ignores) && ignores.every(item => typeof item === 'string')
@@ -45,23 +43,15 @@ const handleESLint: T_ConfigHandler = (...configs) => {
             react: true,
         },
         ...configArray,
-    );
-};
-
-const handleVitestReactE2E: T_ConfigHandler = (...configs) => {
-    return vitestE2E(...(configs as [UserConfig]));
-};
-
-const handleVitestReactUnit: T_ConfigHandler = (...configs) => {
-    return vitestUnit(...(configs as [UserConfig]));
+    ) as unknown as T_Object;
 };
 
 const configHandlers: Record<E_ConfigType, T_ConfigHandler> = {
-    [E_ConfigType.ESLINT]: handleESLint,
-    [E_ConfigType.COMMITLINT]: passThroughHandler,
-    [E_ConfigType.LINT_STAGED]: passThroughHandler,
-    [E_ConfigType.VITEST_REACT_E2E]: handleVitestReactE2E,
-    [E_ConfigType.VITEST_REACT_UNIT]: handleVitestReactUnit,
+    [E_ConfigType.ESLINT]: configs => handleESLint(configs),
+    [E_ConfigType.COMMITLINT]: configs => deepMerge(configs),
+    [E_ConfigType.LINT_STAGED]: configs => deepMerge(configs),
+    [E_ConfigType.VITEST_REACT_UNIT]: configs => vitestUnit(configs) as T_Object,
+    [E_ConfigType.VITEST_REACT_E2E]: configs => vitestE2E(configs) as T_Object,
 };
 
 export function mergeConfigs(type: T_ConfigType, ...configs: T_Object[]) {

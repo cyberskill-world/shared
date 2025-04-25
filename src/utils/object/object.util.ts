@@ -16,12 +16,12 @@ export function isJson(str: string): boolean {
 }
 
 /**
- * Checks if a value is a plain object.
- * A plain object is an object that is not an array, null, or a function.
+ * Checks if a value is an object.
+ * An object is an object that is not an array, null, or a function.
  * @param val - The value to check.
- * @returns True if the value is a plain object, false otherwise.
+ * @returns True if the value is an object, false otherwise.
  */
-export function isPlainObject(val: unknown): val is T_Object {
+export function isObject(val: unknown): val is T_Object {
     return typeof val === 'object' && val !== null && !Array.isArray(val);
 }
 
@@ -46,9 +46,9 @@ export function deepMerge(...objects: T_Object[]): T_Object {
                 continue;
             }
 
-            if (isPlainObject(sourceValue)) {
+            if (isObject(sourceValue)) {
                 result[key] = deepMerge(
-                    isPlainObject(targetValue) ? targetValue : {},
+                    isObject(targetValue) ? targetValue : {},
                     sourceValue,
                 );
                 continue;

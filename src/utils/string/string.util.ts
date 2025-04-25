@@ -1,24 +1,43 @@
 import cryptoJS from 'crypto-js';
 import slugifyRaw from 'slugify';
 
+import type { T_Object } from '#typescript/index.js';
+
 import type { I_SlugifyOptions } from './string.type.js';
+
+import { isObject } from '../object/index.js';
 
 const slugify = slugifyRaw.default || slugifyRaw;
 
 /**
- * Generates a slug from a given string.
+ * Generates a slug from a string or an object containing strings.
  * The slug is a URL-friendly version of the string.
- * It replaces spaces with hyphens and removes special characters.
- * @param str - The string to be slugified.
- * @param options - Options for slugify.
- * @returns The slugified string.
+ * @param input - The string or object to be slugified.
+ * @param options - Options for slugification.
+ * @returns The slugified string or object.
  */
-export function generateSlug(str = '', options?: I_SlugifyOptions): string {
-    return slugify(str, {
-        lower: options?.lower ?? true,
-        locale: options?.locale ?? 'vi',
-        ...options,
-    });
+export function generateSlug<T = string>(
+    input: T,
+    options?: I_SlugifyOptions,
+): T {
+    const slugifyWithOptions = (value: string) =>
+        slugify(value ?? '', {
+            lower: options?.lower ?? true,
+            locale: options?.locale ?? 'vi',
+            ...options,
+        });
+
+    if (isObject(input)) {
+        const result: T_Object = {};
+
+        for (const [key, value] of Object.entries(input)) {
+            result[key] = slugifyWithOptions(value as string);
+        }
+
+        return result as T;
+    }
+
+    return slugifyWithOptions(input as string) as T;
 }
 
 /**

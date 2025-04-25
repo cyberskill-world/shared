@@ -42,7 +42,6 @@ import { Locale } from 'date-fns/locale';
 import type { Locale as Locale_2 } from 'date-fns';
 import migrate from 'migrate-mongo';
 import { Model } from 'mongoose';
-import { MongoClient } from 'mongodb';
 import type mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import type mongooseRaw from 'mongoose';
@@ -1597,14 +1596,13 @@ export { generateShortId as generateShortId_alias_2 }
 export { generateShortId as generateShortId_alias_3 }
 
 /**
- * Generates a slug from a given string.
+ * Generates a slug from a string or an object containing strings.
  * The slug is a URL-friendly version of the string.
- * It replaces spaces with hyphens and removes special characters.
- * @param str - The string to be slugified.
- * @param options - Options for slugify.
- * @returns The slugified string.
+ * @param input - The string or object to be slugified.
+ * @param options - Options for slugification.
+ * @returns The slugified string or object.
  */
-declare function generateSlug(str?: string, options?: I_SlugifyOptions): string;
+declare function generateSlug<T = string>(input: T, options?: I_SlugifyOptions): T;
 export { generateSlug }
 export { generateSlug as generateSlug_alias_1 }
 export { generateSlug as generateSlug_alias_2 }
@@ -2251,16 +2249,16 @@ export { isJson as isJson_alias_2 }
 export { isJson as isJson_alias_3 }
 
 /**
- * Checks if a value is a plain object.
- * A plain object is an object that is not an array, null, or a function.
+ * Checks if a value is an object.
+ * An object is an object that is not an array, null, or a function.
  * @param val - The value to check.
- * @returns True if the value is a plain object, false otherwise.
+ * @returns True if the value is an object, false otherwise.
  */
-declare function isPlainObject(val: unknown): val is T_Object_2;
-export { isPlainObject }
-export { isPlainObject as isPlainObject_alias_1 }
-export { isPlainObject as isPlainObject_alias_2 }
-export { isPlainObject as isPlainObject_alias_3 }
+declare function isObject(val: unknown): val is T_Object_2;
+export { isObject }
+export { isObject as isObject_alias_1 }
+export { isObject as isObject_alias_2 }
+export { isObject as isObject_alias_3 }
 
 declare function join(...urls: string[]): string;
 export { join }
@@ -2352,23 +2350,22 @@ declare const mongo: {
     }): I_GenericDocument;
     applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>): void;
     applyMiddlewares<T extends Partial<C_Document>>(schema: T_MongooseShema<T>, middlewares: I_MongooseModelMiddleware<T>[]): void;
-    createGenericSchema(mongoose: typeof mongooseRaw): mongooseRaw.Schema<I_GenericDocument, mongooseRaw.Model<I_GenericDocument, any, any, any, mongooseRaw.Document<unknown, any, I_GenericDocument> & I_GenericDocument & Required<{
+    createGenericSchema(mongoose: typeof mongooseRaw): mongooseRaw.Schema<I_GenericDocument, mongooseRaw.Model<I_GenericDocument, any, any, any, mongooseRaw.Document<unknown, any, I_GenericDocument, any> & I_GenericDocument & Required<{
         _id: unknown;
     }> & {
         __v: number;
-    }, any>, {}, {}, {}, {}, mongooseRaw.DefaultSchemaOptions, I_GenericDocument, mongooseRaw.Document<unknown, {}, mongooseRaw.FlatRecord<I_GenericDocument>> & mongooseRaw.FlatRecord<I_GenericDocument> & Required<{
+    }, any>, {}, {}, {}, {}, mongooseRaw.DefaultSchemaOptions, I_GenericDocument, mongooseRaw.Document<unknown, {}, mongooseRaw.FlatRecord<I_GenericDocument>, {}> & mongooseRaw.FlatRecord<I_GenericDocument> & Required<{
         _id: unknown;
     }> & {
         __v: number;
     }>;
     createSchema<T extends Partial<C_Document>>({ mongoose, schema, virtuals, standalone, }: I_CreateSchemaOptions<T>): T_MongooseShema<T>;
     createModel<T extends Partial<C_Document>>({ mongoose: currentMongooseInstance, name, schema, pagination, aggregate, virtuals, middlewares, }: I_CreateModelOptions<T>): I_ExtendedModel<T>;
-    createSlugQuery<T>(slug: string, filters?: T_FilterQuery<T>, id?: string): T_CreateSlugQueryResponse<T>;
     validator: {
         isEmpty<T>(): (this: T, value: unknown) => Promise<boolean>;
         isUnique<T extends {
             constructor: {
-                findOne: (query: Record<string, unknown>) => Promise<unknown>;
+                exists: (query: Record<string, unknown>) => Promise<unknown>;
             };
         }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
         matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean>;
@@ -2377,9 +2374,9 @@ declare const mongo: {
         setConfig: (options: Partial<migrate.config.Config>) => void;
         init(): Promise<void>;
         create(description: string): Promise<string>;
-        up(db: Db, client: MongoClient): Promise<string[]>;
-        down(db: Db, client: MongoClient): Promise<string[]>;
-        status(db: Db): Promise<migrate.MigrationStatus[]>;
+        up(db: mongooseRaw.mongo.Db, client: mongooseRaw.mongo.MongoClient): Promise<string[]>;
+        down(db: mongooseRaw.mongo.Db, client: mongooseRaw.mongo.MongoClient): Promise<string[]>;
+        status(db: mongooseRaw.mongo.Db): Promise<migrate.MigrationStatus[]>;
         database: typeof migrate.database;
         config: typeof migrate.config;
     };
@@ -2465,9 +2462,7 @@ declare class MongooseController<T extends Partial<C_Document>> {
     deleteOne(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return<T>>;
     deleteMany(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return<T_DeleteResult>>;
     createShortId(id: string, length?: number): Promise<I_Return<string>>;
-    createSlug(fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return<string | {
-        [key: string]: string;
-    }>>;
+    createSlug<R = string>(fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return<R>>;
     aggregate(pipeline: T_PipelineStage[]): Promise<I_Return<T[]>>;
 }
 export { MongooseController }
@@ -3093,22 +3088,6 @@ export { T_ConfigType }
 export { T_ConfigType as T_ConfigType_alias_1 }
 export { T_ConfigType as T_ConfigType_alias_2 }
 
-declare type T_CreateSlugQueryResponse<T> = T_FilterQuery<T> & {
-    $or: Array<{
-        slug: string;
-    } | {
-        slugHistory: string;
-    }>;
-} & {
-    id?: {
-        $ne: string;
-    };
-};
-export { T_CreateSlugQueryResponse }
-export { T_CreateSlugQueryResponse as T_CreateSlugQueryResponse_alias_1 }
-export { T_CreateSlugQueryResponse as T_CreateSlugQueryResponse_alias_2 }
-export { T_CreateSlugQueryResponse as T_CreateSlugQueryResponse_alias_3 }
-
 declare type T_DeleteResult = DeleteResult;
 export { T_DeleteResult }
 export { T_DeleteResult as T_DeleteResult_alias_1 }
@@ -3211,12 +3190,12 @@ export { T_NextIntlMessageList as T_NextIntlMessageList_alias_1 }
 export { T_NextIntlMessageList as T_NextIntlMessageList_alias_2 }
 export { T_NextIntlMessageList as T_NextIntlMessageList_alias_3 }
 
-declare type T_Object = Record<string, any>;
+declare type T_Object<T = unknown> = Record<string, T>;
 export { T_Object }
 export { T_Object as T_Object_alias_1 }
 export { T_Object as T_Object_alias_2 }
 
-declare type T_Object_2 = Record<string, any>;
+declare type T_Object_2<T = unknown> = Record<string, T>;
 
 declare type T_OptionalUnlessRequiredId<T> = OptionalUnlessRequiredId<T>;
 export { T_OptionalUnlessRequiredId }

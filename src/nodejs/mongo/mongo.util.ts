@@ -8,10 +8,11 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import { v4 as uuidv4 } from 'uuid';
 
 import { RESPONSE_STATUS } from '#constants/response-status.js';
+import { isObject } from '#utils/index.js';
 import { generateShortId, generateSlug } from '#utils/string/index.js';
 import { validate } from '#utils/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_Return, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_CreateSlugQueryResponse, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_Return, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
@@ -110,34 +111,20 @@ export const mongo = {
 
         return currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
     },
-    createSlugQuery<T>(
-        slug: string,
-        filters: T_FilterQuery<T> = {},
-        id?: string,
-    ): T_CreateSlugQueryResponse<T> {
-        return {
-            ...filters,
-            ...(id && { id: { $ne: id } }),
-            $or: [
-                { slug },
-                { slugHistory: slug },
-            ],
-        };
-    },
     validator: {
         isEmpty<T>(): (this: T, value: unknown) => Promise<boolean> {
             return async function (this: T, value: unknown): Promise<boolean> {
                 return !validate.isEmpty(value);
             };
         },
-        isUnique<T extends { constructor: { findOne: (query: Record<string, unknown>) => Promise<unknown> } }>(fields: string[]) {
+        isUnique<T extends { constructor: { exists: (query: Record<string, unknown>) => Promise<unknown> } }>(fields: string[]) {
             return async function (this: T, value: unknown): Promise<boolean> {
                 if (!Array.isArray(fields) || fields.length === 0) {
                     throw new Error('Fields must be a non-empty array of strings.');
                 }
 
                 const query = { $or: fields.map(field => ({ [field]: value })) };
-                const existingDocument = await this.constructor.findOne(query);
+                const existingDocument = await this.constructor.exists(query);
 
                 return !existingDocument;
             };
@@ -389,7 +376,6 @@ export class MongoController<D extends Partial<C_Document>> {
 
 export class MongooseController<T extends Partial<C_Document>> {
     constructor(private model: I_ExtendedModel<T>) { }
-
     private getModelName(): string {
         return this.model.modelName;
     }
@@ -683,52 +669,65 @@ export class MongooseController<T extends Partial<C_Document>> {
         };
     }
 
-    async createSlug(
+    async createSlug<R = string>(
         fieldName: string,
         fields: T,
-        filters: T_FilterQuery<T> = {},
-    ): Promise<I_Return<string | { [key: string]: string }>> {
+        filters?: T_FilterQuery<T>,
+    ): Promise<I_Return<R>> {
         try {
             const fieldValue = fields[fieldName as keyof T];
 
-            const createUniqueSlug = async (slug: string): Promise<string> => {
-                let existingDoc = await this.model.findOne(
-                    mongo.createSlugQuery<T>(slug, filters, fields.id),
-                );
+            const isObjectValue = isObject(fieldValue);
 
-                if (!existingDoc)
-                    return slug;
+            const generateSlugQuery = (slugToCheck: string) => {
+                const baseFilter = { ...(filters ?? {}) };
 
+                return isObjectValue
+                    ? {
+                            ...baseFilter,
+                            $or: [
+                                { [`slug.${fieldName}`]: slugToCheck },
+                                { slugHistory: { $elemMatch: { [`slug.${fieldName}`]: slugToCheck } } },
+                            ],
+                        }
+                    : {
+                            ...baseFilter,
+                            $or: [
+                                { slug: slugToCheck },
+                                { slugHistory: slugToCheck },
+                            ],
+                        };
+            };
+
+            const generateUniqueSlug = async (slug: string): Promise<string> => {
+                let uniqueSlug = slug;
                 let suffix = 1;
-                let uniqueSlug;
 
-                do {
-                    uniqueSlug = `${slug}-${suffix}`;
-                    existingDoc = await this.model.findOne(
-                        mongo.createSlugQuery<T>(uniqueSlug, filters, fields.id),
-                    );
-                    suffix++;
-                } while (existingDoc);
+                while (await this.model.exists(generateSlugQuery(uniqueSlug))) {
+                    uniqueSlug = `${slug}-${suffix++}`;
+                }
 
                 return uniqueSlug;
             };
 
-            if (typeof fieldValue === 'object') {
-                const slugResults: { [key: string]: string } = {};
+            if (isObjectValue) {
+                const uniqueSlug = Object.fromEntries(
+                    await Promise.all(
+                        Object.entries(fieldValue).map(async ([key, value]) => {
+                            const baseSlug = generateSlug<R>(value as R);
 
-                for (const lang in fieldValue) {
-                    const slug = generateSlug(fieldValue[lang] as string);
-                    slugResults[lang] = await createUniqueSlug(slug);
-                }
+                            return [key, await generateUniqueSlug(baseSlug as string)];
+                        }),
+                    ),
+                );
 
-                return { success: true, result: slugResults };
+                return { success: true, result: uniqueSlug as R };
             }
-            else {
-                const slug = generateSlug(fieldValue as string);
-                const uniqueSlug = await createUniqueSlug(slug);
 
-                return { success: true, result: uniqueSlug };
-            }
+            const baseSlug = generateSlug<R>(fieldValue as R);
+            const uniqueSlug = await generateUniqueSlug(baseSlug as string);
+
+            return { success: true, result: uniqueSlug as R };
         }
         catch (error) {
             return {
