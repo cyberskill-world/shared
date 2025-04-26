@@ -15,7 +15,7 @@ export function createCors({ isDev, whiteList, ...rest }: I_CorsOptions) {
                 callback(null, true);
             }
             else {
-                callback(null, false);
+                callback(new Error('Not allowed by CORS'), false);
             }
         },
         credentials: true,
