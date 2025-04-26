@@ -1,3 +1,9 @@
+## [1.112.0](https://github.com/cyberskill-world/shared/compare/v1.111.0...v1.112.0) (2025-04-26)
+
+### ✨ Features
+
+* add optional options for createCors ([f7480b5](https://github.com/cyberskill-world/shared/commit/f7480b5696fab748e42b66551d5284d8ec77d6ee))
+
 ## [1.111.0](https://github.com/cyberskill-world/shared/compare/v1.110.0...v1.111.0) (2025-04-26)
 
 ### ✨ Features
