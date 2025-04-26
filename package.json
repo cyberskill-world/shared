@@ -292,7 +292,7 @@
         "@types/yargs": "17.0.33",
         "eslint": "9.25.1",
         "lint-staged": "15.5.1",
-        "node-modules-inspector": "0.6.6",
+        "node-modules-inspector": "0.6.7",
         "simple-git-hooks": "2.13.0"
     }
 }

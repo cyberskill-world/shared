@@ -33,5 +33,6 @@
         "verbatimModuleSyntax": true,
         "noUncheckedSideEffectImports": true,
         "skipLibCheck": true
-    }
+    },
+    "exclude": ["node_modules"]
 }
