@@ -1,4 +1,5 @@
 import type { Application } from 'express';
+import type { SessionOptions } from 'express-session';
 
 import compression from 'compression';
 import cors from 'cors';
@@ -23,6 +24,10 @@ export function createCors({ isDev, whiteList, ...rest }: I_CorsOptions) {
     });
 };
 
+export function createSession(options: SessionOptions) {
+    return session(options);
+}
+
 export function createExpress(options: I_ExpressOptions): Application {
     const app = express();
 
@@ -37,7 +42,7 @@ export function createExpress(options: I_ExpressOptions): Application {
 
     if (options.sessionOptions) {
         app.use(
-            session(options.sessionOptions),
+            createSession(options.sessionOptions),
         );
     }
 
