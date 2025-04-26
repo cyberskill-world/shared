@@ -23,6 +23,7 @@ export { Session_alias_1 as Session } from '../_tsup-dts-rollup.js';
 export { I_ExpressOptions_alias_1 as I_ExpressOptions } from '../_tsup-dts-rollup.js';
 export { I_CorsOptions_alias_1 as I_CorsOptions } from '../_tsup-dts-rollup.js';
 export { createCors_alias_1 as createCors } from '../_tsup-dts-rollup.js';
+export { createSession_alias_1 as createSession } from '../_tsup-dts-rollup.js';
 export { createExpress_alias_1 as createExpress } from '../_tsup-dts-rollup.js';
 export { express_alias_1 as express } from '../_tsup-dts-rollup.js';
 export { I_CopySyncOptions_alias_1 as I_CopySyncOptions } from '../_tsup-dts-rollup.js';

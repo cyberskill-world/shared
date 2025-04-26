@@ -19,6 +19,7 @@ import { Context } from 'react';
 import type { CopySyncOptions } from 'node:fs';
 import cors from 'cors';
 import type { CorsOptions } from 'cors';
+import type { CorsOptions as CorsOptions_2 } from '@nestjs/common/interfaces/external/cors-options.interface.js';
 import type { CorsOptionsDelegate } from 'cors';
 import type { CorsRequest } from 'cors';
 import { Db } from 'mongodb';
@@ -68,6 +69,7 @@ import { default as React_2 } from 'react';
 import type { ReactElement } from 'react';
 import type { ReactNode } from 'react';
 import { Request as Request_2 } from 'express';
+import type { RequestHandler } from 'express';
 import { Response as Response_2 } from 'express';
 import { Router } from 'express';
 import type { Schema } from 'mongoose';
@@ -278,6 +280,12 @@ export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_2 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_3 }
+
+declare function createSession(options: SessionOptions): RequestHandler;
+export { createSession }
+export { createSession as createSession_alias_1 }
+export { createSession as createSession_alias_2 }
+export { createSession as createSession_alias_3 }
 
 declare function createWSServer(options: I_WSOptions): WebSocketServer;
 export { createWSServer }
@@ -1771,7 +1779,7 @@ export { I_CopySyncOptions as I_CopySyncOptions_alias_1 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_2 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_3 }
 
-declare interface I_CorsOptions extends CorsOptions, CorsOptionsDelegate<CorsRequest> {
+declare interface I_CorsOptions extends ResolvedCorsOptions, CorsOptionsDelegate<CorsRequest> {
     isDev?: boolean;
     whiteList?: string[];
 }
@@ -2675,6 +2683,10 @@ export { resolveCommands }
 export { resolveCommands as resolveCommands_alias_1 }
 export { resolveCommands as resolveCommands_alias_2 }
 export { resolveCommands as resolveCommands_alias_3 }
+
+declare type ResolvedCorsOptions = Partial<CorsOptions> & Partial<CorsOptions_2> & {
+    origin?: CorsOptions['origin'] | CorsOptions_2['origin'];
+};
 
 declare function resolveWorkingPath(...urls: string[]): string;
 export { resolveWorkingPath }

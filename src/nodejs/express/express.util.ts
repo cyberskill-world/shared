@@ -1,4 +1,4 @@
-import type { Application } from 'express';
+import type { Application, RequestHandler } from 'express';
 import type { SessionOptions } from 'express-session';
 
 import compression from 'compression';
@@ -24,7 +24,7 @@ export function createCors({ isDev, whiteList, ...rest }: I_CorsOptions) {
     });
 };
 
-export function createSession(options: SessionOptions) {
+export function createSession(options: SessionOptions): RequestHandler {
     return session(options);
 }
 

@@ -37,6 +37,7 @@ export { Session } from './_tsup-dts-rollup.js';
 export { I_ExpressOptions } from './_tsup-dts-rollup.js';
 export { I_CorsOptions } from './_tsup-dts-rollup.js';
 export { createCors } from './_tsup-dts-rollup.js';
+export { createSession } from './_tsup-dts-rollup.js';
 export { createExpress } from './_tsup-dts-rollup.js';
 export { express } from './_tsup-dts-rollup.js';
 export { I_CopySyncOptions } from './_tsup-dts-rollup.js';
