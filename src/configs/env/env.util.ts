@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import dotenvx from '@dotenvx/dotenvx';
 import { bool, cleanEnv, str } from 'envalid';
 import os from 'node:os';
 import path from 'node:path';
@@ -8,7 +8,7 @@ import type { I_Environment } from './env.type.js';
 
 import { CYBERSKILL_STORAGE_DIRECTORY } from './env.constant.js';
 
-dotenv.config();
+dotenvx.config();
 
 export function getEnv(): I_Environment {
     const processEnv = {
