@@ -9,6 +9,7 @@ import type { ApolloError as ApolloError_2 } from '@apollo/client';
 import type { ApolloLink } from '@apollo/client';
 import { ApolloServer } from '@apollo/server';
 import type { Application } from 'express';
+import bodyParser from 'body-parser';
 import type { Buffer as Buffer_2 } from 'node:buffer';
 import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
@@ -28,6 +29,7 @@ import { Disposable as Disposable_2 } from 'graphql-ws';
 import { Document as Document_2 } from 'mongoose';
 import type { ErrorHandlingMiddlewareFunction } from 'mongoose';
 import type { ErrorHandlingMiddlewareWithOption } from 'mongoose';
+import type { ExceptionFilter } from '@nestjs/common';
 import express from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import type { Filter } from 'mongodb';
@@ -37,6 +39,7 @@ import type { GraphQLSchema } from 'graphql';
 import { I_ApolloErrorContext as I_ApolloErrorContext_2 } from './apollo-error.type.js';
 import { I_Command as I_Command_2 } from './command.type.js';
 import { I_LoadingContext as I_LoadingContext_2 } from './loading.type.js';
+import type { INestApplication } from '@nestjs/common';
 import type { InitOptions } from 'i18next';
 import type { InsertManyOptions } from 'mongoose';
 import type { InsertManyResult } from 'mongodb';
@@ -81,12 +84,14 @@ import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
 import { toast } from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
+import type { Type } from '@nestjs/common';
 import type { UpdateQuery } from 'mongoose';
 import type { UpdateResult } from 'mongodb';
 import type { UriFunction } from '@apollo/client';
 import type { UserConfig } from 'vite';
 import { useTranslation } from 'react-i18next';
 import { useTranslations } from 'next-intl';
+import type { ValidationPipe } from '@nestjs/common';
 import { WebSocketServer } from 'ws';
 import type { WithId } from 'mongodb';
 
@@ -141,6 +146,11 @@ export { appendFileSync }
 export { appendFileSync as appendFileSync_alias_1 }
 export { appendFileSync as appendFileSync_alias_2 }
 export { appendFileSync as appendFileSync_alias_3 }
+
+export { bodyParser }
+export { bodyParser as bodyParser_alias_1 }
+export { bodyParser as bodyParser_alias_2 }
+export { bodyParser as bodyParser_alias_3 }
 
 declare const BUILD_DIRECTORY = "dist";
 export { BUILD_DIRECTORY }
@@ -246,7 +256,7 @@ export { createApolloServer as createApolloServer_alias_1 }
 export { createApolloServer as createApolloServer_alias_2 }
 export { createApolloServer as createApolloServer_alias_3 }
 
-declare function createCors({ isDev, whiteList, ...rest }: I_CorsOptions): (req: cors.CorsRequest, res: {
+declare function createCors<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>): (req: cors.CorsRequest, res: {
     statusCode?: number | undefined;
     setHeader(key: string, value: string): any;
     end(): any;
@@ -256,7 +266,7 @@ export { createCors as createCors_alias_1 }
 export { createCors as createCors_alias_2 }
 export { createCors as createCors_alias_3 }
 
-declare function createExpress(options: I_ExpressOptions): Application;
+declare function createExpress(options?: I_ExpressOptions): Application;
 export { createExpress }
 export { createExpress as createExpress_alias_1 }
 export { createExpress as createExpress_alias_2 }
@@ -280,6 +290,12 @@ export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_2 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_3 }
+
+declare function createNest(options: I_NestOptions): Promise<INestApplication>;
+export { createNest }
+export { createNest as createNest_alias_1 }
+export { createNest as createNest_alias_2 }
+export { createNest as createNest_alias_3 }
 
 declare function createSession(options: SessionOptions): RequestHandler;
 export { createSession }
@@ -1731,6 +1747,11 @@ export { I_ApolloServerOptions as I_ApolloServerOptions_alias_1 }
 export { I_ApolloServerOptions as I_ApolloServerOptions_alias_2 }
 export { I_ApolloServerOptions as I_ApolloServerOptions_alias_3 }
 
+declare interface I_BaseCorsOptions {
+    isDev?: boolean;
+    whiteList?: string[];
+}
+
 declare interface I_CheckPackage {
     isCurrentProject: boolean;
     installedPath: string;
@@ -1779,14 +1800,11 @@ export { I_CopySyncOptions as I_CopySyncOptions_alias_1 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_2 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_3 }
 
-declare interface I_CorsOptions extends ResolvedCorsOptions, CorsOptionsDelegate<CorsRequest> {
-    isDev?: boolean;
-    whiteList?: string[];
+declare interface I_CorsOptionsNestJS extends I_BaseCorsOptions, CorsOptions_2 {
 }
-export { I_CorsOptions }
-export { I_CorsOptions as I_CorsOptions_alias_1 }
-export { I_CorsOptions as I_CorsOptions_alias_2 }
-export { I_CorsOptions as I_CorsOptions_alias_3 }
+
+declare interface I_CorsOptionsNodeJS extends I_BaseCorsOptions, CorsOptions, CorsOptionsDelegate<CorsRequest> {
+}
 
 declare interface I_CreateModelOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
     schema: T_Input_MongooseSchema<T>;
@@ -1843,8 +1861,7 @@ export { I_EslintError as I_EslintError_alias_2 }
 export { I_EslintError as I_EslintError_alias_3 }
 
 declare interface I_ExpressOptions {
-    staticFolder: string;
-    sessionOptions?: SessionOptions;
+    staticFolder?: string;
 }
 export { I_ExpressOptions }
 export { I_ExpressOptions as I_ExpressOptions_alias_1 }
@@ -2095,6 +2112,17 @@ export { I_MongooseOptions }
 export { I_MongooseOptions as I_MongooseOptions_alias_1 }
 export { I_MongooseOptions as I_MongooseOptions_alias_2 }
 export { I_MongooseOptions as I_MongooseOptions_alias_3 }
+
+declare interface I_NestOptions {
+    module: Type<object>;
+    staticFolder?: string;
+    filters?: ExceptionFilter[];
+    pipes?: ValidationPipe[];
+}
+export { I_NestOptions }
+export { I_NestOptions as I_NestOptions_alias_1 }
+export { I_NestOptions as I_NestOptions_alias_2 }
+export { I_NestOptions as I_NestOptions_alias_3 }
 
 declare interface I_NextIntlContext {
     languages: I_NextIntlLanguage[];
@@ -2684,10 +2712,6 @@ export { resolveCommands as resolveCommands_alias_1 }
 export { resolveCommands as resolveCommands_alias_2 }
 export { resolveCommands as resolveCommands_alias_3 }
 
-declare type ResolvedCorsOptions = Partial<CorsOptions> & Partial<CorsOptions_2> & {
-    origin?: CorsOptions['origin'] | CorsOptions_2['origin'];
-};
-
 declare function resolveWorkingPath(...urls: string[]): string;
 export { resolveWorkingPath }
 export { resolveWorkingPath as resolveWorkingPath_alias_1 }
@@ -3102,6 +3126,18 @@ declare type T_ConfigType = `${E_ConfigType}`;
 export { T_ConfigType }
 export { T_ConfigType as T_ConfigType_alias_1 }
 export { T_ConfigType as T_ConfigType_alias_2 }
+
+declare type T_CorsOptions<T extends T_CorsType> = T extends 'node' ? I_CorsOptionsNodeJS : I_CorsOptionsNestJS;
+export { T_CorsOptions }
+export { T_CorsOptions as T_CorsOptions_alias_1 }
+export { T_CorsOptions as T_CorsOptions_alias_2 }
+export { T_CorsOptions as T_CorsOptions_alias_3 }
+
+declare type T_CorsType = 'node' | 'nest';
+export { T_CorsType }
+export { T_CorsType as T_CorsType_alias_1 }
+export { T_CorsType as T_CorsType_alias_2 }
+export { T_CorsType as T_CorsType_alias_3 }
 
 declare type T_DeleteResult = DeleteResult;
 export { T_DeleteResult }
