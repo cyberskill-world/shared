@@ -24,6 +24,7 @@ export { I_ExpressOptions_alias_1 as I_ExpressOptions } from '../_tsup-dts-rollu
 export { I_NestOptions_alias_1 as I_NestOptions } from '../_tsup-dts-rollup.js';
 export { T_CorsType_alias_1 as T_CorsType } from '../_tsup-dts-rollup.js';
 export { T_CorsOptions_alias_1 as T_CorsOptions } from '../_tsup-dts-rollup.js';
+export { createCorsOptions_alias_1 as createCorsOptions } from '../_tsup-dts-rollup.js';
 export { createCors_alias_1 as createCors } from '../_tsup-dts-rollup.js';
 export { createSession_alias_1 as createSession } from '../_tsup-dts-rollup.js';
 export { createExpress_alias_1 as createExpress } from '../_tsup-dts-rollup.js';

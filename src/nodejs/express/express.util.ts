@@ -13,8 +13,8 @@ import session from 'express-session';
 
 import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from './express.type.js';
 
-export function createCors<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>) {
-    return cors<cors.CorsRequest>({
+export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>) {
+    return {
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
             if (isDev || whiteList?.includes(origin ?? '')) {
                 callback(null, true);
@@ -25,7 +25,11 @@ export function createCors<T extends T_CorsType>({ isDev, whiteList, ...rest }: 
         },
         credentials: true,
         ...rest,
-    });
+    };
+}
+
+export function createCors<T extends T_CorsType>(options: T_CorsOptions<T>) {
+    return cors<cors.CorsRequest>(createCorsOptions(options));
 };
 
 export function createSession(options: SessionOptions): RequestHandler {
@@ -62,15 +66,11 @@ export async function createNest(options: I_NestOptions): Promise<INestApplicati
     }
 
     if (options.filters) {
-        options.filters.forEach((Filter) => {
-            app.useGlobalFilters(Filter);
-        });
+        app.useGlobalFilters(...options.filters);
     }
 
     if (options.pipes) {
-        options.pipes.forEach((Pipe) => {
-            app.useGlobalPipes(Pipe);
-        });
+        app.useGlobalPipes(...options.pipes);
     }
 
     return app;

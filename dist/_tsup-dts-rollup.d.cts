@@ -256,7 +256,7 @@ export { createApolloServer as createApolloServer_alias_1 }
 export { createApolloServer as createApolloServer_alias_2 }
 export { createApolloServer as createApolloServer_alias_3 }
 
-declare function createCors<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>): (req: cors.CorsRequest, res: {
+declare function createCors<T extends T_CorsType>(options: T_CorsOptions<T>): (req: cors.CorsRequest, res: {
     statusCode?: number | undefined;
     setHeader(key: string, value: string): any;
     end(): any;
@@ -265,6 +265,15 @@ export { createCors }
 export { createCors as createCors_alias_1 }
 export { createCors as createCors_alias_2 }
 export { createCors as createCors_alias_3 }
+
+declare function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>): {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void;
+    credentials: boolean;
+} & Omit<T_CorsOptions<T>, "isDev" | "whiteList">;
+export { createCorsOptions }
+export { createCorsOptions as createCorsOptions_alias_1 }
+export { createCorsOptions as createCorsOptions_alias_2 }
+export { createCorsOptions as createCorsOptions_alias_3 }
 
 declare function createExpress(options?: I_ExpressOptions): Application;
 export { createExpress }

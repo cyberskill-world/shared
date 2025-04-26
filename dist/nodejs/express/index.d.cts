@@ -7,6 +7,7 @@ export { I_ExpressOptions_alias_3 as I_ExpressOptions } from '../../_tsup-dts-ro
 export { I_NestOptions_alias_3 as I_NestOptions } from '../../_tsup-dts-rollup.cjs';
 export { T_CorsType_alias_3 as T_CorsType } from '../../_tsup-dts-rollup.cjs';
 export { T_CorsOptions_alias_3 as T_CorsOptions } from '../../_tsup-dts-rollup.cjs';
+export { createCorsOptions_alias_3 as createCorsOptions } from '../../_tsup-dts-rollup.cjs';
 export { createCors_alias_3 as createCors } from '../../_tsup-dts-rollup.cjs';
 export { createSession_alias_3 as createSession } from '../../_tsup-dts-rollup.cjs';
 export { createExpress_alias_3 as createExpress } from '../../_tsup-dts-rollup.cjs';

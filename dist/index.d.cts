@@ -38,6 +38,7 @@ export { I_ExpressOptions } from './_tsup-dts-rollup.cjs';
 export { I_NestOptions } from './_tsup-dts-rollup.cjs';
 export { T_CorsType } from './_tsup-dts-rollup.cjs';
 export { T_CorsOptions } from './_tsup-dts-rollup.cjs';
+export { createCorsOptions } from './_tsup-dts-rollup.cjs';
 export { createCors } from './_tsup-dts-rollup.cjs';
 export { createSession } from './_tsup-dts-rollup.cjs';
 export { createExpress } from './_tsup-dts-rollup.cjs';
