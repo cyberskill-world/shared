@@ -1,3 +1,9 @@
+## [1.115.0](https://github.com/cyberskill-world/shared/compare/v1.114.0...v1.115.0) (2025-04-26)
+
+### ✨ Features
+
+* separate createCors and createCorsOptions ([7f123b8](https://github.com/cyberskill-world/shared/commit/7f123b807e781d0401d32bb0e160282806396baf))
+
 ## [1.114.0](https://github.com/cyberskill-world/shared/compare/v1.113.0...v1.114.0) (2025-04-26)
 
 ### ✨ Features
