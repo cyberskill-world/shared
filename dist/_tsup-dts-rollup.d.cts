@@ -18,6 +18,9 @@ import type consola from 'consola';
 import { Context } from 'react';
 import type { CopySyncOptions } from 'node:fs';
 import cors from 'cors';
+import type { CorsOptions } from 'cors';
+import type { CorsOptionsDelegate } from 'cors';
+import type { CorsRequest } from 'cors';
 import { Db } from 'mongodb';
 import type { DeleteResult } from 'mongodb';
 import { Disposable as Disposable_2 } from 'graphql-ws';
@@ -241,7 +244,7 @@ export { createApolloServer as createApolloServer_alias_1 }
 export { createApolloServer as createApolloServer_alias_2 }
 export { createApolloServer as createApolloServer_alias_3 }
 
-declare function createCors(options: I_CorsOptions): (req: cors.CorsRequest, res: {
+declare function createCors({ isDev, whiteList, ...rest }: I_CorsOptions): (req: cors.CorsRequest, res: {
     statusCode?: number | undefined;
     setHeader(key: string, value: string): any;
     end(): any;
@@ -1768,7 +1771,7 @@ export { I_CopySyncOptions as I_CopySyncOptions_alias_1 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_2 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_3 }
 
-declare interface I_CorsOptions {
+declare interface I_CorsOptions extends CorsOptions, CorsOptionsDelegate<CorsRequest> {
     isDev?: boolean;
     whiteList?: string[];
 }
