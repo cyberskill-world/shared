@@ -1,3 +1,11 @@
+## [1.113.0](https://github.com/cyberskill-world/shared/compare/v1.112.0...v1.113.0) (2025-04-26)
+
+### ✨ Features
+
+* combine CorsOptions from nodejs with nestjs ([d286ed1](https://github.com/cyberskill-world/shared/commit/d286ed126a0519b67d81caf693b7db4bc873b119))
+* combine CorsOptions from nodejs with nestjs ([d1add1f](https://github.com/cyberskill-world/shared/commit/d1add1fdbb2991337ff8ac7cf5769c940aa4eeba))
+* combine CorsOptions from nodejs with nestjs ([0e1ee3b](https://github.com/cyberskill-world/shared/commit/0e1ee3b6aa9ad9e29589972886a4b520776bd117))
+
 ## [1.112.0](https://github.com/cyberskill-world/shared/compare/v1.111.0...v1.112.0) (2025-04-26)
 
 ### ✨ Features
