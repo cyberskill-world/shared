@@ -1,7 +1,7 @@
 {
     "name": "@cyberskill/shared",
     "type": "module",
-    "version": "1.115.0",
+    "version": "1.116.0",
     "description": "CyberSkill Shared",
     "author": "Stephen Cheng",
     "license": "MIT",

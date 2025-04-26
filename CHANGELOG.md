@@ -1,3 +1,9 @@
+## [1.116.0](https://github.com/cyberskill-world/shared/compare/v1.115.0...v1.116.0) (2025-04-26)
+
+### ✨ Features
+
+* replace dotenv with dotenvx ([13f2208](https://github.com/cyberskill-world/shared/commit/13f22086803208cdecbcbd1e9b17e8f42d59ba3b))
+
 ## [1.115.0](https://github.com/cyberskill-world/shared/compare/v1.114.0...v1.115.0) (2025-04-26)
 
 ### ✨ Features
