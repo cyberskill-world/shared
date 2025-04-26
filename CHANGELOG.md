@@ -1,3 +1,9 @@
+## [1.111.0](https://github.com/cyberskill-world/shared/compare/v1.110.0...v1.111.0) (2025-04-26)
+
+### ✨ Features
+
+* add node_modules to tsconfig exclude ([fe7ce75](https://github.com/cyberskill-world/shared/commit/fe7ce75022e70d73aec99956ed88c9a6479877d6))
+
 ## [1.110.0](https://github.com/cyberskill-world/shared/compare/v1.109.0...v1.110.0) (2025-04-25)
 
 ### ✨ Features
