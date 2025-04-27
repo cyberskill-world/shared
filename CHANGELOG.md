@@ -1,3 +1,9 @@
+## [1.120.0](https://github.com/cyberskill-world/shared/compare/v1.119.0...v1.120.0) (2025-04-27)
+
+### ✨ Features
+
+* remove @swc/core ([4ae8d01](https://github.com/cyberskill-world/shared/commit/4ae8d0185355eae96e83dad0aca4849640ba1b09))
+
 ## [1.119.0](https://github.com/cyberskill-world/shared/compare/v1.118.0...v1.119.0) (2025-04-27)
 
 ### ✨ Features
