@@ -8,8 +8,13 @@ import type { I_Environment } from './env.type.js';
 
 import { CYBERSKILL_STORAGE_DIRECTORY } from './env.constant.js';
 
+let isEnvFileLoaded = false;
+
 export function loadEnvFile() {
-    dotenvx.config();
+    if (!isEnvFileLoaded) {
+        dotenvx.config();
+        isEnvFileLoaded = true;
+    }
 }
 
 export function getEnv(): I_Environment {
