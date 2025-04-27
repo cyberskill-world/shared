@@ -1,3 +1,9 @@
+## [1.118.0](https://github.com/cyberskill-world/shared/compare/v1.117.0...v1.118.0) (2025-04-27)
+
+### ✨ Features
+
+* add loadEnvFile ([121e57f](https://github.com/cyberskill-world/shared/commit/121e57f0a3c55c5923e0922e5611c2a0e5d7ef94))
+
 ## [1.117.0](https://github.com/cyberskill-world/shared/compare/v1.116.0...v1.117.0) (2025-04-27)
 
 ### ✨ Features
