@@ -1844,8 +1844,8 @@ export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_2 }
 export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_3 }
 
 declare interface I_Environment {
-    DEBUG: boolean;
     CWD: string;
+    DEBUG: boolean;
     CYBERSKILL_STORAGE_DIRECTORY: string;
 }
 export { I_Environment }
@@ -2324,6 +2324,12 @@ export { LINT_STAGED_PACKAGE_NAME }
 export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_1 }
 export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_2 }
 export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_3 }
+
+declare function loadEnvFile(): void;
+export { loadEnvFile }
+export { loadEnvFile as loadEnvFile_alias_1 }
+export { loadEnvFile as loadEnvFile_alias_2 }
+export { loadEnvFile as loadEnvFile_alias_3 }
 
 declare function Loading({ full, block, className, message, ...rest }: I_LoadingProps): React_2.JSX.Element;
 export { Loading }

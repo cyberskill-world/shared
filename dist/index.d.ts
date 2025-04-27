@@ -7,6 +7,7 @@ export { T_ConfigHandler } from './_tsup-dts-rollup.js';
 export { mergeConfigs } from './_tsup-dts-rollup.js';
 export { CYBERSKILL_STORAGE_DIRECTORY } from './_tsup-dts-rollup.js';
 export { I_Environment } from './_tsup-dts-rollup.js';
+export { loadEnvFile } from './_tsup-dts-rollup.js';
 export { getEnv } from './_tsup-dts-rollup.js';
 export { I_GraphqlCodegenConfig } from './_tsup-dts-rollup.js';
 export { createGraphqlCodegenConfig } from './_tsup-dts-rollup.js';

@@ -4,6 +4,10 @@ import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files';
 
 import type { I_GraphqlCodegenConfig } from './graphql-codegen.type.js';
 
+import { loadEnvFile } from '../env/env.util.js';
+
+loadEnvFile();
+
 export function createGraphqlCodegenConfig({
     uri,
     from,

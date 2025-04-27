@@ -29,6 +29,11 @@
             "import": "./dist/configs/commitlint/index.js",
             "require": "./dist/configs/commitlint/index.cjs"
         },
+        "./configs/env": {
+            "types": "./dist/configs/env/index.d.ts",
+            "import": "./dist/configs/env/index.js",
+            "require": "./dist/configs/env/index.cjs"
+        },
         "./configs/eslint": {
             "types": "./dist/configs/eslint/index.d.ts",
             "import": "./dist/configs/eslint/index.js",
@@ -186,17 +191,17 @@
     ],
     "scripts": {
         "build": "tsup",
-        "dev": "dotenvx run -- tsup --watch",
-        "lint": "dotenvx run -- tsx src/nodejs/cli/index.ts lint",
-        "lint:fix": "dotenvx run -- tsx src/nodejs/cli/index.ts lint:fix",
-        "lint:inspect": "dotenvx run -- tsx src/nodejs/cli/index.ts lint:inspect",
-        "reset": "dotenvx run -- tsx src/nodejs/cli/index.ts reset",
-        "setup": "dotenvx run -- tsx src/nodejs/cli/index.ts setup",
-        "inspect": "dotenvx run -- tsx src/nodejs/cli/index.ts inspect",
-        "test:unit": "dotenvx run -- tsx src/nodejs/cli/index.ts test:unit",
-        "test:e2e": "dotenvx run -- tsx src/nodejs/cli/index.ts test:e2e",
-        "commitlint": "dotenvx run -- tsx src/nodejs/cli/index.ts commitlint",
-        "lint-staged": "dotenvx run -- tsx src/nodejs/cli/index.ts lint-staged"
+        "dev": "tsup --watch",
+        "lint": "tsx src/nodejs/cli/index.ts lint",
+        "lint:fix": "tsx src/nodejs/cli/index.ts lint:fix",
+        "lint:inspect": "tsx src/nodejs/cli/index.ts lint:inspect",
+        "reset": "tsx src/nodejs/cli/index.ts reset",
+        "setup": "tsx src/nodejs/cli/index.ts setup",
+        "inspect": "tsx src/nodejs/cli/index.ts inspect",
+        "test:unit": "tsx src/nodejs/cli/index.ts test:unit",
+        "test:e2e": "tsx src/nodejs/cli/index.ts test:e2e",
+        "commitlint": "tsx src/nodejs/cli/index.ts commitlint",
+        "lint-staged": "tsx src/nodejs/cli/index.ts lint-staged"
     },
     "dependencies": {
         "@antfu/eslint-config": "4.12.0",

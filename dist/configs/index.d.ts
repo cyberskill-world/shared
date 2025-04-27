@@ -7,6 +7,7 @@ export { T_ConfigHandler_alias_2 as T_ConfigHandler } from '../_tsup-dts-rollup.
 export { mergeConfigs_alias_2 as mergeConfigs } from '../_tsup-dts-rollup.js';
 export { CYBERSKILL_STORAGE_DIRECTORY_alias_1 as CYBERSKILL_STORAGE_DIRECTORY } from '../_tsup-dts-rollup.js';
 export { I_Environment_alias_1 as I_Environment } from '../_tsup-dts-rollup.js';
+export { loadEnvFile_alias_1 as loadEnvFile } from '../_tsup-dts-rollup.js';
 export { getEnv_alias_1 as getEnv } from '../_tsup-dts-rollup.js';
 export { I_GraphqlCodegenConfig_alias_1 as I_GraphqlCodegenConfig } from '../_tsup-dts-rollup.js';
 export { createGraphqlCodegenConfig_alias_1 as createGraphqlCodegenConfig } from '../_tsup-dts-rollup.js';
