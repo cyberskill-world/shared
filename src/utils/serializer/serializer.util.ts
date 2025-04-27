@@ -1,5 +1,3 @@
-import { Buffer } from 'node:buffer';
-
 import type {
     I_Serializer,
     I_SerializerTypeWrapper,
@@ -47,17 +45,12 @@ const typeHandlers: {
         serialize: v => ({ __type: 'BigInt', value: v.toString() }),
         deserialize: v => BigInt(v as string),
     },
-    Buffer: {
-        is: (v): v is Buffer => Buffer.isBuffer(v),
-        serialize: v => ({ __type: 'Buffer', value: v.toString('base64') }),
-        deserialize: v => Buffer.from(v as string, 'base64'),
-    },
 };
 
 export const serializer: I_Serializer<unknown> = {
     /**
      * Serializes a value to a JSON string.
-     * If the value is of a known type (Date, Map, Set, RegExp, BigInt, Buffer),
+     * If the value is of a known type (Date, Map, Set, RegExp, BigInt),
      * it will be serialized using the corresponding handler.
      * Otherwise, it will be serialized as is.
      *
@@ -79,7 +72,7 @@ export const serializer: I_Serializer<unknown> = {
     },
     /**
      * Deserializes a JSON string to its original value.
-     * If the value is of a known type (Date, Map, Set, RegExp, BigInt, Buffer),
+     * If the value is of a known type (Date, Map, Set, RegExp, BigInt),
      * it will be deserialized using the corresponding handler.
      * Otherwise, it will be deserialized as is.
      *

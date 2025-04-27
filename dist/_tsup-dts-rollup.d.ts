@@ -10,7 +10,6 @@ import type { ApolloLink } from '@apollo/client';
 import { ApolloServer } from '@apollo/server';
 import type { Application } from 'express';
 import bodyParser from 'body-parser';
-import type { Buffer as Buffer_2 } from 'node:buffer';
 import type { ClientSession } from 'mongoose';
 import type { CodegenConfig } from '@graphql-codegen/cli';
 import { Collection } from 'mongodb';
@@ -3349,7 +3348,7 @@ export { T_QueryWithHelpers as T_QueryWithHelpers_alias_1 }
 export { T_QueryWithHelpers as T_QueryWithHelpers_alias_2 }
 export { T_QueryWithHelpers as T_QueryWithHelpers_alias_3 }
 
-declare type T_SerializerKnownTypes = 'Date' | 'Map' | 'Set' | 'RegExp' | 'BigInt' | 'Buffer';
+declare type T_SerializerKnownTypes = 'Date' | 'Map' | 'Set' | 'RegExp' | 'BigInt';
 export { T_SerializerKnownTypes }
 export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_1 }
 export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_2 }
@@ -3361,7 +3360,6 @@ declare interface T_SerializerValueMap {
     Set: Set<unknown>;
     RegExp: RegExp;
     BigInt: bigint;
-    Buffer: Buffer_2;
 }
 export { T_SerializerValueMap }
 export { T_SerializerValueMap as T_SerializerValueMap_alias_1 }

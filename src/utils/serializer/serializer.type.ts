@@ -1,6 +1,4 @@
-import type { Buffer } from 'node:buffer';
-
-export type T_SerializerKnownTypes = 'Date' | 'Map' | 'Set' | 'RegExp' | 'BigInt' | 'Buffer';
+export type T_SerializerKnownTypes = 'Date' | 'Map' | 'Set' | 'RegExp' | 'BigInt';
 
 export interface T_SerializerValueMap {
     Date: Date;
@@ -8,7 +6,6 @@ export interface T_SerializerValueMap {
     Set: Set<unknown>;
     RegExp: RegExp;
     BigInt: bigint;
-    Buffer: Buffer;
 }
 
 export interface I_SerializerTypeWrapper<T extends T_SerializerKnownTypes = T_SerializerKnownTypes> {
