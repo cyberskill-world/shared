@@ -1,3 +1,9 @@
+## [1.119.0](https://github.com/cyberskill-world/shared/compare/v1.118.0...v1.119.0) (2025-04-27)
+
+### ✨ Features
+
+* add logic to avoid multiple env load ([56e7117](https://github.com/cyberskill-world/shared/commit/56e7117db287340b95a82b210740d8fc8edc970b))
+
 ## [1.118.0](https://github.com/cyberskill-world/shared/compare/v1.117.0...v1.118.0) (2025-04-27)
 
 ### ✨ Features
