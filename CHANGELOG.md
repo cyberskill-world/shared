@@ -1,3 +1,9 @@
+## [1.117.0](https://github.com/cyberskill-world/shared/compare/v1.116.0...v1.117.0) (2025-04-27)
+
+### ✨ Features
+
+* remove Buffer from serializer ([0191970](https://github.com/cyberskill-world/shared/commit/01919704e6011e08ecb99eb4febca06404f7a794))
+
 ## [1.116.0](https://github.com/cyberskill-world/shared/compare/v1.115.0...v1.116.0) (2025-04-26)
 
 ### ✨ Features
