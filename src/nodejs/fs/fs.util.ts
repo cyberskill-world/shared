@@ -10,14 +10,19 @@ export const {
     readdirSync,
     mkdirSync,
     readFileSync,
-    writeFileSync,
-    appendFileSync,
     unlinkSync,
     statSync,
 } = fsExtra;
 
 export const readJsonSync: typeof fsExtra.readJsonSync = fsExtra.readJsonSync;
-export const writeJsonSync: typeof fsExtra.writeJsonSync = fsExtra.writeJsonSync;
+
+export function writeFileSync(file: fsExtra.PathOrFileDescriptor, data: string | NodeJS.ArrayBufferView, options?: fsExtra.WriteFileOptions): void {
+    fsExtra.writeFileSync(file, data, options ?? 'utf-8');
+}
+
+export function appendFileSync(path: fsExtra.PathOrFileDescriptor, data: string | Uint8Array, options?: fsExtra.WriteFileOptions): void {
+    fsExtra.appendFileSync(path, data, options ?? 'utf-8');
+}
 
 export function pathExistsSync(...paths: string[]) {
     return paths.every(path => fsExtra.pathExistsSync(path));

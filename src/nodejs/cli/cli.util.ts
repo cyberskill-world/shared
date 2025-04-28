@@ -7,7 +7,7 @@ import type { I_IssueEntry } from '../log/index.js';
 
 import pkg from '../../../package.json' with { type: 'json' };
 import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
-import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync, writeJsonSync } from '../fs/index.js';
+import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync } from '../fs/index.js';
 import { E_IssueType, logNodeJS as log } from '../log/index.js';
 import { checkPackage, installDependencies, setupPackages } from '../package/index.js';
 import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
@@ -105,7 +105,7 @@ async function setupGitHook() {
 
     const hooks = await resolveCommands(createGitHooksConfig);
 
-    writeJsonSync(PATH.SIMPLE_GIT_HOOKS_JSON, hooks);
+    writeFileSync(PATH.SIMPLE_GIT_HOOKS_JSON, JSON.stringify(hooks, null, 4));
 
     const gitIgnoreEntry = `\n${SIMPLE_GIT_HOOK_JSON}\n`;
 
@@ -113,11 +113,11 @@ async function setupGitHook() {
         const gitignore = readFileSync(PATH.GIT_IGNORE, 'utf-8').split('\n');
 
         if (!gitignore.includes(SIMPLE_GIT_HOOK_JSON)) {
-            appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry, 'utf-8');
+            appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
         }
     }
     else {
-        writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry, 'utf-8');
+        writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
     }
 
     await runCommand('Setting up simple-git-hooks', await command.simpleGitHooks());

@@ -152,11 +152,11 @@ export const mongo = {
                 const gitignore = readFileSync(PATH.GIT_IGNORE, 'utf-8').split('\n');
 
                 if (!gitignore.includes(MIGRATE_MONGO_CONFIG)) {
-                    appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry, 'utf-8');
+                    appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
                 }
             }
             else {
-                writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry, 'utf-8');
+                writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
             }
         },
     },

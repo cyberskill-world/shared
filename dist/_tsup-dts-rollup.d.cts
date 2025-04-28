@@ -140,7 +140,7 @@ export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
 export { ApolloProvider as ApolloProvider_alias_3 }
 
-declare const appendFileSync: typeof fsExtra.appendFileSync;
+declare function appendFileSync(path: fsExtra.PathOrFileDescriptor, data: string | Uint8Array, options?: fsExtra.WriteFileOptions): void;
 export { appendFileSync }
 export { appendFileSync as appendFileSync_alias_1 }
 export { appendFileSync as appendFileSync_alias_2 }
@@ -3562,16 +3562,10 @@ export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_1 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_2 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_3 }
 
-declare const writeFileSync: typeof fsExtra.writeFileSync;
+declare function writeFileSync(file: fsExtra.PathOrFileDescriptor, data: string | NodeJS.ArrayBufferView, options?: fsExtra.WriteFileOptions): void;
 export { writeFileSync }
 export { writeFileSync as writeFileSync_alias_1 }
 export { writeFileSync as writeFileSync_alias_2 }
 export { writeFileSync as writeFileSync_alias_3 }
-
-declare const writeJsonSync: typeof fsExtra.writeJsonSync;
-export { writeJsonSync }
-export { writeJsonSync as writeJsonSync_alias_1 }
-export { writeJsonSync as writeJsonSync_alias_2 }
-export { writeJsonSync as writeJsonSync_alias_3 }
 
 export { }
