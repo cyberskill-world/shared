@@ -1,3 +1,17 @@
+## [1.121.0](https://github.com/cyberskill-world/shared/compare/v1.120.0...v1.121.0) (2025-04-28)
+
+### ✨ Features
+
+* correct release workflow ([125bce5](https://github.com/cyberskill-world/shared/commit/125bce510f31608e9f35e29c763c01edbbdd76b3))
+* remove workflow dist cache ([f46ebd9](https://github.com/cyberskill-world/shared/commit/f46ebd9a7745cf3a903a234d7bb236ba593e3c58))
+* separate workflow cache ([a2fa2d2](https://github.com/cyberskill-world/shared/commit/a2fa2d21b31222612c7b76f21ccb344568b7a7e5))
+* separate workflow cache ([3bffe1a](https://github.com/cyberskill-world/shared/commit/3bffe1a935cb2fdf00928b4b70cf9a368732b391))
+* turn off dot-notation rule ([0543cd1](https://github.com/cyberskill-world/shared/commit/0543cd1da7695bcc0938c7ac34707dd627b3fcb7))
+
+### 🐛 Fixes
+
+* correct path ([914189e](https://github.com/cyberskill-world/shared/commit/914189e03535c2a261e556e6514d52dce9b0a62f))
+
 ## [1.120.0](https://github.com/cyberskill-world/shared/compare/v1.119.0...v1.120.0) (2025-04-27)
 
 ### ✨ Features
