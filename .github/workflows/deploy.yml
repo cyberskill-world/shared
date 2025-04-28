@@ -1,13 +1,13 @@
-name: Release
+name: CI - Deploy
 
 on:
   workflow_run:
-    workflows: ["CI - Lint & Build"]
+    workflows: ["CI - Check"]
     types:
       - completed
 
 jobs:
-  release:
+  deploy:
     if: >
       github.event.workflow_run.head_branch == 'main' &&
       !contains(github.event.workflow_run.head_commit.message, '[skip CI]') &&
@@ -15,34 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Set PNPM_HOME and global bin path
-        run: |
-          echo "$HOME/.local/share/pnpm" >> $GITHUB_PATH
-          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
-          export PNPM_HOME=$HOME/.local/share/pnpm
-          export PATH="$PNPM_HOME:$PATH"
-          mkdir -p "$PNPM_HOME"
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.14.0'
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'pnpm'
-
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ~/.local/share/pnpm/store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+      - name: 🔧 Setup Environment and Dependencies
+        uses: cyberskill-world/.github/actions/env-deps@main
 
       - name: Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
