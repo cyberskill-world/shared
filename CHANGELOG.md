@@ -1,3 +1,9 @@
+## [1.125.0](https://github.com/cyberskill-world/shared/compare/v1.124.0...v1.125.0) (2025-04-28)
+
+### ✨ Features
+
+* add all icons to workflows ([d18a22b](https://github.com/cyberskill-world/shared/commit/d18a22bb0b9bef085c51620da8955058203b2797))
+
 ## [1.124.0](https://github.com/cyberskill-world/shared/compare/v1.123.0...v1.124.0) (2025-04-28)
 
 ### ✨ Features
