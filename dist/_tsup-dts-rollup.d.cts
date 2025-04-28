@@ -1515,6 +1515,7 @@ declare const _default_2: {
         'perfectionist/sort-imports': (string | {
             internalPattern: string[];
         })[];
+        'dot-notation': string;
     };
     ignores: string[];
 }[];

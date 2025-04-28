@@ -9,6 +9,7 @@ export default [
             'perfectionist/sort-imports': ['error', {
                 internalPattern: ['^#.*', '^@/.*'],
             }],
+            'dot-notation': 'off',
         },
         ignores: ['build', 'dist'],
     },
