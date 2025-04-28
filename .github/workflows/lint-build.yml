@@ -36,13 +36,23 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: 🗂️ Cache build output
+      - name: 🗂️ Cache build output (dist folder)
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/dist
-          key: ${{ runner.os }}-dist-${{ hashFiles('dist/**') }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-dist-${{ hashFiles('dist/**') }}
           restore-keys: |
             ${{ runner.os }}-dist-
+
+      - name: 🗂️ Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: 📝 Setup environment variables
         run: cp .env.example .env
