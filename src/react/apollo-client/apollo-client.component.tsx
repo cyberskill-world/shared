@@ -55,7 +55,7 @@ function createApolloLinks(options: I_ApolloOptions) {
         if (graphQLErrors) {
             graphQLErrors.forEach(({ message, locations, path }) => {
                 log.error(
-                    `[GraphQL error] ${opName}: ${message}, Location: ${JSON.stringify(locations)}, Path: ${path}`,
+                    `[GraphQL error] ${opName}: ${message}, Location: ${JSON.stringify(locations, null, 4)}, Path: ${path}`,
                 );
             });
         }
@@ -63,7 +63,7 @@ function createApolloLinks(options: I_ApolloOptions) {
         if (protocolErrors) {
             protocolErrors.forEach(({ message, extensions }) => {
                 log.error(
-                    `[Protocol error]: ${message}, Extensions: ${JSON.stringify(extensions)}`,
+                    `[Protocol error]: ${message}, Extensions: ${JSON.stringify(extensions, null, 4)}`,
                 );
             });
         }

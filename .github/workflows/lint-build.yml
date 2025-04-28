@@ -36,14 +36,6 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-      - name: 🗂️ Cache build output (dist folder)
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/dist
-          key: ${{ runner.os }}-dist-${{ hashFiles('dist/**') }}
-          restore-keys: |
-            ${{ runner.os }}-dist-
-
       - name: 🗂️ Cache pnpm dependencies
         uses: actions/cache@v4
         with:
