@@ -1,3 +1,9 @@
+## [1.122.0](https://github.com/cyberskill-world/shared/compare/v1.121.0...v1.122.0) (2025-04-28)
+
+### ✨ Features
+
+* add manual workflow lint & build ([b7fa3bc](https://github.com/cyberskill-world/shared/commit/b7fa3bc699cd6c97ff3cfa6c00fea8a71c183f41))
+
 ## [1.121.0](https://github.com/cyberskill-world/shared/compare/v1.120.0...v1.121.0) (2025-04-28)
 
 ### ✨ Features
