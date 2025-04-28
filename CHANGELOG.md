@@ -1,3 +1,9 @@
+## [1.123.0](https://github.com/cyberskill-world/shared/compare/v1.122.0...v1.123.0) (2025-04-28)
+
+### ✨ Features
+
+* correct workflow ([72a3b90](https://github.com/cyberskill-world/shared/commit/72a3b902c449d11ab31f56d0cfbceddae548014c))
+
 ## [1.122.0](https://github.com/cyberskill-world/shared/compare/v1.121.0...v1.122.0) (2025-04-28)
 
 ### ✨ Features
