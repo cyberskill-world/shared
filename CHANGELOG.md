@@ -1,3 +1,9 @@
+## [1.126.0](https://github.com/cyberskill-world/shared/compare/v1.125.0...v1.126.0) (2025-04-29)
+
+### ✨ Features
+
+* change express-device to express-useragent ([819adc9](https://github.com/cyberskill-world/shared/commit/819adc9b4c5ac931a0ea4834e200e83b5e4d79f2))
+
 ## [1.125.0](https://github.com/cyberskill-world/shared/compare/v1.124.0...v1.125.0) (2025-04-28)
 
 ### ✨ Features
