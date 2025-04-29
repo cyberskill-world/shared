@@ -21,6 +21,8 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - uses: cyberskill-world/.github/actions/env-deps@main
+      - name: 🔧 Setup Environment and Dependencies
+        uses: cyberskill-world/.github/actions/env-deps@main
 
-      - uses: cyberskill-world/.github/actions/lint-build@main
+      - name: 🛠️ Lint & Build
+        uses: cyberskill-world/.github/actions/lint-build@main
