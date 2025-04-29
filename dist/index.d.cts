@@ -34,7 +34,6 @@ export { NextFunction } from './_tsup-dts-rollup.cjs';
 export { Request } from './_tsup-dts-rollup.cjs';
 export { Response } from './_tsup-dts-rollup.cjs';
 export { Router } from './_tsup-dts-rollup.cjs';
-export { Session } from './_tsup-dts-rollup.cjs';
 export { I_ExpressOptions } from './_tsup-dts-rollup.cjs';
 export { I_NestOptions } from './_tsup-dts-rollup.cjs';
 export { T_CorsType } from './_tsup-dts-rollup.cjs';

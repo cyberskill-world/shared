@@ -1,7 +1,8 @@
 import fsExtra from 'fs-extra';
-import { extname } from 'node:path';
 
 import type { I_CopySyncOptions } from './fs.type.js';
+
+import { path } from '../path/index.js';
 
 export const fs = fsExtra;
 
@@ -49,7 +50,7 @@ export function copySync(src: string, dest: string, options: I_CopySyncOptions =
                 return true;
             }
 
-            return extensions.includes(extname(srcPath));
+            return extensions.includes(path.extname(srcPath));
         },
         ...rest,
     });

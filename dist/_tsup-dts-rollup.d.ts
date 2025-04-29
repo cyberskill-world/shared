@@ -16,7 +16,7 @@ import { Collection } from 'mongodb';
 import type { ComponentType } from 'react';
 import type consola from 'consola';
 import { Context } from 'react';
-import type { CopySyncOptions } from 'node:fs';
+import type { CopyOptionsSync } from 'fs-extra';
 import cors from 'cors';
 import type { CorsOptions } from 'cors';
 import type { CorsOptions as CorsOptions_2 } from '@nestjs/common/interfaces/external/cors-options.interface.js';
@@ -77,7 +77,6 @@ import { Router } from 'express';
 import type { Schema } from 'mongoose';
 import type { SchemaDefinition } from 'mongoose';
 import type { Server } from 'node:http';
-import { Session } from 'express-session';
 import type { SessionOptions } from 'express-session';
 import { TFunction } from 'i18next';
 import type { Timezone } from 'next-intl';
@@ -1801,7 +1800,7 @@ export { I_CommandContext as I_CommandContext_alias_1 }
 export { I_CommandContext as I_CommandContext_alias_2 }
 export { I_CommandContext as I_CommandContext_alias_3 }
 
-declare interface I_CopySyncOptions extends CopySyncOptions {
+declare interface I_CopySyncOptions extends CopyOptionsSync {
     extensions?: string[];
 }
 export { I_CopySyncOptions }
@@ -3008,11 +3007,6 @@ export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
 export { serializer as serializer_alias_3 }
-
-export { Session }
-export { Session as Session_alias_1 }
-export { Session as Session_alias_2 }
-export { Session as Session_alias_3 }
 
 declare function setGlobalApolloErrorCallback(callback: (err: ApolloError_2) => void): void;
 export { setGlobalApolloErrorCallback }

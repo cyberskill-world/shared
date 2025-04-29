@@ -1,5 +1,5 @@
-import type { CopySyncOptions } from 'node:fs';
+import type { CopyOptionsSync } from 'fs-extra';
 
-export interface I_CopySyncOptions extends CopySyncOptions {
+export interface I_CopySyncOptions extends CopyOptionsSync {
     extensions?: string[];
 }

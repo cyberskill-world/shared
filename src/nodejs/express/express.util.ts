@@ -8,8 +8,8 @@ import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import device from 'express-device';
 import session from 'express-session';
+import useragent from 'express-useragent';
 
 import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from './express.type.js';
 
@@ -43,7 +43,7 @@ export function createExpress(options?: I_ExpressOptions): Application {
     app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
     app.use(compression());
-    app.use(device.capture());
+    app.use(useragent.express());
 
     if (options?.staticFolder) {
         app.use(express.static(options.staticFolder));
@@ -59,7 +59,7 @@ export async function createNest(options: I_NestOptions): Promise<INestApplicati
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
     app.use(compression());
-    app.use(device.capture());
+    app.use(useragent.express());
 
     if (options.staticFolder) {
         app.use(express.static(options.staticFolder));

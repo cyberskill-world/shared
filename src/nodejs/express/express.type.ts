@@ -3,8 +3,8 @@ import type { CorsOptions as CorsOptionsNestJS } from '@nestjs/common/interfaces
 import type { CorsOptions, CorsOptionsDelegate, CorsRequest } from 'cors';
 
 export type { NextFunction, Request, Response } from 'express';
+
 export { Router } from 'express';
-export type { Session } from 'express-session';
 
 export interface I_ExpressOptions {
     staticFolder?: string;

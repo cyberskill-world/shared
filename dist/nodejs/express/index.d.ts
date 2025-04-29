@@ -2,7 +2,6 @@ export { NextFunction_alias_3 as NextFunction } from '../../_tsup-dts-rollup.js'
 export { Request_alias_3 as Request } from '../../_tsup-dts-rollup.js';
 export { Response_alias_3 as Response } from '../../_tsup-dts-rollup.js';
 export { Router_alias_3 as Router } from '../../_tsup-dts-rollup.js';
-export { Session_alias_3 as Session } from '../../_tsup-dts-rollup.js';
 export { I_ExpressOptions_alias_3 as I_ExpressOptions } from '../../_tsup-dts-rollup.js';
 export { I_NestOptions_alias_3 as I_NestOptions } from '../../_tsup-dts-rollup.js';
 export { T_CorsType_alias_3 as T_CorsType } from '../../_tsup-dts-rollup.js';

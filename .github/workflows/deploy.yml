@@ -1,14 +1,13 @@
-name: CI - Deploy
+name: 🚀 CI - Deploy
 
 on:
   workflow_run:
-    workflows: ["CI - Check"]
+    workflows: ["🧪 CI - Check"]
     types:
       - completed
 
 jobs:
   deploy:
-    name: 🚀 Deploy
     if: >
       github.event.workflow_run.head_branch == 'main' &&
       !contains(github.event.workflow_run.head_commit.message, '[skip CI]') &&
@@ -19,8 +18,7 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🔧 Setup Environment and Dependencies
-        uses: cyberskill-world/.github/actions/env-deps@main
+      - uses: cyberskill-world/.github/actions/env-deps@main
 
       - name: 🔑 Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc

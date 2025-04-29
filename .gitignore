@@ -1,11 +1,14 @@
 # dependencies
-/node_modules
+node_modules
 
 # misc
 .DS_Store
 
 # debug
 npm-debug.log*
+
+# tsup
+.tsup
 
 # local env files
 .env
