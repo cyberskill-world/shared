@@ -1,3 +1,9 @@
+## [1.127.0](https://github.com/cyberskill-world/shared/compare/v1.126.0...v1.127.0) (2025-04-29)
+
+### ✨ Features
+
+* change workflow icons ([6b14666](https://github.com/cyberskill-world/shared/commit/6b14666f27d85b2e4bb186d4088da3cd77d27e86))
+
 ## [1.126.0](https://github.com/cyberskill-world/shared/compare/v1.125.0...v1.126.0) (2025-04-29)
 
 ### ✨ Features
