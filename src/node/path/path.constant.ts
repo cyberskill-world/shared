@@ -41,6 +41,7 @@ export const VITEST_PACKAGE_NAME = 'vitest';
 export const PLAYWRIGHT_PACKAGE_NAME = 'playwright';
 export const VITEST_CLI = 'vitest';
 export const COMMIT_LINT_PACKAGE_NAME = '@commitlint/cli';
+export const COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME = '@commitlint/config-conventional';
 export const COMMIT_LINT_CLI = 'commitlint';
 export const LINT_STAGED_PACKAGE_NAME = 'lint-staged';
 export const LINT_STAGED_CLI = 'lint-staged';
@@ -174,7 +175,16 @@ export const command = {
     }),
     commitLint: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: COMMIT_LINT_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: COMMIT_LINT_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+            {
+                name: COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+        ],
         command: `${COMMIT_LINT_CLI} --edit ${PATH.GIT_COMMIT_MSG} --config ${PATH.COMMITLINT_CONFIG}`,
     }),
     lintStaged: buildCommand({

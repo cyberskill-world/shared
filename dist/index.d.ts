@@ -161,6 +161,7 @@ export { VITEST_PACKAGE_NAME } from './_tsup-dts-rollup.js';
 export { PLAYWRIGHT_PACKAGE_NAME } from './_tsup-dts-rollup.js';
 export { VITEST_CLI } from './_tsup-dts-rollup.js';
 export { COMMIT_LINT_PACKAGE_NAME } from './_tsup-dts-rollup.js';
+export { COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME } from './_tsup-dts-rollup.js';
 export { COMMIT_LINT_CLI } from './_tsup-dts-rollup.js';
 export { LINT_STAGED_PACKAGE_NAME } from './_tsup-dts-rollup.js';
 export { LINT_STAGED_CLI } from './_tsup-dts-rollup.js';

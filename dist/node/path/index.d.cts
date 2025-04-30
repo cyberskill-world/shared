@@ -21,6 +21,7 @@ export { VITEST_PACKAGE_NAME_alias_2 as VITEST_PACKAGE_NAME } from '../../_tsup-
 export { PLAYWRIGHT_PACKAGE_NAME_alias_2 as PLAYWRIGHT_PACKAGE_NAME } from '../../_tsup-dts-rollup.cjs';
 export { VITEST_CLI_alias_2 as VITEST_CLI } from '../../_tsup-dts-rollup.cjs';
 export { COMMIT_LINT_PACKAGE_NAME_alias_2 as COMMIT_LINT_PACKAGE_NAME } from '../../_tsup-dts-rollup.cjs';
+export { COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME_alias_2 as COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME } from '../../_tsup-dts-rollup.cjs';
 export { COMMIT_LINT_CLI_alias_2 as COMMIT_LINT_CLI } from '../../_tsup-dts-rollup.cjs';
 export { LINT_STAGED_PACKAGE_NAME_alias_2 as LINT_STAGED_PACKAGE_NAME } from '../../_tsup-dts-rollup.cjs';
 export { LINT_STAGED_CLI_alias_2 as LINT_STAGED_CLI } from '../../_tsup-dts-rollup.cjs';
