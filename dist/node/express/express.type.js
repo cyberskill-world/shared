@@ -1,0 +1,1 @@
+import{Router as r}from"express";export{r as Router};

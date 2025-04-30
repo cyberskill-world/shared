@@ -308,7 +308,7 @@ export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_1 }
 export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_2 }
 export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_3 }
 
-declare const CYBERSKILL_CLI_PATH = "src/nodejs/cli/index.ts";
+declare const CYBERSKILL_CLI_PATH = "src/node/cli/index.ts";
 export { CYBERSKILL_CLI_PATH }
 export { CYBERSKILL_CLI_PATH as CYBERSKILL_CLI_PATH_alias_1 }
 export { CYBERSKILL_CLI_PATH as CYBERSKILL_CLI_PATH_alias_2 }
@@ -3268,7 +3268,7 @@ declare interface T_PackageJson {
     version?: string;
     dependencies?: Record<string, string>;
     devDependencies?: Record<string, string>;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 export { T_PackageJson }
 export { T_PackageJson as T_PackageJson_alias_1 }

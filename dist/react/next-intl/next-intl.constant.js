@@ -1,0 +1,1 @@
+import{enUS as e}from"date-fns/locale";var a={label:"English",value:"en",flag:"\uD83C\uDDFA\uD83C\uDDF8",adapterLocale:e,icon:"flagpack:gb-nir",numberFormat:{code:"en-US",currency:"USD"},timezone:"America/New_York"};export{a as NEXT_INTL_DEFAULT_LANGUAGE};

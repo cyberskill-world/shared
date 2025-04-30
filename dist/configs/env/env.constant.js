@@ -1,0 +1,1 @@
+var r=".cyberskill-storage";export{r as CYBERSKILL_STORAGE_DIRECTORY};

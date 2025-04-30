@@ -1,0 +1,1 @@
+import{createContext as o}from"react";var r=o(void 0);export{r as ApolloErrorContext};
