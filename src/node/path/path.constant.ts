@@ -1,7 +1,9 @@
+import fsExtra from 'fs-extra';
+
 import { getEnv } from '#configs/env/index.js';
 
 import type { I_CommandContext } from '../command/index.js';
-import type { I_PackageInput } from '../package/index.js';
+import type { I_PackageInput, T_PackageJson } from '../package/index.js';
 
 import { E_CommandType, formatCommand, rawCommand } from '../command/index.js';
 import { E_PackageType, setupPackages } from '../package/index.js';
@@ -22,8 +24,15 @@ export const PNPM_LOCK_YAML = 'pnpm-lock.yaml';
 export const GIT_HOOK = '.git/hooks/';
 export const GIT_COMMIT_EDITMSG = '.git/COMMIT_EDITMSG';
 export const MIGRATE_MONGO_CONFIG = '.migrate-mongo.config.js';
-export const CYBERSKILL_DIRECTORY = join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
+export const CYBERSKILL_DIRECTORY = (() => {
+    const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as T_PackageJson;
 
+    if (packageJson.name === CYBERSKILL_PACKAGE_NAME) {
+        return WORKING_DIRECTORY;
+    }
+
+    return join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
+})();
 export const CYBERSKILL_CLI = 'cyberskill';
 export const CYBERSKILL_CLI_PATH = 'src/node/cli/index.ts';
 export const ESLINT_PACKAGE_NAME = 'eslint';

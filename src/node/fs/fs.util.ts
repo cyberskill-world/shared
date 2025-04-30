@@ -1,8 +1,7 @@
 import fsExtra from 'fs-extra';
+import path from 'node:path';
 
 import type { I_CopySyncOptions } from './fs.type.js';
-
-import { path } from '../path/index.js';
 
 export const fs = fsExtra;
 
