@@ -180,14 +180,14 @@ async function mongoMigrateDown() {
                     describe: 'Migration name',
                     type: 'string',
                 }), async (argv) => {
-                    if (!argv.name) {
-                        log.error('Migration name is required.');
+                if (!argv.name) {
+                    log.error('Migration name is required.');
 
-                        return;
-                    }
+                    return;
+                }
 
-                    await mongoMigrateCreate(argv.name);
-                })
+                await mongoMigrateCreate(argv.name);
+            })
             .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
             .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
             .demandCommand(1, 'Please specify a valid command.')
