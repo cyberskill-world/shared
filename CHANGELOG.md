@@ -1,3 +1,11 @@
+## [1.128.0](https://github.com/cyberskill-world/shared/compare/v1.127.0...v1.128.0) (2025-04-30)
+
+### ✨ Features
+
+* change nodejs to node, setup to prepare ([6a0b003](https://github.com/cyberskill-world/shared/commit/6a0b00325a75d9728b7d6f23627601d8da838e34))
+* change nodejs to node, setup to prepare ([90b85c8](https://github.com/cyberskill-world/shared/commit/90b85c845a2fe1d8e3a566a448ea13c30fc1b157))
+* change nodejs to node, setup to prepare ([35aeb90](https://github.com/cyberskill-world/shared/commit/35aeb90e05c2488d81b2faef2668a7a2a1a73cf1))
+
 ## [1.127.0](https://github.com/cyberskill-world/shared/compare/v1.126.0...v1.127.0) (2025-04-29)
 
 ### ✨ Features
