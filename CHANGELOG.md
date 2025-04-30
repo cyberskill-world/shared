@@ -1,3 +1,12 @@
+## [1.129.0](https://github.com/cyberskill-world/shared/compare/v1.128.0...v1.129.0) (2025-04-30)
+
+### ✨ Features
+
+* make CYBERSKILL_DIRECTORY work with both external and itself ([0869200](https://github.com/cyberskill-world/shared/commit/086920003251b31c86afa04ce83ba36738e7b684))
+* make CYBERSKILL_DIRECTORY work with both external and itself ([428d052](https://github.com/cyberskill-world/shared/commit/428d052c7ee83def892b4cc2c3eaac423ec91c41))
+* make CYBERSKILL_DIRECTORY work with both external and itself ([1cf63c4](https://github.com/cyberskill-world/shared/commit/1cf63c4e6fb3c40082cff33f937aa96b8954199a))
+* make CYBERSKILL_DIRECTORY work with both external and itself ([5c2ae63](https://github.com/cyberskill-world/shared/commit/5c2ae63c268077ead0a054e1c4014fb76fba65e4))
+
 ## [1.128.0](https://github.com/cyberskill-world/shared/compare/v1.127.0...v1.128.0) (2025-04-30)
 
 ### ✨ Features
