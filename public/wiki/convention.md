@@ -75,7 +75,7 @@ pnpm run dev
 | **lint:fix**     | Tự động sửa các lỗi có thể sửa          |
 | **lint:inspect** | Xem chi tiết các lint rule đang dùng    |
 | **reset**        | Cài đặt lại dependencies                |
-| **setup**        | Nâng cấp dependencies                   |
+| **prepare**      | Tự động nâng cấp @cyberskill/shared     |
 | **inspect**      | Xem chi tiết các dependencies đang dùng |
 
 ---

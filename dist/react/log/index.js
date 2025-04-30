@@ -1,1 +1,0 @@
-import{consola as e}from"consola/browser";var r={silent:e.silent,level:e.level,fatal:e.fatal,error:e.error,warn:e.warn,log:e.log,info:e.info,success:e.success,ready:e.ready,start:e.start,box:e.box,debug:e.debug,trace:e.trace,verbose:e.verbose};export{r as log};

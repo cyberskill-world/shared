@@ -3,7 +3,7 @@ import type { UserConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vitest/config';
 
-import { PATH } from '#nodejs/path/index.js';
+import { PATH } from '#node/path/index.js';
 
 export function vitestUnit(options: UserConfig) {
     return defineConfig({

@@ -1,1 +1,0 @@
-var r="/graphql";export{r as GRAPHQL_URI_DEFAULT};

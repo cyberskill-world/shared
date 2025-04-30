@@ -56,7 +56,7 @@ pnpm install @cyberskill/shared
 | `pnpm run lint`         | Check for linting issues ✅         |
 | `pnpm run lint:fix`     | Fix linting issues 🔧               |
 | `pnpm run lint:inspect` | Inspect linting config 🧐           |
-| `pnpm run setup`        | Project setup 🏗️                    |
+| `pnpm run prepare`      | Project prepare 🏗️                  |
 | `pnpm run reset`        | Reset the project ♻️                |
 | `pnpm run inspect`      | Inspect the project dependencies 🔍 |
 
@@ -69,7 +69,7 @@ pnpm install @cyberskill/shared
 ├──src/
     ├── configs/        → App configuration files
     ├── constants/      → Static values used across the app
-    ├── nodejs/         → NodeJS modules
+    ├── node/           → NodeJS modules
     ├── react/          → ReactJS modules
     ├── styles/         → Global and component-specific styles
     ├── typescript/     → TypeScript types and interfaces

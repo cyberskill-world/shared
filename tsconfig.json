@@ -14,8 +14,8 @@
             "#constants/*": [
                 "./src/constants/*"
             ],
-            "#nodejs/*": [
-                "./src/nodejs/*"
+            "#node/*": [
+                "./src/node/*"
             ],
             "#react/*": [
                 "./src/react/*"

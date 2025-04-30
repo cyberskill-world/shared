@@ -184,20 +184,6 @@ export { C_Model as C_Model_alias_1 }
 export { C_Model as C_Model_alias_2 }
 export { C_Model as C_Model_alias_3 }
 
-declare const CHECK_PACKAGE_EMPTY_RESULT: I_CheckPackage;
-export { CHECK_PACKAGE_EMPTY_RESULT }
-export { CHECK_PACKAGE_EMPTY_RESULT as CHECK_PACKAGE_EMPTY_RESULT_alias_1 }
-export { CHECK_PACKAGE_EMPTY_RESULT as CHECK_PACKAGE_EMPTY_RESULT_alias_2 }
-export { CHECK_PACKAGE_EMPTY_RESULT as CHECK_PACKAGE_EMPTY_RESULT_alias_3 }
-
-declare function checkPackage(packageName: string, options?: {
-    update?: boolean;
-}): Promise<I_CheckPackage>;
-export { checkPackage }
-export { checkPackage as checkPackage_alias_1 }
-export { checkPackage as checkPackage_alias_2 }
-export { checkPackage as checkPackage_alias_3 }
-
 declare function clearAllErrorLists(): Promise<void>;
 export { clearAllErrorLists }
 export { clearAllErrorLists as clearAllErrorLists_alias_1 }
@@ -211,7 +197,6 @@ declare const command: {
     eslintCheck: () => Promise<string>;
     eslintFix: () => Promise<string>;
     typescriptCheck: () => Promise<string>;
-    configureGitHook: () => Promise<string>;
     testUnit: () => Promise<string>;
     testE2e: () => Promise<string>;
     mongoMigrateCreate: (migrateName: string) => Promise<string>;
@@ -219,6 +204,7 @@ declare const command: {
     mongoMigrateDown: () => Promise<string>;
     commitLint: () => Promise<string>;
     lintStaged: () => Promise<string>;
+    configureGitHook: () => Promise<string>;
     stageBuildDirectory: () => Promise<string>;
     build: () => Promise<string>;
     pnpmInstallStandard: () => Promise<string>;
@@ -1559,6 +1545,18 @@ export { E_IssueType as E_IssueType_alias_1 }
 export { E_IssueType as E_IssueType_alias_2 }
 export { E_IssueType as E_IssueType_alias_3 }
 
+declare enum E_PackageType {
+    DEPENDENCY = "dependencies",
+    DEV_DEPENDENCY = "devDependencies",
+    PEER_DEPENDENCY = "peerDependencies",
+    BUNDLE_DEPENDENCY = "bundleDependencies",
+    OPTIONAL_DEPENDENCY = "optionalDependencies"
+}
+export { E_PackageType }
+export { E_PackageType as E_PackageType_alias_1 }
+export { E_PackageType as E_PackageType_alias_2 }
+export { E_PackageType as E_PackageType_alias_3 }
+
 declare const ESLINT_CLI = "eslint";
 export { ESLINT_CLI }
 export { ESLINT_CLI as ESLINT_CLI_alias_1 }
@@ -1667,7 +1665,7 @@ export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_3 }
 
-declare function getPackage(packageName: string): I_GetPackage | false;
+declare function getPackage(inputPackage: I_PackageInput): Promise<I_PackageInfo>;
 export { getPackage }
 export { getPackage as getPackage_alias_1 }
 export { getPackage as getPackage_alias_2 }
@@ -1760,17 +1758,6 @@ declare interface I_BaseCorsOptions {
     whiteList?: string[];
 }
 
-declare interface I_CheckPackage {
-    isCurrentProject: boolean;
-    installedPath: string;
-    file: T_PackageJson;
-    isUpToDate: boolean;
-}
-export { I_CheckPackage }
-export { I_CheckPackage as I_CheckPackage_alias_1 }
-export { I_CheckPackage as I_CheckPackage_alias_2 }
-export { I_CheckPackage as I_CheckPackage_alias_3 }
-
 declare interface I_Children {
     children: T_Children;
 }
@@ -1792,7 +1779,6 @@ export { I_Command as I_Command_alias_2 }
 export { I_Command as I_Command_alias_3 }
 
 declare interface I_CommandContext {
-    isRemote: boolean;
     isCurrentProject: boolean;
 }
 export { I_CommandContext }
@@ -1893,18 +1879,6 @@ export { I_GenericDocument }
 export { I_GenericDocument as I_GenericDocument_alias_1 }
 export { I_GenericDocument as I_GenericDocument_alias_2 }
 export { I_GenericDocument as I_GenericDocument_alias_3 }
-
-declare interface I_GetPackage {
-    path: string;
-    file: T_PackageJson;
-    isCurrentProject: boolean;
-    isDepend: boolean;
-    isDevDepend: boolean;
-}
-export { I_GetPackage }
-export { I_GetPackage as I_GetPackage_alias_1 }
-export { I_GetPackage as I_GetPackage_alias_2 }
-export { I_GetPackage as I_GetPackage_alias_3 }
 
 declare interface I_GraphqlCodegenConfig {
     uri: string;
@@ -2167,6 +2141,32 @@ export { I_NextIntlProviderProps }
 export { I_NextIntlProviderProps as I_NextIntlProviderProps_alias_1 }
 export { I_NextIntlProviderProps as I_NextIntlProviderProps_alias_2 }
 export { I_NextIntlProviderProps as I_NextIntlProviderProps_alias_3 }
+
+declare interface I_PackageInfo {
+    name: string;
+    currentVersion: string;
+    latestVersion: string;
+    isCurrentProject: boolean;
+    isInstalled: boolean;
+    isUpToDate: boolean;
+    isDependency: boolean;
+    isDevDependency: boolean;
+    installedPath: string;
+    file: T_PackageJson;
+}
+export { I_PackageInfo }
+export { I_PackageInfo as I_PackageInfo_alias_1 }
+export { I_PackageInfo as I_PackageInfo_alias_2 }
+export { I_PackageInfo as I_PackageInfo_alias_3 }
+
+declare interface I_PackageInput {
+    name: string;
+    type?: E_PackageType;
+}
+export { I_PackageInput }
+export { I_PackageInput as I_PackageInput_alias_1 }
+export { I_PackageInput as I_PackageInput_alias_2 }
+export { I_PackageInput as I_PackageInput_alias_3 }
 
 declare type I_Return<T = void, E = unknown> = I_ReturnSuccess<T, E> | I_ReturnFailure;
 export { I_Return }
@@ -2718,7 +2718,7 @@ export { resolve as resolve_alias_1 }
 export { resolve as resolve_alias_2 }
 export { resolve as resolve_alias_3 }
 
-declare function resolveCommands(input: T_CommandMapInput, context?: Partial<I_CommandContext>): Promise<{
+declare function resolveCommands(input: T_CommandMapInput): Promise<{
     [k: string]: string | I_Command_2;
 }>;
 export { resolveCommands }
@@ -3014,7 +3014,7 @@ export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_1 }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_2 }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_3 }
 
-declare function setupPackages(packages: string[], options?: {
+declare function setupPackages(packages: I_PackageInput[], options?: {
     update?: boolean;
     postInstallActions?: (() => Promise<void>)[];
 }): Promise<void>;
@@ -3441,6 +3441,12 @@ export { unlinkSync }
 export { unlinkSync as unlinkSync_alias_1 }
 export { unlinkSync as unlinkSync_alias_2 }
 export { unlinkSync as unlinkSync_alias_3 }
+
+declare function updatePackage(packageInfo: I_PackageInfo): Promise<void>;
+export { updatePackage }
+export { updatePackage as updatePackage_alias_1 }
+export { updatePackage as updatePackage_alias_2 }
+export { updatePackage as updatePackage_alias_3 }
 
 declare function useApolloError(): I_ApolloErrorContext_2;
 export { useApolloError }
