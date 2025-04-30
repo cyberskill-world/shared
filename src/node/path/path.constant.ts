@@ -27,11 +27,11 @@ export const MIGRATE_MONGO_CONFIG = '.migrate-mongo.config.js';
 export const CYBERSKILL_DIRECTORY = (() => {
     const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as T_PackageJson;
 
-    if (packageJson.name === CYBERSKILL_PACKAGE_NAME) {
-        return WORKING_DIRECTORY;
-    }
+    const baseDirectory = packageJson.name === CYBERSKILL_PACKAGE_NAME
+        ? WORKING_DIRECTORY
+        : join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME);
 
-    return join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
+    return join(baseDirectory, BUILD_DIRECTORY);
 })();
 export const CYBERSKILL_CLI = 'cyberskill';
 export const CYBERSKILL_CLI_PATH = 'src/node/cli/index.ts';
