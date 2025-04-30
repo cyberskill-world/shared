@@ -354,6 +354,7 @@ export { deepMerge as deepMerge_alias_3 }
 
 declare const _default: {
     extends: string[];
+    ignores: ((message: string) => boolean)[];
 };
 export { _default as commitlintConfig }
 export { _default as commitlintConfig_alias_1 }

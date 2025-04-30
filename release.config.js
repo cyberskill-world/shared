@@ -22,7 +22,7 @@ export default {
                     'dist/**/*',
                 ],
                 message:
-                    '🚀 chore(release): ${nextRelease.version} [skip CI]\n\n${nextRelease.notes}',
+                    'chore(release): ${nextRelease.version} [🚀 CI - Deploy]\n\n${nextRelease.notes}',
             },
         ],
     ],
