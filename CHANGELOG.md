@@ -1,3 +1,9 @@
+## [1.131.0](https://github.com/cyberskill-world/shared/compare/v1.130.0...v1.131.0) (2025-05-01)
+
+### ✨ Features
+
+* use workflow template for check ([94b4144](https://github.com/cyberskill-world/shared/commit/94b41445c6078f1de6115a161552ad896da2cc9c))
+
 ## [1.130.0](https://github.com/cyberskill-world/shared/compare/v1.129.0...v1.130.0) (2025-05-01)
 
 ### ✨ Features
