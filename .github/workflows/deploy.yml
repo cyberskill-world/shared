@@ -10,17 +10,13 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
-
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-
       - name: 🔧 Setup Environment and Dependencies
         uses: cyberskill-world/.github/actions/env-deps@main
-
       - name: 🔑 Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-
       - name: 🔗 Install semantic-release globally with pnpm
         run: |
           pnpm install --global semantic-release@24.2.3 \
@@ -31,7 +27,6 @@ jobs:
             @semantic-release/commit-analyzer@13.0.1 \
             @semantic-release/release-notes-generator@14.0.3 \
             conventional-changelog-conventionalcommits@latest
-
       - name: 🚀 Deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
