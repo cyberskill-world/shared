@@ -1,3 +1,11 @@
+## [1.130.0](https://github.com/cyberskill-world/shared/compare/v1.129.0...v1.130.0) (2025-05-01)
+
+### ✨ Features
+
+* add dummy build script ([025ec24](https://github.com/cyberskill-world/shared/commit/025ec245cd96a992dbb43ca2159218259a61d59b))
+* add itself ([8fb72aa](https://github.com/cyberskill-world/shared/commit/8fb72aa0386dd15c7d1a0d4cb45da1a6d87a7bc6))
+* revert ([dab4866](https://github.com/cyberskill-world/shared/commit/dab4866726f1947ad779f1f01b95594d7853610c))
+
 ## [1.129.0](https://github.com/cyberskill-world/shared/compare/v1.128.0...v1.129.0) (2025-04-30)
 
 ### ✨ Features
