@@ -216,6 +216,7 @@ export async function setupPackages(packages: I_PackageInput[], options?: {
         if (outDatedPackages.length > 0) {
             await Promise.all(outDatedPackages.map(updatePackage));
             await installDependencies();
+            await runCommand('Running ESLint with auto-fix', await command.eslintFix());
         }
 
         for (const action of options?.postInstallActions ?? []) {

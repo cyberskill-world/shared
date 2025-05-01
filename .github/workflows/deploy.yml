@@ -9,9 +9,8 @@ on:
 jobs:
   deploy:
     if: >
-      github.event.workflow_run.head_branch == 'main' &&
-      !contains(github.event.workflow_run.head_commit.message, '[🚀 CI - Deploy]') &&
-      github.event.workflow_run.conclusion == 'success'
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
 
     steps:
