@@ -1,15 +1,15 @@
 name: 🧪 CI - Check
 on:
-  # pull_request:
-  #   branches:
-  #     - develop
-  #     - staging
-  #     - main
-  # push:
-  #   branches:
-  #     - develop
-  #     - staging
-  #     - main
+  pull_request:
+    branches:
+      - develop
+      - staging
+      - main
+  push:
+    branches:
+      - develop
+      - staging
+      - main
   workflow_dispatch:
 jobs:
   check:
