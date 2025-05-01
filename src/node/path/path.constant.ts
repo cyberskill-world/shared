@@ -202,7 +202,7 @@ export const command = {
     }),
     build: buildCommand({
         type: E_CommandType.STRING,
-        command: `${PNPM_CLI} run build`,
+        command: `echo "Don't forget to build your project!"`,
     }),
     pnpmInstallStandard: buildCommand({
         type: E_CommandType.STRING,

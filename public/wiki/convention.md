@@ -29,10 +29,10 @@
 - **nvm (Node Version Manager):**
     - MacOS: [nvm-sh/nvm](https://github.com/nvm-sh/nvm)
     - Windows: [coreybutler/nvm-windows](https://github.com/coreybutler/nvm-windows)
-- **Node.js:** 22.14.0
+- **Node.js:** 22.15.0
   _(nvm sẽ tự động cài đặt phiên bản này nếu chưa có)_
-    - MacOS: [node-v22.14.0.pkg](https://nodejs.org/dist/v22.14.0/node-v22.14.0.pkg)
-    - Windows: [node-v22.14.0-x64.msi](https://nodejs.org/dist/v22.14.0/node-v22.14.0-x64.msi)
+    - MacOS: [node-v22.15.0.pkg](https://nodejs.org/dist/v22.15.0/node-v22.15.0.pkg)
+    - Windows: [node-v22.15.0-x64.msi](https://nodejs.org/dist/v22.15.0/node-v22.15.0-x64.msi)
 - **Docker:** [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - **Ghi chú:** Dùng **pnpm** để tránh xung đột với các công cụ khác.
 
