@@ -1,3 +1,15 @@
+## [1.132.0](https://github.com/cyberskill-world/shared/compare/v1.131.0...v1.132.0) (2025-05-01)
+
+### ✨ Features
+
+* add distribute workflow ([ae055ba](https://github.com/cyberskill-world/shared/commit/ae055ba7ea8d1dc182e8ef12707aeb6f148abbe1))
+* enhance update workflow ([499a1d3](https://github.com/cyberskill-world/shared/commit/499a1d32076f1dab20ae5e814057c7cf3671f0fc))
+* enhance update workflow ([155c3c1](https://github.com/cyberskill-world/shared/commit/155c3c13c61cda2bbcd99ce52783675855999edb))
+* test trigger_update ([5cb8f05](https://github.com/cyberskill-world/shared/commit/5cb8f05c758a385b5f0480b686b5240debea8a40))
+* test trigger_update ([d6f7581](https://github.com/cyberskill-world/shared/commit/d6f75817de889366aaa107ecc442d71f2bb2edf4))
+* test trigger_update ([a67933c](https://github.com/cyberskill-world/shared/commit/a67933c4b6de6ca9aff112a993b5094eb3bf8844))
+* test trigger_update ([47c3981](https://github.com/cyberskill-world/shared/commit/47c3981be1c4861652edb485ad3780d301071196))
+
 ## [1.131.0](https://github.com/cyberskill-world/shared/compare/v1.130.0...v1.131.0) (2025-05-01)
 
 ### ✨ Features
