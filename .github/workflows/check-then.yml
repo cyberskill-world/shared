@@ -16,6 +16,7 @@ jobs:
       - name: Trigger another repository's workflow
         uses: cyberskill-world/.github/actions/trigger-events@main
         with:
-          REPO: "cyberskill-world/template-be-nodejs"
-          EVENTS: "📈 CI - Update"
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          REPO: "cyberskill-world/template-be-nodejs"
+          EVENTS: |
+            📈 CI - Update
