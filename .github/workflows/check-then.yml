@@ -13,12 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-
       - name: Trigger another repository's workflow
-        run: |
-          curl -X POST \
-          -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-          -d '{"event_type": "trigger_update"}' \
-          https://api.github.com/repos/cyberskill-world/template-be-nodejs/dispatches
+        uses: cyberskill-world/.github/actions/trigger-events@main
+        with:
+          repo: "cyberskill-world/template-be-nodejs"
+          events: "📈 CI - Update"
