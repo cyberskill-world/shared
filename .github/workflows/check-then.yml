@@ -1,0 +1,24 @@
+name: 🚀 CI - Deploy
+on:
+  # workflow_run:
+  #   workflows: ["🧪 CI - Check"]
+  #   types:
+  #     - completed
+  workflow_dispatch:
+jobs:
+  deploy:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Trigger another repository's workflow
+        run: |
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+          -d '{"event_type": "trigger_update"}' \
+          https://api.github.com/repos/cyberskill-world/template-be-nodejs/dispatches
