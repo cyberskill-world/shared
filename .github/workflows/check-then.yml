@@ -1,4 +1,4 @@
-name: 🚀 CI - Deploy
+name: 🚀 CI - Deploy Then
 on:
   # workflow_run:
   #   workflows: ["🧪 CI - Check"]
