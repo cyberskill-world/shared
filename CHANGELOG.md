@@ -1,3 +1,9 @@
+## [1.133.0](https://github.com/cyberskill-world/shared/compare/v1.132.0...v1.133.0) (2025-05-01)
+
+### ✨ Features
+
+* inherit secrets ([04c1d8c](https://github.com/cyberskill-world/shared/commit/04c1d8c9bd013cb47ccd62a70ff9c243fb207d76))
+
 ## [1.132.0](https://github.com/cyberskill-world/shared/compare/v1.131.0...v1.132.0) (2025-05-01)
 
 ### ✨ Features
