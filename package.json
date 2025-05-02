@@ -183,7 +183,7 @@
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "bin": {
-        "cyberskill": "./dist/node/cli/index.js"
+        "cyberskill": "dist/node/cli/index.js"
     },
     "files": [
         "dist",
