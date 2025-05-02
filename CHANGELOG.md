@@ -1,3 +1,9 @@
+## [1.136.0](https://github.com/cyberskill-world/shared/compare/v1.135.0...v1.136.0) (2025-05-02)
+
+### ✨ Features
+
+* correct bin folder ([1e96fbe](https://github.com/cyberskill-world/shared/commit/1e96fbed58cf3911bc2c2994ed99c9b0719adb6e))
+
 ## [1.135.0](https://github.com/cyberskill-world/shared/compare/v1.134.0...v1.135.0) (2025-05-02)
 
 ### ✨ Features
