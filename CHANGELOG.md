@@ -1,3 +1,9 @@
+## [1.137.0](https://github.com/cyberskill-world/shared/compare/v1.136.0...v1.137.0) (2025-05-02)
+
+### ✨ Features
+
+* update readme ([d72abe8](https://github.com/cyberskill-world/shared/commit/d72abe839bd875025dfd6b89914370d1cf9c61d3))
+
 ## [1.136.0](https://github.com/cyberskill-world/shared/compare/v1.135.0...v1.136.0) (2025-05-02)
 
 ### ✨ Features
