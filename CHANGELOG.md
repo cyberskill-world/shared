@@ -1,3 +1,9 @@
+## [1.134.0](https://github.com/cyberskill-world/shared/compare/v1.133.0...v1.134.0) (2025-05-02)
+
+### ✨ Features
+
+* add --no-frozen-lockfile to pnpm ([9e4c0f1](https://github.com/cyberskill-world/shared/commit/9e4c0f1e36b4087086a4e0d26d9d8796322c0549))
+
 ## [1.133.0](https://github.com/cyberskill-world/shared/compare/v1.132.0...v1.133.0) (2025-05-01)
 
 ### ✨ Features
