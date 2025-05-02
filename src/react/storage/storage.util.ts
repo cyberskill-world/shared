@@ -1,6 +1,6 @@
 import localForage from 'localforage';
 
-import { log } from '../log/index.js';
+import { catchError } from '../log/index.js';
 
 export const storage = {
     async get<T = unknown>(key: string): Promise<T | null> {
@@ -8,8 +8,7 @@ export const storage = {
             return await localForage.getItem<T>(key);
         }
         catch (error) {
-            log.error(`[Storage:get] Error getting key "${key}":`, error);
-            return null;
+            return catchError(error, { returnValue: null });
         }
     },
     async set<T = unknown>(key: string, value: T): Promise<void> {
@@ -17,7 +16,7 @@ export const storage = {
             await localForage.setItem(key, value);
         }
         catch (error) {
-            log.error(`[Storage:set] Error setting key "${key}":`, error);
+            catchError(error);
         }
     },
     async remove(key: string): Promise<void> {
@@ -25,17 +24,17 @@ export const storage = {
             await localForage.removeItem(key);
         }
         catch (error) {
-            log.error(`[Storage:remove] Error removing key "${key}":`, error);
+            catchError(error);
         }
     },
     async keys(): Promise<string[]> {
         try {
             const keys = await localForage.keys();
+
             return keys ?? [];
         }
         catch (error) {
-            log.error(`[Storage:keys] Error getting keys:`, error);
-            return [];
+            return catchError(error, { returnValue: [] });
         }
     },
 };

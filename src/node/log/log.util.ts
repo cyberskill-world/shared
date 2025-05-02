@@ -4,10 +4,12 @@ import chalk from 'chalk';
 import consola from 'consola';
 import { GraphQLError } from 'graphql';
 
+import type { I_Return } from '#typescript/index.js';
+
 import { getEnv } from '#configs/env/index.js';
 import { RESPONSE_STATUS } from '#constants/response-status.js';
 
-import type { I_IssueEntry, I_Log_NodeJS, T_ThrowError } from './log.type.js';
+import type { I_CatchErrorOptionsNode, I_IssueEntry, I_LogNode, T_ThrowError } from './log.type.js';
 
 const env = getEnv();
 
@@ -40,7 +42,7 @@ function chalkKeyword(color: string): ChalkInstance {
     return typeof chalkColor === 'function' ? (chalkColor as ChalkInstance) : chalk.green;
 }
 
-export const logNodeJS: I_Log_NodeJS = {
+export const logNode: I_LogNode = {
     silent: consola.silent,
     level: consola.level,
     fatal: consola.fatal,
@@ -76,3 +78,31 @@ export const logNodeJS: I_Log_NodeJS = {
         consola.log(chalk.gray('─'.repeat(40)));
     },
 };
+
+export function catchErrorNode<T = unknown>(errorInput: unknown, options: I_CatchErrorOptionsNode & { returnValue: T }): T;
+export function catchErrorNode<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptionsNode): I_Return<T>;
+export function catchErrorNode<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptionsNode): I_Return<T> | T {
+    const { shouldLog = true, returnValue, callback } = options ?? {};
+
+    const error = errorInput instanceof Error
+        ? errorInput
+        : new Error(typeof errorInput === 'string' ? errorInput : 'Unknown error');
+
+    if (shouldLog) {
+        logNode.error(error.message);
+    }
+
+    if (callback && typeof callback === 'function') {
+        callback(error);
+    }
+
+    if (returnValue) {
+        return returnValue as T;
+    }
+
+    return {
+        success: false,
+        message: error.message,
+        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+    };
+}

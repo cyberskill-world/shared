@@ -4,7 +4,7 @@ import type { I_Serializer } from '#utils/serializer/index.js';
 
 import { serializer as defaultSerializer } from '#utils/serializer/index.js';
 
-import { log } from '../log/index.js';
+import { catchError } from '../log/index.js';
 import { storage } from './storage.util.js';
 
 export function useStorage<T>(
@@ -38,7 +38,7 @@ export function useStorage<T>(
                 }
             }
             catch (error) {
-                log.error(`Error loading value for key "${key}":`, error);
+                catchError(error);
 
                 if (isMounted) {
                     setValue(initialValue);
@@ -70,7 +70,7 @@ export function useStorage<T>(
                 }
             }
             catch (error) {
-                log.error(`Error saving value for key "${key}":`, error);
+                catchError(error);
             }
         };
 
@@ -92,7 +92,7 @@ export function useStorage<T>(
             setValue(undefined);
         }
         catch (error) {
-            log.error(`Error removing key "${key}":`, error);
+            catchError(error);
         }
     }, [key]);
 

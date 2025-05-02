@@ -1,10 +1,10 @@
-import pathNodeJS from 'node:path';
+import pathNode from 'node:path';
 
 import { getEnv } from '#configs/env/index.js';
 
 const env = getEnv();
 
-export const path = pathNodeJS;
+export const path = pathNode;
 
 export function resolveWorkingPath(...urls: string[]): string {
     return path.resolve(env.CWD, ...urls);

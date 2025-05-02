@@ -1,18 +1,20 @@
 import fetch from 'node-fetch';
 
+import type { I_Return } from '#typescript/index.js';
+
 import { getEnv } from '#configs/env/index.js';
 
 import type { I_PackageInfo, I_PackageInput, T_PackageJson } from './package.type.js';
 
 import { runCommand } from '../command/index.js';
 import { pathExistsSync, readJsonSync, writeFileSync } from '../fs/index.js';
-import { logNodeJS as log } from '../log/index.js';
+import { catchErrorNode, logNode as log } from '../log/index.js';
 import { command, join, NODE_MODULES, PACKAGE_JSON, PATH } from '../path/index.js';
 import { E_PackageType } from './package.type.js';
 
 const env = getEnv();
 
-export async function getLatestPackageVersion(packageName: string): Promise<string> {
+export async function getLatestPackageVersion(packageName: string): Promise<I_Return<string>> {
     try {
         const res = await fetch(`https://registry.npmjs.org/${packageName}/latest`);
 
@@ -22,29 +24,34 @@ export async function getLatestPackageVersion(packageName: string): Promise<stri
 
         const { version } = await res.json() as { version: string };
 
-        return version;
+        return {
+            success: true,
+            result: version,
+        };
     }
-    catch (err) {
-        log.error(`Failed to fetch version for "${packageName}": ${(err as Error).message}`);
-        throw err;
+    catch (error) {
+        return catchErrorNode<string>(error);
     }
 }
 
-export async function getPackage(inputPackage: I_PackageInput): Promise<I_PackageInfo> {
+export async function getPackage(inputPackage: I_PackageInput): Promise<I_Return<I_PackageInfo>> {
     try {
         // if package.json does not exist
         if (!pathExistsSync(PATH.PACKAGE_JSON)) {
             return {
-                name: inputPackage.name,
-                currentVersion: '',
-                latestVersion: '',
-                isCurrentProject: false,
-                isInstalled: false,
-                isUpToDate: false,
-                isDependency: inputPackage.type === E_PackageType.DEPENDENCY,
-                isDevDependency: inputPackage.type === E_PackageType.DEV_DEPENDENCY,
-                installedPath: '',
-                file: {},
+                success: true,
+                result: {
+                    name: inputPackage.name,
+                    currentVersion: '',
+                    latestVersion: '',
+                    isCurrentProject: false,
+                    isInstalled: false,
+                    isUpToDate: false,
+                    isDependency: inputPackage.type === E_PackageType.DEPENDENCY,
+                    isDevDependency: inputPackage.type === E_PackageType.DEV_DEPENDENCY,
+                    installedPath: '',
+                    file: {},
+                },
             };
         }
 
@@ -55,16 +62,19 @@ export async function getPackage(inputPackage: I_PackageInput): Promise<I_Packag
         // if it's the current project
         if (inputPackage.name === name) {
             return {
-                name,
-                currentVersion: version,
-                latestVersion: version,
-                isCurrentProject: true,
-                isInstalled: true,
-                isUpToDate: true,
-                isDependency: inputPackage.type === E_PackageType.DEPENDENCY,
-                isDevDependency: inputPackage.type === E_PackageType.DEV_DEPENDENCY,
-                installedPath: PATH.PACKAGE_JSON,
-                file: packageJson,
+                success: true,
+                result: {
+                    name,
+                    currentVersion: version,
+                    latestVersion: version,
+                    isCurrentProject: true,
+                    isInstalled: true,
+                    isUpToDate: true,
+                    isDependency: inputPackage.type === E_PackageType.DEPENDENCY,
+                    isDevDependency: inputPackage.type === E_PackageType.DEV_DEPENDENCY,
+                    installedPath: PATH.PACKAGE_JSON,
+                    file: packageJson,
+                },
             };
         }
 
@@ -72,21 +82,42 @@ export async function getPackage(inputPackage: I_PackageInput): Promise<I_Packag
 
         const isDevDependency = inputPackage.name in devDependencies;
 
-        const latestVersion = await getLatestPackageVersion(inputPackage.name);
+        const latestVersionFound = await getLatestPackageVersion(inputPackage.name);
+
+        if (!latestVersionFound.success) {
+            return {
+                success: true,
+                result: {
+                    name: inputPackage.name,
+                    currentVersion: '',
+                    latestVersion: '',
+                    isCurrentProject: false,
+                    isInstalled: false,
+                    isUpToDate: false,
+                    isDependency,
+                    isDevDependency,
+                    installedPath: '',
+                    file: {},
+                },
+            };
+        }
 
         // if it's not a dependency or devDependency
         if (!isDependency && !isDevDependency) {
             return {
-                name: inputPackage.name,
-                currentVersion: '',
-                latestVersion,
-                isCurrentProject: false,
-                isInstalled: false,
-                isUpToDate: false,
-                isDependency: inputPackage.type === E_PackageType.DEPENDENCY,
-                isDevDependency: inputPackage.type === E_PackageType.DEV_DEPENDENCY,
-                installedPath: '',
-                file: {},
+                success: true,
+                result: {
+                    name: inputPackage.name,
+                    currentVersion: '',
+                    latestVersion: latestVersionFound.result,
+                    isCurrentProject: false,
+                    isInstalled: false,
+                    isUpToDate: false,
+                    isDependency: inputPackage.type === E_PackageType.DEPENDENCY,
+                    isDevDependency: inputPackage.type === E_PackageType.DEV_DEPENDENCY,
+                    installedPath: '',
+                    file: {},
+                },
             };
         }
 
@@ -96,16 +127,19 @@ export async function getPackage(inputPackage: I_PackageInput): Promise<I_Packag
         // if package does not exist in node_modules
         if (!pathExistsSync(dependencyPackageJsonPath)) {
             return {
-                name: inputPackage.name,
-                currentVersion: '',
-                latestVersion,
-                isCurrentProject: false,
-                isInstalled: false,
-                isUpToDate: false,
-                isDependency,
-                isDevDependency,
-                installedPath: '',
-                file: {},
+                success: true,
+                result: {
+                    name: inputPackage.name,
+                    currentVersion: '',
+                    latestVersion: latestVersionFound.result,
+                    isCurrentProject: false,
+                    isInstalled: false,
+                    isUpToDate: false,
+                    isDependency,
+                    isDevDependency,
+                    installedPath: '',
+                    file: {},
+                },
             };
         }
 
@@ -116,36 +150,41 @@ export async function getPackage(inputPackage: I_PackageInput): Promise<I_Packag
         // if version in package.json is different from version in node_modules
         if (packageJsonVersion !== dependencyVersion) {
             return {
-                name: inputPackage.name,
-                currentVersion: dependencyVersion || packageJsonVersion,
-                latestVersion,
-                isCurrentProject: false,
-                isInstalled: true,
-                isUpToDate: false,
-                isDependency,
-                isDevDependency,
-                installedPath: dependencyPackageJsonPath,
-                file: dependencyPackageJson,
+                success: true,
+                result: {
+                    name: inputPackage.name,
+                    currentVersion: dependencyVersion || packageJsonVersion,
+                    latestVersion: latestVersionFound.result,
+                    isCurrentProject: false,
+                    isInstalled: true,
+                    isUpToDate: false,
+                    isDependency,
+                    isDevDependency,
+                    installedPath: dependencyPackageJsonPath,
+                    file: dependencyPackageJson,
+                },
             };
         }
 
         // if version in package.json is the same as version in node_modules
         return {
-            name: inputPackage.name,
-            currentVersion: packageJsonVersion,
-            latestVersion,
-            isCurrentProject: false,
-            isInstalled: true,
-            isUpToDate: packageJsonVersion === latestVersion,
-            isDependency,
-            isDevDependency,
-            installedPath: dependencyPackageJsonPath,
-            file: dependencyPackageJson,
+            success: true,
+            result: {
+                name: inputPackage.name,
+                currentVersion: packageJsonVersion,
+                latestVersion: latestVersionFound.result,
+                isCurrentProject: false,
+                isInstalled: true,
+                isUpToDate: packageJsonVersion === latestVersionFound.result,
+                isDependency,
+                isDevDependency,
+                installedPath: dependencyPackageJsonPath,
+                file: dependencyPackageJson,
+            },
         };
     }
     catch (error) {
-        log.error(`Error getting package "${inputPackage.name}": ${(error as Error).message}`);
-        throw error;
+        return catchErrorNode<I_PackageInfo>(error);
     }
 }
 
@@ -168,12 +207,11 @@ export async function updatePackage(packageInfo: I_PackageInfo): Promise<void> {
         log.info(`Updated "${packageInfo.name}" to version ${packageInfo.latestVersion}`);
     }
     catch (error) {
-        log.error(`Error updating package "${packageInfo.name}": ${(error as Error).message}`);
-        throw error;
+        catchErrorNode(error);
     }
 }
 
-export async function installDependencies() {
+export async function installDependencies(): Promise<void> {
     try {
         const strategies = [
             { command: () => command.pnpmInstallStandard(), message: 'Installing dependencies (standard)' },
@@ -188,33 +226,43 @@ export async function installDependencies() {
                 return;
             }
             catch (error) {
-                log.warn(`Installation attempt failed: ${message}`);
-                log.error(`Details: ${(error as Error).message}`);
+                catchErrorNode(error);
             }
         }
     }
     catch (error) {
-        log.error(`Failed to install dependencies: ${(error as Error).message}`);
-        throw error;
+        catchErrorNode(error);
     }
 }
 
 export async function setupPackages(packages: I_PackageInput[], options?: {
     update?: boolean;
     postInstallActions?: (() => Promise<void>)[];
-}) {
+}): Promise<void> {
     if (!pathExistsSync(PATH.PACKAGE_JSON)) {
         log.error('package.json not found. Aborting setup.');
         return;
     }
 
     try {
-        const packagesInfo = await Promise.all(packages.map(getPackage));
+        const packagesData = await Promise.all(packages.map(getPackage));
 
-        const outDatedPackages = packagesInfo.filter(pkg => !pkg.isCurrentProject && (!pkg.isInstalled || !pkg.isUpToDate));
+        const outDatedPackages = packagesData.filter((packageData) => {
+            if (!packageData.success) {
+                return false;
+            }
+
+            return !packageData.result.isCurrentProject && (!packageData.result.isInstalled || !packageData.result.isUpToDate);
+        });
 
         if (outDatedPackages.length > 0) {
-            await Promise.all(outDatedPackages.map(updatePackage));
+            await Promise.all(outDatedPackages.map((packageInfo) => {
+                if (!packageInfo.success) {
+                    return Promise.resolve();
+                }
+
+                return updatePackage(packageInfo.result);
+            }));
             await installDependencies();
             await runCommand('Running ESLint with auto-fix', await command.eslintFix());
         }
@@ -224,7 +272,6 @@ export async function setupPackages(packages: I_PackageInput[], options?: {
         }
     }
     catch (error) {
-        log.error(`Failed to setup "${packages.map(pkg => pkg.name).join(', ')}": ${(error as Error).message}`);
-        throw error;
+        catchErrorNode(error);
     }
 }

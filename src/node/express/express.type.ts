@@ -24,12 +24,12 @@ interface I_BaseCorsOptions {
     whiteList?: string[];
 }
 
-interface I_CorsOptionsNodeJS extends I_BaseCorsOptions, CorsOptions, CorsOptionsDelegate<CorsRequest> {
+interface I_CorsOptionsNode extends I_BaseCorsOptions, CorsOptions, CorsOptionsDelegate<CorsRequest> {
 }
 
-interface I_CorsOptionsNestJS extends I_BaseCorsOptions, CorsOptionsNestJS {
+interface I_CorsOptionsNest extends I_BaseCorsOptions, CorsOptionsNestJS {
 }
 
 export type T_CorsOptions<T extends T_CorsType> = T extends 'node'
-    ? I_CorsOptionsNodeJS
-    : I_CorsOptionsNestJS;
+    ? I_CorsOptionsNode
+    : I_CorsOptionsNest;

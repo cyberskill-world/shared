@@ -22,10 +22,16 @@ export interface T_ThrowError {
     type?: 'graphql' | 'rest';
 }
 
-export interface I_Log_NodeJS extends I_Log {
+export interface I_LogNode extends I_Log {
     printBoxedLog: (
         title: string,
         issues: I_IssueEntry[],
         color?: string,
     ) => void;
+}
+
+export interface I_CatchErrorOptionsNode {
+    shouldLog?: boolean;
+    returnValue?: unknown;
+    callback?: (error: Error) => void;
 }

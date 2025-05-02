@@ -57,7 +57,7 @@ import type { OptionalUnlessRequiredId } from 'mongodb';
 import type { PaginateModel } from 'mongoose';
 import type { PaginateOptions } from 'mongoose';
 import type { PaginateResult } from 'mongoose';
-import pathNodeJS from 'node:path';
+import pathNode from 'node:path';
 import type { PipelineStage } from 'mongoose';
 import type { PopulateOption } from 'mongoose';
 import type { PopulateOptions } from 'mongoose';
@@ -183,6 +183,26 @@ export { C_Model }
 export { C_Model as C_Model_alias_1 }
 export { C_Model as C_Model_alias_2 }
 export { C_Model as C_Model_alias_3 }
+
+declare function catchError<T = unknown>(errorInput: unknown, options: I_CatchErrorOptions & {
+    returnValue: T;
+}): T;
+
+declare function catchError<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions): I_Return_2<T>;
+export { catchError }
+export { catchError as catchError_alias_1 }
+export { catchError as catchError_alias_2 }
+export { catchError as catchError_alias_3 }
+
+declare function catchErrorNode<T = unknown>(errorInput: unknown, options: I_CatchErrorOptionsNode & {
+    returnValue: T;
+}): T;
+
+declare function catchErrorNode<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptionsNode): I_Return_2<T>;
+export { catchErrorNode }
+export { catchErrorNode as catchErrorNode_alias_1 }
+export { catchErrorNode as catchErrorNode_alias_2 }
+export { catchErrorNode as catchErrorNode_alias_3 }
 
 declare function clearAllErrorLists(): Promise<void>;
 export { clearAllErrorLists }
@@ -1666,13 +1686,13 @@ export { getFileName as getFileName_alias_1 }
 export { getFileName as getFileName_alias_2 }
 export { getFileName as getFileName_alias_3 }
 
-declare function getLatestPackageVersion(packageName: string): Promise<string>;
+declare function getLatestPackageVersion(packageName: string): Promise<I_Return_2<string>>;
 export { getLatestPackageVersion }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_3 }
 
-declare function getPackage(inputPackage: I_PackageInput): Promise<I_PackageInfo>;
+declare function getPackage(inputPackage: I_PackageInput): Promise<I_Return_2<I_PackageInfo>>;
 export { getPackage }
 export { getPackage as getPackage_alias_1 }
 export { getPackage as getPackage_alias_2 }
@@ -1765,6 +1785,26 @@ declare interface I_BaseCorsOptions {
     whiteList?: string[];
 }
 
+declare interface I_CatchErrorOptions {
+    shouldLog?: boolean;
+    returnValue?: unknown;
+    callback?: (error: Error) => void;
+}
+export { I_CatchErrorOptions }
+export { I_CatchErrorOptions as I_CatchErrorOptions_alias_1 }
+export { I_CatchErrorOptions as I_CatchErrorOptions_alias_2 }
+export { I_CatchErrorOptions as I_CatchErrorOptions_alias_3 }
+
+declare interface I_CatchErrorOptionsNode {
+    shouldLog?: boolean;
+    returnValue?: unknown;
+    callback?: (error: Error) => void;
+}
+export { I_CatchErrorOptionsNode }
+export { I_CatchErrorOptionsNode as I_CatchErrorOptionsNode_alias_1 }
+export { I_CatchErrorOptionsNode as I_CatchErrorOptionsNode_alias_2 }
+export { I_CatchErrorOptionsNode as I_CatchErrorOptionsNode_alias_3 }
+
 declare interface I_Children {
     children: T_Children;
 }
@@ -1801,10 +1841,10 @@ export { I_CopySyncOptions as I_CopySyncOptions_alias_1 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_2 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_3 }
 
-declare interface I_CorsOptionsNestJS extends I_BaseCorsOptions, CorsOptions_2 {
+declare interface I_CorsOptionsNest extends I_BaseCorsOptions, CorsOptions_2 {
 }
 
-declare interface I_CorsOptionsNodeJS extends I_BaseCorsOptions, CorsOptions, CorsOptionsDelegate<CorsRequest> {
+declare interface I_CorsOptionsNode extends I_BaseCorsOptions, CorsOptions, CorsOptionsDelegate<CorsRequest> {
 }
 
 declare interface I_CreateModelOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
@@ -2071,13 +2111,13 @@ declare interface I_Log_2 {
     verbose: typeof consola['verbose'];
 }
 
-declare interface I_Log_NodeJS extends I_Log_2 {
+declare interface I_LogNode extends I_Log_2 {
     printBoxedLog: (title: string, issues: I_IssueEntry[], color?: string) => void;
 }
-export { I_Log_NodeJS }
-export { I_Log_NodeJS as I_Log_NodeJS_alias_1 }
-export { I_Log_NodeJS as I_Log_NodeJS_alias_2 }
-export { I_Log_NodeJS as I_Log_NodeJS_alias_3 }
+export { I_LogNode }
+export { I_LogNode as I_LogNode_alias_1 }
+export { I_LogNode as I_LogNode_alias_2 }
+export { I_LogNode as I_LogNode_alias_3 }
 
 declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     method: T_MongooseMiddlewareMethod;
@@ -2179,7 +2219,8 @@ declare type I_Return<T = void, E = unknown> = I_ReturnSuccess<T, E> | I_ReturnF
 export { I_Return }
 export { I_Return as I_Return_alias_1 }
 export { I_Return as I_Return_alias_2 }
-export { I_Return as I_Return_alias_3 }
+
+declare type I_Return_2<T = void, E = unknown> = I_ReturnSuccess_2<T, E> | I_ReturnFailure_2;
 
 declare interface I_ReturnFailure {
     success: false;
@@ -2189,7 +2230,12 @@ declare interface I_ReturnFailure {
 export { I_ReturnFailure }
 export { I_ReturnFailure as I_ReturnFailure_alias_1 }
 export { I_ReturnFailure as I_ReturnFailure_alias_2 }
-export { I_ReturnFailure as I_ReturnFailure_alias_3 }
+
+declare interface I_ReturnFailure_2 {
+    success: false;
+    message: string;
+    code: number | string;
+}
 
 declare interface I_ReturnSuccess<T, E = unknown> {
     success: true;
@@ -2200,7 +2246,13 @@ declare interface I_ReturnSuccess<T, E = unknown> {
 export { I_ReturnSuccess }
 export { I_ReturnSuccess as I_ReturnSuccess_alias_1 }
 export { I_ReturnSuccess as I_ReturnSuccess_alias_2 }
-export { I_ReturnSuccess as I_ReturnSuccess_alias_3 }
+
+declare interface I_ReturnSuccess_2<T, E = unknown> {
+    success: true;
+    result: T & E;
+    message?: string;
+    code?: number | string;
+}
 
 declare interface I_Serializer<T = unknown> {
     serialize: (value: T) => string;
@@ -2362,11 +2414,11 @@ export { log as log_alias_1 }
 export { log as log_alias_2 }
 export { log as log_alias_3 }
 
-declare const logNodeJS: I_Log_NodeJS;
-export { logNodeJS }
-export { logNodeJS as logNodeJS_alias_1 }
-export { logNodeJS as logNodeJS_alias_2 }
-export { logNodeJS as logNodeJS_alias_3 }
+declare const logNode: I_LogNode;
+export { logNode }
+export { logNode as logNode_alias_1 }
+export { logNode as logNode_alias_2 }
+export { logNode as logNode_alias_3 }
 
 declare const lstatSync: fsExtra.StatSyncFn;
 export { lstatSync }
@@ -2455,51 +2507,15 @@ export { MONGO_MIGRATE_OPTIONS as MONGO_MIGRATE_OPTIONS_alias_3 }
 declare class MongoController<D extends Partial<C_Document>> {
     private collection;
     constructor(db: C_Db, collectionName: string);
-    createOne(document: D): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_InsertOneResult<D>;
-    }>;
-    createMany(documents: D[]): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_InsertManyResult<D>;
-    }>;
-    findOne(filter: T_Filter<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_WithId<D> | null;
-    }>;
-    findAll(filter?: T_Filter<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_WithId<D>[];
-    }>;
-    count(filter?: T_Filter<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: number;
-    }>;
-    updateOne(filter: T_Filter<D>, update: Partial<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_UpdateResult;
-    }>;
-    updateMany(filter: T_Filter<D>, update: Partial<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_UpdateResult;
-    }>;
-    deleteOne(filter: T_Filter<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_DeleteResult;
-    }>;
-    deleteMany(filter: T_Filter<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_DeleteResult;
-    }>;
+    createOne(document: D): Promise<I_Return_2<T_InsertOneResult<D>>>;
+    createMany(documents: D[]): Promise<I_Return_2<T_InsertManyResult<D>>>;
+    findOne(filter: T_Filter<D>): Promise<I_Return_2<T_WithId<D>>>;
+    findAll(filter?: T_Filter<D>): Promise<I_Return_2<T_WithId<D>[]>>;
+    count(filter?: T_Filter<D>): Promise<I_Return_2<number>>;
+    updateOne(filter: T_Filter<D>, update: Partial<D>): Promise<I_Return_2<T_UpdateResult>>;
+    updateMany(filter: T_Filter<D>, update: Partial<D>): Promise<I_Return_2<T_UpdateResult>>;
+    deleteOne(filter: T_Filter<D>): Promise<I_Return_2<T_DeleteResult>>;
+    deleteMany(filter: T_Filter<D>): Promise<I_Return_2<T_DeleteResult>>;
 }
 export { MongoController }
 export { MongoController as MongoController_alias_1 }
@@ -2510,20 +2526,20 @@ declare class MongooseController<T extends Partial<C_Document>> {
     private model;
     constructor(model: I_ExtendedModel<T>);
     private getModelName;
-    findOne(filter?: T_FilterQuery<T>, projection?: T_ProjectionType<T>, options?: T_QueryOptions<T>, populate?: T_Input_Populate): Promise<I_Return<T>>;
-    findAll(filter?: T_FilterQuery<T>, projection?: T_ProjectionType<T>, options?: T_QueryOptions<T>, populate?: T_Input_Populate): Promise<I_Return<T[]>>;
-    findPaging(filter?: T_FilterQuery<T>, options?: T_PaginateOptionsWithPopulate): Promise<I_Return<T_PaginateResult<T>>>;
-    findPagingAggregate(pipeline: T_PipelineStage[], options?: T_PaginateOptionsWithPopulate): Promise<I_Return<T_AggregatePaginateResult<T>>>;
-    count(filter?: T_FilterQuery<T>): Promise<I_Return<number>>;
-    createOne(doc: T | Partial<T>): Promise<I_Return<T>>;
-    createMany(docs: (T | Partial<T>)[], options?: T_InsertManyOptions): Promise<I_Return<T[]>>;
-    updateOne(filter?: T_FilterQuery<T>, update?: T_UpdateQuery<T>, options?: I_UpdateOptionsExtended): Promise<I_Return<T>>;
-    updateMany(filter?: T_FilterQuery<T>, update?: T_UpdateQuery<T>, options?: I_UpdateOptionsExtended): Promise<I_Return<T_UpdateResult>>;
-    deleteOne(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return<T>>;
-    deleteMany(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return<T_DeleteResult>>;
-    createShortId(id: string, length?: number): Promise<I_Return<string>>;
-    createSlug<R = string>(fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return<R>>;
-    aggregate(pipeline: T_PipelineStage[]): Promise<I_Return<T[]>>;
+    findOne(filter?: T_FilterQuery<T>, projection?: T_ProjectionType<T>, options?: T_QueryOptions<T>, populate?: T_Input_Populate): Promise<I_Return_2<T>>;
+    findAll(filter?: T_FilterQuery<T>, projection?: T_ProjectionType<T>, options?: T_QueryOptions<T>, populate?: T_Input_Populate): Promise<I_Return_2<T[]>>;
+    findPaging(filter?: T_FilterQuery<T>, options?: T_PaginateOptionsWithPopulate): Promise<I_Return_2<T_PaginateResult<T>>>;
+    findPagingAggregate(pipeline: T_PipelineStage[], options?: T_PaginateOptionsWithPopulate): Promise<I_Return_2<T_AggregatePaginateResult<T>>>;
+    count(filter?: T_FilterQuery<T>): Promise<I_Return_2<number>>;
+    createOne(doc: T | Partial<T>): Promise<I_Return_2<T>>;
+    createMany(docs: (T | Partial<T>)[], options?: T_InsertManyOptions): Promise<I_Return_2<T[]>>;
+    updateOne(filter?: T_FilterQuery<T>, update?: T_UpdateQuery<T>, options?: I_UpdateOptionsExtended): Promise<I_Return_2<T>>;
+    updateMany(filter?: T_FilterQuery<T>, update?: T_UpdateQuery<T>, options?: I_UpdateOptionsExtended): Promise<I_Return_2<T_UpdateResult>>;
+    deleteOne(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T>>;
+    deleteMany(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T_DeleteResult>>;
+    createShortId(id: string, length?: number): Promise<I_Return_2<string>>;
+    createSlug<R = string>(fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return_2<R>>;
+    aggregate(pipeline: T_PipelineStage[]): Promise<I_Return_2<T[]>>;
 }
 export { MongooseController }
 export { MongooseController as MongooseController_alias_1 }
@@ -2623,7 +2639,7 @@ export { PATH as PATH_alias_1 }
 export { PATH as PATH_alias_2 }
 export { PATH as PATH_alias_3 }
 
-declare const path: pathNodeJS.PlatformPath;
+declare const path: pathNode.PlatformPath;
 export { path }
 export { path as path_alias_1 }
 export { path as path_alias_2 }
@@ -2727,7 +2743,7 @@ export { resolve as resolve_alias_3 }
 
 declare function resolveCommands(input: T_CommandMapInput): Promise<{
     [k: string]: string | I_Command_2;
-}>;
+} | undefined>;
 export { resolveCommands }
 export { resolveCommands as resolveCommands_alias_1 }
 export { resolveCommands as resolveCommands_alias_2 }
@@ -3071,17 +3087,17 @@ export { storage as storage_alias_1 }
 export { storage as storage_alias_2 }
 export { storage as storage_alias_3 }
 
-declare const storageNodeJS: {
+declare const storageNode: {
     get<T = unknown>(key: string): Promise<T | null>;
     set<T = unknown>(key: string, value: T): Promise<void>;
     remove(key: string): Promise<void>;
     keys(): Promise<string[]>;
     getLogLink(key: string): Promise<string | null>;
 };
-export { storageNodeJS }
-export { storageNodeJS as storageNodeJS_alias_1 }
-export { storageNodeJS as storageNodeJS_alias_2 }
-export { storageNodeJS as storageNodeJS_alias_3 }
+export { storageNode }
+export { storageNode as storageNode_alias_1 }
+export { storageNode as storageNode_alias_2 }
+export { storageNode as storageNode_alias_3 }
 
 /**
  * Extracts a substring between two strings.
@@ -3143,7 +3159,7 @@ export { T_ConfigType }
 export { T_ConfigType as T_ConfigType_alias_1 }
 export { T_ConfigType as T_ConfigType_alias_2 }
 
-declare type T_CorsOptions<T extends T_CorsType> = T extends 'node' ? I_CorsOptionsNodeJS : I_CorsOptionsNestJS;
+declare type T_CorsOptions<T extends T_CorsType> = T extends 'node' ? I_CorsOptionsNode : I_CorsOptionsNest;
 export { T_CorsOptions }
 export { T_CorsOptions as T_CorsOptions_alias_1 }
 export { T_CorsOptions as T_CorsOptions_alias_2 }

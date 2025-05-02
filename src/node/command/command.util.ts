@@ -7,10 +7,10 @@ import { getEnv } from '#configs/env/index.js';
 import type { I_IssueEntry } from '../log/index.js';
 import type { I_CommandContext, I_EslintError, T_Command, T_CommandMapInput } from './command.type.js';
 
-import { E_IssueType, logNodeJS as log } from '../log/index.js';
+import { catchErrorNode, E_IssueType, logNode as log } from '../log/index.js';
 import { getPackage } from '../package/index.js';
 import { CYBERSKILL_CLI, CYBERSKILL_CLI_PATH, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '../path/index.js';
-import { storageNodeJS } from '../storage/index.js';
+import { storageNode } from '../storage/index.js';
 
 const env = getEnv();
 const execPromise = util.promisify(exec);
@@ -28,13 +28,13 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
     const key = getErrorListKey(timestamp);
 
     try {
-        await storageNodeJS.set(key, {
+        await storageNode.set(key, {
             errors: errorList,
             timestamp,
         });
 
         setTimeout(async () => {
-            const logPath = await storageNodeJS.getLogLink(key);
+            const logPath = await storageNode.getLogLink(key);
 
             if (logPath) {
                 log.info(`📂 Open the error list manually: ${logPath}`);
@@ -42,13 +42,13 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
         }, 10);
     }
     catch (error) {
-        log.error(`Failed to save errors: ${(error as Error).message}`);
+        catchErrorNode(error);
     }
 }
 
 export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
     try {
-        const keys = await storageNodeJS.keys();
+        const keys = await storageNode.keys();
 
         const errorKeys = Array.isArray(keys)
             ? keys.filter(key => key?.startsWith?.('error_list:'))
@@ -56,7 +56,7 @@ export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
 
         const allErrors = await Promise.all(
             errorKeys.map(async (key) => {
-                const entry = await storageNodeJS.get<{ errors: I_IssueEntry[]; timestamp: number }>(key);
+                const entry = await storageNode.get<{ errors: I_IssueEntry[]; timestamp: number }>(key);
 
                 return entry?.errors || [];
             }),
@@ -65,24 +65,24 @@ export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
         return allErrors.flat();
     }
     catch (error) {
-        log.error(`Failed to retrieve stored errors: ${(error as Error).message}`);
-
-        return [];
+        return catchErrorNode<I_IssueEntry[]>(error, {
+            returnValue: [],
+        });
     }
 }
 
 export async function clearAllErrorLists(): Promise<void> {
     try {
-        const keys = await storageNodeJS.keys();
+        const keys = await storageNode.keys();
 
         const errorKeys = Array.isArray(keys)
             ? keys.filter(key => key?.startsWith?.('error_list:'))
             : [];
 
-        await Promise.all(errorKeys.map(key => storageNodeJS.remove(key)));
+        await Promise.all(errorKeys.map(key => storageNode.remove(key)));
     }
     catch (error) {
-        log.error(`Failed to clear error lists: ${(error as Error).message}`);
+        catchErrorNode(error);
     }
 }
 
@@ -235,14 +235,16 @@ export function formatCommand(command: T_Command, context?: I_CommandContext) {
 }
 
 export async function resolveCommands(input: T_CommandMapInput) {
-    const { isCurrentProject } = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
+    const packageData = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
 
-    const ctx: I_CommandContext = { isCurrentProject };
-    const commands = typeof input === 'function' ? input(ctx) : input;
+    if (packageData.success) {
+        const ctx: I_CommandContext = { isCurrentProject: packageData.result.isCurrentProject };
+        const commands = typeof input === 'function' ? input(ctx) : input;
 
-    return Object.fromEntries(
-        Object.entries(commands).map(([key, cmd]) => [key, formatCommand(cmd, ctx)]),
-    );
+        return Object.fromEntries(
+            Object.entries(commands).map(([key, cmd]) => [key, formatCommand(cmd, ctx)]),
+        );
+    }
 }
 
 export async function runCommand(label: string, command: string | void) {
@@ -256,8 +258,7 @@ export async function runCommand(label: string, command: string | void) {
         await executeCommand(command);
         log.success(`${label} done.`);
     }
-    catch (err) {
-        log.error(`${label} failed: ${(err as Error).message}`);
-        throw err;
+    catch (error) {
+        catchErrorNode(error);
     }
 }

@@ -16,3 +16,9 @@ export interface I_Log {
     trace: typeof consola['trace'];
     verbose: typeof consola['verbose'];
 }
+
+export interface I_CatchErrorOptions {
+    shouldLog?: boolean;
+    returnValue?: unknown;
+    callback?: (error: Error) => void;
+}

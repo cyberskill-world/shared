@@ -7,14 +7,17 @@ import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { v4 as uuidv4 } from 'uuid';
 
+import type { I_Return } from '#typescript/index.js';
+
 import { RESPONSE_STATUS } from '#constants/response-status.js';
 import { isObject } from '#utils/index.js';
 import { generateShortId, generateSlug } from '#utils/string/index.js';
 import { validate } from '#utils/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_Return, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
+import { catchErrorNode } from '../log/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 
 export { aggregatePaginate, mongoosePaginate };
@@ -169,11 +172,7 @@ export class MongoController<D extends Partial<C_Document>> {
         this.collection = db.collection<D>(collectionName);
     }
 
-    async createOne(document: D): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_InsertOneResult<D>;
-    }> {
+    async createOne(document: D): Promise<I_Return<T_InsertOneResult<D>>> {
         try {
             const finalDocument = {
                 ...mongo.createGenericFields(),
@@ -189,15 +188,11 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_InsertOneResult<D>>(error);
         }
     }
 
-    async createMany(documents: D[]): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_InsertManyResult<D>;
-    }> {
+    async createMany(documents: D[]): Promise<I_Return<T_InsertManyResult<D>>> {
         try {
             const finalDocuments = documents.map(document => ({
                 ...mongo.createGenericFields(),
@@ -210,6 +205,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents were inserted',
+                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
             return {
@@ -219,31 +215,27 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_InsertManyResult<D>>(error);
         }
     }
 
-    async findOne(filter: T_Filter<D>): Promise<{
-        success: boolean;
-        message: string;
-        result?: T_WithId<D> | null;
-    }> {
+    async findOne(filter: T_Filter<D>): Promise<I_Return<T_WithId<D>>> {
         try {
             const result = await this.collection.findOne(filter);
 
             if (!result) {
-                return { success: false, message: 'Document not found' };
+                return { success: false, message: 'Document not found', code: RESPONSE_STATUS.NOT_FOUND.CODE };
             }
             return { success: true, message: 'Document found', result };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_WithId<D>>(error);
         }
     }
 
     async findAll(
         filter: T_Filter<D> = {},
-    ): Promise<{ success: boolean; message: string; result?: T_WithId<D>[] }> {
+    ): Promise<I_Return<T_WithId<D>[]>> {
         try {
             const result = await this.collection.find(filter).toArray();
 
@@ -254,13 +246,13 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_WithId<D>[]>(error);
         }
     }
 
     async count(
         filter: T_Filter<D> = {},
-    ): Promise<{ success: boolean; message: string; result?: number }> {
+    ): Promise<I_Return<number>> {
         try {
             const result = await this.collection.countDocuments(filter);
 
@@ -271,14 +263,14 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<number>(error);
         }
     }
 
     async updateOne(
         filter: T_Filter<D>,
         update: Partial<D>,
-    ): Promise<{ success: boolean; message: string; result?: T_UpdateResult }> {
+    ): Promise<I_Return<T_UpdateResult>> {
         try {
             const result = await this.collection.updateOne(filter, {
                 $set: update,
@@ -288,6 +280,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
+                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
             return {
@@ -297,14 +290,14 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_UpdateResult>(error);
         }
     }
 
     async updateMany(
         filter: T_Filter<D>,
         update: Partial<D>,
-    ): Promise<{ success: boolean; message: string; result?: T_UpdateResult }> {
+    ): Promise<I_Return<T_UpdateResult>> {
         try {
             const result = await this.collection.updateMany(filter, {
                 $set: update,
@@ -314,6 +307,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
+                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
             return {
@@ -323,13 +317,13 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_UpdateResult>(error);
         }
     }
 
     async deleteOne(
         filter: T_Filter<D>,
-    ): Promise<{ success: boolean; message: string; result?: T_DeleteResult }> {
+    ): Promise<I_Return<T_DeleteResult>> {
         try {
             const result = await this.collection.deleteOne(filter);
 
@@ -337,6 +331,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
+                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
             return {
@@ -346,13 +341,13 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_DeleteResult>(error);
         }
     }
 
     async deleteMany(
         filter: T_Filter<D>,
-    ): Promise<{ success: boolean; message: string; result?: T_DeleteResult }> {
+    ): Promise<I_Return<T_DeleteResult>> {
         try {
             const result = await this.collection.deleteMany(filter);
 
@@ -360,6 +355,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
+                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
             return {
@@ -369,7 +365,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message };
+            return catchErrorNode<T_DeleteResult>(error);
         }
     }
 }
@@ -406,11 +402,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T>(error);
         }
     }
 
@@ -432,11 +424,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T[]>(error);
         }
     }
 
@@ -450,11 +438,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T_PaginateResult<T>>(error);
         }
     }
 
@@ -471,11 +455,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T_AggregatePaginateResult<T>>(error);
         }
     }
 
@@ -486,11 +466,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<number>(error);
         }
     }
 
@@ -501,11 +477,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T>(error);
         }
     }
 
@@ -529,11 +501,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T[]>(error);
         }
     }
 
@@ -561,11 +529,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T>(error);
         }
     }
 
@@ -582,11 +546,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T_UpdateResult>(error);
         }
     }
 
@@ -610,11 +570,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T>(error);
         }
     }
 
@@ -636,37 +592,38 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return {
-                success: false,
-                message: (error as Error).message,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<T_DeleteResult>(error);
         }
     }
 
     async createShortId(id: string, length = 4): Promise<I_Return<string>> {
-        const maxRetries = 10;
-        const existingShortIds = new Set();
+        try {
+            const maxRetries = 10;
+            const existingShortIds = new Set();
 
-        for (let retries = 0; retries < maxRetries; retries++) {
-            const shortId = generateShortId(id, retries + length);
+            for (let retries = 0; retries < maxRetries; retries++) {
+                const shortId = generateShortId(id, retries + length);
 
-            if (!existingShortIds.has(shortId)) {
-                existingShortIds.add(shortId);
+                if (!existingShortIds.has(shortId)) {
+                    existingShortIds.add(shortId);
 
-                const shortIdExists = await this.model.exists({ shortId });
+                    const shortIdExists = await this.model.exists({ shortId });
 
-                if (!shortIdExists) {
-                    return { success: true, result: shortId };
+                    if (!shortIdExists) {
+                        return { success: true, result: shortId };
+                    }
                 }
             }
-        }
 
-        return {
-            success: false,
-            message: 'Failed to create a unique shortId',
-            code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-        };
+            return {
+                success: false,
+                message: 'Failed to create a unique shortId',
+                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+            };
+        }
+        catch (error) {
+            return catchErrorNode<string>(error);
+        }
     }
 
     async createSlug<R = string>(
@@ -730,11 +687,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result: uniqueSlug as R };
         }
         catch (error) {
-            return {
-                success: false,
-                message: `Failed to create a unique slug: ${(error as Error).message}`,
-                code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-            };
+            return catchErrorNode<R>(error);
         }
     }
 
@@ -745,7 +698,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return { success: false, message: (error as Error).message, code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE };
+            return catchErrorNode<T[]>(error);
         }
     }
 }

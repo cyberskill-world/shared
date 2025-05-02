@@ -21,6 +21,8 @@ export { LoadingProvider_alias_1 as LoadingProvider } from '../_tsup-dts-rollup.
 export { I_LoadingContext_alias_1 as I_LoadingContext } from '../_tsup-dts-rollup.cjs';
 export { I_LoadingProps_alias_1 as I_LoadingProps } from '../_tsup-dts-rollup.cjs';
 export { I_Log_alias_1 as I_Log } from '../_tsup-dts-rollup.cjs';
+export { I_CatchErrorOptions_alias_1 as I_CatchErrorOptions } from '../_tsup-dts-rollup.cjs';
+export { catchError_alias_1 as catchError } from '../_tsup-dts-rollup.cjs';
 export { log_alias_1 as log } from '../_tsup-dts-rollup.cjs';
 export { NEXT_INTL_DEFAULT_LANGUAGE_alias_1 as NEXT_INTL_DEFAULT_LANGUAGE } from '../_tsup-dts-rollup.cjs';
 export { NextIntlContext_alias_1 as NextIntlContext } from '../_tsup-dts-rollup.cjs';

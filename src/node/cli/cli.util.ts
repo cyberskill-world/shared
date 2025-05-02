@@ -8,7 +8,7 @@ import type { I_IssueEntry } from '../log/index.js';
 import pkg from '../../../package.json' with { type: 'json' };
 import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
 import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync } from '../fs/index.js';
-import { E_IssueType, logNodeJS as log } from '../log/index.js';
+import { catchErrorNode, E_IssueType, logNode as log } from '../log/index.js';
 import { E_PackageType, getPackage, installDependencies, setupPackages } from '../package/index.js';
 import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
@@ -59,17 +59,16 @@ async function showCheckResult() {
 
 async function lintStaged() {
     await clearAllErrorLists();
-    const { isCurrentProject } = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
+    const packageData = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
 
-    if (isCurrentProject) {
-        try {
-            await runCommand(`Building package: ${CYBERSKILL_PACKAGE_NAME}`, await command.build());
-            await runCommand('Staging build artifacts', await command.stageBuildDirectory());
-        }
-        catch (error) {
-            log.error(`Error building and staging ${CYBERSKILL_PACKAGE_NAME}: ${(error as Error).message}`);
-            throw error;
-        }
+    if (!packageData.success) {
+        log.error('Failed to retrieve package information. Aborting lint-staged.');
+        return;
+    }
+
+    if (packageData.result.isCurrentProject) {
+        await runCommand(`Building package: ${CYBERSKILL_PACKAGE_NAME}`, await command.build());
+        await runCommand('Staging build artifacts', await command.stageBuildDirectory());
     }
 
     await runCommand('Executing lint-staged', await command.lintStaged());
@@ -199,8 +198,8 @@ async function mongoMigrateDown() {
             .epilog('💡 Tip: Use "--help" with any command to see options\n')
             .parse();
     }
-    catch (err) {
-        log.error(`Fatal: ${(err as Error).message}`);
+    catch (error) {
+        catchErrorNode(error);
         process.exit(1);
     }
 })();

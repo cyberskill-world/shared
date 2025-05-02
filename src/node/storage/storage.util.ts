@@ -2,7 +2,7 @@ import nodePersist from 'node-persist';
 
 import { getEnv } from '#configs/env/index.js';
 
-import { logNodeJS as log } from '../log/index.js';
+import { catchErrorNode, logNode as log } from '../log/index.js';
 
 const env = getEnv();
 
@@ -19,7 +19,7 @@ async function initNodePersist() {
     }
 }
 
-export const storageNodeJS = {
+export const storageNode = {
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
             await initNodePersist();
@@ -28,8 +28,7 @@ export const storageNodeJS = {
             return result ?? null;
         }
         catch (error) {
-            log.error(`[Storage:get] Error getting key "${key}":`, error);
-            return null;
+            return catchErrorNode(error, { returnValue: null });
         }
     },
     async set<T = unknown>(key: string, value: T): Promise<void> {
@@ -38,7 +37,7 @@ export const storageNodeJS = {
             await nodePersist.setItem(key, value);
         }
         catch (error) {
-            log.error(`[Storage:set] Error setting key "${key}":`, error);
+            catchErrorNode(error);
         }
     },
     async remove(key: string): Promise<void> {
@@ -47,7 +46,7 @@ export const storageNodeJS = {
             await nodePersist.removeItem(key);
         }
         catch (error) {
-            log.error(`[Storage:remove] Error removing key "${key}":`, error);
+            catchErrorNode(error);
         }
     },
     async keys(): Promise<string[]> {
@@ -63,8 +62,7 @@ export const storageNodeJS = {
             return keys;
         }
         catch (error) {
-            log.error(`[Storage:keys] Error getting keys:`, error);
-            return [];
+            return catchErrorNode(error, { returnValue: [] });
         }
     },
     async getLogLink(key: string): Promise<string | null> {
@@ -74,8 +72,7 @@ export const storageNodeJS = {
             return `${storagePath} (key: ${key})`;
         }
         catch (error) {
-            log.error(`[Storage:getLogLink] Error getting log link:`, error);
-            return null;
+            return catchErrorNode(error, { returnValue: null });
         }
     },
 

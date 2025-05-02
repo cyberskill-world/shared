@@ -1,1 +1,1 @@
-export { storageNodeJS_alias_3 as storageNodeJS } from '../../_tsup-dts-rollup.cjs';
+export { storageNode_alias_3 as storageNode } from '../../_tsup-dts-rollup.cjs';

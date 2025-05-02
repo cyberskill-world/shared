@@ -53,6 +53,3 @@ export { I_Input_UpdateMany_alias_3 as I_Input_UpdateMany } from '../../_tsup-dt
 export { I_DeleteOptionsExtended_alias_3 as I_DeleteOptionsExtended } from '../../_tsup-dts-rollup.js';
 export { I_Input_DeleteOne_alias_3 as I_Input_DeleteOne } from '../../_tsup-dts-rollup.js';
 export { I_Input_DeleteMany_alias_3 as I_Input_DeleteMany } from '../../_tsup-dts-rollup.js';
-export { I_ReturnSuccess_alias_3 as I_ReturnSuccess } from '../../_tsup-dts-rollup.js';
-export { I_ReturnFailure_alias_3 as I_ReturnFailure } from '../../_tsup-dts-rollup.js';
-export { I_Return_alias_3 as I_Return } from '../../_tsup-dts-rollup.js';
