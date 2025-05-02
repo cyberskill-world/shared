@@ -200,8 +200,7 @@
         "inspect": "tsx src/node/cli/index.ts inspect",
         "test:unit": "tsx src/node/cli/index.ts test:unit",
         "test:e2e": "tsx src/node/cli/index.ts test:e2e",
-        "commitlint": "tsx src/node/cli/index.ts commitlint",
-        "lint-staged": "tsx src/node/cli/index.ts lint-staged"
+        "commitlint": "tsx src/node/cli/index.ts commitlint"
     },
     "dependencies": {
         "@antfu/eslint-config": "4.12.0",

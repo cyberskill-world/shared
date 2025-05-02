@@ -51,14 +51,16 @@ pnpm install @cyberskill/shared
 
 | Command                 | Description                         |
 | ----------------------- | ----------------------------------- |
-| `pnpm run dev`          | Start development mode 🚧           |
-| `pnpm run build`        | Build for production 🚀             |
-| `pnpm run lint`         | Check for linting issues ✅         |
-| `pnpm run lint:fix`     | Fix linting issues 🔧               |
-| `pnpm run lint:inspect` | Inspect linting config 🧐           |
-| `pnpm run prepare`      | Project prepare 🏗️                  |
-| `pnpm run reset`        | Reset the project ♻️                |
-| `pnpm run inspect`      | Inspect the project dependencies 🔍 |
+| `pnpm run dev`          | 🚧 Start development mode           |
+| `pnpm run build`        | 🚀 Build for production             |
+| `pnpm run lint`         | ✅ Check for linting issues         |
+| `pnpm run lint:fix`     | 🔧 Fix linting issues               |
+| `pnpm run lint:inspect` | 🧐 Inspect linting config           |
+| `pnpm run prepare`      | 🏗️ Project prepare                  |
+| `pnpm run reset`        | ♻️ Reset the project                |
+| `pnpm run inspect`      | 🔍 Inspect the project dependencies |
+| `pnpm run test:unit`    | 🔬 Run unit tests                   |
+| `pnpm run test:e2e`     | 🧪 Run end-to-end tests             |
 
 ---
 
