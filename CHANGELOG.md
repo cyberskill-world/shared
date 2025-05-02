@@ -1,3 +1,10 @@
+## [1.135.0](https://github.com/cyberskill-world/shared/compare/v1.134.0...v1.135.0) (2025-05-02)
+
+### ✨ Features
+
+* add catchError and catchErrorNode ([f7d7ae8](https://github.com/cyberskill-world/shared/commit/f7d7ae8c479c623d1cacf1f2f811dee1e517d907))
+* update libs ([4823576](https://github.com/cyberskill-world/shared/commit/4823576a5276cce298bcd3e35953ae62b6436082))
+
 ## [1.134.0](https://github.com/cyberskill-world/shared/compare/v1.133.0...v1.134.0) (2025-05-02)
 
 ### ✨ Features
