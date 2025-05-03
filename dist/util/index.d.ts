@@ -1,5 +1,6 @@
 export { regexSearchMapper } from '../_tsup-dts-rollup.js';
 export { removeAccent } from '../_tsup-dts-rollup.js';
+export { uniqueArray } from '../_tsup-dts-rollup.js';
 export { isJson } from '../_tsup-dts-rollup.js';
 export { isObject } from '../_tsup-dts-rollup.js';
 export { deepMerge } from '../_tsup-dts-rollup.js';

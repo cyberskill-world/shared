@@ -44,3 +44,31 @@ export function regexSearchMapper(str: string) {
 export function removeAccent(str: string) {
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
+
+/**
+ * Remove duplicates from an array based on a key function.
+ * @param arr - The array to remove duplicates from.
+ * @param keyFn - A function that returns a unique key for each item in the array.
+ * @returns A new array with duplicates removed.
+ */
+export function uniqueArray<T>(
+    arr: T[],
+    keyFn?: (item: T) => string | number,
+): T[] {
+    if (!keyFn) {
+        return Array.from(new Set(arr));
+    }
+
+    const seen = new Set<string | number>();
+    const result: T[] = [];
+
+    for (const item of arr) {
+        const key = keyFn(item);
+        if (!seen.has(key)) {
+            seen.add(key);
+            result.push(item);
+        }
+    }
+
+    return result;
+}

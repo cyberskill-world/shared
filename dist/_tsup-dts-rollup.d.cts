@@ -268,7 +268,7 @@ declare function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandCon
     'pre-push'?: {
         raw: boolean;
         cmd: string;
-    };
+    } | undefined;
     'pre-commit': string;
     'commit-msg': string;
 };
@@ -3217,6 +3217,17 @@ declare const TSX_CLI = "tsx";
 export { TSX_CLI }
 export { TSX_CLI as TSX_CLI_alias_1 }
 export { TSX_CLI as TSX_CLI_alias_2 }
+
+/**
+ * Remove duplicates from an array based on a key function.
+ * @param arr - The array to remove duplicates from.
+ * @param keyFn - A function that returns a unique key for each item in the array.
+ * @returns A new array with duplicates removed.
+ */
+declare function uniqueArray<T>(arr: T[], keyFn?: (item: T) => string | number): T[];
+export { uniqueArray }
+export { uniqueArray as uniqueArray_alias_1 }
+export { uniqueArray as uniqueArray_alias_2 }
 
 declare const unlinkSync: typeof fsExtra.unlinkSync;
 export { unlinkSync }
