@@ -1,3 +1,9 @@
+## [1.139.0](https://github.com/cyberskill-world/shared/compare/v1.138.0...v1.139.0) (2025-05-03)
+
+### ✨ Features
+
+* turn exactOptionalPropertyTypes off, add uniqueArray util ([1a3a093](https://github.com/cyberskill-world/shared/commit/1a3a0932ed11e32d7551dd8b3de0e43d0051a59f))
+
 ## [1.138.0](https://github.com/cyberskill-world/shared/compare/v1.137.0...v1.138.0) (2025-05-03)
 
 ### ✨ Features
