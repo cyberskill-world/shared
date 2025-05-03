@@ -1,3 +1,9 @@
+## [1.138.0](https://github.com/cyberskill-world/shared/compare/v1.137.0...v1.138.0) (2025-05-03)
+
+### ✨ Features
+
+* separate modules ([5428bfd](https://github.com/cyberskill-world/shared/commit/5428bfd40ba35e9dcaf92ac11cba880dfcfb10dc))
+
 ## [1.137.0](https://github.com/cyberskill-world/shared/compare/v1.136.0...v1.137.0) (2025-05-02)
 
 ### ✨ Features
