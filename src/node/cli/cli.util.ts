@@ -8,7 +8,7 @@ import type { I_IssueEntry } from '../log/index.js';
 import pkg from '../../../package.json' with { type: 'json' };
 import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
 import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync } from '../fs/index.js';
-import { catchErrorNode, E_IssueType, logNode as log } from '../log/index.js';
+import { catchError, E_IssueType, log } from '../log/index.js';
 import { E_PackageType, getPackage, installDependencies, setupPackages } from '../package/index.js';
 import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
@@ -199,7 +199,7 @@ async function mongoMigrateDown() {
             .parse();
     }
     catch (error) {
-        catchErrorNode(error);
+        catchError(error);
         process.exit(1);
     }
 })();

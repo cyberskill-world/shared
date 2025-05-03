@@ -9,15 +9,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { I_Return } from '#typescript/index.js';
 
-import { RESPONSE_STATUS } from '#constants/response-status.js';
-import { isObject } from '#utils/index.js';
-import { generateShortId, generateSlug } from '#utils/string/index.js';
-import { validate } from '#utils/validate/index.js';
+import { RESPONSE_STATUS } from '#constant/response-status.js';
+import { isObject } from '#util/index.js';
+import { generateShortId, generateSlug } from '#util/string/index.js';
+import { validate } from '#util/validate/index.js';
 
 import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
-import { catchErrorNode } from '../log/index.js';
+import { catchError } from '../log/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 
 export { aggregatePaginate, mongoosePaginate };
@@ -188,7 +188,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<T_InsertOneResult<D>>(error);
+            return catchError<T_InsertOneResult<D>>(error);
         }
     }
 
@@ -215,7 +215,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<T_InsertManyResult<D>>(error);
+            return catchError<T_InsertManyResult<D>>(error);
         }
     }
 
@@ -229,7 +229,7 @@ export class MongoController<D extends Partial<C_Document>> {
             return { success: true, message: 'Document found', result };
         }
         catch (error) {
-            return catchErrorNode<T_WithId<D>>(error);
+            return catchError<T_WithId<D>>(error);
         }
     }
 
@@ -246,7 +246,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<T_WithId<D>[]>(error);
+            return catchError<T_WithId<D>[]>(error);
         }
     }
 
@@ -263,7 +263,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<number>(error);
+            return catchError<number>(error);
         }
     }
 
@@ -290,7 +290,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<T_UpdateResult>(error);
+            return catchError<T_UpdateResult>(error);
         }
     }
 
@@ -317,7 +317,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<T_UpdateResult>(error);
+            return catchError<T_UpdateResult>(error);
         }
     }
 
@@ -341,7 +341,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<T_DeleteResult>(error);
+            return catchError<T_DeleteResult>(error);
         }
     }
 
@@ -365,7 +365,7 @@ export class MongoController<D extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<T_DeleteResult>(error);
+            return catchError<T_DeleteResult>(error);
         }
     }
 }
@@ -402,7 +402,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T>(error);
+            return catchError<T>(error);
         }
     }
 
@@ -424,7 +424,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T[]>(error);
+            return catchError<T[]>(error);
         }
     }
 
@@ -438,7 +438,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T_PaginateResult<T>>(error);
+            return catchError<T_PaginateResult<T>>(error);
         }
     }
 
@@ -455,7 +455,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T_AggregatePaginateResult<T>>(error);
+            return catchError<T_AggregatePaginateResult<T>>(error);
         }
     }
 
@@ -466,7 +466,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<number>(error);
+            return catchError<number>(error);
         }
     }
 
@@ -477,7 +477,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T>(error);
+            return catchError<T>(error);
         }
     }
 
@@ -501,7 +501,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T[]>(error);
+            return catchError<T[]>(error);
         }
     }
 
@@ -529,7 +529,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T>(error);
+            return catchError<T>(error);
         }
     }
 
@@ -546,7 +546,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T_UpdateResult>(error);
+            return catchError<T_UpdateResult>(error);
         }
     }
 
@@ -570,7 +570,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T>(error);
+            return catchError<T>(error);
         }
     }
 
@@ -592,7 +592,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T_DeleteResult>(error);
+            return catchError<T_DeleteResult>(error);
         }
     }
 
@@ -622,7 +622,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             };
         }
         catch (error) {
-            return catchErrorNode<string>(error);
+            return catchError<string>(error);
         }
     }
 
@@ -687,7 +687,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result: uniqueSlug as R };
         }
         catch (error) {
-            return catchErrorNode<R>(error);
+            return catchError<R>(error);
         }
     }
 
@@ -698,7 +698,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             return { success: true, result };
         }
         catch (error) {
-            return catchErrorNode<T[]>(error);
+            return catchError<T[]>(error);
         }
     }
 }

@@ -2,7 +2,7 @@ import React, { use } from 'react';
 import { FaRepeat } from 'react-icons/fa6';
 
 import { ApolloErrorContext } from './apollo-error.context.js';
-import styles from './apollo-error.module.scss';
+import style from './apollo-error.module.scss';
 
 export function ApolloError() {
     const context = use(ApolloErrorContext);
@@ -29,19 +29,19 @@ export function ApolloError() {
             : null;
 
     return (
-        <div className={styles['modal-backdrop']}>
-            <div className={styles['modal-content']}>
+        <div className={style['modal-backdrop']}>
+            <div className={style['modal-content']}>
                 <button
                     type="button"
-                    className={styles['btn-close']}
+                    className={style['btn-close']}
                     onClick={context.hideError}
                 >
                     ✕
                 </button>
-                <div className={styles['error-title']}>
+                <div className={style['error-title']}>
                     <button
                         type="button"
-                        className={styles['btn-retry']}
+                        className={style['btn-retry']}
                         onClick={() => window.location.reload()}
                     >
                         <FaRepeat />
@@ -49,7 +49,7 @@ export function ApolloError() {
                     {' '}
                     {error.message}
                 </div>
-                <div className={styles['error-details']}>
+                <div className={style['error-details']}>
                     {error.networkError && (
                         <pre className="network">
                             <strong>Network Error:</strong>

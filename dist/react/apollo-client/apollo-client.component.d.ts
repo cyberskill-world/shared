@@ -1,1 +1,1 @@
-export { ApolloProvider_alias_3 as ApolloProvider } from '../../_tsup-dts-rollup.js';
+export { ApolloProvider_alias_2 as ApolloProvider } from '../../_tsup-dts-rollup.js';

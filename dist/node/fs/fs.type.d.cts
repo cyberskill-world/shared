@@ -1,1 +1,1 @@
-export { I_CopySyncOptions_alias_2 as I_CopySyncOptions } from '../../_tsup-dts-rollup.cjs';
+export { I_CopySyncOptions_alias_1 as I_CopySyncOptions } from '../../_tsup-dts-rollup.cjs';

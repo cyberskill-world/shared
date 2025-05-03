@@ -6,10 +6,10 @@ import { GraphQLError } from 'graphql';
 
 import type { I_Return } from '#typescript/index.js';
 
-import { getEnv } from '#configs/env/index.js';
-import { RESPONSE_STATUS } from '#constants/response-status.js';
+import { getEnv } from '#config/env/index.js';
+import { RESPONSE_STATUS } from '#constant/response-status.js';
 
-import type { I_CatchErrorOptionsNode, I_IssueEntry, I_LogNode, T_ThrowError } from './log.type.js';
+import type { I_CatchErrorOptions, I_IssueEntry, I_Log, T_ThrowError } from './log.type.js';
 
 const env = getEnv();
 
@@ -42,7 +42,7 @@ function chalkKeyword(color: string): ChalkInstance {
     return typeof chalkColor === 'function' ? (chalkColor as ChalkInstance) : chalk.green;
 }
 
-export const logNode: I_LogNode = {
+export const log: I_Log = {
     silent: consola.silent,
     level: consola.level,
     fatal: consola.fatal,
@@ -79,9 +79,9 @@ export const logNode: I_LogNode = {
     },
 };
 
-export function catchErrorNode<T = unknown>(errorInput: unknown, options: I_CatchErrorOptionsNode & { returnValue: T }): T;
-export function catchErrorNode<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptionsNode): I_Return<T>;
-export function catchErrorNode<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptionsNode): I_Return<T> | T {
+export function catchError<T = unknown>(errorInput: unknown, options: I_CatchErrorOptions & { returnValue: T }): T;
+export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions): I_Return<T>;
+export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions): I_Return<T> | T {
     const { shouldLog = true, returnValue, callback } = options ?? {};
 
     const error = errorInput instanceof Error
@@ -89,7 +89,7 @@ export function catchErrorNode<T = unknown>(errorInput: unknown, options?: I_Cat
         : new Error(typeof errorInput === 'string' ? errorInput : 'Unknown error');
 
     if (shouldLog) {
-        logNode.error(error.message);
+        log.error(error.message);
     }
 
     if (callback && typeof callback === 'function') {

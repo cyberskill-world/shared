@@ -2,13 +2,13 @@ import fetch from 'node-fetch';
 
 import type { I_Return } from '#typescript/index.js';
 
-import { getEnv } from '#configs/env/index.js';
+import { getEnv } from '#config/env/index.js';
 
 import type { I_PackageInfo, I_PackageInput, T_PackageJson } from './package.type.js';
 
 import { runCommand } from '../command/index.js';
 import { pathExistsSync, readJsonSync, writeFileSync } from '../fs/index.js';
-import { catchErrorNode, logNode as log } from '../log/index.js';
+import { catchError, log } from '../log/index.js';
 import { command, join, NODE_MODULES, PACKAGE_JSON, PATH } from '../path/index.js';
 import { E_PackageType } from './package.type.js';
 
@@ -30,7 +30,7 @@ export async function getLatestPackageVersion(packageName: string): Promise<I_Re
         };
     }
     catch (error) {
-        return catchErrorNode<string>(error);
+        return catchError<string>(error);
     }
 }
 
@@ -184,7 +184,7 @@ export async function getPackage(inputPackage: I_PackageInput): Promise<I_Return
         };
     }
     catch (error) {
-        return catchErrorNode<I_PackageInfo>(error);
+        return catchError<I_PackageInfo>(error);
     }
 }
 
@@ -207,7 +207,7 @@ export async function updatePackage(packageInfo: I_PackageInfo): Promise<void> {
         log.info(`Updated "${packageInfo.name}" to version ${packageInfo.latestVersion}`);
     }
     catch (error) {
-        catchErrorNode(error);
+        catchError(error);
     }
 }
 
@@ -226,12 +226,12 @@ export async function installDependencies(): Promise<void> {
                 return;
             }
             catch (error) {
-                catchErrorNode(error);
+                catchError(error);
             }
         }
     }
     catch (error) {
-        catchErrorNode(error);
+        catchError(error);
     }
 }
 
@@ -272,6 +272,6 @@ export async function setupPackages(packages: I_PackageInput[], options?: {
         }
     }
     catch (error) {
-        catchErrorNode(error);
+        catchError(error);
     }
 }

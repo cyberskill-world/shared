@@ -8,11 +8,11 @@
             "#public/*": [
                 "./public/*"
             ],
-            "#configs/*": [
-                "./src/configs/*"
+            "#config/*": [
+                "./src/config/*"
             ],
-            "#constants/*": [
-                "./src/constants/*"
+            "#constant/*": [
+                "./src/constant/*"
             ],
             "#node/*": [
                 "./src/node/*"
@@ -20,14 +20,14 @@
             "#react/*": [
                 "./src/react/*"
             ],
-            "#styles/*": [
-                "./src/styles/*"
+            "#style/*": [
+                "./src/style/*"
             ],
             "#typescript/*": [
                 "./src/typescript/*"
             ],
-            "#utils/*": [
-                "./src/utils/*"
+            "#util/*": [
+                "./src/util/*"
             ]
         },
         "noEmit": true

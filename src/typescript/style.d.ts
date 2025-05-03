@@ -1,13 +1,13 @@
 declare module '*.module.css' {
-    const styles: { [className: string]: string };
+    const style: { [className: string]: string };
 
-    export default styles;
+    export default style;
 }
 declare module '*.css' { };
 
 declare module '*.module.scss' {
-    const styles: { [className: string]: string };
+    const style: { [className: string]: string };
 
-    export default styles;
+    export default style;
 }
 declare module '*.scss' { };

@@ -2,15 +2,15 @@ import { exec } from 'node:child_process';
 import process from 'node:process';
 import * as util from 'node:util';
 
-import { getEnv } from '#configs/env/index.js';
+import { getEnv } from '#config/env/index.js';
 
 import type { I_IssueEntry } from '../log/index.js';
 import type { I_CommandContext, I_EslintError, T_Command, T_CommandMapInput } from './command.type.js';
 
-import { catchErrorNode, E_IssueType, logNode as log } from '../log/index.js';
+import { catchError, E_IssueType, log } from '../log/index.js';
 import { getPackage } from '../package/index.js';
 import { CYBERSKILL_CLI, CYBERSKILL_CLI_PATH, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '../path/index.js';
-import { storageNode } from '../storage/index.js';
+import { storage } from '../storage/index.js';
 
 const env = getEnv();
 const execPromise = util.promisify(exec);
@@ -28,13 +28,13 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
     const key = getErrorListKey(timestamp);
 
     try {
-        await storageNode.set(key, {
+        await storage.set(key, {
             errors: errorList,
             timestamp,
         });
 
         setTimeout(async () => {
-            const logPath = await storageNode.getLogLink(key);
+            const logPath = await storage.getLogLink(key);
 
             if (logPath) {
                 log.info(`📂 Open the error list manually: ${logPath}`);
@@ -42,13 +42,13 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
         }, 10);
     }
     catch (error) {
-        catchErrorNode(error);
+        catchError(error);
     }
 }
 
 export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
     try {
-        const keys = await storageNode.keys();
+        const keys = await storage.keys();
 
         const errorKeys = Array.isArray(keys)
             ? keys.filter(key => key?.startsWith?.('error_list:'))
@@ -56,7 +56,7 @@ export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
 
         const allErrors = await Promise.all(
             errorKeys.map(async (key) => {
-                const entry = await storageNode.get<{ errors: I_IssueEntry[]; timestamp: number }>(key);
+                const entry = await storage.get<{ errors: I_IssueEntry[]; timestamp: number }>(key);
 
                 return entry?.errors || [];
             }),
@@ -65,7 +65,7 @@ export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
         return allErrors.flat();
     }
     catch (error) {
-        return catchErrorNode<I_IssueEntry[]>(error, {
+        return catchError<I_IssueEntry[]>(error, {
             returnValue: [],
         });
     }
@@ -73,16 +73,16 @@ export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
 
 export async function clearAllErrorLists(): Promise<void> {
     try {
-        const keys = await storageNode.keys();
+        const keys = await storage.keys();
 
         const errorKeys = Array.isArray(keys)
             ? keys.filter(key => key?.startsWith?.('error_list:'))
             : [];
 
-        await Promise.all(errorKeys.map(key => storageNode.remove(key)));
+        await Promise.all(errorKeys.map(key => storage.remove(key)));
     }
     catch (error) {
-        catchErrorNode(error);
+        catchError(error);
     }
 }
 
@@ -259,6 +259,6 @@ export async function runCommand(label: string, command: string | void) {
         log.success(`${label} done.`);
     }
     catch (error) {
-        catchErrorNode(error);
+        catchError(error);
     }
 }

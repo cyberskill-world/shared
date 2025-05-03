@@ -1,1 +1,1 @@
-export { useStorage_alias_3 as useStorage } from '../../_tsup-dts-rollup.js';
+export { useStorage_alias_2 as useStorage } from '../../_tsup-dts-rollup.js';

@@ -1,6 +1,6 @@
 import pathNode from 'node:path';
 
-import { getEnv } from '#configs/env/index.js';
+import { getEnv } from '#config/env/index.js';
 
 const env = getEnv();
 

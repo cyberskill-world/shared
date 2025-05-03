@@ -8,7 +8,7 @@ import {
 
 import type { I_ApolloServerOptions } from './apollo-server.type.js';
 
-import { logNode as log } from '../log/index.js';
+import { log } from '../log/index.js';
 
 export function createApolloServer(options: I_ApolloServerOptions): ApolloServer {
     return new ApolloServer({

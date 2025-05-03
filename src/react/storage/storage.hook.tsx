@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { I_Serializer } from '#utils/serializer/index.js';
+import type { I_Serializer } from '#util/serializer/index.js';
 
-import { serializer as defaultSerializer } from '#utils/serializer/index.js';
+import { serializer as defaultSerializer } from '#util/serializer/index.js';
 
 import { catchError } from '../log/index.js';
 import { storage } from './storage.util.js';

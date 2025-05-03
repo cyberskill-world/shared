@@ -69,13 +69,13 @@ pnpm install @cyberskill/shared
 ```plaintext
 ├── public/         → Static assets (images, fonts, etc.)
 ├──src/
-    ├── configs/        → App configuration files
-    ├── constants/      → Static values used across the app
+    ├── config/        → App configuration files
+    ├── constant/      → Static values used across the app
     ├── node/           → NodeJS modules
     ├── react/          → ReactJS modules
-    ├── styles/         → Global and component-specific styles
+    ├── style/         → Global and component-specific style
     ├── typescript/     → TypeScript types and interfaces
-    ├── utils/          → Utility functions and helpers
+    ├── util/          → Utility functions and helpers
     └── index.ts        → Entry point for the app
 ```
 

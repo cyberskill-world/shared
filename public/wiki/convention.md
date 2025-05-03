@@ -137,7 +137,7 @@ pnpm run dev
 ```ts
 import React from 'react'; // Thư viện bên ngoài
 
-import { formatDate } from '#shared/utils'; // Module nội bộ
+import { formatDate } from '#shared/util'; // Module nội bộ
 ```
 
 ### Quy Ước Viết Code

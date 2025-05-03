@@ -96,34 +96,28 @@ import type { WithId } from 'mongodb';
 export { aggregatePaginate }
 export { aggregatePaginate as aggregatePaginate_alias_1 }
 export { aggregatePaginate as aggregatePaginate_alias_2 }
-export { aggregatePaginate as aggregatePaginate_alias_3 }
 
 export { ApolloCache }
 export { ApolloCache as ApolloCache_alias_1 }
 export { ApolloCache as ApolloCache_alias_2 }
-export { ApolloCache as ApolloCache_alias_3 }
 
 export { ApolloClient }
 export { ApolloClient as ApolloClient_alias_1 }
 export { ApolloClient as ApolloClient_alias_2 }
-export { ApolloClient as ApolloClient_alias_3 }
 
 export { ApolloClientOptions }
 export { ApolloClientOptions as ApolloClientOptions_alias_1 }
 export { ApolloClientOptions as ApolloClientOptions_alias_2 }
-export { ApolloClientOptions as ApolloClientOptions_alias_3 }
 
 declare function ApolloError(): React_2.JSX.Element | null;
 export { ApolloError }
 export { ApolloError as ApolloError_alias_1 }
 export { ApolloError as ApolloError_alias_2 }
-export { ApolloError as ApolloError_alias_3 }
 
 declare const ApolloErrorContext: Context<I_ApolloErrorContext | undefined>;
 export { ApolloErrorContext }
 export { ApolloErrorContext as ApolloErrorContext_alias_1 }
 export { ApolloErrorContext as ApolloErrorContext_alias_2 }
-export { ApolloErrorContext as ApolloErrorContext_alias_3 }
 
 declare function ApolloErrorProvider({ children }: {
     children: ReactNode;
@@ -131,58 +125,49 @@ declare function ApolloErrorProvider({ children }: {
 export { ApolloErrorProvider }
 export { ApolloErrorProvider as ApolloErrorProvider_alias_1 }
 export { ApolloErrorProvider as ApolloErrorProvider_alias_2 }
-export { ApolloErrorProvider as ApolloErrorProvider_alias_3 }
 
 declare function ApolloProvider({ isNextJS, options, children, client: CustomClient, provider: CustomProvider, cache: CustomCache, }: I_ApolloProviderProps): React_2.JSX.Element;
 export { ApolloProvider }
 export { ApolloProvider as ApolloProvider_alias_1 }
 export { ApolloProvider as ApolloProvider_alias_2 }
-export { ApolloProvider as ApolloProvider_alias_3 }
 
 declare function appendFileSync(path: fsExtra.PathOrFileDescriptor, data: string | Uint8Array, options?: fsExtra.WriteFileOptions): void;
 export { appendFileSync }
 export { appendFileSync as appendFileSync_alias_1 }
 export { appendFileSync as appendFileSync_alias_2 }
-export { appendFileSync as appendFileSync_alias_3 }
 
 export { bodyParser }
 export { bodyParser as bodyParser_alias_1 }
 export { bodyParser as bodyParser_alias_2 }
-export { bodyParser as bodyParser_alias_3 }
 
 declare const BUILD_DIRECTORY = "dist";
 export { BUILD_DIRECTORY }
 export { BUILD_DIRECTORY as BUILD_DIRECTORY_alias_1 }
 export { BUILD_DIRECTORY as BUILD_DIRECTORY_alias_2 }
-export { BUILD_DIRECTORY as BUILD_DIRECTORY_alias_3 }
 
 declare class C_Collection<T extends Partial<C_Document>> extends Collection<T> {
 }
 export { C_Collection }
 export { C_Collection as C_Collection_alias_1 }
 export { C_Collection as C_Collection_alias_2 }
-export { C_Collection as C_Collection_alias_3 }
 
 declare class C_Db extends Db {
 }
 export { C_Db }
 export { C_Db as C_Db_alias_1 }
 export { C_Db as C_Db_alias_2 }
-export { C_Db as C_Db_alias_3 }
 
 declare class C_Document extends Document_2 {
 }
 export { C_Document }
 export { C_Document as C_Document_alias_1 }
 export { C_Document as C_Document_alias_2 }
-export { C_Document as C_Document_alias_3 }
 
 declare class C_Model extends Model {
 }
 export { C_Model }
 export { C_Model as C_Model_alias_1 }
 export { C_Model as C_Model_alias_2 }
-export { C_Model as C_Model_alias_3 }
 
 declare function catchError<T = unknown>(errorInput: unknown, options: I_CatchErrorOptions & {
     returnValue: T;
@@ -192,23 +177,20 @@ declare function catchError<T = unknown>(errorInput: unknown, options?: I_CatchE
 export { catchError }
 export { catchError as catchError_alias_1 }
 export { catchError as catchError_alias_2 }
-export { catchError as catchError_alias_3 }
 
-declare function catchErrorNode<T = unknown>(errorInput: unknown, options: I_CatchErrorOptionsNode & {
+declare function catchError_2<T = unknown>(errorInput: unknown, options: I_CatchErrorOptions_2 & {
     returnValue: T;
 }): T;
 
-declare function catchErrorNode<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptionsNode): I_Return_2<T>;
-export { catchErrorNode }
-export { catchErrorNode as catchErrorNode_alias_1 }
-export { catchErrorNode as catchErrorNode_alias_2 }
-export { catchErrorNode as catchErrorNode_alias_3 }
+declare function catchError_2<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions_2): I_Return_2<T>;
+export { catchError_2 as catchError_alias_3 }
+export { catchError_2 as catchError_alias_4 }
+export { catchError_2 as catchError_alias_5 }
 
 declare function clearAllErrorLists(): Promise<void>;
 export { clearAllErrorLists }
 export { clearAllErrorLists as clearAllErrorLists_alias_1 }
 export { clearAllErrorLists as clearAllErrorLists_alias_2 }
-export { clearAllErrorLists as clearAllErrorLists_alias_3 }
 
 declare const command: {
     simpleGitHooks: () => Promise<string>;
@@ -234,37 +216,31 @@ declare const command: {
 export { command }
 export { command as command_alias_1 }
 export { command as command_alias_2 }
-export { command as command_alias_3 }
 
 declare const COMMIT_LINT_CLI = "commitlint";
 export { COMMIT_LINT_CLI }
 export { COMMIT_LINT_CLI as COMMIT_LINT_CLI_alias_1 }
 export { COMMIT_LINT_CLI as COMMIT_LINT_CLI_alias_2 }
-export { COMMIT_LINT_CLI as COMMIT_LINT_CLI_alias_3 }
 
 declare const COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME = "@commitlint/config-conventional";
 export { COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME }
 export { COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME as COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME_alias_1 }
 export { COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME as COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME_alias_2 }
-export { COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME as COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME_alias_3 }
 
 declare const COMMIT_LINT_PACKAGE_NAME = "@commitlint/cli";
 export { COMMIT_LINT_PACKAGE_NAME }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_1 }
 export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_2 }
-export { COMMIT_LINT_PACKAGE_NAME as COMMIT_LINT_PACKAGE_NAME_alias_3 }
 
 declare function copySync(src: string, dest: string, options?: I_CopySyncOptions): void;
 export { copySync }
 export { copySync as copySync_alias_1 }
 export { copySync as copySync_alias_2 }
-export { copySync as copySync_alias_3 }
 
 declare function createApolloServer(options: I_ApolloServerOptions): ApolloServer;
 export { createApolloServer }
 export { createApolloServer as createApolloServer_alias_1 }
 export { createApolloServer as createApolloServer_alias_2 }
-export { createApolloServer as createApolloServer_alias_3 }
 
 declare function createCors<T extends T_CorsType>(options: T_CorsOptions<T>): (req: cors.CorsRequest, res: {
     statusCode?: number | undefined;
@@ -274,7 +250,6 @@ declare function createCors<T extends T_CorsType>(options: T_CorsOptions<T>): (r
 export { createCors }
 export { createCors as createCors_alias_1 }
 export { createCors as createCors_alias_2 }
-export { createCors as createCors_alias_3 }
 
 declare function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>): {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void;
@@ -283,13 +258,11 @@ declare function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...
 export { createCorsOptions }
 export { createCorsOptions as createCorsOptions_alias_1 }
 export { createCorsOptions as createCorsOptions_alias_2 }
-export { createCorsOptions as createCorsOptions_alias_3 }
 
 declare function createExpress(options?: I_ExpressOptions): Application;
 export { createExpress }
 export { createExpress as createExpress_alias_1 }
 export { createExpress as createExpress_alias_2 }
-export { createExpress as createExpress_alias_3 }
 
 declare function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>): {
     'pre-push'?: {
@@ -302,61 +275,51 @@ declare function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandCon
 export { createGitHooksConfig }
 export { createGitHooksConfig as createGitHooksConfig_alias_1 }
 export { createGitHooksConfig as createGitHooksConfig_alias_2 }
-export { createGitHooksConfig as createGitHooksConfig_alias_3 }
 
 declare function createGraphqlCodegenConfig({ uri, from, to, target, }: I_GraphqlCodegenConfig): CodegenConfig;
 export { createGraphqlCodegenConfig }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_1 }
 export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_2 }
-export { createGraphqlCodegenConfig as createGraphqlCodegenConfig_alias_3 }
 
 declare function createNest(options: I_NestOptions): Promise<INestApplication>;
 export { createNest }
 export { createNest as createNest_alias_1 }
 export { createNest as createNest_alias_2 }
-export { createNest as createNest_alias_3 }
 
 declare function createSession(options: SessionOptions): RequestHandler;
 export { createSession }
 export { createSession as createSession_alias_1 }
 export { createSession as createSession_alias_2 }
-export { createSession as createSession_alias_3 }
 
 declare function createWSServer(options: I_WSOptions): WebSocketServer;
 export { createWSServer }
 export { createWSServer as createWSServer_alias_1 }
 export { createWSServer as createWSServer_alias_2 }
-export { createWSServer as createWSServer_alias_3 }
 
 declare const CYBERSKILL_CLI = "cyberskill";
 export { CYBERSKILL_CLI }
 export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_1 }
 export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_2 }
-export { CYBERSKILL_CLI as CYBERSKILL_CLI_alias_3 }
 
 declare const CYBERSKILL_CLI_PATH = "src/node/cli/index.ts";
 export { CYBERSKILL_CLI_PATH }
 export { CYBERSKILL_CLI_PATH as CYBERSKILL_CLI_PATH_alias_1 }
 export { CYBERSKILL_CLI_PATH as CYBERSKILL_CLI_PATH_alias_2 }
-export { CYBERSKILL_CLI_PATH as CYBERSKILL_CLI_PATH_alias_3 }
 
 declare const CYBERSKILL_DIRECTORY: string;
 export { CYBERSKILL_DIRECTORY }
 export { CYBERSKILL_DIRECTORY as CYBERSKILL_DIRECTORY_alias_1 }
 export { CYBERSKILL_DIRECTORY as CYBERSKILL_DIRECTORY_alias_2 }
-export { CYBERSKILL_DIRECTORY as CYBERSKILL_DIRECTORY_alias_3 }
 
 declare const CYBERSKILL_PACKAGE_NAME = "@cyberskill/shared";
 export { CYBERSKILL_PACKAGE_NAME }
 export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_1 }
 export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_2 }
-export { CYBERSKILL_PACKAGE_NAME as CYBERSKILL_PACKAGE_NAME_alias_3 }
 
 declare const CYBERSKILL_STORAGE_DIRECTORY = ".cyberskill-storage";
 export { CYBERSKILL_STORAGE_DIRECTORY }
 export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_1 }
 export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_2 }
-export { CYBERSKILL_STORAGE_DIRECTORY as CYBERSKILL_STORAGE_DIRECTORY_alias_3 }
 
 /**
  * Merges multiple objects deeply.
@@ -370,14 +333,12 @@ declare function deepMerge(...objects: T_Object_2[]): T_Object_2;
 export { deepMerge }
 export { deepMerge as deepMerge_alias_1 }
 export { deepMerge as deepMerge_alias_2 }
-export { deepMerge as deepMerge_alias_3 }
 
 declare const _default: {
     extends: string[];
     ignores: ((message: string) => boolean)[];
 };
 export { _default as commitlintConfig }
-export { _default as commitlintConfig_alias_1 }
 export { _default as default_alias }
 
 declare const _default_2: {
@@ -1533,14 +1494,12 @@ declare const _default_2: {
 }[];
 export { _default_2 as default_alias_1 }
 export { _default_2 as eslintConfig }
-export { _default_2 as eslintConfig_alias_1 }
 
 declare const _default_3: {
     '*': string[];
 };
 export { _default_3 as default_alias_2 }
 export { _default_3 as lintStagedConfig }
-export { _default_3 as lintStagedConfig_alias_1 }
 
 declare enum E_CommandType {
     CLI = "CLI",
@@ -1550,7 +1509,6 @@ declare enum E_CommandType {
 export { E_CommandType }
 export { E_CommandType as E_CommandType_alias_1 }
 export { E_CommandType as E_CommandType_alias_2 }
-export { E_CommandType as E_CommandType_alias_3 }
 
 declare enum E_ConfigType {
     ESLINT = "eslint",
@@ -1561,7 +1519,6 @@ declare enum E_ConfigType {
 }
 export { E_ConfigType }
 export { E_ConfigType as E_ConfigType_alias_1 }
-export { E_ConfigType as E_ConfigType_alias_2 }
 
 declare enum E_IssueType {
     Error = "error",
@@ -1570,7 +1527,6 @@ declare enum E_IssueType {
 export { E_IssueType }
 export { E_IssueType as E_IssueType_alias_1 }
 export { E_IssueType as E_IssueType_alias_2 }
-export { E_IssueType as E_IssueType_alias_3 }
 
 declare enum E_PackageType {
     DEPENDENCY = "dependencies",
@@ -1582,53 +1538,44 @@ declare enum E_PackageType {
 export { E_PackageType }
 export { E_PackageType as E_PackageType_alias_1 }
 export { E_PackageType as E_PackageType_alias_2 }
-export { E_PackageType as E_PackageType_alias_3 }
 
 declare const ESLINT_CLI = "eslint";
 export { ESLINT_CLI }
 export { ESLINT_CLI as ESLINT_CLI_alias_1 }
 export { ESLINT_CLI as ESLINT_CLI_alias_2 }
-export { ESLINT_CLI as ESLINT_CLI_alias_3 }
 
 declare const ESLINT_INSPECT_CLI = "eslint-config-inspector";
 export { ESLINT_INSPECT_CLI }
 export { ESLINT_INSPECT_CLI as ESLINT_INSPECT_CLI_alias_1 }
 export { ESLINT_INSPECT_CLI as ESLINT_INSPECT_CLI_alias_2 }
-export { ESLINT_INSPECT_CLI as ESLINT_INSPECT_CLI_alias_3 }
 
 declare const ESLINT_INSPECT_PACKAGE_NAME = "@eslint/config-inspector";
 export { ESLINT_INSPECT_PACKAGE_NAME }
 export { ESLINT_INSPECT_PACKAGE_NAME as ESLINT_INSPECT_PACKAGE_NAME_alias_1 }
 export { ESLINT_INSPECT_PACKAGE_NAME as ESLINT_INSPECT_PACKAGE_NAME_alias_2 }
-export { ESLINT_INSPECT_PACKAGE_NAME as ESLINT_INSPECT_PACKAGE_NAME_alias_3 }
 
 declare const ESLINT_PACKAGE_NAME = "eslint";
 export { ESLINT_PACKAGE_NAME }
 export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_1 }
 export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_2 }
-export { ESLINT_PACKAGE_NAME as ESLINT_PACKAGE_NAME_alias_3 }
 
 export { express }
 export { express as express_alias_1 }
 export { express as express_alias_2 }
-export { express as express_alias_3 }
 
 export { expressMiddleware }
 export { expressMiddleware as expressMiddleware_alias_1 }
 export { expressMiddleware as expressMiddleware_alias_2 }
-export { expressMiddleware as expressMiddleware_alias_3 }
 
 declare function formatCommand(command: T_Command, context?: I_CommandContext): string | I_Command_2;
 export { formatCommand }
 export { formatCommand as formatCommand_alias_1 }
 export { formatCommand as formatCommand_alias_2 }
-export { formatCommand as formatCommand_alias_3 }
 
 declare const fs: typeof fsExtra;
 export { fs }
 export { fs as fs_alias_1 }
 export { fs as fs_alias_2 }
-export { fs as fs_alias_3 }
 
 /**
  * Generates a random password of a given length.
@@ -1640,7 +1587,6 @@ declare function generateRandomPassword(length?: number): string;
 export { generateRandomPassword }
 export { generateRandomPassword as generateRandomPassword_alias_1 }
 export { generateRandomPassword as generateRandomPassword_alias_2 }
-export { generateRandomPassword as generateRandomPassword_alias_3 }
 
 /**
  * Generates a short ID from a UUID.
@@ -1653,7 +1599,6 @@ declare function generateShortId(uuid: string, length?: number): string;
 export { generateShortId }
 export { generateShortId as generateShortId_alias_1 }
 export { generateShortId as generateShortId_alias_2 }
-export { generateShortId as generateShortId_alias_3 }
 
 /**
  * Generates a slug from a string or an object containing strings.
@@ -1666,13 +1611,11 @@ declare function generateSlug<T = string>(input: T, options?: I_SlugifyOptions):
 export { generateSlug }
 export { generateSlug as generateSlug_alias_1 }
 export { generateSlug as generateSlug_alias_2 }
-export { generateSlug as generateSlug_alias_3 }
 
 declare function getEnv(): I_Environment;
 export { getEnv }
 export { getEnv as getEnv_alias_1 }
 export { getEnv as getEnv_alias_2 }
-export { getEnv as getEnv_alias_3 }
 
 /**
  * Get the file name from a URL.
@@ -1684,55 +1627,46 @@ declare function getFileName(url?: string, getExtension?: boolean): string;
 export { getFileName }
 export { getFileName as getFileName_alias_1 }
 export { getFileName as getFileName_alias_2 }
-export { getFileName as getFileName_alias_3 }
 
 declare function getLatestPackageVersion(packageName: string): Promise<I_Return_2<string>>;
 export { getLatestPackageVersion }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_1 }
 export { getLatestPackageVersion as getLatestPackageVersion_alias_2 }
-export { getLatestPackageVersion as getLatestPackageVersion_alias_3 }
 
 declare function getPackage(inputPackage: I_PackageInput): Promise<I_Return_2<I_PackageInfo>>;
 export { getPackage }
 export { getPackage as getPackage_alias_1 }
 export { getPackage as getPackage_alias_2 }
-export { getPackage as getPackage_alias_3 }
 
 declare function getStoredErrorLists(): Promise<I_IssueEntry[]>;
 export { getStoredErrorLists }
 export { getStoredErrorLists as getStoredErrorLists_alias_1 }
 export { getStoredErrorLists as getStoredErrorLists_alias_2 }
-export { getStoredErrorLists as getStoredErrorLists_alias_3 }
 
 declare const GIT_CLI = "git";
 export { GIT_CLI }
 export { GIT_CLI as GIT_CLI_alias_1 }
 export { GIT_CLI as GIT_CLI_alias_2 }
-export { GIT_CLI as GIT_CLI_alias_3 }
 
 declare const GIT_COMMIT_EDITMSG = ".git/COMMIT_EDITMSG";
 export { GIT_COMMIT_EDITMSG }
 export { GIT_COMMIT_EDITMSG as GIT_COMMIT_EDITMSG_alias_1 }
 export { GIT_COMMIT_EDITMSG as GIT_COMMIT_EDITMSG_alias_2 }
-export { GIT_COMMIT_EDITMSG as GIT_COMMIT_EDITMSG_alias_3 }
 
 declare const GIT_HOOK = ".git/hooks/";
 export { GIT_HOOK }
 export { GIT_HOOK as GIT_HOOK_alias_1 }
 export { GIT_HOOK as GIT_HOOK_alias_2 }
-export { GIT_HOOK as GIT_HOOK_alias_3 }
 
 declare const GIT_IGNORE = ".gitignore";
 export { GIT_IGNORE }
 export { GIT_IGNORE as GIT_IGNORE_alias_1 }
 export { GIT_IGNORE as GIT_IGNORE_alias_2 }
-export { GIT_IGNORE as GIT_IGNORE_alias_3 }
 
 declare const GRAPHQL_URI_DEFAULT = "/graphql";
 export { GRAPHQL_URI_DEFAULT }
 export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_1 }
 export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_2 }
-export { GRAPHQL_URI_DEFAULT as GRAPHQL_URI_DEFAULT_alias_3 }
 
 declare interface I_ApolloErrorContext {
     error: ApolloError_2 | null;
@@ -1742,7 +1676,6 @@ declare interface I_ApolloErrorContext {
 export { I_ApolloErrorContext }
 export { I_ApolloErrorContext as I_ApolloErrorContext_alias_1 }
 export { I_ApolloErrorContext as I_ApolloErrorContext_alias_2 }
-export { I_ApolloErrorContext as I_ApolloErrorContext_alias_3 }
 
 declare interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCacheObject>, 'cache'> {
     uri?: string | UriFunction;
@@ -1754,7 +1687,6 @@ declare interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCac
 export { I_ApolloOptions }
 export { I_ApolloOptions as I_ApolloOptions_alias_1 }
 export { I_ApolloOptions as I_ApolloOptions_alias_2 }
-export { I_ApolloOptions as I_ApolloOptions_alias_3 }
 
 declare interface I_ApolloProviderProps extends I_Children_2 {
     isNextJS?: boolean;
@@ -1767,7 +1699,6 @@ declare interface I_ApolloProviderProps extends I_Children_2 {
 export { I_ApolloProviderProps }
 export { I_ApolloProviderProps as I_ApolloProviderProps_alias_1 }
 export { I_ApolloProviderProps as I_ApolloProviderProps_alias_2 }
-export { I_ApolloProviderProps as I_ApolloProviderProps_alias_3 }
 
 declare interface I_ApolloServerOptions {
     server: Server;
@@ -1778,7 +1709,6 @@ declare interface I_ApolloServerOptions {
 export { I_ApolloServerOptions }
 export { I_ApolloServerOptions as I_ApolloServerOptions_alias_1 }
 export { I_ApolloServerOptions as I_ApolloServerOptions_alias_2 }
-export { I_ApolloServerOptions as I_ApolloServerOptions_alias_3 }
 
 declare interface I_BaseCorsOptions {
     isDev?: boolean;
@@ -1793,24 +1723,21 @@ declare interface I_CatchErrorOptions {
 export { I_CatchErrorOptions }
 export { I_CatchErrorOptions as I_CatchErrorOptions_alias_1 }
 export { I_CatchErrorOptions as I_CatchErrorOptions_alias_2 }
-export { I_CatchErrorOptions as I_CatchErrorOptions_alias_3 }
 
-declare interface I_CatchErrorOptionsNode {
+declare interface I_CatchErrorOptions_2 {
     shouldLog?: boolean;
     returnValue?: unknown;
     callback?: (error: Error) => void;
 }
-export { I_CatchErrorOptionsNode }
-export { I_CatchErrorOptionsNode as I_CatchErrorOptionsNode_alias_1 }
-export { I_CatchErrorOptionsNode as I_CatchErrorOptionsNode_alias_2 }
-export { I_CatchErrorOptionsNode as I_CatchErrorOptionsNode_alias_3 }
+export { I_CatchErrorOptions_2 as I_CatchErrorOptions_alias_3 }
+export { I_CatchErrorOptions_2 as I_CatchErrorOptions_alias_4 }
+export { I_CatchErrorOptions_2 as I_CatchErrorOptions_alias_5 }
 
 declare interface I_Children {
     children: T_Children;
 }
 export { I_Children }
 export { I_Children as I_Children_alias_1 }
-export { I_Children as I_Children_alias_2 }
 
 declare interface I_Children_2 {
     children: T_Children_2;
@@ -1823,7 +1750,6 @@ declare interface I_Command {
 export { I_Command }
 export { I_Command as I_Command_alias_1 }
 export { I_Command as I_Command_alias_2 }
-export { I_Command as I_Command_alias_3 }
 
 declare interface I_CommandContext {
     isCurrentProject: boolean;
@@ -1831,7 +1757,6 @@ declare interface I_CommandContext {
 export { I_CommandContext }
 export { I_CommandContext as I_CommandContext_alias_1 }
 export { I_CommandContext as I_CommandContext_alias_2 }
-export { I_CommandContext as I_CommandContext_alias_3 }
 
 declare interface I_CopySyncOptions extends CopyOptionsSync {
     extensions?: string[];
@@ -1839,7 +1764,6 @@ declare interface I_CopySyncOptions extends CopyOptionsSync {
 export { I_CopySyncOptions }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_1 }
 export { I_CopySyncOptions as I_CopySyncOptions_alias_2 }
-export { I_CopySyncOptions as I_CopySyncOptions_alias_3 }
 
 declare interface I_CorsOptionsNest extends I_BaseCorsOptions, CorsOptions_2 {
 }
@@ -1857,7 +1781,6 @@ declare interface I_CreateModelOptions<T extends Partial<C_Document>> extends I_
 export { I_CreateModelOptions }
 export { I_CreateModelOptions as I_CreateModelOptions_alias_1 }
 export { I_CreateModelOptions as I_CreateModelOptions_alias_2 }
-export { I_CreateModelOptions as I_CreateModelOptions_alias_3 }
 
 declare interface I_CreateSchemaOptions<T extends Partial<C_Document>> extends I_MongooseOptions<T> {
     schema: T_Input_MongooseSchema<T>;
@@ -1866,7 +1789,6 @@ declare interface I_CreateSchemaOptions<T extends Partial<C_Document>> extends I
 export { I_CreateSchemaOptions }
 export { I_CreateSchemaOptions as I_CreateSchemaOptions_alias_1 }
 export { I_CreateSchemaOptions as I_CreateSchemaOptions_alias_2 }
-export { I_CreateSchemaOptions as I_CreateSchemaOptions_alias_3 }
 
 declare interface I_DeleteOptionsExtended extends Omit<QueryOptions, 'session'> {
     session?: ClientSession;
@@ -1874,7 +1796,6 @@ declare interface I_DeleteOptionsExtended extends Omit<QueryOptions, 'session'> 
 export { I_DeleteOptionsExtended }
 export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_1 }
 export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_2 }
-export { I_DeleteOptionsExtended as I_DeleteOptionsExtended_alias_3 }
 
 declare interface I_Environment {
     CWD: string;
@@ -1884,7 +1805,6 @@ declare interface I_Environment {
 export { I_Environment }
 export { I_Environment as I_Environment_alias_1 }
 export { I_Environment as I_Environment_alias_2 }
-export { I_Environment as I_Environment_alias_3 }
 
 declare interface I_EslintError {
     filePath: string;
@@ -1899,7 +1819,6 @@ declare interface I_EslintError {
 export { I_EslintError }
 export { I_EslintError as I_EslintError_alias_1 }
 export { I_EslintError as I_EslintError_alias_2 }
-export { I_EslintError as I_EslintError_alias_3 }
 
 declare interface I_ExpressOptions {
     staticFolder?: string;
@@ -1907,14 +1826,12 @@ declare interface I_ExpressOptions {
 export { I_ExpressOptions }
 export { I_ExpressOptions as I_ExpressOptions_alias_1 }
 export { I_ExpressOptions as I_ExpressOptions_alias_2 }
-export { I_ExpressOptions as I_ExpressOptions_alias_3 }
 
 declare interface I_ExtendedModel<T extends Partial<C_Document>> extends Model<T>, PaginateModel<T>, AggregatePaginateModel<T> {
 }
 export { I_ExtendedModel }
 export { I_ExtendedModel as I_ExtendedModel_alias_1 }
 export { I_ExtendedModel as I_ExtendedModel_alias_2 }
-export { I_ExtendedModel as I_ExtendedModel_alias_3 }
 
 declare interface I_GenericDocument extends Partial<C_Document> {
     id: string;
@@ -1925,7 +1842,6 @@ declare interface I_GenericDocument extends Partial<C_Document> {
 export { I_GenericDocument }
 export { I_GenericDocument as I_GenericDocument_alias_1 }
 export { I_GenericDocument as I_GenericDocument_alias_2 }
-export { I_GenericDocument as I_GenericDocument_alias_3 }
 
 declare interface I_GraphqlCodegenConfig {
     uri: string;
@@ -1936,7 +1852,6 @@ declare interface I_GraphqlCodegenConfig {
 export { I_GraphqlCodegenConfig }
 export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_1 }
 export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_2 }
-export { I_GraphqlCodegenConfig as I_GraphqlCodegenConfig_alias_3 }
 
 declare interface I_GraphqlWSOptions {
     schema: GraphQLSchema;
@@ -1945,7 +1860,6 @@ declare interface I_GraphqlWSOptions {
 export { I_GraphqlWSOptions }
 export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_1 }
 export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_2 }
-export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_3 }
 
 declare interface I_Input_CreateMany<T> {
     docs: T[];
@@ -1953,7 +1867,6 @@ declare interface I_Input_CreateMany<T> {
 export { I_Input_CreateMany }
 export { I_Input_CreateMany as I_Input_CreateMany_alias_1 }
 export { I_Input_CreateMany as I_Input_CreateMany_alias_2 }
-export { I_Input_CreateMany as I_Input_CreateMany_alias_3 }
 
 declare interface I_Input_CreateOne<T> {
     doc: T;
@@ -1961,7 +1874,6 @@ declare interface I_Input_CreateOne<T> {
 export { I_Input_CreateOne }
 export { I_Input_CreateOne as I_Input_CreateOne_alias_1 }
 export { I_Input_CreateOne as I_Input_CreateOne_alias_2 }
-export { I_Input_CreateOne as I_Input_CreateOne_alias_3 }
 
 declare interface I_Input_DeleteMany<T> {
     filter: T_FilterQuery<T>;
@@ -1970,7 +1882,6 @@ declare interface I_Input_DeleteMany<T> {
 export { I_Input_DeleteMany }
 export { I_Input_DeleteMany as I_Input_DeleteMany_alias_1 }
 export { I_Input_DeleteMany as I_Input_DeleteMany_alias_2 }
-export { I_Input_DeleteMany as I_Input_DeleteMany_alias_3 }
 
 declare interface I_Input_DeleteOne<T> {
     filter: T_FilterQuery<T>;
@@ -1979,7 +1890,6 @@ declare interface I_Input_DeleteOne<T> {
 export { I_Input_DeleteOne }
 export { I_Input_DeleteOne as I_Input_DeleteOne_alias_1 }
 export { I_Input_DeleteOne as I_Input_DeleteOne_alias_2 }
-export { I_Input_DeleteOne as I_Input_DeleteOne_alias_3 }
 
 declare interface I_Input_FindAll<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
@@ -1989,7 +1899,6 @@ declare interface I_Input_FindAll<T> extends T_PopulateOption {
 export { I_Input_FindAll }
 export { I_Input_FindAll as I_Input_FindAll_alias_1 }
 export { I_Input_FindAll as I_Input_FindAll_alias_2 }
-export { I_Input_FindAll as I_Input_FindAll_alias_3 }
 
 declare interface I_Input_FindOne<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
@@ -1999,7 +1908,6 @@ declare interface I_Input_FindOne<T> extends T_PopulateOption {
 export { I_Input_FindOne }
 export { I_Input_FindOne as I_Input_FindOne_alias_1 }
 export { I_Input_FindOne as I_Input_FindOne_alias_2 }
-export { I_Input_FindOne as I_Input_FindOne_alias_3 }
 
 declare interface I_Input_FindPaging<T> {
     filter?: T_FilterQuery<T>;
@@ -2008,7 +1916,6 @@ declare interface I_Input_FindPaging<T> {
 export { I_Input_FindPaging }
 export { I_Input_FindPaging as I_Input_FindPaging_alias_1 }
 export { I_Input_FindPaging as I_Input_FindPaging_alias_2 }
-export { I_Input_FindPaging as I_Input_FindPaging_alias_3 }
 
 declare interface I_Input_FindPagingAggregate {
     pipeline: T_PipelineStage[];
@@ -2017,7 +1924,6 @@ declare interface I_Input_FindPagingAggregate {
 export { I_Input_FindPagingAggregate }
 export { I_Input_FindPagingAggregate as I_Input_FindPagingAggregate_alias_1 }
 export { I_Input_FindPagingAggregate as I_Input_FindPagingAggregate_alias_2 }
-export { I_Input_FindPagingAggregate as I_Input_FindPagingAggregate_alias_3 }
 
 declare interface I_Input_UpdateMany<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
@@ -2027,7 +1933,6 @@ declare interface I_Input_UpdateMany<T> extends T_PopulateOption {
 export { I_Input_UpdateMany }
 export { I_Input_UpdateMany as I_Input_UpdateMany_alias_1 }
 export { I_Input_UpdateMany as I_Input_UpdateMany_alias_2 }
-export { I_Input_UpdateMany as I_Input_UpdateMany_alias_3 }
 
 declare interface I_Input_UpdateOne<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
@@ -2037,7 +1942,6 @@ declare interface I_Input_UpdateOne<T> extends T_PopulateOption {
 export { I_Input_UpdateOne }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_1 }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_2 }
-export { I_Input_UpdateOne as I_Input_UpdateOne_alias_3 }
 
 declare interface I_IssueEntry {
     type: E_IssueType;
@@ -2049,7 +1953,6 @@ declare interface I_IssueEntry {
 export { I_IssueEntry }
 export { I_IssueEntry as I_IssueEntry_alias_1 }
 export { I_IssueEntry as I_IssueEntry_alias_2 }
-export { I_IssueEntry as I_IssueEntry_alias_3 }
 
 declare interface I_LoadingContext {
     isLoading: boolean;
@@ -2060,7 +1963,6 @@ declare interface I_LoadingContext {
 export { I_LoadingContext }
 export { I_LoadingContext as I_LoadingContext_alias_1 }
 export { I_LoadingContext as I_LoadingContext_alias_2 }
-export { I_LoadingContext as I_LoadingContext_alias_3 }
 
 declare interface I_LoadingProps {
     full?: boolean;
@@ -2071,28 +1973,13 @@ declare interface I_LoadingProps {
 export { I_LoadingProps }
 export { I_LoadingProps as I_LoadingProps_alias_1 }
 export { I_LoadingProps as I_LoadingProps_alias_2 }
-export { I_LoadingProps as I_LoadingProps_alias_3 }
 
-declare interface I_Log {
-    silent: typeof consola['silent'];
-    level: typeof consola['level'];
-    fatal: typeof consola['fatal'];
-    error: typeof consola['error'];
-    warn: typeof consola['warn'];
-    log: typeof consola['log'];
-    info: typeof consola['info'];
-    success: typeof consola['success'];
-    ready: typeof consola['ready'];
-    start: typeof consola['start'];
-    box: typeof consola['box'];
-    debug: typeof consola['debug'];
-    trace: typeof consola['trace'];
-    verbose: typeof consola['verbose'];
+declare interface I_Log extends I_Log_3 {
+    printBoxedLog: (title: string, issues: I_IssueEntry[], color?: string) => void;
 }
 export { I_Log }
 export { I_Log as I_Log_alias_1 }
 export { I_Log as I_Log_alias_2 }
-export { I_Log as I_Log_alias_3 }
 
 declare interface I_Log_2 {
     silent: typeof consola['silent'];
@@ -2110,14 +1997,25 @@ declare interface I_Log_2 {
     trace: typeof consola['trace'];
     verbose: typeof consola['verbose'];
 }
+export { I_Log_2 as I_Log_alias_3 }
+export { I_Log_2 as I_Log_alias_4 }
 
-declare interface I_LogNode extends I_Log_2 {
-    printBoxedLog: (title: string, issues: I_IssueEntry[], color?: string) => void;
+declare interface I_Log_3 {
+    silent: typeof consola['silent'];
+    level: typeof consola['level'];
+    fatal: typeof consola['fatal'];
+    error: typeof consola['error'];
+    warn: typeof consola['warn'];
+    log: typeof consola['log'];
+    info: typeof consola['info'];
+    success: typeof consola['success'];
+    ready: typeof consola['ready'];
+    start: typeof consola['start'];
+    box: typeof consola['box'];
+    debug: typeof consola['debug'];
+    trace: typeof consola['trace'];
+    verbose: typeof consola['verbose'];
 }
-export { I_LogNode }
-export { I_LogNode as I_LogNode_alias_1 }
-export { I_LogNode as I_LogNode_alias_2 }
-export { I_LogNode as I_LogNode_alias_3 }
 
 declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     method: T_MongooseMiddlewareMethod;
@@ -2127,7 +2025,6 @@ declare interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
 export { I_MongooseModelMiddleware }
 export { I_MongooseModelMiddleware as I_MongooseModelMiddleware_alias_1 }
 export { I_MongooseModelMiddleware as I_MongooseModelMiddleware_alias_2 }
-export { I_MongooseModelMiddleware as I_MongooseModelMiddleware_alias_3 }
 
 declare interface I_MongooseOptions<T extends Partial<C_Document>> {
     mongoose: typeof mongoose;
@@ -2140,7 +2037,6 @@ declare interface I_MongooseOptions<T extends Partial<C_Document>> {
 export { I_MongooseOptions }
 export { I_MongooseOptions as I_MongooseOptions_alias_1 }
 export { I_MongooseOptions as I_MongooseOptions_alias_2 }
-export { I_MongooseOptions as I_MongooseOptions_alias_3 }
 
 declare interface I_NestOptions {
     module: Type<object>;
@@ -2151,7 +2047,6 @@ declare interface I_NestOptions {
 export { I_NestOptions }
 export { I_NestOptions as I_NestOptions_alias_1 }
 export { I_NestOptions as I_NestOptions_alias_2 }
-export { I_NestOptions as I_NestOptions_alias_3 }
 
 declare interface I_NextIntlContext {
     languages: I_NextIntlLanguage[];
@@ -2161,7 +2056,6 @@ declare interface I_NextIntlContext {
 export { I_NextIntlContext }
 export { I_NextIntlContext as I_NextIntlContext_alias_1 }
 export { I_NextIntlContext as I_NextIntlContext_alias_2 }
-export { I_NextIntlContext as I_NextIntlContext_alias_3 }
 
 declare interface I_NextIntlLanguage {
     label: string;
@@ -2178,7 +2072,6 @@ declare interface I_NextIntlLanguage {
 export { I_NextIntlLanguage }
 export { I_NextIntlLanguage as I_NextIntlLanguage_alias_1 }
 export { I_NextIntlLanguage as I_NextIntlLanguage_alias_2 }
-export { I_NextIntlLanguage as I_NextIntlLanguage_alias_3 }
 
 declare interface I_NextIntlProviderProps extends I_Children_2 {
     languages: I_NextIntlLanguage[];
@@ -2187,7 +2080,6 @@ declare interface I_NextIntlProviderProps extends I_Children_2 {
 export { I_NextIntlProviderProps }
 export { I_NextIntlProviderProps as I_NextIntlProviderProps_alias_1 }
 export { I_NextIntlProviderProps as I_NextIntlProviderProps_alias_2 }
-export { I_NextIntlProviderProps as I_NextIntlProviderProps_alias_3 }
 
 declare interface I_PackageInfo {
     name: string;
@@ -2204,7 +2096,6 @@ declare interface I_PackageInfo {
 export { I_PackageInfo }
 export { I_PackageInfo as I_PackageInfo_alias_1 }
 export { I_PackageInfo as I_PackageInfo_alias_2 }
-export { I_PackageInfo as I_PackageInfo_alias_3 }
 
 declare interface I_PackageInput {
     name: string;
@@ -2213,12 +2104,10 @@ declare interface I_PackageInput {
 export { I_PackageInput }
 export { I_PackageInput as I_PackageInput_alias_1 }
 export { I_PackageInput as I_PackageInput_alias_2 }
-export { I_PackageInput as I_PackageInput_alias_3 }
 
 declare type I_Return<T = void, E = unknown> = I_ReturnSuccess<T, E> | I_ReturnFailure;
 export { I_Return }
 export { I_Return as I_Return_alias_1 }
-export { I_Return as I_Return_alias_2 }
 
 declare type I_Return_2<T = void, E = unknown> = I_ReturnSuccess_2<T, E> | I_ReturnFailure_2;
 
@@ -2229,7 +2118,6 @@ declare interface I_ReturnFailure {
 }
 export { I_ReturnFailure }
 export { I_ReturnFailure as I_ReturnFailure_alias_1 }
-export { I_ReturnFailure as I_ReturnFailure_alias_2 }
 
 declare interface I_ReturnFailure_2 {
     success: false;
@@ -2245,7 +2133,6 @@ declare interface I_ReturnSuccess<T, E = unknown> {
 }
 export { I_ReturnSuccess }
 export { I_ReturnSuccess as I_ReturnSuccess_alias_1 }
-export { I_ReturnSuccess as I_ReturnSuccess_alias_2 }
 
 declare interface I_ReturnSuccess_2<T, E = unknown> {
     success: true;
@@ -2261,7 +2148,6 @@ declare interface I_Serializer<T = unknown> {
 export { I_Serializer }
 export { I_Serializer as I_Serializer_alias_1 }
 export { I_Serializer as I_Serializer_alias_2 }
-export { I_Serializer as I_Serializer_alias_3 }
 
 declare interface I_Serializer_2<T = unknown> {
     serialize: (value: T) => string;
@@ -2275,7 +2161,6 @@ declare interface I_SerializerTypeWrapper<T extends T_SerializerKnownTypes = T_S
 export { I_SerializerTypeWrapper }
 export { I_SerializerTypeWrapper as I_SerializerTypeWrapper_alias_1 }
 export { I_SerializerTypeWrapper as I_SerializerTypeWrapper_alias_2 }
-export { I_SerializerTypeWrapper as I_SerializerTypeWrapper_alias_3 }
 
 declare interface I_SlugifyOptions {
     replacement?: string;
@@ -2288,7 +2173,6 @@ declare interface I_SlugifyOptions {
 export { I_SlugifyOptions }
 export { I_SlugifyOptions as I_SlugifyOptions_alias_1 }
 export { I_SlugifyOptions as I_SlugifyOptions_alias_2 }
-export { I_SlugifyOptions as I_SlugifyOptions_alias_3 }
 
 declare interface I_UpdateOptionsExtended extends Omit<QueryOptions, 'session'> {
     session?: ClientSession;
@@ -2296,7 +2180,6 @@ declare interface I_UpdateOptionsExtended extends Omit<QueryOptions, 'session'> 
 export { I_UpdateOptionsExtended }
 export { I_UpdateOptionsExtended as I_UpdateOptionsExtended_alias_1 }
 export { I_UpdateOptionsExtended as I_UpdateOptionsExtended_alias_2 }
-export { I_UpdateOptionsExtended as I_UpdateOptionsExtended_alias_3 }
 
 declare interface I_VirtualNestedOptions {
     [key: string]: I_VirtualNestedOptions | number | string | boolean;
@@ -2318,30 +2201,25 @@ declare interface I_WSOptions {
 export { I_WSOptions }
 export { I_WSOptions as I_WSOptions_alias_1 }
 export { I_WSOptions as I_WSOptions_alias_2 }
-export { I_WSOptions as I_WSOptions_alias_3 }
 
 declare function initGraphQLWS(options: I_GraphqlWSOptions): Disposable_2;
 export { initGraphQLWS }
 export { initGraphQLWS as initGraphQLWS_alias_1 }
 export { initGraphQLWS as initGraphQLWS_alias_2 }
-export { initGraphQLWS as initGraphQLWS_alias_3 }
 
 declare function initI18next(options: InitOptions): Promise<TFunction<"translation", undefined>>;
 export { initI18next }
 export { initI18next as initI18next_alias_1 }
 export { initI18next as initI18next_alias_2 }
-export { initI18next as initI18next_alias_3 }
 
 declare function installDependencies(): Promise<void>;
 export { installDependencies }
 export { installDependencies as installDependencies_alias_1 }
 export { installDependencies as installDependencies_alias_2 }
-export { installDependencies as installDependencies_alias_3 }
 
 declare const IS_BROWSER: boolean;
 export { IS_BROWSER }
 export { IS_BROWSER as IS_BROWSER_alias_1 }
-export { IS_BROWSER as IS_BROWSER_alias_2 }
 
 /**
  * Check if a string is a valid JSON string.
@@ -2352,7 +2230,6 @@ declare function isJson(str: string): boolean;
 export { isJson }
 export { isJson as isJson_alias_1 }
 export { isJson as isJson_alias_2 }
-export { isJson as isJson_alias_3 }
 
 /**
  * Checks if a value is an object.
@@ -2364,96 +2241,80 @@ declare function isObject(val: unknown): val is T_Object_2;
 export { isObject }
 export { isObject as isObject_alias_1 }
 export { isObject as isObject_alias_2 }
-export { isObject as isObject_alias_3 }
 
 declare function join(...urls: string[]): string;
 export { join }
 export { join as join_alias_1 }
 export { join as join_alias_2 }
-export { join as join_alias_3 }
 
 declare const LINT_STAGED_CLI = "lint-staged";
 export { LINT_STAGED_CLI }
 export { LINT_STAGED_CLI as LINT_STAGED_CLI_alias_1 }
 export { LINT_STAGED_CLI as LINT_STAGED_CLI_alias_2 }
-export { LINT_STAGED_CLI as LINT_STAGED_CLI_alias_3 }
 
 declare const LINT_STAGED_PACKAGE_NAME = "lint-staged";
 export { LINT_STAGED_PACKAGE_NAME }
 export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_1 }
 export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_2 }
-export { LINT_STAGED_PACKAGE_NAME as LINT_STAGED_PACKAGE_NAME_alias_3 }
 
 declare function loadEnvFile(): void;
 export { loadEnvFile }
 export { loadEnvFile as loadEnvFile_alias_1 }
 export { loadEnvFile as loadEnvFile_alias_2 }
-export { loadEnvFile as loadEnvFile_alias_3 }
 
 declare function Loading({ full, block, className, message, ...rest }: I_LoadingProps): React_2.JSX.Element;
 export { Loading }
 export { Loading as Loading_alias_1 }
 export { Loading as Loading_alias_2 }
-export { Loading as Loading_alias_3 }
 
 declare const LoadingContext: Context<I_LoadingContext | undefined>;
 export { LoadingContext }
 export { LoadingContext as LoadingContext_alias_1 }
 export { LoadingContext as LoadingContext_alias_2 }
-export { LoadingContext as LoadingContext_alias_3 }
 
 declare function LoadingProvider({ children }: I_Children_2): React_2.JSX.Element;
 export { LoadingProvider }
 export { LoadingProvider as LoadingProvider_alias_1 }
 export { LoadingProvider as LoadingProvider_alias_2 }
-export { LoadingProvider as LoadingProvider_alias_3 }
 
 declare const log: I_Log;
 export { log }
 export { log as log_alias_1 }
 export { log as log_alias_2 }
-export { log as log_alias_3 }
 
-declare const logNode: I_LogNode;
-export { logNode }
-export { logNode as logNode_alias_1 }
-export { logNode as logNode_alias_2 }
-export { logNode as logNode_alias_3 }
+declare const log_2: I_Log_3;
+export { log_2 as log_alias_3 }
+export { log_2 as log_alias_4 }
+export { log_2 as log_alias_5 }
 
 declare const lstatSync: fsExtra.StatSyncFn;
 export { lstatSync }
 export { lstatSync as lstatSync_alias_1 }
 export { lstatSync as lstatSync_alias_2 }
-export { lstatSync as lstatSync_alias_3 }
 
-declare function mergeConfigs(type: T_ConfigType, ...configs: T_Object_2[]): T_Object_2;
+declare function mergeConfigs(type: T_ConfigType, ...config: T_Object_2[]): T_Object_2;
 export { mergeConfigs }
 export { mergeConfigs as mergeConfigs_alias_1 }
-export { mergeConfigs as mergeConfigs_alias_2 }
 
 declare const MIGRATE_MONGO_CLI = "./node_modules/migrate-mongo/bin/migrate-mongo";
 export { MIGRATE_MONGO_CLI }
 export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_1 }
 export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_2 }
-export { MIGRATE_MONGO_CLI as MIGRATE_MONGO_CLI_alias_3 }
 
 declare const MIGRATE_MONGO_CONFIG = ".migrate-mongo.config.js";
 export { MIGRATE_MONGO_CONFIG }
 export { MIGRATE_MONGO_CONFIG as MIGRATE_MONGO_CONFIG_alias_1 }
 export { MIGRATE_MONGO_CONFIG as MIGRATE_MONGO_CONFIG_alias_2 }
-export { MIGRATE_MONGO_CONFIG as MIGRATE_MONGO_CONFIG_alias_3 }
 
 declare const MIGRATE_MONGO_PACKAGE_NAME = "migrate-mongo";
 export { MIGRATE_MONGO_PACKAGE_NAME }
 export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_1 }
 export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_2 }
-export { MIGRATE_MONGO_PACKAGE_NAME as MIGRATE_MONGO_PACKAGE_NAME_alias_3 }
 
 declare const mkdirSync: typeof fsExtra.mkdirSync;
 export { mkdirSync }
 export { mkdirSync as mkdirSync_alias_1 }
 export { mkdirSync as mkdirSync_alias_2 }
-export { mkdirSync as mkdirSync_alias_3 }
 
 declare const mongo: {
     getDateTime(now?: Date): string;
@@ -2496,13 +2357,11 @@ declare const mongo: {
 export { mongo }
 export { mongo as mongo_alias_1 }
 export { mongo as mongo_alias_2 }
-export { mongo as mongo_alias_3 }
 
 declare const MONGO_MIGRATE_OPTIONS = "MONGO_MIGRATE_OPTIONS";
 export { MONGO_MIGRATE_OPTIONS }
 export { MONGO_MIGRATE_OPTIONS as MONGO_MIGRATE_OPTIONS_alias_1 }
 export { MONGO_MIGRATE_OPTIONS as MONGO_MIGRATE_OPTIONS_alias_2 }
-export { MONGO_MIGRATE_OPTIONS as MONGO_MIGRATE_OPTIONS_alias_3 }
 
 declare class MongoController<D extends Partial<C_Document>> {
     private collection;
@@ -2520,7 +2379,6 @@ declare class MongoController<D extends Partial<C_Document>> {
 export { MongoController }
 export { MongoController as MongoController_alias_1 }
 export { MongoController as MongoController_alias_2 }
-export { MongoController as MongoController_alias_3 }
 
 declare class MongooseController<T extends Partial<C_Document>> {
     private model;
@@ -2544,12 +2402,10 @@ declare class MongooseController<T extends Partial<C_Document>> {
 export { MongooseController }
 export { MongooseController as MongooseController_alias_1 }
 export { MongooseController as MongooseController_alias_2 }
-export { MongooseController as MongooseController_alias_3 }
 
 export { mongoosePaginate }
 export { mongoosePaginate as mongoosePaginate_alias_1 }
 export { mongoosePaginate as mongoosePaginate_alias_2 }
-export { mongoosePaginate as mongoosePaginate_alias_3 }
 
 declare const NEXT_INTL_DEFAULT_LANGUAGE: {
     label: string;
@@ -2566,54 +2422,45 @@ declare const NEXT_INTL_DEFAULT_LANGUAGE: {
 export { NEXT_INTL_DEFAULT_LANGUAGE }
 export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_1 }
 export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_2 }
-export { NEXT_INTL_DEFAULT_LANGUAGE as NEXT_INTL_DEFAULT_LANGUAGE_alias_3 }
 
 export { NextFunction }
 export { NextFunction as NextFunction_alias_1 }
 export { NextFunction as NextFunction_alias_2 }
-export { NextFunction as NextFunction_alias_3 }
 
 declare const NextIntlContext: Context<I_NextIntlContext | undefined>;
 export { NextIntlContext }
 export { NextIntlContext as NextIntlContext_alias_1 }
 export { NextIntlContext as NextIntlContext_alias_2 }
-export { NextIntlContext as NextIntlContext_alias_3 }
 
 declare function NextIntlProvider({ children, languages, messages, }: I_NextIntlProviderProps): React_2.JSX.Element;
 export { NextIntlProvider }
 export { NextIntlProvider as NextIntlProvider_alias_1 }
 export { NextIntlProvider as NextIntlProvider_alias_2 }
-export { NextIntlProvider as NextIntlProvider_alias_3 }
 
 declare const NODE_MODULES = "node_modules";
 export { NODE_MODULES }
 export { NODE_MODULES as NODE_MODULES_alias_1 }
 export { NODE_MODULES as NODE_MODULES_alias_2 }
-export { NODE_MODULES as NODE_MODULES_alias_3 }
 
 declare const NODE_MODULES_INSPECT_CLI = "node-modules-inspector";
 export { NODE_MODULES_INSPECT_CLI }
 export { NODE_MODULES_INSPECT_CLI as NODE_MODULES_INSPECT_CLI_alias_1 }
 export { NODE_MODULES_INSPECT_CLI as NODE_MODULES_INSPECT_CLI_alias_2 }
-export { NODE_MODULES_INSPECT_CLI as NODE_MODULES_INSPECT_CLI_alias_3 }
 
 declare const NODE_MODULES_INSPECT_PACKAGE_NAME = "node-modules-inspector";
 export { NODE_MODULES_INSPECT_PACKAGE_NAME }
 export { NODE_MODULES_INSPECT_PACKAGE_NAME as NODE_MODULES_INSPECT_PACKAGE_NAME_alias_1 }
 export { NODE_MODULES_INSPECT_PACKAGE_NAME as NODE_MODULES_INSPECT_PACKAGE_NAME_alias_2 }
-export { NODE_MODULES_INSPECT_PACKAGE_NAME as NODE_MODULES_INSPECT_PACKAGE_NAME_alias_3 }
 
 declare const PACKAGE_JSON = "package.json";
 export { PACKAGE_JSON }
 export { PACKAGE_JSON as PACKAGE_JSON_alias_1 }
 export { PACKAGE_JSON as PACKAGE_JSON_alias_2 }
-export { PACKAGE_JSON as PACKAGE_JSON_alias_3 }
 
 declare const PACKAGE_LOCK_JSON = "package-lock.json";
 export { PACKAGE_LOCK_JSON }
 export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_1 }
 export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_2 }
-export { PACKAGE_LOCK_JSON as PACKAGE_LOCK_JSON_alias_3 }
 
 declare const PATH: {
     CYBERSKILL_DIRECTORY: string;
@@ -2637,43 +2484,36 @@ declare const PATH: {
 export { PATH }
 export { PATH as PATH_alias_1 }
 export { PATH as PATH_alias_2 }
-export { PATH as PATH_alias_3 }
 
 declare const path: pathNode.PlatformPath;
 export { path }
 export { path as path_alias_1 }
 export { path as path_alias_2 }
-export { path as path_alias_3 }
 
 declare function pathExistsSync(...paths: string[]): boolean;
 export { pathExistsSync }
 export { pathExistsSync as pathExistsSync_alias_1 }
 export { pathExistsSync as pathExistsSync_alias_2 }
-export { pathExistsSync as pathExistsSync_alias_3 }
 
 declare const PLAYWRIGHT_PACKAGE_NAME = "playwright";
 export { PLAYWRIGHT_PACKAGE_NAME }
 export { PLAYWRIGHT_PACKAGE_NAME as PLAYWRIGHT_PACKAGE_NAME_alias_1 }
 export { PLAYWRIGHT_PACKAGE_NAME as PLAYWRIGHT_PACKAGE_NAME_alias_2 }
-export { PLAYWRIGHT_PACKAGE_NAME as PLAYWRIGHT_PACKAGE_NAME_alias_3 }
 
 declare const PNPM_CLI = "pnpm";
 export { PNPM_CLI }
 export { PNPM_CLI as PNPM_CLI_alias_1 }
 export { PNPM_CLI as PNPM_CLI_alias_2 }
-export { PNPM_CLI as PNPM_CLI_alias_3 }
 
 declare const PNPM_EXEC_CLI = "pnpm exec";
 export { PNPM_EXEC_CLI }
 export { PNPM_EXEC_CLI as PNPM_EXEC_CLI_alias_1 }
 export { PNPM_EXEC_CLI as PNPM_EXEC_CLI_alias_2 }
-export { PNPM_EXEC_CLI as PNPM_EXEC_CLI_alias_3 }
 
 declare const PNPM_LOCK_YAML = "pnpm-lock.yaml";
 export { PNPM_LOCK_YAML }
 export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_1 }
 export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_2 }
-export { PNPM_LOCK_YAML as PNPM_LOCK_YAML_alias_3 }
 
 declare function rawCommand(cmd: string): {
     raw: boolean;
@@ -2682,25 +2522,21 @@ declare function rawCommand(cmd: string): {
 export { rawCommand }
 export { rawCommand as rawCommand_alias_1 }
 export { rawCommand as rawCommand_alias_2 }
-export { rawCommand as rawCommand_alias_3 }
 
 declare const readdirSync: typeof fsExtra.readdirSync;
 export { readdirSync }
 export { readdirSync as readdirSync_alias_1 }
 export { readdirSync as readdirSync_alias_2 }
-export { readdirSync as readdirSync_alias_3 }
 
 declare const readFileSync: typeof fsExtra.readFileSync;
 export { readFileSync }
 export { readFileSync as readFileSync_alias_1 }
 export { readFileSync as readFileSync_alias_2 }
-export { readFileSync as readFileSync_alias_3 }
 
 declare const readJsonSync: typeof fsExtra.readJsonSync;
 export { readJsonSync }
 export { readJsonSync as readJsonSync_alias_1 }
 export { readJsonSync as readJsonSync_alias_2 }
-export { readJsonSync as readJsonSync_alias_3 }
 
 /**
  * Convert a string to a regex pattern that matches the string and its accented variations.
@@ -2711,7 +2547,6 @@ declare function regexSearchMapper(str: string): string;
 export { regexSearchMapper }
 export { regexSearchMapper as regexSearchMapper_alias_1 }
 export { regexSearchMapper as regexSearchMapper_alias_2 }
-export { regexSearchMapper as regexSearchMapper_alias_3 }
 
 /**
  * Remove accents from a string.
@@ -2722,24 +2557,20 @@ declare function removeAccent(str: string): string;
 export { removeAccent }
 export { removeAccent as removeAccent_alias_1 }
 export { removeAccent as removeAccent_alias_2 }
-export { removeAccent as removeAccent_alias_3 }
 
 declare function removeSync(...paths: string[]): void;
 export { removeSync }
 export { removeSync as removeSync_alias_1 }
 export { removeSync as removeSync_alias_2 }
-export { removeSync as removeSync_alias_3 }
 
 export { Request_2 as Request }
 export { Request_2 as Request_alias_1 }
 export { Request_2 as Request_alias_2 }
-export { Request_2 as Request_alias_3 }
 
 declare function resolve(...urls: string[]): string;
 export { resolve }
 export { resolve as resolve_alias_1 }
 export { resolve as resolve_alias_2 }
-export { resolve as resolve_alias_3 }
 
 declare function resolveCommands(input: T_CommandMapInput): Promise<{
     [k: string]: string | I_Command_2;
@@ -2747,18 +2578,15 @@ declare function resolveCommands(input: T_CommandMapInput): Promise<{
 export { resolveCommands }
 export { resolveCommands as resolveCommands_alias_1 }
 export { resolveCommands as resolveCommands_alias_2 }
-export { resolveCommands as resolveCommands_alias_3 }
 
 declare function resolveWorkingPath(...urls: string[]): string;
 export { resolveWorkingPath }
 export { resolveWorkingPath as resolveWorkingPath_alias_1 }
 export { resolveWorkingPath as resolveWorkingPath_alias_2 }
-export { resolveWorkingPath as resolveWorkingPath_alias_3 }
 
 export { Response_2 as Response }
 export { Response_2 as Response_alias_1 }
 export { Response_2 as Response_alias_2 }
-export { Response_2 as Response_alias_3 }
 
 declare const RESPONSE_STATUS: {
     GRAPHQL_PARSE_FAILED: {
@@ -3012,30 +2840,25 @@ declare const RESPONSE_STATUS: {
 };
 export { RESPONSE_STATUS }
 export { RESPONSE_STATUS as RESPONSE_STATUS_alias_1 }
-export { RESPONSE_STATUS as RESPONSE_STATUS_alias_2 }
 
 export { Router }
 export { Router as Router_alias_1 }
 export { Router as Router_alias_2 }
-export { Router as Router_alias_3 }
 
 declare function runCommand(label: string, command: string | void): Promise<void>;
 export { runCommand }
 export { runCommand as runCommand_alias_1 }
 export { runCommand as runCommand_alias_2 }
-export { runCommand as runCommand_alias_3 }
 
 declare const serializer: I_Serializer<unknown>;
 export { serializer }
 export { serializer as serializer_alias_1 }
 export { serializer as serializer_alias_2 }
-export { serializer as serializer_alias_3 }
 
 declare function setGlobalApolloErrorCallback(callback: (err: ApolloError_2) => void): void;
 export { setGlobalApolloErrorCallback }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_1 }
 export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_2 }
-export { setGlobalApolloErrorCallback as setGlobalApolloErrorCallback_alias_3 }
 
 declare function setupPackages(packages: I_PackageInput[], options?: {
     update?: boolean;
@@ -3044,60 +2867,52 @@ declare function setupPackages(packages: I_PackageInput[], options?: {
 export { setupPackages }
 export { setupPackages as setupPackages_alias_1 }
 export { setupPackages as setupPackages_alias_2 }
-export { setupPackages as setupPackages_alias_3 }
 
 declare function showGlobalApolloError(error: ApolloError_2): void;
 export { showGlobalApolloError }
 export { showGlobalApolloError as showGlobalApolloError_alias_1 }
 export { showGlobalApolloError as showGlobalApolloError_alias_2 }
-export { showGlobalApolloError as showGlobalApolloError_alias_3 }
 
 declare const SIMPLE_GIT_HOOK_CLI = "simple-git-hooks";
 export { SIMPLE_GIT_HOOK_CLI }
 export { SIMPLE_GIT_HOOK_CLI as SIMPLE_GIT_HOOK_CLI_alias_1 }
 export { SIMPLE_GIT_HOOK_CLI as SIMPLE_GIT_HOOK_CLI_alias_2 }
-export { SIMPLE_GIT_HOOK_CLI as SIMPLE_GIT_HOOK_CLI_alias_3 }
 
 declare const SIMPLE_GIT_HOOK_JSON = ".simple-git-hooks.json";
 export { SIMPLE_GIT_HOOK_JSON }
 export { SIMPLE_GIT_HOOK_JSON as SIMPLE_GIT_HOOK_JSON_alias_1 }
 export { SIMPLE_GIT_HOOK_JSON as SIMPLE_GIT_HOOK_JSON_alias_2 }
-export { SIMPLE_GIT_HOOK_JSON as SIMPLE_GIT_HOOK_JSON_alias_3 }
 
 declare const SIMPLE_GIT_HOOKS_PACKAGE_NAME = "simple-git-hooks";
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_1 }
 export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_2 }
-export { SIMPLE_GIT_HOOKS_PACKAGE_NAME as SIMPLE_GIT_HOOKS_PACKAGE_NAME_alias_3 }
 
 declare const statSync: fsExtra.StatSyncFn;
 export { statSync }
 export { statSync as statSync_alias_1 }
 export { statSync as statSync_alias_2 }
-export { statSync as statSync_alias_3 }
 
 declare const storage: {
     get<T = unknown>(key: string): Promise<T | null>;
     set<T = unknown>(key: string, value: T): Promise<void>;
     remove(key: string): Promise<void>;
     keys(): Promise<string[]>;
+    getLogLink(key: string): Promise<string | null>;
 };
 export { storage }
 export { storage as storage_alias_1 }
 export { storage as storage_alias_2 }
-export { storage as storage_alias_3 }
 
-declare const storageNode: {
+declare const storage_2: {
     get<T = unknown>(key: string): Promise<T | null>;
     set<T = unknown>(key: string, value: T): Promise<void>;
     remove(key: string): Promise<void>;
     keys(): Promise<string[]>;
-    getLogLink(key: string): Promise<string | null>;
 };
-export { storageNode }
-export { storageNode as storageNode_alias_1 }
-export { storageNode as storageNode_alias_2 }
-export { storageNode as storageNode_alias_3 }
+export { storage_2 as storage_alias_3 }
+export { storage_2 as storage_alias_4 }
+export { storage_2 as storage_alias_5 }
 
 /**
  * Extracts a substring between two strings.
@@ -3110,18 +2925,15 @@ declare function substringBetween(s: string, a: string, b: string): string;
 export { substringBetween }
 export { substringBetween as substringBetween_alias_1 }
 export { substringBetween as substringBetween_alias_2 }
-export { substringBetween as substringBetween_alias_3 }
 
 declare type T_AggregatePaginateResult<T> = AggregatePaginateResult<T>;
 export { T_AggregatePaginateResult }
 export { T_AggregatePaginateResult as T_AggregatePaginateResult_alias_1 }
 export { T_AggregatePaginateResult as T_AggregatePaginateResult_alias_2 }
-export { T_AggregatePaginateResult as T_AggregatePaginateResult_alias_3 }
 
 declare type T_Children = ReactNode | ReactNode[] | ReactElement | JSX.Element | null;
 export { T_Children }
 export { T_Children as T_Children_alias_1 }
-export { T_Children as T_Children_alias_2 }
 
 declare type T_Children_2 = ReactNode | ReactNode[] | ReactElement | JSX.Element | null;
 
@@ -3129,154 +2941,128 @@ declare type T_Command = string | I_Command | T_CommandFunction;
 export { T_Command }
 export { T_Command as T_Command_alias_1 }
 export { T_Command as T_Command_alias_2 }
-export { T_Command as T_Command_alias_3 }
 
 declare type T_CommandFunction = (context?: I_CommandContext) => string;
 export { T_CommandFunction }
 export { T_CommandFunction as T_CommandFunction_alias_1 }
 export { T_CommandFunction as T_CommandFunction_alias_2 }
-export { T_CommandFunction as T_CommandFunction_alias_3 }
 
 declare type T_CommandMap = Record<string, T_Command>;
 export { T_CommandMap }
 export { T_CommandMap as T_CommandMap_alias_1 }
 export { T_CommandMap as T_CommandMap_alias_2 }
-export { T_CommandMap as T_CommandMap_alias_3 }
 
 declare type T_CommandMapInput = T_CommandMap | ((ctx: I_CommandContext) => T_CommandMap);
 export { T_CommandMapInput }
 export { T_CommandMapInput as T_CommandMapInput_alias_1 }
 export { T_CommandMapInput as T_CommandMapInput_alias_2 }
-export { T_CommandMapInput as T_CommandMapInput_alias_3 }
 
-declare type T_ConfigHandler = (...configs: T_Object_2[]) => T_Object_2;
+declare type T_ConfigHandler = (...config: T_Object_2[]) => T_Object_2;
 export { T_ConfigHandler }
 export { T_ConfigHandler as T_ConfigHandler_alias_1 }
-export { T_ConfigHandler as T_ConfigHandler_alias_2 }
 
 declare type T_ConfigType = `${E_ConfigType}`;
 export { T_ConfigType }
 export { T_ConfigType as T_ConfigType_alias_1 }
-export { T_ConfigType as T_ConfigType_alias_2 }
 
 declare type T_CorsOptions<T extends T_CorsType> = T extends 'node' ? I_CorsOptionsNode : I_CorsOptionsNest;
 export { T_CorsOptions }
 export { T_CorsOptions as T_CorsOptions_alias_1 }
 export { T_CorsOptions as T_CorsOptions_alias_2 }
-export { T_CorsOptions as T_CorsOptions_alias_3 }
 
 declare type T_CorsType = 'node' | 'nest';
 export { T_CorsType }
 export { T_CorsType as T_CorsType_alias_1 }
 export { T_CorsType as T_CorsType_alias_2 }
-export { T_CorsType as T_CorsType_alias_3 }
 
 declare type T_DeleteResult = DeleteResult;
 export { T_DeleteResult }
 export { T_DeleteResult as T_DeleteResult_alias_1 }
 export { T_DeleteResult as T_DeleteResult_alias_2 }
-export { T_DeleteResult as T_DeleteResult_alias_3 }
 
 declare type T_ErrorHandlingMiddlewareFunction<T> = ErrorHandlingMiddlewareFunction<T>;
 export { T_ErrorHandlingMiddlewareFunction }
 export { T_ErrorHandlingMiddlewareFunction as T_ErrorHandlingMiddlewareFunction_alias_1 }
 export { T_ErrorHandlingMiddlewareFunction as T_ErrorHandlingMiddlewareFunction_alias_2 }
-export { T_ErrorHandlingMiddlewareFunction as T_ErrorHandlingMiddlewareFunction_alias_3 }
 
 declare type T_ErrorHandlingMiddlewareWithOption<T> = ErrorHandlingMiddlewareWithOption<T>;
 export { T_ErrorHandlingMiddlewareWithOption }
 export { T_ErrorHandlingMiddlewareWithOption as T_ErrorHandlingMiddlewareWithOption_alias_1 }
 export { T_ErrorHandlingMiddlewareWithOption as T_ErrorHandlingMiddlewareWithOption_alias_2 }
-export { T_ErrorHandlingMiddlewareWithOption as T_ErrorHandlingMiddlewareWithOption_alias_3 }
 
 declare type T_Filter<T> = Filter<T>;
 export { T_Filter }
 export { T_Filter as T_Filter_alias_1 }
 export { T_Filter as T_Filter_alias_2 }
-export { T_Filter as T_Filter_alias_3 }
 
 declare type T_FilterQuery<T> = FilterQuery<T>;
 export { T_FilterQuery }
 export { T_FilterQuery as T_FilterQuery_alias_1 }
 export { T_FilterQuery as T_FilterQuery_alias_2 }
-export { T_FilterQuery as T_FilterQuery_alias_3 }
 
 declare type T_Input_MongooseSchema<T> = SchemaDefinition<T>;
 export { T_Input_MongooseSchema }
 export { T_Input_MongooseSchema as T_Input_MongooseSchema_alias_1 }
 export { T_Input_MongooseSchema as T_Input_MongooseSchema_alias_2 }
-export { T_Input_MongooseSchema as T_Input_MongooseSchema_alias_3 }
 
 declare type T_Input_Populate = string | string[] | T_PopulateOptions | T_PopulateOptions[];
 export { T_Input_Populate }
 export { T_Input_Populate as T_Input_Populate_alias_1 }
 export { T_Input_Populate as T_Input_Populate_alias_2 }
-export { T_Input_Populate as T_Input_Populate_alias_3 }
 
 declare type T_InsertManyOptions = InsertManyOptions;
 export { T_InsertManyOptions }
 export { T_InsertManyOptions as T_InsertManyOptions_alias_1 }
 export { T_InsertManyOptions as T_InsertManyOptions_alias_2 }
-export { T_InsertManyOptions as T_InsertManyOptions_alias_3 }
 
 declare type T_InsertManyResult<T> = InsertManyResult<T>;
 export { T_InsertManyResult }
 export { T_InsertManyResult as T_InsertManyResult_alias_1 }
 export { T_InsertManyResult as T_InsertManyResult_alias_2 }
-export { T_InsertManyResult as T_InsertManyResult_alias_3 }
 
 declare type T_InsertOneResult<T> = InsertOneResult<T>;
 export { T_InsertOneResult }
 export { T_InsertOneResult as T_InsertOneResult_alias_1 }
 export { T_InsertOneResult as T_InsertOneResult_alias_2 }
-export { T_InsertOneResult as T_InsertOneResult_alias_3 }
 
 declare type T_MongooseHookNextFunction = (error?: Error) => void;
 export { T_MongooseHookNextFunction }
 export { T_MongooseHookNextFunction as T_MongooseHookNextFunction_alias_1 }
 export { T_MongooseHookNextFunction as T_MongooseHookNextFunction_alias_2 }
-export { T_MongooseHookNextFunction as T_MongooseHookNextFunction_alias_3 }
 
 declare type T_MongooseMiddlewareMethod = string | RegExp;
 export { T_MongooseMiddlewareMethod }
 export { T_MongooseMiddlewareMethod as T_MongooseMiddlewareMethod_alias_1 }
 export { T_MongooseMiddlewareMethod as T_MongooseMiddlewareMethod_alias_2 }
-export { T_MongooseMiddlewareMethod as T_MongooseMiddlewareMethod_alias_3 }
 
 declare type T_MongooseMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
 export { T_MongooseMiddlewarePostFunction }
 export { T_MongooseMiddlewarePostFunction as T_MongooseMiddlewarePostFunction_alias_1 }
 export { T_MongooseMiddlewarePostFunction as T_MongooseMiddlewarePostFunction_alias_2 }
-export { T_MongooseMiddlewarePostFunction as T_MongooseMiddlewarePostFunction_alias_3 }
 
 declare type T_MongooseMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_PreSaveMiddlewareFunction<T>;
 export { T_MongooseMiddlewarePreFunction }
 export { T_MongooseMiddlewarePreFunction as T_MongooseMiddlewarePreFunction_alias_1 }
 export { T_MongooseMiddlewarePreFunction as T_MongooseMiddlewarePreFunction_alias_2 }
-export { T_MongooseMiddlewarePreFunction as T_MongooseMiddlewarePreFunction_alias_3 }
 
 declare type T_MongoosePlugin = (schema: Schema, options?: Record<string, unknown>) => void;
 export { T_MongoosePlugin }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_1 }
 export { T_MongoosePlugin as T_MongoosePlugin_alias_2 }
-export { T_MongoosePlugin as T_MongoosePlugin_alias_3 }
 
 declare type T_MongooseShema<T> = mongoose.Schema<T>;
 export { T_MongooseShema }
 export { T_MongooseShema as T_MongooseShema_alias_1 }
 export { T_MongooseShema as T_MongooseShema_alias_2 }
-export { T_MongooseShema as T_MongooseShema_alias_3 }
 
 declare type T_NextIntlMessageList = Record<string, AbstractIntlMessages>;
 export { T_NextIntlMessageList }
 export { T_NextIntlMessageList as T_NextIntlMessageList_alias_1 }
 export { T_NextIntlMessageList as T_NextIntlMessageList_alias_2 }
-export { T_NextIntlMessageList as T_NextIntlMessageList_alias_3 }
 
 declare type T_Object<T = unknown> = Record<string, T>;
 export { T_Object }
 export { T_Object as T_Object_alias_1 }
-export { T_Object as T_Object_alias_2 }
 
 declare type T_Object_2<T = unknown> = Record<string, T>;
 
@@ -3284,7 +3070,6 @@ declare type T_OptionalUnlessRequiredId<T> = OptionalUnlessRequiredId<T>;
 export { T_OptionalUnlessRequiredId }
 export { T_OptionalUnlessRequiredId as T_OptionalUnlessRequiredId_alias_1 }
 export { T_OptionalUnlessRequiredId as T_OptionalUnlessRequiredId_alias_2 }
-export { T_OptionalUnlessRequiredId as T_OptionalUnlessRequiredId_alias_3 }
 
 declare interface T_PackageJson {
     name?: string;
@@ -3296,13 +3081,11 @@ declare interface T_PackageJson {
 export { T_PackageJson }
 export { T_PackageJson as T_PackageJson_alias_1 }
 export { T_PackageJson as T_PackageJson_alias_2 }
-export { T_PackageJson as T_PackageJson_alias_3 }
 
 declare type T_PaginateOptions = PaginateOptions;
 export { T_PaginateOptions }
 export { T_PaginateOptions as T_PaginateOptions_alias_1 }
 export { T_PaginateOptions as T_PaginateOptions_alias_2 }
-export { T_PaginateOptions as T_PaginateOptions_alias_3 }
 
 declare interface T_PaginateOptionsWithPopulate extends T_PaginateOptions, Omit<T_PopulateOption, 'populate'> {
     populate?: T_Input_Populate;
@@ -3310,73 +3093,61 @@ declare interface T_PaginateOptionsWithPopulate extends T_PaginateOptions, Omit<
 export { T_PaginateOptionsWithPopulate }
 export { T_PaginateOptionsWithPopulate as T_PaginateOptionsWithPopulate_alias_1 }
 export { T_PaginateOptionsWithPopulate as T_PaginateOptionsWithPopulate_alias_2 }
-export { T_PaginateOptionsWithPopulate as T_PaginateOptionsWithPopulate_alias_3 }
 
 declare type T_PaginateResult<T> = PaginateResult<T>;
 export { T_PaginateResult }
 export { T_PaginateResult as T_PaginateResult_alias_1 }
 export { T_PaginateResult as T_PaginateResult_alias_2 }
-export { T_PaginateResult as T_PaginateResult_alias_3 }
 
 declare type T_PipelineStage = PipelineStage;
 export { T_PipelineStage }
 export { T_PipelineStage as T_PipelineStage_alias_1 }
 export { T_PipelineStage as T_PipelineStage_alias_2 }
-export { T_PipelineStage as T_PipelineStage_alias_3 }
 
 declare type T_PopulateOption = PopulateOption;
 export { T_PopulateOption }
 export { T_PopulateOption as T_PopulateOption_alias_1 }
 export { T_PopulateOption as T_PopulateOption_alias_2 }
-export { T_PopulateOption as T_PopulateOption_alias_3 }
 
 declare type T_PopulateOptions = PopulateOptions;
 export { T_PopulateOptions }
 export { T_PopulateOptions as T_PopulateOptions_alias_1 }
 export { T_PopulateOptions as T_PopulateOptions_alias_2 }
-export { T_PopulateOptions as T_PopulateOptions_alias_3 }
 
 declare type T_PostMiddlewareFunction<T> = PostMiddlewareFunction<T>;
 export { T_PostMiddlewareFunction }
 export { T_PostMiddlewareFunction as T_PostMiddlewareFunction_alias_1 }
 export { T_PostMiddlewareFunction as T_PostMiddlewareFunction_alias_2 }
-export { T_PostMiddlewareFunction as T_PostMiddlewareFunction_alias_3 }
 
 declare type T_PreMiddlewareFunction<T> = PreMiddlewareFunction<T>;
 export { T_PreMiddlewareFunction }
 export { T_PreMiddlewareFunction as T_PreMiddlewareFunction_alias_1 }
 export { T_PreMiddlewareFunction as T_PreMiddlewareFunction_alias_2 }
-export { T_PreMiddlewareFunction as T_PreMiddlewareFunction_alias_3 }
 
 declare type T_PreSaveMiddlewareFunction<T> = PreSaveMiddlewareFunction<T>;
 export { T_PreSaveMiddlewareFunction }
 export { T_PreSaveMiddlewareFunction as T_PreSaveMiddlewareFunction_alias_1 }
 export { T_PreSaveMiddlewareFunction as T_PreSaveMiddlewareFunction_alias_2 }
-export { T_PreSaveMiddlewareFunction as T_PreSaveMiddlewareFunction_alias_3 }
 
 declare type T_ProjectionType<T> = ProjectionType<T>;
 export { T_ProjectionType }
 export { T_ProjectionType as T_ProjectionType_alias_1 }
 export { T_ProjectionType as T_ProjectionType_alias_2 }
-export { T_ProjectionType as T_ProjectionType_alias_3 }
 
 declare type T_QueryOptions<T> = QueryOptions<T>;
 export { T_QueryOptions }
 export { T_QueryOptions as T_QueryOptions_alias_1 }
 export { T_QueryOptions as T_QueryOptions_alias_2 }
-export { T_QueryOptions as T_QueryOptions_alias_3 }
 
 declare type T_QueryWithHelpers<T> = QueryWithHelpers<T, T>;
 export { T_QueryWithHelpers }
 export { T_QueryWithHelpers as T_QueryWithHelpers_alias_1 }
 export { T_QueryWithHelpers as T_QueryWithHelpers_alias_2 }
-export { T_QueryWithHelpers as T_QueryWithHelpers_alias_3 }
 
 declare type T_SerializerKnownTypes = 'Date' | 'Map' | 'Set' | 'RegExp' | 'BigInt';
 export { T_SerializerKnownTypes }
 export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_1 }
 export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_2 }
-export { T_SerializerKnownTypes as T_SerializerKnownTypes_alias_3 }
 
 declare interface T_SerializerValueMap {
     Date: Date;
@@ -3388,7 +3159,6 @@ declare interface T_SerializerValueMap {
 export { T_SerializerValueMap }
 export { T_SerializerValueMap as T_SerializerValueMap_alias_1 }
 export { T_SerializerValueMap as T_SerializerValueMap_alias_2 }
-export { T_SerializerValueMap as T_SerializerValueMap_alias_3 }
 
 declare interface T_ThrowError {
     message?: string;
@@ -3401,93 +3171,77 @@ declare interface T_ThrowError {
 export { T_ThrowError }
 export { T_ThrowError as T_ThrowError_alias_1 }
 export { T_ThrowError as T_ThrowError_alias_2 }
-export { T_ThrowError as T_ThrowError_alias_3 }
 
 declare type T_UpdateQuery<T> = UpdateQuery<T>;
 export { T_UpdateQuery }
 export { T_UpdateQuery as T_UpdateQuery_alias_1 }
 export { T_UpdateQuery as T_UpdateQuery_alias_2 }
-export { T_UpdateQuery as T_UpdateQuery_alias_3 }
 
 declare type T_UpdateResult = UpdateResult;
 export { T_UpdateResult }
 export { T_UpdateResult as T_UpdateResult_alias_1 }
 export { T_UpdateResult as T_UpdateResult_alias_2 }
-export { T_UpdateResult as T_UpdateResult_alias_3 }
 
 declare type T_WithId<T> = WithId<T>;
 export { T_WithId }
 export { T_WithId as T_WithId_alias_1 }
 export { T_WithId as T_WithId_alias_2 }
-export { T_WithId as T_WithId_alias_3 }
 
 declare function throwError({ message, status, type, }: T_ThrowError): never;
 export { throwError }
 export { throwError as throwError_alias_1 }
 export { throwError as throwError_alias_2 }
-export { throwError as throwError_alias_3 }
 
 export { toast }
 export { toast as toast_alias_1 }
-export { toast as toast_alias_2 }
 
 export { Toaster }
 export { Toaster as Toaster_alias_1 }
-export { Toaster as Toaster_alias_2 }
 
 declare const TSC_CLI = "tsc";
 export { TSC_CLI }
 export { TSC_CLI as TSC_CLI_alias_1 }
 export { TSC_CLI as TSC_CLI_alias_2 }
-export { TSC_CLI as TSC_CLI_alias_3 }
 
 declare const TSC_PACKAGE_NAME = "typescript";
 export { TSC_PACKAGE_NAME }
 export { TSC_PACKAGE_NAME as TSC_PACKAGE_NAME_alias_1 }
 export { TSC_PACKAGE_NAME as TSC_PACKAGE_NAME_alias_2 }
-export { TSC_PACKAGE_NAME as TSC_PACKAGE_NAME_alias_3 }
 
 declare const TSCONFIG_JSON = "tsconfig.json";
 export { TSCONFIG_JSON }
 export { TSCONFIG_JSON as TSCONFIG_JSON_alias_1 }
 export { TSCONFIG_JSON as TSCONFIG_JSON_alias_2 }
-export { TSCONFIG_JSON as TSCONFIG_JSON_alias_3 }
 
 declare const TSX_CLI = "tsx";
 export { TSX_CLI }
 export { TSX_CLI as TSX_CLI_alias_1 }
 export { TSX_CLI as TSX_CLI_alias_2 }
-export { TSX_CLI as TSX_CLI_alias_3 }
 
 declare const unlinkSync: typeof fsExtra.unlinkSync;
 export { unlinkSync }
 export { unlinkSync as unlinkSync_alias_1 }
 export { unlinkSync as unlinkSync_alias_2 }
-export { unlinkSync as unlinkSync_alias_3 }
 
 declare function updatePackage(packageInfo: I_PackageInfo): Promise<void>;
 export { updatePackage }
 export { updatePackage as updatePackage_alias_1 }
 export { updatePackage as updatePackage_alias_2 }
-export { updatePackage as updatePackage_alias_3 }
 
 declare function useApolloError(): I_ApolloErrorContext_2;
 export { useApolloError }
 export { useApolloError as useApolloError_alias_1 }
 export { useApolloError as useApolloError_alias_2 }
-export { useApolloError as useApolloError_alias_3 }
 
 declare function useLoading(): I_LoadingContext_2;
 export { useLoading }
 export { useLoading as useLoading_alias_1 }
 export { useLoading as useLoading_alias_2 }
-export { useLoading as useLoading_alias_3 }
 
 declare function useNextIntl(): I_NextIntlContext;
 export { useNextIntl }
 export { useNextIntl as useNextIntl_alias_1 }
 export { useNextIntl as useNextIntl_alias_2 }
-export { useNextIntl as useNextIntl_alias_3 }
 
 declare function useStorage<T>(key: string, initialValue?: T, serializer?: I_Serializer_2<T>): {
     value: T | undefined;
@@ -3497,19 +3251,16 @@ declare function useStorage<T>(key: string, initialValue?: T, serializer?: I_Ser
 export { useStorage }
 export { useStorage as useStorage_alias_1 }
 export { useStorage as useStorage_alias_2 }
-export { useStorage as useStorage_alias_3 }
 
 declare const useTranslateI18next: typeof useTranslation;
 export { useTranslateI18next }
 export { useTranslateI18next as useTranslateI18next_alias_1 }
 export { useTranslateI18next as useTranslateI18next_alias_2 }
-export { useTranslateI18next as useTranslateI18next_alias_3 }
 
 declare const useTranslateNextIntl: typeof useTranslations;
 export { useTranslateNextIntl }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_1 }
 export { useTranslateNextIntl as useTranslateNextIntl_alias_2 }
-export { useTranslateNextIntl as useTranslateNextIntl_alias_3 }
 
 declare const validate: {
     /**
@@ -3541,31 +3292,26 @@ declare const validate: {
 export { validate }
 export { validate as validate_alias_1 }
 export { validate as validate_alias_2 }
-export { validate as validate_alias_3 }
 
 declare const VITEST_CLI = "vitest";
 export { VITEST_CLI }
 export { VITEST_CLI as VITEST_CLI_alias_1 }
 export { VITEST_CLI as VITEST_CLI_alias_2 }
-export { VITEST_CLI as VITEST_CLI_alias_3 }
 
 declare const VITEST_PACKAGE_NAME = "vitest";
 export { VITEST_PACKAGE_NAME }
 export { VITEST_PACKAGE_NAME as VITEST_PACKAGE_NAME_alias_1 }
 export { VITEST_PACKAGE_NAME as VITEST_PACKAGE_NAME_alias_2 }
-export { VITEST_PACKAGE_NAME as VITEST_PACKAGE_NAME_alias_3 }
 
 declare function vitestE2E(options: UserConfig): UserConfig;
 export { vitestE2E }
 export { vitestE2E as vitestE2E_alias_1 }
 export { vitestE2E as vitestE2E_alias_2 }
-export { vitestE2E as vitestE2E_alias_3 }
 
 declare function vitestUnit(options: UserConfig): UserConfig;
 export { vitestUnit }
 export { vitestUnit as vitestUnit_alias_1 }
 export { vitestUnit as vitestUnit_alias_2 }
-export { vitestUnit as vitestUnit_alias_3 }
 
 declare function withNextIntl<T extends I_Children_2>(Component: ComponentType<T>): {
     (props: T & {
@@ -3577,18 +3323,15 @@ declare function withNextIntl<T extends I_Children_2>(Component: ComponentType<T
 export { withNextIntl }
 export { withNextIntl as withNextIntl_alias_1 }
 export { withNextIntl as withNextIntl_alias_2 }
-export { withNextIntl as withNextIntl_alias_3 }
 
 declare const WORKING_DIRECTORY: string;
 export { WORKING_DIRECTORY }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_1 }
 export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_2 }
-export { WORKING_DIRECTORY as WORKING_DIRECTORY_alias_3 }
 
 declare function writeFileSync(file: fsExtra.PathOrFileDescriptor, data: string | NodeJS.ArrayBufferView, options?: fsExtra.WriteFileOptions): void;
 export { writeFileSync }
 export { writeFileSync as writeFileSync_alias_1 }
 export { writeFileSync as writeFileSync_alias_2 }
-export { writeFileSync as writeFileSync_alias_3 }
 
 export { }

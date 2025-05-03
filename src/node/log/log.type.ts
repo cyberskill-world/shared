@@ -1,4 +1,4 @@
-import type { I_Log } from '#react/log/index.js';
+import type { I_Log as I_LogCommon } from '#typescript/index.js';
 
 export enum E_IssueType {
     Error = 'error',
@@ -22,7 +22,7 @@ export interface T_ThrowError {
     type?: 'graphql' | 'rest';
 }
 
-export interface I_LogNode extends I_Log {
+export interface I_Log extends I_LogCommon {
     printBoxedLog: (
         title: string,
         issues: I_IssueEntry[],
@@ -30,7 +30,7 @@ export interface I_LogNode extends I_Log {
     ) => void;
 }
 
-export interface I_CatchErrorOptionsNode {
+export interface I_CatchErrorOptions {
     shouldLog?: boolean;
     returnValue?: unknown;
     callback?: (error: Error) => void;

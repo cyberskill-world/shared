@@ -1,1 +1,1 @@
-export { withNextIntl_alias_3 as withNextIntl } from '../../_tsup-dts-rollup.js';
+export { withNextIntl_alias_2 as withNextIntl } from '../../_tsup-dts-rollup.js';

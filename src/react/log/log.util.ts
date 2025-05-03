@@ -1,10 +1,10 @@
 import { consola } from 'consola/browser';
 
-import type { I_Return } from '#typescript/index.js';
+import type { I_Log, I_Return } from '#typescript/index.js';
 
-import { RESPONSE_STATUS } from '#constants/index.js';
+import { RESPONSE_STATUS } from '#constant/index.js';
 
-import type { I_CatchErrorOptions, I_Log } from './log.type.js';
+import type { I_CatchErrorOptions } from './log.type.js';
 
 export const log: I_Log = {
     silent: consola.silent,

@@ -1,8 +1,8 @@
 import nodePersist from 'node-persist';
 
-import { getEnv } from '#configs/env/index.js';
+import { getEnv } from '#config/env/index.js';
 
-import { catchErrorNode, logNode as log } from '../log/index.js';
+import { catchError, log } from '../log/index.js';
 
 const env = getEnv();
 
@@ -19,7 +19,7 @@ async function initNodePersist() {
     }
 }
 
-export const storageNode = {
+export const storage = {
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
             await initNodePersist();
@@ -28,7 +28,7 @@ export const storageNode = {
             return result ?? null;
         }
         catch (error) {
-            return catchErrorNode(error, { returnValue: null });
+            return catchError(error, { returnValue: null });
         }
     },
     async set<T = unknown>(key: string, value: T): Promise<void> {
@@ -37,7 +37,7 @@ export const storageNode = {
             await nodePersist.setItem(key, value);
         }
         catch (error) {
-            catchErrorNode(error);
+            catchError(error);
         }
     },
     async remove(key: string): Promise<void> {
@@ -46,7 +46,7 @@ export const storageNode = {
             await nodePersist.removeItem(key);
         }
         catch (error) {
-            catchErrorNode(error);
+            catchError(error);
         }
     },
     async keys(): Promise<string[]> {
@@ -62,7 +62,7 @@ export const storageNode = {
             return keys;
         }
         catch (error) {
-            return catchErrorNode(error, { returnValue: [] });
+            return catchError(error, { returnValue: [] });
         }
     },
     async getLogLink(key: string): Promise<string | null> {
@@ -72,7 +72,7 @@ export const storageNode = {
             return `${storagePath} (key: ${key})`;
         }
         catch (error) {
-            return catchErrorNode(error, { returnValue: null });
+            return catchError(error, { returnValue: null });
         }
     },
 

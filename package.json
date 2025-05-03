@@ -19,40 +19,40 @@
             "import": "./dist/index.js",
             "require": "./dist/index.cjs"
         },
-        "./configs": {
-            "types": "./dist/configs/index.d.ts",
-            "import": "./dist/configs/index.js",
-            "require": "./dist/configs/index.cjs"
+        "./config": {
+            "types": "./dist/config/index.d.ts",
+            "import": "./dist/config/index.js",
+            "require": "./dist/config/index.cjs"
         },
-        "./configs/commitlint": {
-            "types": "./dist/configs/commitlint/index.d.ts",
-            "import": "./dist/configs/commitlint/index.js",
-            "require": "./dist/configs/commitlint/index.cjs"
+        "./config/commitlint": {
+            "types": "./dist/config/commitlint/index.d.ts",
+            "import": "./dist/config/commitlint/index.js",
+            "require": "./dist/config/commitlint/index.cjs"
         },
-        "./configs/env": {
-            "types": "./dist/configs/env/index.d.ts",
-            "import": "./dist/configs/env/index.js",
-            "require": "./dist/configs/env/index.cjs"
+        "./config/env": {
+            "types": "./dist/config/env/index.d.ts",
+            "import": "./dist/config/env/index.js",
+            "require": "./dist/config/env/index.cjs"
         },
-        "./configs/eslint": {
-            "types": "./dist/configs/eslint/index.d.ts",
-            "import": "./dist/configs/eslint/index.js",
-            "require": "./dist/configs/eslint/index.cjs"
+        "./config/eslint": {
+            "types": "./dist/config/eslint/index.d.ts",
+            "import": "./dist/config/eslint/index.js",
+            "require": "./dist/config/eslint/index.cjs"
         },
-        "./configs/graphql-codegen": {
-            "types": "./dist/configs/graphql-codegen/index.d.ts",
-            "import": "./dist/configs/graphql-codegen/index.js",
-            "require": "./dist/configs/graphql-codegen/index.cjs"
+        "./config/graphql-codegen": {
+            "types": "./dist/config/graphql-codegen/index.d.ts",
+            "import": "./dist/config/graphql-codegen/index.js",
+            "require": "./dist/config/graphql-codegen/index.cjs"
         },
-        "./configs/lint-staged": {
-            "types": "./dist/configs/lint-staged/index.d.ts",
-            "import": "./dist/configs/lint-staged/index.js",
-            "require": "./dist/configs/lint-staged/index.cjs"
+        "./config/lint-staged": {
+            "types": "./dist/config/lint-staged/index.d.ts",
+            "import": "./dist/config/lint-staged/index.js",
+            "require": "./dist/config/lint-staged/index.cjs"
         },
-        "./constants": {
-            "types": "./dist/constants/index.d.ts",
-            "import": "./dist/constants/index.js",
-            "require": "./dist/constants/index.cjs"
+        "./constant": {
+            "types": "./dist/constant/index.d.ts",
+            "import": "./dist/constant/index.js",
+            "require": "./dist/constant/index.cjs"
         },
         "./node": {
             "types": "./dist/node/index.d.ts",
@@ -164,24 +164,43 @@
             "import": "./dist/react/vitest/index.js",
             "require": "./dist/react/vitest/index.cjs"
         },
-        "./styles/reset.css": {
-            "import": "./dist/styles/reset.css",
-            "require": "./dist/styles/reset.css"
+        "./style/reset.css": {
+            "import": "./dist/style/reset.css",
+            "require": "./dist/style/reset.css"
         },
         "./typescript": {
             "types": "./dist/typescript/index.d.ts",
             "import": "./dist/typescript/index.js",
             "require": "./dist/typescript/index.cjs"
         },
-        "./utils": {
-            "types": "./dist/utils/index.d.ts",
-            "import": "./dist/utils/index.js",
-            "require": "./dist/utils/index.cjs"
+        "./util": {
+            "types": "./dist/util/index.d.ts",
+            "import": "./dist/util/index.js",
+            "require": "./dist/util/index.cjs"
         }
     },
-    "main": "./dist/index.cjs",
-    "module": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "config": [
+                "dist/config/index.d.ts"
+            ],
+            "constant": [
+                "dist/constant/index.d.ts"
+            ],
+            "node": [
+                "dist/node/index.d.ts"
+            ],
+            "react": [
+                "dist/react/index.d.ts"
+            ],
+            "typescript": [
+                "dist/typescript/index.d.ts"
+            ],
+            "util": [
+                "dist/util/index.d.ts"
+            ]
+        }
+    },
     "bin": {
         "cyberskill": "dist/node/cli/index.js"
     },
@@ -271,7 +290,7 @@
         "vite": "6.3.4",
         "vitest": "3.1.2",
         "vitest-browser-react": "0.1.1",
-        "ws": "8.18.1",
+        "ws": "8.18.2",
         "yargs": "17.7.2"
     },
     "publishConfig": {

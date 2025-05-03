@@ -1,6 +1,6 @@
 import fsExtra from 'fs-extra';
 
-import { getEnv } from '#configs/env/index.js';
+import { getEnv } from '#config/env/index.js';
 
 import type { I_CommandContext } from '../command/index.js';
 import type { I_PackageInput, T_PackageJson } from '../package/index.js';
@@ -73,8 +73,8 @@ export const PATH = {
     PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
     NODE_MODULES: resolveWorkingPath(NODE_MODULES),
     MIGRATE_MONGO_CONFIG: resolveWorkingPath(MIGRATE_MONGO_CONFIG),
-    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/lint-staged/index.js`),
-    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/configs/commitlint/index.js`),
+    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/lint-staged/index.js`),
+    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/commitlint/index.js`),
     UNIT_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.js`),
     UNIT_TEST_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.setup.js`),
     E2E_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.e2e.js`),
