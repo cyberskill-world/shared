@@ -2396,7 +2396,10 @@ declare class MongooseController<T extends Partial<C_Document>> {
     deleteOne(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T>>;
     deleteMany(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T_DeleteResult>>;
     createShortId(id: string, length?: number): Promise<I_Return_2<string>>;
+    private generateSlugQuery;
+    private generateUniqueSlug;
     createSlug<R = string>(fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return_2<R>>;
+    checkSlug(slug: string, fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return_2<boolean>>;
     aggregate(pipeline: T_PipelineStage[]): Promise<I_Return_2<T[]>>;
 }
 export { MongooseController }
