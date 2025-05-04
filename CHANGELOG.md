@@ -1,3 +1,9 @@
+## [1.141.0](https://github.com/cyberskill-world/shared/compare/v1.140.0...v1.141.0) (2025-05-04)
+
+### ✨ Features
+
+* refactor slug methods ([54a38ed](https://github.com/cyberskill-world/shared/commit/54a38ed4f80edb15db42975b2b09cc9f217cae34))
+
 ## [1.140.0](https://github.com/cyberskill-world/shared/compare/v1.139.0...v1.140.0) (2025-05-04)
 
 ### ✨ Features
