@@ -232,3 +232,22 @@ export interface I_Input_DeleteMany<T> {
     filter: T_FilterQuery<T>;
     options?: I_DeleteOptionsExtended;
 }
+
+export interface I_InputSlug<T> {
+    field: string;
+    filter?: T_FilterQuery<T>;
+}
+
+export interface I_Input_CreateSlug<T> extends I_InputSlug<T> {
+    from: T;
+}
+
+export interface I_Input_CheckSlug<T> extends I_InputSlug<T> {
+    slug: string;
+    from: T;
+}
+
+export interface I_Input_GenerateSlug<T> extends I_InputSlug<T> {
+    slug: string;
+    isObject: boolean;
+}

@@ -14,7 +14,7 @@ import { isObject } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
@@ -626,62 +626,53 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
-    private generateSlugQuery(
-        slugToCheck: string,
-        fieldName: string,
-        isObjectValue: boolean,
-        filters?: T_FilterQuery<T>,
-    ) {
-        const baseFilter = { ...(filters ?? {}) };
+    generateSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>) {
+        const baseFilter = { ...(filter ?? {}) };
 
-        return isObjectValue
+        return isObject
             ? {
                     ...baseFilter,
                     $or: [
-                        { [`slug.${fieldName}`]: slugToCheck },
-                        { slugHistory: { $elemMatch: { [`slug.${fieldName}`]: slugToCheck } } },
+                        { [`slug.${field}`]: slug },
+                        { slugHistory: { $elemMatch: { [`slug.${field}`]: slug } } },
                     ],
                 }
             : {
                     ...baseFilter,
                     $or: [
-                        { slug: slugToCheck },
-                        { slugHistory: slugToCheck },
+                        { slug },
+                        { slugHistory: slug },
                     ],
                 };
     }
 
-    private async generateUniqueSlug(
-        value: string,
-        fieldName: string,
-        isObjectValue: boolean,
-        filters?: T_FilterQuery<T>,
-    ): Promise<string> {
-        const baseSlug = generateSlug(value);
+    async generateUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string> {
+        const baseSlug = generateSlug(slug);
         let uniqueSlug = baseSlug;
         let suffix = 1;
 
-        while (await this.model.exists(this.generateSlugQuery(uniqueSlug, fieldName, isObjectValue, filters))) {
+        while (await this.model.exists(this.generateSlugQuery({ slug: uniqueSlug, field, isObject, filter }))) {
             uniqueSlug = `${baseSlug}-${suffix++}`;
         }
 
         return uniqueSlug;
     }
 
-    async createSlug<R = string>(
-        fieldName: string,
-        fields: T,
-        filters?: T_FilterQuery<T>,
-    ): Promise<I_Return<R>> {
+    async createSlug<R = string>({ field, from, filter }: I_Input_CreateSlug<T>): Promise<I_Return<R>> {
         try {
-            const fieldValue = fields[fieldName as keyof T];
+            const fieldValue = from[field as keyof T];
             const isObjectValue = isObject(fieldValue);
 
             if (isObjectValue) {
                 const uniqueSlug = Object.fromEntries(
                     await Promise.all(
                         Object.entries(fieldValue).map(async ([key, value]) => {
-                            const uniqueSlugForKey = await this.generateUniqueSlug(value as string, key, true, filters);
+                            const uniqueSlugForKey = await this.generateUniqueSlug({
+                                slug: value as string,
+                                field: key,
+                                isObject: true,
+                                filter,
+                            });
                             return [key, uniqueSlugForKey];
                         }),
                     ),
@@ -690,7 +681,12 @@ export class MongooseController<T extends Partial<C_Document>> {
                 return { success: true, result: uniqueSlug as R };
             }
 
-            const uniqueSlug = await this.generateUniqueSlug(fieldValue as string, fieldName, false, filters);
+            const uniqueSlug = await this.generateUniqueSlug({
+                slug: fieldValue as string,
+                field,
+                isObject: false,
+                filter,
+            });
             return { success: true, result: uniqueSlug as R };
         }
         catch (error) {
@@ -698,20 +694,20 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
-    async checkSlug(
-        slug: string,
-        fieldName: string,
-        fields: T,
-        filters?: T_FilterQuery<T>,
-    ): Promise<I_Return<boolean>> {
+    async checkSlug({ slug, field, from, filter }: I_Input_CheckSlug<T>): Promise<I_Return<boolean>> {
         try {
-            const fieldValue = fields[fieldName as keyof T];
+            const fieldValue = from[field as keyof T];
             const isObjectValue = isObject(fieldValue);
 
             if (isObjectValue) {
                 for (const value of Object.values(fieldValue)) {
                     const nestedSlug = generateSlug(value as string);
-                    const exists = await this.model.exists(this.generateSlugQuery(nestedSlug, fieldName, true, filters));
+                    const exists = await this.model.exists(this.generateSlugQuery({
+                        slug: nestedSlug,
+                        field,
+                        isObject: true,
+                        filter,
+                    }));
 
                     if (exists) {
                         return { success: true, result: true };
@@ -721,7 +717,12 @@ export class MongooseController<T extends Partial<C_Document>> {
             }
 
             const baseSlug = generateSlug(slug);
-            const exists = await this.model.exists(this.generateSlugQuery(baseSlug, fieldName, false, filters));
+            const exists = await this.model.exists(this.generateSlugQuery({
+                slug: baseSlug,
+                field,
+                isObject: false,
+                filter,
+            }));
 
             return { success: true, result: exists !== null };
         }

@@ -54,6 +54,10 @@ export { I_Input_UpdateMany_alias_1 as I_Input_UpdateMany } from '../../_tsup-dt
 export { I_DeleteOptionsExtended_alias_1 as I_DeleteOptionsExtended } from '../../_tsup-dts-rollup.cjs';
 export { I_Input_DeleteOne_alias_1 as I_Input_DeleteOne } from '../../_tsup-dts-rollup.cjs';
 export { I_Input_DeleteMany_alias_1 as I_Input_DeleteMany } from '../../_tsup-dts-rollup.cjs';
+export { I_InputSlug_alias_1 as I_InputSlug } from '../../_tsup-dts-rollup.cjs';
+export { I_Input_CreateSlug_alias_1 as I_Input_CreateSlug } from '../../_tsup-dts-rollup.cjs';
+export { I_Input_CheckSlug_alias_1 as I_Input_CheckSlug } from '../../_tsup-dts-rollup.cjs';
+export { I_Input_GenerateSlug_alias_1 as I_Input_GenerateSlug } from '../../_tsup-dts-rollup.cjs';
 export { aggregatePaginate_alias_1 as aggregatePaginate } from '../../_tsup-dts-rollup.cjs';
 export { mongoosePaginate_alias_1 as mongoosePaginate } from '../../_tsup-dts-rollup.cjs';
 export { mongo_alias_1 as mongo } from '../../_tsup-dts-rollup.cjs';

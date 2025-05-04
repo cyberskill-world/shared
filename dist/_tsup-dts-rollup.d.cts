@@ -1861,6 +1861,14 @@ export { I_GraphqlWSOptions }
 export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_1 }
 export { I_GraphqlWSOptions as I_GraphqlWSOptions_alias_2 }
 
+declare interface I_Input_CheckSlug<T> extends I_InputSlug<T> {
+    slug: string;
+    from: T;
+}
+export { I_Input_CheckSlug }
+export { I_Input_CheckSlug as I_Input_CheckSlug_alias_1 }
+export { I_Input_CheckSlug as I_Input_CheckSlug_alias_2 }
+
 declare interface I_Input_CreateMany<T> {
     docs: T[];
 }
@@ -1874,6 +1882,13 @@ declare interface I_Input_CreateOne<T> {
 export { I_Input_CreateOne }
 export { I_Input_CreateOne as I_Input_CreateOne_alias_1 }
 export { I_Input_CreateOne as I_Input_CreateOne_alias_2 }
+
+declare interface I_Input_CreateSlug<T> extends I_InputSlug<T> {
+    from: T;
+}
+export { I_Input_CreateSlug }
+export { I_Input_CreateSlug as I_Input_CreateSlug_alias_1 }
+export { I_Input_CreateSlug as I_Input_CreateSlug_alias_2 }
 
 declare interface I_Input_DeleteMany<T> {
     filter: T_FilterQuery<T>;
@@ -1925,6 +1940,14 @@ export { I_Input_FindPagingAggregate }
 export { I_Input_FindPagingAggregate as I_Input_FindPagingAggregate_alias_1 }
 export { I_Input_FindPagingAggregate as I_Input_FindPagingAggregate_alias_2 }
 
+declare interface I_Input_GenerateSlug<T> extends I_InputSlug<T> {
+    slug: string;
+    isObject: boolean;
+}
+export { I_Input_GenerateSlug }
+export { I_Input_GenerateSlug as I_Input_GenerateSlug_alias_1 }
+export { I_Input_GenerateSlug as I_Input_GenerateSlug_alias_2 }
+
 declare interface I_Input_UpdateMany<T> extends T_PopulateOption {
     filter: T_FilterQuery<T>;
     update: T_UpdateQuery<T>;
@@ -1942,6 +1965,14 @@ declare interface I_Input_UpdateOne<T> extends T_PopulateOption {
 export { I_Input_UpdateOne }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_1 }
 export { I_Input_UpdateOne as I_Input_UpdateOne_alias_2 }
+
+declare interface I_InputSlug<T> {
+    field: string;
+    filter?: T_FilterQuery<T>;
+}
+export { I_InputSlug }
+export { I_InputSlug as I_InputSlug_alias_1 }
+export { I_InputSlug as I_InputSlug_alias_2 }
 
 declare interface I_IssueEntry {
     type: E_IssueType;
@@ -2396,10 +2427,165 @@ declare class MongooseController<T extends Partial<C_Document>> {
     deleteOne(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T>>;
     deleteMany(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T_DeleteResult>>;
     createShortId(id: string, length?: number): Promise<I_Return_2<string>>;
-    private generateSlugQuery;
-    private generateUniqueSlug;
-    createSlug<R = string>(fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return_2<R>>;
-    checkSlug(slug: string, fieldName: string, fields: T, filters?: T_FilterQuery<T>): Promise<I_Return_2<boolean>>;
+    generateSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): {
+        $or: ({
+            [x: string]: string;
+            slugHistory?: undefined;
+        } | {
+            slugHistory: {
+                $elemMatch: {
+                    [x: string]: string;
+                };
+            };
+        })[];
+        _id?: any;
+        $assertPopulated?: any;
+        $clearModifiedPaths?: any;
+        $clone?: any;
+        $createModifiedPathsSnapshot?: any;
+        $getAllSubdocs?: any;
+        $ignore?: any;
+        $isDefault?: any;
+        $isDeleted?: any;
+        $getPopulatedDocs?: any;
+        $inc?: any;
+        $isEmpty?: any;
+        $isValid?: any;
+        $locals?: any;
+        $markValid?: any;
+        $model?: any;
+        $op?: any;
+        $restoreModifiedPathsSnapshot?: any;
+        $session?: any;
+        $set?: any;
+        $where?: any;
+        baseModelName?: any;
+        collection?: any;
+        db?: any;
+        deleteOne?: any;
+        depopulate?: any;
+        directModifiedPaths?: any;
+        equals?: any;
+        errors?: any;
+        get?: any;
+        getChanges?: any;
+        id?: any;
+        increment?: any;
+        init?: any;
+        invalidate?: any;
+        isDirectModified?: any;
+        isDirectSelected?: any;
+        isInit?: any;
+        isModified?: any;
+        isNew?: any;
+        isSelected?: any;
+        markModified?: any;
+        model?: any;
+        modifiedPaths?: any;
+        overwrite?: any;
+        $parent?: any;
+        populate?: any;
+        populated?: any;
+        replaceOne?: any;
+        save?: any;
+        schema?: any;
+        set?: any;
+        toJSON?: any;
+        toObject?: any;
+        unmarkModified?: any;
+        updateOne?: any;
+        validate?: any;
+        validateSync?: any;
+        $and?: mongooseRaw.FilterQuery<T>[] | undefined;
+        $nor?: mongooseRaw.FilterQuery<T>[] | undefined;
+        $text?: {
+            $search: string;
+            $language?: string;
+            $caseSensitive?: boolean;
+            $diacriticSensitive?: boolean;
+        };
+        $comment?: string;
+        $expr?: Record<string, any>;
+    } | {
+        $or: ({
+            slug: string;
+            slugHistory?: undefined;
+        } | {
+            slugHistory: string;
+            slug?: undefined;
+        })[];
+        _id?: any;
+        $assertPopulated?: any;
+        $clearModifiedPaths?: any;
+        $clone?: any;
+        $createModifiedPathsSnapshot?: any;
+        $getAllSubdocs?: any;
+        $ignore?: any;
+        $isDefault?: any;
+        $isDeleted?: any;
+        $getPopulatedDocs?: any;
+        $inc?: any;
+        $isEmpty?: any;
+        $isValid?: any;
+        $locals?: any;
+        $markValid?: any;
+        $model?: any;
+        $op?: any;
+        $restoreModifiedPathsSnapshot?: any;
+        $session?: any;
+        $set?: any;
+        $where?: any;
+        baseModelName?: any;
+        collection?: any;
+        db?: any;
+        deleteOne?: any;
+        depopulate?: any;
+        directModifiedPaths?: any;
+        equals?: any;
+        errors?: any;
+        get?: any;
+        getChanges?: any;
+        id?: any;
+        increment?: any;
+        init?: any;
+        invalidate?: any;
+        isDirectModified?: any;
+        isDirectSelected?: any;
+        isInit?: any;
+        isModified?: any;
+        isNew?: any;
+        isSelected?: any;
+        markModified?: any;
+        model?: any;
+        modifiedPaths?: any;
+        overwrite?: any;
+        $parent?: any;
+        populate?: any;
+        populated?: any;
+        replaceOne?: any;
+        save?: any;
+        schema?: any;
+        set?: any;
+        toJSON?: any;
+        toObject?: any;
+        unmarkModified?: any;
+        updateOne?: any;
+        validate?: any;
+        validateSync?: any;
+        $and?: mongooseRaw.FilterQuery<T>[] | undefined;
+        $nor?: mongooseRaw.FilterQuery<T>[] | undefined;
+        $text?: {
+            $search: string;
+            $language?: string;
+            $caseSensitive?: boolean;
+            $diacriticSensitive?: boolean;
+        };
+        $comment?: string;
+        $expr?: Record<string, any>;
+    };
+    generateUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string>;
+    createSlug<R = string>({ field, from, filter }: I_Input_CreateSlug<T>): Promise<I_Return_2<R>>;
+    checkSlug({ slug, field, from, filter }: I_Input_CheckSlug<T>): Promise<I_Return_2<boolean>>;
     aggregate(pipeline: T_PipelineStage[]): Promise<I_Return_2<T[]>>;
 }
 export { MongooseController }
