@@ -2427,7 +2427,7 @@ declare class MongooseController<T extends Partial<C_Document>> {
     deleteOne(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T>>;
     deleteMany(filter?: T_FilterQuery<T>, options?: I_DeleteOptionsExtended): Promise<I_Return_2<T_DeleteResult>>;
     createShortId(id: string, length?: number): Promise<I_Return_2<string>>;
-    generateSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): {
+    createSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): {
         $or: ({
             [x: string]: string;
             slugHistory?: undefined;
@@ -2583,7 +2583,7 @@ declare class MongooseController<T extends Partial<C_Document>> {
         $comment?: string;
         $expr?: Record<string, any>;
     };
-    generateUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string>;
+    createUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string>;
     createSlug<R = string>({ field, from, filter }: I_Input_CreateSlug<T>): Promise<I_Return_2<R>>;
     checkSlug({ slug, field, from, filter }: I_Input_CheckSlug<T>): Promise<I_Return_2<boolean>>;
     aggregate(pipeline: T_PipelineStage[]): Promise<I_Return_2<T[]>>;

@@ -626,7 +626,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
-    generateSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>) {
+    createSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>) {
         const baseFilter = { ...(filter ?? {}) };
 
         return isObject
@@ -646,12 +646,12 @@ export class MongooseController<T extends Partial<C_Document>> {
                 };
     }
 
-    async generateUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string> {
+    async createUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string> {
         const baseSlug = generateSlug(slug);
         let uniqueSlug = baseSlug;
         let suffix = 1;
 
-        while (await this.model.exists(this.generateSlugQuery({ slug: uniqueSlug, field, isObject, filter }))) {
+        while (await this.model.exists(this.createSlugQuery({ slug: uniqueSlug, field, isObject, filter }))) {
             uniqueSlug = `${baseSlug}-${suffix++}`;
         }
 
@@ -667,7 +667,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 const uniqueSlug = Object.fromEntries(
                     await Promise.all(
                         Object.entries(fieldValue).map(async ([key, value]) => {
-                            const uniqueSlugForKey = await this.generateUniqueSlug({
+                            const uniqueSlugForKey = await this.createUniqueSlug({
                                 slug: value as string,
                                 field: key,
                                 isObject: true,
@@ -681,7 +681,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 return { success: true, result: uniqueSlug as R };
             }
 
-            const uniqueSlug = await this.generateUniqueSlug({
+            const uniqueSlug = await this.createUniqueSlug({
                 slug: fieldValue as string,
                 field,
                 isObject: false,
@@ -702,7 +702,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             if (isObjectValue) {
                 for (const value of Object.values(fieldValue)) {
                     const nestedSlug = generateSlug(value as string);
-                    const exists = await this.model.exists(this.generateSlugQuery({
+                    const exists = await this.model.exists(this.createSlugQuery({
                         slug: nestedSlug,
                         field,
                         isObject: true,
@@ -717,7 +717,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             }
 
             const baseSlug = generateSlug(slug);
-            const exists = await this.model.exists(this.generateSlugQuery({
+            const exists = await this.model.exists(this.createSlugQuery({
                 slug: baseSlug,
                 field,
                 isObject: false,
