@@ -1,3 +1,9 @@
+## [1.142.0](https://github.com/cyberskill-world/shared/compare/v1.141.0...v1.142.0) (2025-05-04)
+
+### ✨ Features
+
+* rename slug methods ([8b2c06b](https://github.com/cyberskill-world/shared/commit/8b2c06b42673bd91d5a793977f21afb7d25baa5d))
+
 ## [1.141.0](https://github.com/cyberskill-world/shared/compare/v1.140.0...v1.141.0) (2025-05-04)
 
 ### ✨ Features
