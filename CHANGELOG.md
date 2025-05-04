@@ -1,3 +1,9 @@
+## [1.140.0](https://github.com/cyberskill-world/shared/compare/v1.139.0...v1.140.0) (2025-05-04)
+
+### ✨ Features
+
+* expose generateSlugQuery and generateUniqueSlug ([f2a257a](https://github.com/cyberskill-world/shared/commit/f2a257a6e1eeac094788dd81c826d36b9eb2700f))
+
 ## [1.139.0](https://github.com/cyberskill-world/shared/compare/v1.138.0...v1.139.0) (2025-05-03)
 
 ### ✨ Features
