@@ -31,9 +31,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: semantic-release
-      - name: 🔁 Sync changes to develop
-        uses: cyberskill-world/.github/actions/merge-branch@main
-        with:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          FROM: main
-          TO: develop
+      # - name: 🔁 Sync changes to develop
+      #   uses: cyberskill-world/.github/actions/merge-branch@main
+      #   with:
+      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      #     FROM: main
+      #     TO: develop
