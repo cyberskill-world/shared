@@ -1,0 +1,1 @@
+var e=function(e){return e.DEPENDENCY="dependencies",e.DEV_DEPENDENCY="devDependencies",e.PEER_DEPENDENCY="peerDependencies",e.BUNDLE_DEPENDENCY="bundleDependencies",e.OPTIONAL_DEPENDENCY="optionalDependencies",e}({});export{e as E_PackageType};

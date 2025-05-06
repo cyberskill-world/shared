@@ -1,3 +1,17 @@
+## [1.143.0](https://github.com/cyberskill-world/shared/compare/v1.142.0...v1.143.0) (2025-05-06)
+
+### ✨ Features
+
+* use package name instead of timestamp for storage ([ce108bc](https://github.com/cyberskill-world/shared/commit/ce108bce157e7a997b8055cae770fad3804b2465))
+
+### 🐛 Fixes
+
+* build and release on main ([b72eb3f](https://github.com/cyberskill-world/shared/commit/b72eb3ffd7505d937d0b777cbf2ca71354c0ca15))
+
+### 🧹 Maintenance
+
+* Configure Renovate ([#1](https://github.com/cyberskill-world/shared/issues/1)) ([8ce3243](https://github.com/cyberskill-world/shared/commit/8ce324361d684ffa0c8262915bee75b1429477fc))
+
 ## [1.142.0](https://github.com/cyberskill-world/shared/compare/v1.141.0...v1.142.0) (2025-05-04)
 
 ### ✨ Features

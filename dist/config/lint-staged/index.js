@@ -1,0 +1,1 @@
+var a={"*":["eslint --fix"]};export{a as default};
