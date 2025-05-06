@@ -1,18 +1,19 @@
 name: 🚀 CI - Deploy
 on:
   workflow_run:
-    workflows: ["🧪 CI - Check"]
+    workflows: ["🔄 CI - Pre-deploy"]
     types:
       - completed
 jobs:
   deploy:
     if: >
-      github.event.workflow_run.head_branch == 'main' &&
       github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: release
       - name: 🔧 Setup Environment and Dependencies
         uses: cyberskill-world/.github/actions/env-deps@main
       - name: 🚧 Build project
@@ -30,14 +31,14 @@ jobs:
             @semantic-release/commit-analyzer@13.0.1 \
             @semantic-release/release-notes-generator@14.0.3 \
             conventional-changelog-conventionalcommits@latest
-      - name: 🔄 Merge main into release
-        uses: cyberskill-world/.github/actions/merge-branch@main
-        with:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          FROM: main
-          TO: release
       - name: 🚀 Deploy
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: semantic-release
+      - name: 🔄 Merge release into main
+        uses: cyberskill-world/.github/actions/merge-branch@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          FROM: release
+          TO: main
