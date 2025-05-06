@@ -1,7 +1,7 @@
 name: 🚀 CI - Deploy
 on:
   workflow_run:
-    workflows: ["🔄 CI - Pre-deploy"]
+    workflows: ["🔄 CI - Sync"]
     types:
       - completed
 jobs:
