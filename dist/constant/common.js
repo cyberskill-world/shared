@@ -1,1 +1,0 @@
-function e(e){"@swc/helpers - typeof";return e&&typeof Symbol!=="undefined"&&e.constructor===Symbol?"symbol":typeof e}var o=(typeof window==="undefined"?"undefined":e(window))<"u";export{o as IS_BROWSER};

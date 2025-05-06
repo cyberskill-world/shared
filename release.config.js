@@ -9,7 +9,7 @@ export default {
             '@semantic-release/npm',
             {
                 npmPublish: true,
-                pkgRoot: '.',
+                pkgRoot: './dist',
             },
         ],
         '@semantic-release/github',
@@ -19,7 +19,6 @@ export default {
                 assets: [
                     'package.json',
                     'CHANGELOG.md',
-                    'dist/**/*',
                 ],
                 message:
                     'chore(release): ${nextRelease.version} [🚀 CI - Deploy]\n\n${nextRelease.notes}',

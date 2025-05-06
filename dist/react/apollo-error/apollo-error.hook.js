@@ -1,1 +1,0 @@
-var r=Object.defineProperty;var o=function(o,e){return r(o,"name",{value:e,configurable:!0})};import{use as e}from"react";import{createContext as t}from"react";var a=t(void 0);function n(){var r=e(a);if(!r)throw new Error("useApolloError must be used within ApolloErrorProvider");return r}o(n,"useApolloError");export{n as useApolloError};

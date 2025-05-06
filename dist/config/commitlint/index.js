@@ -1,1 +1,0 @@
-var n={extends:["@commitlint/config-conventional"],ignores:[function(n){return n.includes("[\uD83D\uDE80 CI - Deploy]")}]};export{n as default};

@@ -20,7 +20,7 @@ jobs:
           pnpm build
       - name: 🔑 Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-      - name: 🔗 Install semantic-release globally with pnpm
+      - name: 🔗 Install semantic-release globally
         run: |
           pnpm install --global semantic-release@24.2.3 \
             @semantic-release/changelog@6.0.2 \
