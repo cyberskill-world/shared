@@ -1,19 +1,18 @@
-name: 🛠️ CI - Pre-deploy
+name: 🔄 CI - Sync
 on:
   workflow_run:
-    workflows: ["🧪 CI - Check"]
+    workflows: ["🚀 CI - Deploy"]
     types:
       - completed
 jobs:
-  deploy:
+  sync:
     if: >
-      github.event.workflow_run.head_branch == 'main' &&
       github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-      - name: 🔄 Merge main into release
+      - name: 🔄 Merge release into main
         uses: cyberskill-world/.github/actions/merge-branch@main
         with:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
