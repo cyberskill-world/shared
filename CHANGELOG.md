@@ -1,3 +1,10 @@
+## [1.144.0](https://github.com/cyberskill-world/shared/compare/v1.143.0...v1.144.0) (2025-05-06)
+
+### ✨ Features
+
+* exclude dist from commit but still publish ([232e121](https://github.com/cyberskill-world/shared/commit/232e1219dfed2adc1e770ae3ae411bbfe188ad9f))
+* exclude dist from commit but still publish ([a11e1c9](https://github.com/cyberskill-world/shared/commit/a11e1c9ccf7e1064d02de9481011805db1dc6ea6))
+
 ## [1.143.0](https://github.com/cyberskill-world/shared/compare/v1.142.0...v1.143.0) (2025-05-06)
 
 ### ✨ Features
