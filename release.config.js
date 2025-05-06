@@ -1,6 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 export default {
-    branches: ['main'],
+    branches: ['release'],
     plugins: [
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
