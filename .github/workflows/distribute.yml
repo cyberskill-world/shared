@@ -1,12 +1,12 @@
-name: 🌍 CI - Distribute
-on:
-  workflow_run:
-    workflows: ["🚀 CI - Deploy"]
-    types:
-      - completed
-jobs:
-  distribute:
-    if: >
-      github.event.workflow_run.conclusion == 'success'
-    uses: cyberskill-world/.github/.github/workflows/distribute.yml@main
-    secrets: inherit
+# name: 🌍 CI - Distribute
+# on:
+#   workflow_run:
+#     workflows: ["🚀 CI - Deploy"]
+#     types:
+#       - completed
+# jobs:
+#   distribute:
+#     if: >
+#       github.event.workflow_run.conclusion == 'success'
+#     uses: cyberskill-world/.github/.github/workflows/distribute.yml@main
+#     secrets: inherit

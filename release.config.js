@@ -22,6 +22,7 @@ export default {
                 ],
                 message:
                     'chore(release): ${nextRelease.version} [🚀 CI - Deploy]\n\n${nextRelease.notes}',
+                branch: 'release',
             },
         ],
     ],
