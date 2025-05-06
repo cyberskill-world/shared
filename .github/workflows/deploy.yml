@@ -17,6 +17,12 @@ jobs:
           ref: release
       - name: 🔧 Setup Environment and Dependencies
         uses: cyberskill-world/.github/actions/env-deps@main
+      - name: 🔄 Merge main into release
+        uses: cyberskill-world/.github/actions/merge-branch@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          FROM: main
+          TO: release
       - name: 🚧 Build project
         run: |
           pnpm build
