@@ -1,1 +1,0 @@
-var I=function(I){return I.CLI="CLI",I.STRING="STRING",I.FUNCTION="FUNCTION",I}({});export{I as E_CommandType};

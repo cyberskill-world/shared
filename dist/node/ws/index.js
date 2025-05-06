@@ -1,1 +1,0 @@
-var e=Object.defineProperty;var r=function(r,a){return e(r,"name",{value:a,configurable:!0})};import{useServer as a}from"graphql-ws/use/ws";import{WebSocketServer as t}from"ws";function n(e){return new t({server:e.server,path:e.path})}r(n,"createWSServer");function s(e){return a({schema:e.schema},e.server)}r(s,"initGraphQLWS");export{n as createWSServer,s as initGraphQLWS};

@@ -1,1 +1,0 @@
-import{createContext as t}from"react";var e=t(void 0);export{e as NextIntlContext};
