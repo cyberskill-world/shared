@@ -5,7 +5,7 @@ on:
       - main
   pull_request:
     branches:
-      - main
+      - '*'
 jobs:
   check:
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
