@@ -68,6 +68,10 @@ async function lintStaged() {
         return;
     }
 
+    if (packageData.result.isCurrentProject) {
+        await runCommand(`Building package: ${CYBERSKILL_PACKAGE_NAME}`, await command.build());
+    }
+
     await runCommand('Executing lint-staged', await command.lintStaged());
     showCheckResult();
 }

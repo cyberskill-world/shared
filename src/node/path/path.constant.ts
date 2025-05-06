@@ -196,10 +196,6 @@ export const command = {
         type: E_CommandType.STRING,
         command: `${GIT_CLI} config core.hooksPath ${PATH.GIT_HOOK}`,
     }),
-    stageBuildDirectory: buildCommand({
-        type: E_CommandType.STRING,
-        command: `${GIT_CLI} add ${BUILD_DIRECTORY}`,
-    }),
     build: buildCommand({
         type: E_CommandType.STRING,
         command: `${PNPM_CLI} run --if-present build`,
