@@ -1,8 +1,0 @@
-export { I_EslintError_alias_1 as I_EslintError } from '../../_tsup-dts-rollup.cjs';
-export { I_CommandContext_alias_1 as I_CommandContext } from '../../_tsup-dts-rollup.cjs';
-export { I_Command_alias_1 as I_Command } from '../../_tsup-dts-rollup.cjs';
-export { T_CommandFunction_alias_1 as T_CommandFunction } from '../../_tsup-dts-rollup.cjs';
-export { T_Command_alias_1 as T_Command } from '../../_tsup-dts-rollup.cjs';
-export { T_CommandMap_alias_1 as T_CommandMap } from '../../_tsup-dts-rollup.cjs';
-export { T_CommandMapInput_alias_1 as T_CommandMapInput } from '../../_tsup-dts-rollup.cjs';
-export { E_CommandType_alias_1 as E_CommandType } from '../../_tsup-dts-rollup.cjs';
