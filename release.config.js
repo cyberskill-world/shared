@@ -9,7 +9,7 @@ export default {
             '@semantic-release/npm',
             {
                 npmPublish: true,
-                pkgRoot: './dist',
+                pkgRoot: '.',
             },
         ],
         '@semantic-release/github',
