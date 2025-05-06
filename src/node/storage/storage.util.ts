@@ -10,11 +10,6 @@ async function initNodePersist() {
     if (!nodePersist.defaultInstance) {
         await nodePersist.init({
             dir: env.CYBERSKILL_STORAGE_DIRECTORY,
-            stringify: JSON.stringify,
-            parse: JSON.parse,
-            encoding: 'utf8',
-            logging: false,
-            forgiveParseErrors: true,
         });
     }
 }

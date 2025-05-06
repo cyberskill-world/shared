@@ -34,8 +34,46 @@ export async function getLatestPackageVersion(packageName: string): Promise<I_Re
     }
 }
 
-export async function getPackage(inputPackage: I_PackageInput): Promise<I_Return<I_PackageInfo>> {
+export async function getPackage(inputPackage?: I_PackageInput): Promise<I_Return<I_PackageInfo>> {
     try {
+        if (!inputPackage) {
+            if (pathExistsSync(PATH.PACKAGE_JSON)) {
+                const packageJson = readJsonSync(PATH.PACKAGE_JSON) as T_PackageJson;
+                const { name = '', version = '' } = packageJson;
+
+                return {
+                    success: true,
+                    result: {
+                        name,
+                        currentVersion: version,
+                        latestVersion: version,
+                        isCurrentProject: true,
+                        isInstalled: true,
+                        isUpToDate: true,
+                        isDependency: false,
+                        isDevDependency: false,
+                        installedPath: PATH.PACKAGE_JSON,
+                        file: packageJson,
+                    },
+                };
+            }
+            return {
+                success: true,
+                result: {
+                    name: '',
+                    currentVersion: '',
+                    latestVersion: '',
+                    isCurrentProject: false,
+                    isInstalled: false,
+                    isUpToDate: false,
+                    isDependency: false,
+                    isDevDependency: false,
+                    installedPath: '',
+                    file: {},
+                },
+            };
+        }
+
         // if package.json does not exist
         if (!pathExistsSync(PATH.PACKAGE_JSON)) {
             return {

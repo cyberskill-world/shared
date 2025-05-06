@@ -18,6 +18,3 @@ dist
 
 # Ignore simple-git-hooks config
 .simple-git-hooks.json
-
-# Ignore cyberskill storage
-.cyberskill-storage

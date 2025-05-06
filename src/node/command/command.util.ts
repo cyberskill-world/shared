@@ -15,8 +15,14 @@ import { storage } from '../storage/index.js';
 const env = getEnv();
 const execPromise = util.promisify(exec);
 
-function getErrorListKey(timestamp: number) {
-    return `error_list:${timestamp}`;
+async function getPackageName() {
+    const pkg = await getPackage();
+
+    if (!pkg.success) {
+        return Date.now().toString();
+    }
+
+    return pkg.result.name;
 }
 
 async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> {
@@ -24,22 +30,18 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
         return;
     }
 
-    const timestamp = Date.now();
-    const key = getErrorListKey(timestamp);
+    const packageName = await getPackageName();
 
     try {
-        await storage.set(key, {
-            errors: errorList,
-            timestamp,
-        });
+        await storage.set(packageName, errorList);
 
         setTimeout(async () => {
-            const logPath = await storage.getLogLink(key);
+            const logPath = await storage.getLogLink(packageName);
 
             if (logPath) {
                 log.info(`📂 Open the error list manually: ${logPath}`);
             }
-        }, 10);
+        }, 0);
     }
     catch (error) {
         catchError(error);
@@ -48,21 +50,10 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
 
 export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
     try {
-        const keys = await storage.keys();
+        const packageName = await getPackageName();
+        const allErrors = await storage.get<I_IssueEntry[]>(packageName);
 
-        const errorKeys = Array.isArray(keys)
-            ? keys.filter(key => key?.startsWith?.('error_list:'))
-            : [];
-
-        const allErrors = await Promise.all(
-            errorKeys.map(async (key) => {
-                const entry = await storage.get<{ errors: I_IssueEntry[]; timestamp: number }>(key);
-
-                return entry?.errors || [];
-            }),
-        );
-
-        return allErrors.flat();
+        return allErrors ?? [];
     }
     catch (error) {
         return catchError<I_IssueEntry[]>(error, {
@@ -73,13 +64,8 @@ export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
 
 export async function clearAllErrorLists(): Promise<void> {
     try {
-        const keys = await storage.keys();
-
-        const errorKeys = Array.isArray(keys)
-            ? keys.filter(key => key?.startsWith?.('error_list:'))
-            : [];
-
-        await Promise.all(errorKeys.map(key => storage.remove(key)));
+        const packageName = await getPackageName();
+        await storage.remove(packageName);
     }
     catch (error) {
         catchError(error);

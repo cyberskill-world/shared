@@ -40,21 +40,23 @@ function printIssues(type: 'Errors' | 'Warnings', list: I_IssueEntry[]) {
 }
 
 async function showCheckResult() {
-    const allResults = await getStoredErrorLists();
-    const errors = allResults.filter(e => e.type === E_IssueType.Error);
-    const warnings = allResults.filter(e => e.type === E_IssueType.Warning);
+    setTimeout(async () => {
+        const allResults = await getStoredErrorLists();
+        const errors = allResults.filter(e => e.type === E_IssueType.Error);
+        const warnings = allResults.filter(e => e.type === E_IssueType.Warning);
 
-    if (!errors.length && !warnings.length) {
-        log.printBoxedLog('✔ NO ISSUES FOUND', [], 'green');
-    }
-    else {
-        printIssues('Warnings', warnings);
-        printIssues('Errors', errors);
-
-        if (errors.length > 0 || warnings.length > 0) {
-            process.exit(1);
+        if (!errors.length && !warnings.length) {
+            log.printBoxedLog('✔ NO ISSUES FOUND', [], 'green');
         }
-    }
+        else {
+            printIssues('Warnings', warnings);
+            printIssues('Errors', errors);
+
+            if (errors.length > 0 || warnings.length > 0) {
+                process.exit(1);
+            }
+        }
+    }, 0);
 }
 
 async function lintStaged() {
@@ -64,11 +66,6 @@ async function lintStaged() {
     if (!packageData.success) {
         log.error('Failed to retrieve package information. Aborting lint-staged.');
         return;
-    }
-
-    if (packageData.result.isCurrentProject) {
-        await runCommand(`Building package: ${CYBERSKILL_PACKAGE_NAME}`, await command.build());
-        await runCommand('Staging build artifacts', await command.stageBuildDirectory());
     }
 
     await runCommand('Executing lint-staged', await command.lintStaged());
