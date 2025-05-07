@@ -2,8 +2,7 @@ name: 🚀 CI - Deploy
 on:
   push:
     branches:
-      - release
-  workflow_dispatch:
+      - main
 jobs:
   check:
     name: 🧪 Check
@@ -39,10 +38,3 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: semantic-release
-
-      - name: Create PR
-        uses: cyberskill-world/.github/actions/create-pr@main
-        with:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          FROM: release
-          TO: main
