@@ -2,7 +2,7 @@ name: 🚀 CI - Deploy
 on:
   push:
     branches:
-      - main
+      - release
 jobs:
   check:
     name: 🧪 Check
