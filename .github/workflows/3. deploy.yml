@@ -1,10 +1,13 @@
 name: 🚀 CI - Deploy
 on:
-  push:
-    branches:
-      - release
+  workflow_run:
+    workflows: ["🔄 CI - Rebase"]
+    types:
+      - completed
+  workflow_dispatch:
 jobs:
   check:
+    if: github.ref == 'refs/heads/release'
     name: 🧪 Check
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
     with:
