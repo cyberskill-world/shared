@@ -33,7 +33,7 @@ jobs:
 
       - name: Install semantic-release globally
         run: |
-          pnpm install --global --ignore-scripts --frozen-lockfile semantic-release@latest @semantic-release/git@latest
+          pnpm install --global semantic-release@latest @semantic-release/git@latest
 
       - name: Deploy
         env:
