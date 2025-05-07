@@ -1,11 +1,8 @@
-name: ⚙️ CI/CD
+name: 🚀 CI - Deploy
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - "*"
+      - release
 jobs:
   check:
     name: 🧪 Check
@@ -33,7 +30,7 @@ jobs:
 
       - name: Install semantic-release globally
         run: |
-          pnpm install --global semantic-release@latest @semantic-release/git@latest
+          pnpm install --global semantic-release@latest
 
       - name: Deploy
         env:

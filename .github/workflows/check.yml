@@ -1,0 +1,27 @@
+name: 🧪 CI - Check
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "*"
+jobs:
+  check:
+    name: 🧪 Check
+    uses: cyberskill-world/.github/.github/workflows/check.yml@main
+  merge:
+    name: 🔄 Merge
+    needs: check
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Merge main into release
+        uses: cyberskill-world/.github/actions/merge-branch@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          FROM: main
+          TO: release
