@@ -1,9 +1,8 @@
 name: 🚀 CI - Deploy
 on:
-  workflow_run:
-    workflows: ["🔄 CI - Sync"]
-    types:
-      - completed
+  push:
+    branches:
+      - release
 jobs:
   deploy:
     if: >
@@ -12,8 +11,6 @@ jobs:
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: release
       - name: 🔧 Setup Environment and Dependencies
         uses: cyberskill-world/.github/actions/env-deps@main
       - name: 🚧 Build project
