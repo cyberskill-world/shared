@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - release
+  workflow_dispatch:
 jobs:
   check:
     name: 🧪 Check
