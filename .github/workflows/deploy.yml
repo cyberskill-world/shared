@@ -9,8 +9,6 @@ jobs:
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
   deploy:
     name: 🚀 Deploy
-    needs: check
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

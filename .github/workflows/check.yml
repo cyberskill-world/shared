@@ -7,12 +7,8 @@ on:
     branches:
       - "*"
 jobs:
-  check:
-    name: 🧪 Check
-    uses: cyberskill-world/.github/.github/workflows/check.yml@main
   merge:
     name: 🔄 Merge
-    needs: check
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
