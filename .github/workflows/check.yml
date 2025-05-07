@@ -8,9 +8,8 @@ on:
       - "*"
 jobs:
   check:
-    runs-on: ubuntu-latest
+    uses: cyberskill-world/.github/.github/workflows/check.yml@main
     steps:
-      - uses: cyberskill-world/.github/.github/workflows/check.yml@main
       - name: 📤 Upload build or dist folder as artifact
         uses: actions/upload-artifact@v4
         with:
