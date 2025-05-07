@@ -29,7 +29,7 @@ jobs:
 
       - name: Install semantic-release globally
         run: |
-          pnpm install --global semantic-release@latest
+          pnpm install --global semantic-release@latest @semantic-release/git@latest
 
       - name: Deploy
         env:
