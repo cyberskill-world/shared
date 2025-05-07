@@ -38,8 +38,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: semantic-release
-  distribute:
-    name: 🌍 Distribute
-    needs: deploy
-    uses: cyberskill-world/.github/.github/workflows/distribute.yml@main
-    secrets: inherit
+
+      - name: Create PR
+        uses: cyberskill-world/.github/actions/create-pr@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          FROM: release
+          TO: main
