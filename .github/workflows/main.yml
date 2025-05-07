@@ -16,19 +16,26 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: 📦 Download artifact
+
+      - name: Setup Environment and Dependencies
+        uses: cyberskill-world/.github/actions/env-deps@main
+
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: BUILD_ARTIFACT
           github-token: ${{ secrets.GH_TOKEN }}
-      - name: 🔑 Configure npm authentication
+
+      - name: Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-      - name: 🔗 Install semantic-release globally
+
+      - name: Install semantic-release globally
         run: |
           pnpm install --global --ignore-scripts --no-frozen-lockfile semantic-release@latest @semantic-release/git@latest
-      - name: 🚀 Deploy
+
+      - name: Deploy
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
