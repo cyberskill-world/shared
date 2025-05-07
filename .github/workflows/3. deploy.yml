@@ -7,6 +7,8 @@ jobs:
   check:
     name: 🧪 Check
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
+    with:
+      BUILD_ARTIFACT_NAME: BUILD_ARTIFACT
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
