@@ -21,8 +21,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: release
+
+      - name: Checkout release branch
+        run: |
+          git fetch origin
+          git checkout release
+          git pull origin release
 
       - name: Setup Environment and Dependencies
         uses: cyberskill-world/.github/actions/env-deps@main
