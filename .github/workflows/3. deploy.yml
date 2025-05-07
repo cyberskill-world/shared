@@ -7,7 +7,6 @@ on:
   workflow_dispatch:
 jobs:
   check:
-    if: github.ref == 'refs/heads/release'
     name: 🧪 Check
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
     with:
@@ -19,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: release
 
       - name: Setup Environment and Dependencies
         uses: cyberskill-world/.github/actions/env-deps@main
