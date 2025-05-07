@@ -13,11 +13,11 @@ jobs:
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-      - name: 🔧 Setup Environment and Dependencies
-        uses: cyberskill-world/.github/actions/env-deps@main
-      - name: 🚧 Build project
-        run: |
-          pnpm build
+      - name: 📦 Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: BUILD_ARTIFACT
+          github-token: ${{ secrets.GH_TOKEN }}
       - name: 🔑 Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
       - name: 🔗 Install semantic-release globally
