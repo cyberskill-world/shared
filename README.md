@@ -2,7 +2,7 @@
   <img src="https://res.cloudinary.com/cyberskill/image/upload/v1742786793/cyberskill/favicon/favicon-96x96.png" width="96" height="96" alt="CyberSkill Logo">
 </p>
 
-<h1 align="center">🚀 CyberSkill Shared</h1>
+<h1 align="center">CyberSkill Shared</h1>
 
 <p align="center">
   <b>A shared utility library for consistent development across CyberSkill projects.</b>
@@ -76,7 +76,6 @@ pnpm install @cyberskill/shared
     ├── style/         → Global and component-specific style
     ├── typescript/     → TypeScript types and interfaces
     ├── util/          → Utility functions and helpers
-    └── index.ts        → Entry point for the app
 ```
 
 ---
