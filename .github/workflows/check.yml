@@ -9,6 +9,8 @@ on:
 jobs:
   check:
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
+  upload-artifact:
+    runs-on: ubuntu-latest
     steps:
       - name: 📤 Upload build or dist folder as artifact
         uses: actions/upload-artifact@v4
