@@ -6,10 +6,10 @@ on:
       - completed
 jobs:
   merge:
-    name: 🔄 Rebase
     if: >
       github.event.workflow_run.head_branch == 'main' &&
       github.event.workflow_run.conclusion == 'success'
+    name: 🔄 Rebase
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

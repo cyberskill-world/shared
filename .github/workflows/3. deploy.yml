@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
 jobs:
   check:
+    if: >
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.conclusion == 'success'
     name: 🧪 Check
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
     with:
