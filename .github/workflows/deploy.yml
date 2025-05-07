@@ -1,8 +1,5 @@
 name: 🚀 CI - Deploy
 on:
-  # push:
-  #   branches:
-  #     - release
   workflow_run:
     workflows: ["🧪 CI - Check"]
     types:
@@ -25,15 +22,9 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
       - name: 🔗 Install semantic-release globally
         run: |
-          pnpm install --global semantic-release@latest
+          pnpm install --global --ignore-scripts --no-frozen-lockfile semantic-release@latest @semantic-release/git@latest
       - name: 🚀 Deploy
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: semantic-release
-      # - name: 🔄 Merge release into main
-      #   uses: cyberskill-world/.github/actions/merge-branch@main
-      #   with:
-      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      #     FROM: release
-      #     TO: main
