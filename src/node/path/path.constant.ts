@@ -202,14 +202,14 @@ export const command = {
     }),
     pnpmInstallStandard: buildCommand({
         type: E_CommandType.STRING,
-        command: `${PNPM_CLI} install --ignore-scripts --no-frozen-lockfile`,
+        command: `${PNPM_CLI} install --ignore-scripts --frozen-lockfile`,
     }),
     pnpmInstallLegacy: buildCommand({
         type: E_CommandType.STRING,
-        command: `${PNPM_CLI} install --ignore-scripts --no-frozen-lockfile --legacy-peer-deps`,
+        command: `${PNPM_CLI} install --ignore-scripts --frozen-lockfile --legacy-peer-deps`,
     }),
     pnpmInstallForce: buildCommand({
         type: E_CommandType.STRING,
-        command: `${PNPM_CLI} install --ignore-scripts --no-frozen-lockfile --force`,
+        command: `${PNPM_CLI} install --ignore-scripts --frozen-lockfile --force`,
     }),
 };
