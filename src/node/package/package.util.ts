@@ -251,7 +251,7 @@ export async function updatePackage(packageInfo: I_PackageInfo): Promise<void> {
 
 export async function installDependencies(): Promise<void> {
     try {
-        //BUG infinity loop when install the version that not exist
+        // BUG infinity loop when install the version that not exist
         const strategies = [
             { command: () => command.pnpmInstallStandard(), message: 'Installing dependencies (standard)' },
             { command: () => command.pnpmInstallLegacy(), message: 'Retrying with legacy peer dependencies' },
