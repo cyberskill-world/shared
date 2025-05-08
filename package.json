@@ -260,7 +260,7 @@
         "globals": "16.1.0",
         "graphql": "16.11.0",
         "graphql-ws": "6.0.4",
-        "i18next": "25.1.1",
+        "i18next": "25.1.2",
         "jsdom": "26.1.0",
         "localforage": "1.10.0",
         "migrate-mongo": "12.1.3",
