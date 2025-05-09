@@ -29,7 +29,7 @@
 
 ## 🎯 **About**
 
-CyberSkill Shared is a modular utility library designed to:
+CyberSkill Shared is a modular utility library implemented by CyberSkill JSC to:
 
 - 📦 **Provide reusable utility functions** across multiple projects.
 - ⚙️ **Ensure consistent coding standards**.
