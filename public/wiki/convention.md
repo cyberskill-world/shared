@@ -110,6 +110,7 @@ pnpm run dev
 | **Interface** | `I_`    | `interface I_User` |
 | **Type**      | `T_`    | `type T_User`      |
 | **Enum**      | `E_`    | `enum E_User`      |
+| **Constant**  | `C_`    | `enum C_User`      |
 
 ### Quy Ước Đặt Tên Type Trong GraphQL
 
