@@ -298,7 +298,7 @@
         "registry": "https://registry.npmjs.org/"
     },
     "devDependencies": {
-        "@commitlint/cli": "19.8.0",
+        "@commitlint/cli": "19.8.1",
         "@commitlint/config-conventional": "19.8.1",
         "@eslint/config-inspector": "1.0.2",
         "@types/body-parser": "1.19.5",
