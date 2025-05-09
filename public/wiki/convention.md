@@ -178,16 +178,7 @@ git checkout -b feature/new-feature
 git commit -m "feat(module): mô tả ngắn gọn"
 ```
 
-3. **Rebase trước khi merge**:
-
-```bash
-git checkout develop
-git pull origin develop
-git checkout feature/new-feature
-git rebase develop
-```
-
-4. **Tạo Pull Request (PR)** và đợi review trước khi merge vào `develop`.
+3. **Tạo Pull Request (PR)** và đợi review trước khi merge vào `develop`.
 
 ---
 
