@@ -42,7 +42,7 @@ CyberSkill Shared is a modular utility library designed to:
 Install via **pnpm**:
 
 ```bash
-pnpm install @cyberskill/shared --ignore-scripts
+pnpm install @cyberskill/shared
 ```
 
 ---
