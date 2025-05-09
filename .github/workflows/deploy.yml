@@ -8,7 +8,8 @@ jobs:
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
-    if: "${{ github.event.pull_request.title != 'chore(CI): sync from release to main' }}"
+    if: |
+      ${{ github.event.pull_request.title != 'chore(CI): sync from release to main' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
