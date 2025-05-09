@@ -37,3 +37,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: semantic-release
+
+      - name: Merge
+        uses: cyberskill-world/.github/actions/merge@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          FROM: release
+          TO: main
