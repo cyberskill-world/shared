@@ -24,7 +24,7 @@ jobs:
 
       - name: Install semantic-release globally
         run: |
-          pnpm install --global semantic-release@latest @semantic-release/git@latest semantic-release-github-pullrequest@latest
+          pnpm install --global semantic-release@latest @semantic-release/git@latest
 
       - name: Lint & Build
         uses: cyberskill-world/.github/actions/lint-build@main
@@ -34,3 +34,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: semantic-release
+
+      - name: Create PR to main
+        uses: cyberskill-world/.github/actions/create-pr@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          FROM: release
+          TO: main
