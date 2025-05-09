@@ -16,21 +16,21 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
 
       - name: Rebase
-        uses: cyberskill-world/.github/actions/rebase.yml@main
+        uses: cyberskill-world/.github/actions/rebase@main
         with:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           FROM: main
           TO: release
 
       - name: Env & Deps
-        uses: cyberskill-world/.github/actions/env-deps.yml@main
+        uses: cyberskill-world/.github/actions/env-deps@main
 
       - name: Install semantic-release globally
         run: |
           pnpm install --global semantic-release@latest @semantic-release/git@latest
 
       - name: Lint & Build
-        uses: cyberskill-world/.github/actions/lint-build.yml@main
+        uses: cyberskill-world/.github/actions/lint-build@main
 
       - name: Deploy
         env:
