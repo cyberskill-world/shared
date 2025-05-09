@@ -4,19 +4,6 @@ on:
     branches:
       - release
 jobs:
-  rebase:
-    name: 🔄 Rebase
-    uses: cyberskill-world/.github/.github/workflows/rebase-branch.yml@main
-    with:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      FROM: main
-      TO: release
-  check:
-    name: 🧪 Check
-    needs: rebase
-    uses: cyberskill-world/.github/.github/workflows/check.yml@main
-    with:
-      BUILD_ARTIFACT_NAME: BUILD_ARTIFACT
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
@@ -25,21 +12,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Environment and Dependencies
-        uses: cyberskill-world/.github/actions/env-deps@main
-
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: BUILD_ARTIFACT
-          github-token: ${{ secrets.GH_TOKEN }}
-
       - name: Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
+      - name: Rebase
+        uses: cyberskill-world/.github/actions/rebase.yml@main
+        with:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          FROM: main
+          TO: release
+
+      - name: Env & Deps
+        uses: cyberskill-world/.github/actions/env-deps.yml@main
 
       - name: Install semantic-release globally
         run: |
           pnpm install --global semantic-release@latest @semantic-release/git@latest
+
+      - name: Lint & Build
+        uses: cyberskill-world/.github/actions/lint-build.yml@main
 
       - name: Deploy
         env:

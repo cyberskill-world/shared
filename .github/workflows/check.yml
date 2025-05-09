@@ -9,4 +9,13 @@ on:
 jobs:
   check:
     name: 🧪 Check
-    uses: cyberskill-world/.github/.github/workflows/check.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Env & Deps
+        uses: cyberskill-world/.github/actions/env-deps.yml@main
+
+      - name: Lint & Build
+        uses: cyberskill-world/.github/actions/lint-build.yml@main
