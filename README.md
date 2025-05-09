@@ -67,15 +67,15 @@ pnpm install @cyberskill/shared --ignore-scripts
 ## 📂 **Project Structure**
 
 ```plaintext
-├── public/         → Static assets (images, fonts, etc.)
+├── public/          → Static assets (images, fonts, etc.)
 ├──src/
-    ├── config/        → App configuration files
-    ├── constant/      → Static values used across the app
-    ├── node/           → NodeJS modules
-    ├── react/          → ReactJS modules
-    ├── style/         → Global and component-specific style
-    ├── typescript/     → TypeScript types and interfaces
-    ├── util/          → Utility functions and helpers
+    ├── config/      → App configuration files
+    ├── constant/    → Static values used across the app
+    ├── node/        → NodeJS modules
+    ├── react/       → ReactJS modules
+    ├── style/       → Global and component-specific style
+    ├── typescript/  → TypeScript types and interfaces
+    ├── util/        → Utility functions and helpers
 ```
 
 ---
