@@ -90,10 +90,10 @@ pnpm install @cyberskill/shared --ignore-scripts
 
 ## 📄 **License**
 
-**[MIT](./LICENSE)** License © [Stephen Cheng](https://github.com/zintaen)
+**[MIT](./LICENSE)** License © [CyberSkill JSC](https://github.com/cyberskill-world)
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/zintaen">@zintaen</a>
+  Made with ❤️ by <a href="https://github.com/cyberskill-world">@cyberskill-world</a>
 </p>
