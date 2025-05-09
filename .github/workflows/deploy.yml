@@ -4,6 +4,11 @@ on:
     branches:
       - release
   workflow_dispatch:
+    inputs:
+      VERSION:
+        description: 'Optional version to release'
+        required: false
+        default: ''
 jobs:
   deploy:
     name: 🚀 Deploy
@@ -36,4 +41,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: semantic-release
+        run: |
+          if [ -z "${{ github.event.inputs.VERSION }}" ]; then
+            echo "No VERSION input provided, running semantic-release normally"
+            semantic-release
+          else
+            echo "Using provided version: ${{ github.event.inputs.VERSION }}"
+            semantic-release --set-version ${{ github.event.inputs.VERSION }}
+          fi
