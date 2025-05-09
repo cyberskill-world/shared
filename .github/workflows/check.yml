@@ -4,8 +4,8 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - "*"
+    branches-ignore:
+      - "release"
 jobs:
   check:
     name: 🧪 Check

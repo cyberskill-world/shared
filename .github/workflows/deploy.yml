@@ -4,8 +4,16 @@ on:
     branches:
       - release
 jobs:
+  rebase:
+    name: 🔄 Rebase
+    uses: cyberskill-world/.github/.github/workflows/rebase-branch.yml@main
+    with:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      FROM: main
+      TO: release
   check:
     name: 🧪 Check
+    needs: rebase
     uses: cyberskill-world/.github/.github/workflows/check.yml@main
     with:
       BUILD_ARTIFACT_NAME: BUILD_ARTIFACT
