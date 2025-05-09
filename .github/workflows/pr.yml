@@ -1,0 +1,14 @@
+name: PR
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    name: PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create PR
+        run: |
+          gh pr create --base main --head release --title "Add feature X" --body "This PR adds feature X which includes..."
