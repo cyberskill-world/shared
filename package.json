@@ -320,7 +320,7 @@
         "@types/ws": "8.18.1",
         "@types/yargs": "17.0.33",
         "eslint": "9.26.0",
-        "lint-staged": "15.5.2",
+        "lint-staged": "16.0.0",
         "node-modules-inspector": "0.6.8",
         "simple-git-hooks": "2.13.0"
     }
