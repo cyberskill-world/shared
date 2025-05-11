@@ -1,3 +1,4 @@
 export default {
-    '*': ['eslint --fix'],
+    '*.ts': () => 'tsc --noEmit',
+    '*': ['eslint --fix --no-cache'],
 };
