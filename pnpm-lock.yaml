@@ -13,7 +13,7 @@ importers:
         version: 4.13.0(@eslint-react/eslint-plugin@1.49.0(eslint@9.26.0(jiti@2.4.2))(ts-api-utils@2.1.0(typescript@5.8.3))(typescript@5.8.3))(@typescript-eslint/utils@8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(@vue/compiler-sfc@3.5.13)(eslint-plugin-format@1.0.1(eslint@9.26.0(jiti@2.4.2)))(eslint-plugin-react-hooks@5.2.0(eslint@9.26.0(jiti@2.4.2)))(eslint-plugin-react-refresh@0.4.20(eslint@9.26.0(jiti@2.4.2)))(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)(vitest@3.1.3)
       '@apollo/client':
         specifier: 3.13.8
-        version: 3.13.8(@types/react@19.1.3)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.2))(graphql@16.11.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 3.13.8(@types/react@19.1.4)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.2))(graphql@16.11.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@apollo/server':
         specifier: 4.12.0
         version: 4.12.0(graphql@16.11.0)
@@ -49,7 +49,7 @@ importers:
         version: 6.6.3
       '@testing-library/react':
         specifier: 16.3.0
-        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react-dom@19.1.3(@types/react@19.1.3))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react-dom@19.1.5(@types/react@19.1.4))(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@vitejs/plugin-react-swc':
         specifier: 3.9.0
         version: 3.9.0(vite@6.3.5(@types/node@22.15.17)(jiti@2.4.2)(sass@1.88.0)(tsx@4.19.4)(yaml@2.7.1))
@@ -141,14 +141,14 @@ importers:
         specifier: 6.16.0
         version: 6.16.0
       mongoose:
-        specifier: 8.14.2
-        version: 8.14.2
+        specifier: 8.14.3
+        version: 8.14.3
       mongoose-aggregate-paginate-v2:
         specifier: 1.1.4
         version: 1.1.4
       mongoose-paginate-v2:
         specifier: 1.9.0
-        version: 1.9.0(mongoose@8.14.2)
+        version: 1.9.0(mongoose@8.14.3)
       next-intl:
         specifier: 4.1.0
         version: 4.1.0(next@15.3.2(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.88.0))(react@19.1.0)(typescript@5.8.3)
@@ -211,7 +211,7 @@ importers:
         version: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/browser@3.1.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.88.0)(tsx@4.19.4)(yaml@2.7.1)
       vitest-browser-react:
         specifier: 0.1.1
-        version: 0.1.1(@types/react-dom@19.1.3(@types/react@19.1.3))(@types/react@19.1.3)(@vitest/browser@3.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.1.3)
+        version: 0.1.1(@types/react-dom@19.1.5(@types/react@19.1.4))(@types/react@19.1.4)(@vitest/browser@3.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.1.3)
       ws:
         specifier: 8.18.2
         version: 8.18.2
@@ -265,11 +265,11 @@ importers:
         specifier: 3.1.8
         version: 3.1.8
       '@types/react':
-        specifier: 19.1.3
-        version: 19.1.3
+        specifier: 19.1.4
+        version: 19.1.4
       '@types/react-dom':
-        specifier: 19.1.3
-        version: 19.1.3(@types/react@19.1.3)
+        specifier: 19.1.5
+        version: 19.1.5(@types/react@19.1.4)
       '@types/unorm':
         specifier: 1.3.31
         version: 1.3.31
@@ -2040,13 +2040,13 @@ packages:
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
 
-  '@types/react-dom@19.1.3':
-    resolution: {integrity: sha512-rJXC08OG0h3W6wDMFxQrZF00Kq6qQvw0djHRdzl3U5DnIERz0MRce3WVc7IS6JYBwtaP/DwYtRRjVlvivNveKg==}
+  '@types/react-dom@19.1.5':
+    resolution: {integrity: sha512-CMCjrWucUBZvohgZxkjd6S9h0nZxXjzus6yDfUb+xLxYM7VvjKNH1tQrE9GWLql1XoOP4/Ds3bwFqShHUYraGg==}
     peerDependencies:
       '@types/react': ^19.0.0
 
-  '@types/react@19.1.3':
-    resolution: {integrity: sha512-dLWQ+Z0CkIvK1J8+wrDPwGxEYFA4RAyHoZPxHVGspYmFVnwGSNT24cGIhFJrtfRnWVuW8X7NO52gCXmhkVUWGQ==}
+  '@types/react@19.1.4':
+    resolution: {integrity: sha512-EB1yiiYdvySuIITtD5lhW4yPyJ31RkJkkDw794LaQYrxCSaQV/47y5o1FMC4zF9ZyjUjzJMZwbovEnT5yHTW6g==}
 
   '@types/send@0.17.4':
     resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
@@ -4852,8 +4852,8 @@ packages:
     resolution: {integrity: sha512-al4rsqadzg4TXcJVWI5WSaNUuSpzdtcPbabwXxbA7Euh6swuLkrrHrBmlGI6d3I4RMStdRAoD7k6wvB/x5zvaw==}
     engines: {node: '>=4.0.0'}
 
-  mongoose@8.14.2:
-    resolution: {integrity: sha512-LPLZiN6M8ap4GlXmaaG7yrHIkK45dSO3NZ0qgERJl2CfcL5eP7MA9umn4zGhKiWkMLbnHM4jhebIYbUhvuwWvQ==}
+  mongoose@8.14.3:
+    resolution: {integrity: sha512-BiIQK4mZiStUgnNep1YJMMYTiC4K893+Dj/Sr3lvxXutqy4+yZMVhlHq60xRH3r/l6eXkQXO3tXJnVOE5g592Q==}
     engines: {node: '>=16.20.1'}
 
   mpath@0.8.4:
@@ -6693,7 +6693,7 @@ snapshots:
     dependencies:
       graphql: 16.11.0
 
-  '@apollo/client@3.13.8(@types/react@19.1.3)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.2))(graphql@16.11.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@apollo/client@3.13.8(@types/react@19.1.4)(graphql-ws@6.0.4(graphql@16.11.0)(ws@8.18.2))(graphql@16.11.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.11.0)
       '@wry/caches': 1.0.1
@@ -6704,7 +6704,7 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       optimism: 0.18.1
       prop-types: 15.8.1
-      rehackt: 0.1.0(@types/react@19.1.3)(react@19.1.0)
+      rehackt: 0.1.0(@types/react@19.1.4)(react@19.1.0)
       symbol-observable: 4.0.0
       ts-invariant: 0.10.3
       tslib: 2.8.1
@@ -8522,15 +8522,15 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/react@16.3.0(@testing-library/dom@10.4.0)(@types/react-dom@19.1.3(@types/react@19.1.3))(@types/react@19.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@testing-library/react@16.3.0(@testing-library/dom@10.4.0)(@types/react-dom@19.1.5(@types/react@19.1.4))(@types/react@19.1.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@babel/runtime': 7.27.1
       '@testing-library/dom': 10.4.0
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
     optionalDependencies:
-      '@types/react': 19.1.3
-      '@types/react-dom': 19.1.3(@types/react@19.1.3)
+      '@types/react': 19.1.4
+      '@types/react-dom': 19.1.5(@types/react@19.1.4)
 
   '@testing-library/user-event@14.6.1(@testing-library/dom@10.4.0)':
     dependencies:
@@ -8679,11 +8679,11 @@ snapshots:
 
   '@types/range-parser@1.2.7': {}
 
-  '@types/react-dom@19.1.3(@types/react@19.1.3)':
+  '@types/react-dom@19.1.5(@types/react@19.1.4)':
     dependencies:
-      '@types/react': 19.1.3
+      '@types/react': 19.1.4
 
-  '@types/react@19.1.3':
+  '@types/react@19.1.4':
     dependencies:
       csstype: 3.1.3
 
@@ -12045,18 +12045,18 @@ snapshots:
 
   mongoose-aggregate-paginate-v2@1.1.4: {}
 
-  mongoose-lean-virtuals@1.1.0(mongoose@8.14.2):
+  mongoose-lean-virtuals@1.1.0(mongoose@8.14.3):
     dependencies:
-      mongoose: 8.14.2
+      mongoose: 8.14.3
       mpath: 0.8.4
 
-  mongoose-paginate-v2@1.9.0(mongoose@8.14.2):
+  mongoose-paginate-v2@1.9.0(mongoose@8.14.3):
     dependencies:
-      mongoose-lean-virtuals: 1.1.0(mongoose@8.14.2)
+      mongoose-lean-virtuals: 1.1.0(mongoose@8.14.3)
     transitivePeerDependencies:
       - mongoose
 
-  mongoose@8.14.2:
+  mongoose@8.14.3:
     dependencies:
       bson: 6.10.3
       kareem: 2.6.3
@@ -12740,9 +12740,9 @@ snapshots:
     dependencies:
       jsesc: 3.0.2
 
-  rehackt@0.1.0(@types/react@19.1.3)(react@19.1.0):
+  rehackt@0.1.0(@types/react@19.1.4)(react@19.1.0):
     optionalDependencies:
-      '@types/react': 19.1.3
+      '@types/react': 19.1.4
       react: 19.1.0
 
   relay-runtime@12.0.0:
@@ -13693,15 +13693,15 @@ snapshots:
       tsx: 4.19.4
       yaml: 2.7.1
 
-  vitest-browser-react@0.1.1(@types/react-dom@19.1.3(@types/react@19.1.3))(@types/react@19.1.3)(@vitest/browser@3.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.1.3):
+  vitest-browser-react@0.1.1(@types/react-dom@19.1.5(@types/react@19.1.4))(@types/react@19.1.4)(@vitest/browser@3.1.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.1.3):
     dependencies:
       '@vitest/browser': 3.1.3(playwright@1.52.0)(vite@6.3.5(@types/node@22.15.17)(jiti@2.4.2)(sass@1.88.0)(tsx@4.19.4)(yaml@2.7.1))(vitest@3.1.3)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       vitest: 3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/browser@3.1.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.88.0)(tsx@4.19.4)(yaml@2.7.1)
     optionalDependencies:
-      '@types/react': 19.1.3
-      '@types/react-dom': 19.1.3(@types/react@19.1.3)
+      '@types/react': 19.1.4
+      '@types/react-dom': 19.1.5(@types/react@19.1.4)
 
   vitest@3.1.3(@types/debug@4.1.12)(@types/node@22.15.17)(@vitest/browser@3.1.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.88.0)(tsx@4.19.4)(yaml@2.7.1):
     dependencies:
