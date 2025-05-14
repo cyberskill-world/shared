@@ -7,11 +7,12 @@ import process from 'node:process';
 import type { I_Environment } from './env.type.js';
 
 import { CYBERSKILL_STORAGE_DIRECTORY } from './env.constant.js';
+import { E_Environment } from './env.type.js';
 
 let isEnvFileLoaded = false;
 
 export function loadEnvFile() {
-    if (!isEnvFileLoaded) {
+    if (process.env.NODE_ENV !== E_Environment.PRODUCTION && !isEnvFileLoaded) {
         dotenvx.config();
         isEnvFileLoaded = true;
     }
