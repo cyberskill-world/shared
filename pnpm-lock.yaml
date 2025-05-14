@@ -18,8 +18,8 @@ importers:
         specifier: 4.12.0
         version: 4.12.0(graphql@16.11.0)
       '@dotenvx/dotenvx':
-        specifier: 1.43.0
-        version: 1.43.0
+        specifier: 1.44.0
+        version: 1.44.0
       '@eddeee888/gcg-typescript-resolver-files':
         specifier: 0.12.0
         version: 0.12.0(graphql@16.11.0)
@@ -33,8 +33,8 @@ importers:
         specifier: 4.8.1
         version: 4.8.1(graphql@16.11.0)
       '@microsoft/api-extractor':
-        specifier: 7.52.7
-        version: 7.52.7(@types/node@22.15.17)
+        specifier: 7.52.8
+        version: 7.52.8(@types/node@22.15.17)
       '@nestjs/common':
         specifier: 11.1.0
         version: 11.1.0(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -190,7 +190,7 @@ importers:
         version: 1.6.6
       tsup:
         specifier: 8.4.0
-        version: 8.4.0(@microsoft/api-extractor@7.52.7(@types/node@22.15.17))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.7.1)
+        version: 8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.17))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.7.1)
       tsx:
         specifier: 4.19.4
         version: 4.19.4
@@ -650,8 +650,8 @@ packages:
     resolution: {integrity: sha512-UJnjoFsmxfKUdNYdWgOB0mWUypuLvAfQPH1+pyvRJs6euowbFkFC6P13w1l8mJyi3vxYMxc9kld5jZEGRQs6bw==}
     engines: {node: '>=18'}
 
-  '@dotenvx/dotenvx@1.43.0':
-    resolution: {integrity: sha512-Z8XjM75aWZ/ekUzBjlr/OqQsLWtJY4nVtruxopAt+FlYHfY0/gKl85nD16aEqbTkU53kJcm5psID0L2/sQMmuw==}
+  '@dotenvx/dotenvx@1.44.0':
+    resolution: {integrity: sha512-18Aa+7KP/L2Kj9lxmT4EJZnsCq/xGIHgzU26rdzsKMhjpeT3YY+qin/dNAnIaVHPZnee7kXpZL55M9htd30r7Q==}
     hasBin: true
 
   '@dprint/formatter@0.3.0':
@@ -1397,8 +1397,8 @@ packages:
   '@microsoft/api-extractor-model@7.30.6':
     resolution: {integrity: sha512-znmFn69wf/AIrwHya3fxX6uB5etSIn6vg4Q4RB/tb5VDDs1rqREc+AvMC/p19MUN13CZ7+V/8pkYPTj7q8tftg==}
 
-  '@microsoft/api-extractor@7.52.7':
-    resolution: {integrity: sha512-YLdPS644MfbLJt4hArP1WcldcaEUBh9wnFjcLEcQnVG0AMznbLh2sdE0F5Wr+w6+Lyp5/XUPvRAg3sYGSP3GCw==}
+  '@microsoft/api-extractor@7.52.8':
+    resolution: {integrity: sha512-cszYIcjiNscDoMB1CIKZ3My61+JOhpERGlGr54i6bocvGLrcL/wo9o+RNXMBrb7XgLtKaizZWUpqRduQuHQLdg==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.17.1':
@@ -7101,7 +7101,7 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.3': {}
 
-  '@dotenvx/dotenvx@1.43.0':
+  '@dotenvx/dotenvx@1.44.0':
     dependencies:
       commander: 11.1.0
       dotenv: 16.5.0
@@ -8094,7 +8094,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.52.7(@types/node@22.15.17)':
+  '@microsoft/api-extractor@7.52.8(@types/node@22.15.17)':
     dependencies:
       '@microsoft/api-extractor-model': 7.30.6(@types/node@22.15.17)
       '@microsoft/tsdoc': 0.15.1
@@ -13438,7 +13438,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsup@8.4.0(@microsoft/api-extractor@7.52.7(@types/node@22.15.17))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.7.1):
+  tsup@8.4.0(@microsoft/api-extractor@7.52.8(@types/node@22.15.17))(@swc/core@1.11.24)(jiti@2.4.2)(postcss@8.5.3)(tsx@4.19.4)(typescript@5.8.3)(yaml@2.7.1):
     dependencies:
       bundle-require: 5.1.0(esbuild@0.25.4)
       cac: 6.7.14
@@ -13457,7 +13457,7 @@ snapshots:
       tinyglobby: 0.2.13
       tree-kill: 1.2.2
     optionalDependencies:
-      '@microsoft/api-extractor': 7.52.7(@types/node@22.15.17)
+      '@microsoft/api-extractor': 7.52.8(@types/node@22.15.17)
       '@swc/core': 1.11.24
       postcss: 8.5.3
       typescript: 5.8.3
