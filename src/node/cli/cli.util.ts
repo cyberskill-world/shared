@@ -124,6 +124,7 @@ async function setupGitHook() {
 }
 
 async function prepare() {
+    await installDependencies();
     await setupGitHook();
 }
 
