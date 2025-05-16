@@ -9,7 +9,7 @@ import pkg from '../../../package.json' with { type: 'json' };
 import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
 import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync } from '../fs/index.js';
 import { catchError, E_IssueType, log } from '../log/index.js';
-import { E_PackageType, getPackage, installDependencies, setupPackages } from '../package/index.js';
+import { getPackage, installDependencies } from '../package/index.js';
 import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
 async function checkTypescript() {
@@ -124,10 +124,8 @@ async function setupGitHook() {
 }
 
 async function prepare() {
-    await setupPackages([{ name: CYBERSKILL_PACKAGE_NAME, type: E_PackageType.DEPENDENCY }], {
-        update: true,
-        postInstallActions: [setupGitHook],
-    });
+    await installDependencies();
+    await setupGitHook();
 }
 
 async function reset() {

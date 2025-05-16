@@ -5,6 +5,10 @@
         "docker:pinDigests",
         "helpers:pinGitHubActionDigests",
         ":configMigration",
-        ":pinDevDependencies"
+        ":pinDevDependencies",
+        "group:allNonMajor"
+    ],
+    "ignoreDeps": [
+        "node"
     ]
 }
