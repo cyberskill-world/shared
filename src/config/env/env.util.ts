@@ -4,10 +4,11 @@ import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 
+import { E_Environment } from '#typescript/index.js';
+
 import type { I_Environment } from './env.type.js';
 
 import { CYBERSKILL_STORAGE_DIRECTORY } from './env.constant.js';
-import { E_Environment } from './env.type.js';
 
 let isEnvFileLoaded = false;
 

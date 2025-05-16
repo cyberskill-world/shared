@@ -33,3 +33,9 @@ export interface I_ReturnFailure {
 }
 
 export type I_Return<T = void, E = unknown> = I_ReturnSuccess<T, E> | I_ReturnFailure;
+
+export enum E_Environment {
+    PRODUCTION = 'production',
+    STAGING = 'staging',
+    DEVELOPMENT = 'development',
+}
