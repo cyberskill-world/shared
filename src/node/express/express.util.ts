@@ -16,7 +16,7 @@ import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from 
 export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>) {
     return {
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-            if (isDev || whiteList?.includes(origin ?? '')) {
+            if (isDev || !origin || whiteList?.includes(origin ?? '')) {
                 callback(null, true);
             }
             else {
