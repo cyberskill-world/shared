@@ -251,7 +251,6 @@ export async function updatePackage(packageInfo: I_PackageInfo): Promise<void> {
 
 export async function installDependencies(): Promise<void> {
     try {
-        // BUG infinity loop when install the version that not exist
         const strategies = [
             { command: () => command.pnpmInstallStandard(), message: 'Installing dependencies (standard)' },
             { command: () => command.pnpmInstallLegacy(), message: 'Retrying with legacy peer dependencies' },
@@ -274,40 +273,47 @@ export async function installDependencies(): Promise<void> {
     }
 }
 
-export async function setupPackages(packages: I_PackageInput[], options?: {
-    update?: boolean;
-    postInstallActions?: (() => Promise<void>)[];
-}): Promise<void> {
-    if (!pathExistsSync(PATH.PACKAGE_JSON)) {
-        log.error('package.json not found. Aborting setup.');
-        return;
-    }
-
+export async function setupPackages(
+    packages: I_PackageInput[],
+    options?: {
+        install?: boolean;
+        update?: boolean;
+        callbacks?: (() => Promise<void>)[];
+    },
+): Promise<void> {
     try {
+        if (!pathExistsSync(PATH.PACKAGE_JSON)) {
+            log.error('package.json not found. Aborting setup.');
+            return;
+        }
+
         const packagesData = await Promise.all(packages.map(getPackage));
 
-        const outDatedPackages = packagesData.filter((packageData) => {
-            if (!packageData.success) {
-                return false;
-            }
+        const validPackages = packagesData
+            .filter((pkg): pkg is { success: true; result: I_PackageInfo } => pkg.success && !!pkg.result && !pkg.result.isCurrentProject)
+            .map(pkg => pkg.result);
 
-            return !packageData.result.isCurrentProject && (!packageData.result.isInstalled || !packageData.result.isUpToDate);
-        });
+        const packagesToInstall = validPackages.filter(pkg => !pkg.isInstalled);
+        const packagesToUpdate = validPackages.filter(pkg => !pkg.isUpToDate);
 
-        if (outDatedPackages.length > 0) {
-            await Promise.all(outDatedPackages.map((packageInfo) => {
-                if (!packageInfo.success) {
-                    return Promise.resolve();
-                }
+        const tasks: Promise<void>[] = [];
 
-                return updatePackage(packageInfo.result);
-            }));
+        if (options?.install && packagesToInstall.length > 0) {
+            tasks.push(...packagesToInstall.map(updatePackage));
+        }
+
+        if (options?.update && packagesToUpdate.length > 0) {
+            tasks.push(...packagesToUpdate.map(updatePackage));
+        }
+
+        if (tasks.length > 0) {
+            await Promise.all(tasks);
             await installDependencies();
             await runCommand('Running ESLint with auto-fix', await command.eslintFix());
         }
 
-        for (const action of options?.postInstallActions ?? []) {
-            await action();
+        for (const callback of options?.callbacks ?? []) {
+            await callback();
         }
     }
     catch (error) {
