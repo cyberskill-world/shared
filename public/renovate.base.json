@@ -8,6 +8,9 @@
         ":pinDevDependencies",
         "group:allNonMajor"
     ],
+    "dockerfile": {
+        "enabled": false
+    },
     "nvm": {
         "enabled": false
     }
