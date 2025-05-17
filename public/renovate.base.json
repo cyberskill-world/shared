@@ -8,7 +8,8 @@
         ":pinDevDependencies",
         "group:allNonMajor"
     ],
-    "ignoreDeps": [
-        "node"
-    ]
+    "packageRules": [{
+        "packageNames": ["node"],
+        "enabled": false
+    }]
 }
