@@ -1,23 +1,18 @@
-## ✅ Bước 1: Cài đặt homebrew (nếu chưa cài)
+## ✅ Bước 1: Cài đặt nginx
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+sudo apt update
+sudo apt install nginx
 ```
 
-## ✅ Bước 2: Cài đặt nginx
+## ✅ Bước 2: Cấu hình nginx
 
 ```
-brew install nginx
-```
-
-## ✅ Bước 3: Cấu hình nginx
-
-```
-cd $HOMEBREW_PREFIX/etc/nginx
+cd /etc/nginx/sites-enabled
 ```
 
 ```
-nano nginx.conf
+sudo nano default
 ```
 
 Thiết lập cấu hình
@@ -38,18 +33,18 @@ Thiết lập cấu hình
     }
 ```
 
-## ✅ Bước 4: Kiểm tra cấu hình
+## ✅ Bước 3: Kiểm tra cấu hình
 
 ```
-nginx -t
+sudo nginx -t
 ```
 
 Nếu hiện như sau là cấu hình ok
-`nginx: the configuration file /home/linuxbrew/.linuxbrew/etc/nginx/nginx.conf syntax is ok`
-`nginx: configuration file /home/linuxbrew/.linuxbrew/etc/nginx/nginx.conf test is successful`
+`nginx: the configuration file /etc/nginx/nginx.conf syntax is ok`
+`nginx: configuration file /etc/nginx/nginx.conf test is successful`
 
 ## ✅ Bước 4: Khởi động lại nginx với cấu hình mới
 
 ```
-nginx -s reload
+sudo nginx -s reload
 ```
