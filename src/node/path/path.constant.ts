@@ -101,7 +101,7 @@ function buildCommand({ type, packages, command }: { type: E_CommandType; packag
             case E_CommandType.CLI: {
                 if (uniquePackages?.length) {
                     await setupPackages(uniquePackages, {
-                        update: true,
+                        install: true,
                     });
                 }
 
@@ -211,5 +211,13 @@ export const command = {
     pnpmInstallForce: buildCommand({
         type: E_CommandType.STRING,
         command: `${PNPM_CLI} install --ignore-scripts --force`,
+    }),
+    pnpmPruneStore: buildCommand({
+        type: E_CommandType.STRING,
+        command: `${PNPM_CLI} store prune`,
+    }),
+    pnpmCleanCache: buildCommand({
+        type: E_CommandType.STRING,
+        command: `${PNPM_CLI} cache delete`,
     }),
 };

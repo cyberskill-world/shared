@@ -130,6 +130,8 @@ async function prepare() {
 
 async function reset() {
     removeSync(PATH.NODE_MODULES, PATH.PNPM_LOCK_YAML);
+    await runCommand('Pruning pnpm store', await command.pnpmPruneStore());
+    await runCommand('Clearing pnpm cache', await command.pnpmCleanCache());
     await installDependencies();
     await setupGitHook();
 }

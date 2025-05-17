@@ -8,8 +8,7 @@
         ":pinDevDependencies",
         "group:allNonMajor"
     ],
-    "packageRules": [{
-        "packageNames": ["node"],
+    "nvm": {
         "enabled": false
-    }]
+    }
 }
