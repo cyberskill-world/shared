@@ -83,20 +83,14 @@ export function uniqueArray<T>(
  * @returns  An object containing flags for the environment.
  */
 export function mapEnvironment(env: I_NodeEnvInput): I_EnvFlags {
-    const { NODE_ENV, NODE_ENV_MODE } = env;
+    const { NODE_ENV = E_Environment.DEVELOPMENT, NODE_ENV_MODE = E_Environment.DEVELOPMENT } = env;
 
-    const IS_DEV = NODE_ENV === E_Environment.DEVELOPMENT;
-    const IS_STAG
-        = NODE_ENV === E_Environment.PRODUCTION
-            && NODE_ENV_MODE === E_Environment.STAGING;
-    const IS_PROD
-        = NODE_ENV === E_Environment.PRODUCTION
-            && NODE_ENV_MODE === E_Environment.PRODUCTION;
+    const IS_DEV = NODE_ENV === E_Environment.DEVELOPMENT && NODE_ENV_MODE === E_Environment.DEVELOPMENT;
+    const IS_STAG = NODE_ENV === E_Environment.PRODUCTION && NODE_ENV_MODE === E_Environment.STAGING;
+    const IS_PROD = NODE_ENV === E_Environment.PRODUCTION && NODE_ENV_MODE === E_Environment.PRODUCTION;
 
-    if (!IS_DEV && NODE_ENV_MODE === E_Environment.DEVELOPMENT) {
-        throw new Error(
-            'NODE_ENV_MODE cannot be DEVELOPMENT in non-development environment',
-        );
+    if (NODE_ENV === E_Environment.PRODUCTION && NODE_ENV_MODE === E_Environment.DEVELOPMENT) {
+        throw new Error('NODE_ENV_MODE must be set to staging or production in production environment');
     }
 
     return { IS_DEV, IS_STAG, IS_PROD };

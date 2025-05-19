@@ -1,6 +1,6 @@
 export interface I_NodeEnvInput {
-    NODE_ENV: string;
-    NODE_ENV_MODE: string;
+    NODE_ENV?: string;
+    NODE_ENV_MODE?: string;
 }
 
 export interface I_EnvFlags {
