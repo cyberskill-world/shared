@@ -1,5 +1,9 @@
 import unorm from 'unorm';
 
+import { E_Environment } from '#typescript/index.js';
+
+import type { I_EnvFlags, I_NodeEnvInput } from './common.type.js';
+
 const charMap: Record<string, string[]> = {
     a: ['à', 'á', 'ạ', 'ả', 'ã', 'â', 'ầ', 'ấ', 'ậ', 'ẩ', 'ẫ', 'ă', 'ằ', 'ắ', 'ặ', 'ẳ', 'ẵ'],
     e: ['è', 'é', 'ẹ', 'ẻ', 'ẽ', 'ê', 'ề', 'ế', 'ệ', 'ể', 'ễ'],
@@ -71,4 +75,29 @@ export function uniqueArray<T>(
     }
 
     return result;
+}
+
+/**
+ *
+ * @param env - The environment variables to map.
+ * @returns  An object containing flags for the environment.
+ */
+export function mapEnvironment(env: I_NodeEnvInput): I_EnvFlags {
+    const { NODE_ENV, NODE_ENV_MODE } = env;
+
+    const IS_DEV = NODE_ENV === E_Environment.DEVELOPMENT;
+    const IS_STAG
+        = NODE_ENV === E_Environment.PRODUCTION
+            && NODE_ENV_MODE === E_Environment.STAGING;
+    const IS_PROD
+        = NODE_ENV === E_Environment.PRODUCTION
+            && NODE_ENV_MODE === E_Environment.PRODUCTION;
+
+    if (!IS_DEV && NODE_ENV_MODE === E_Environment.DEVELOPMENT) {
+        throw new Error(
+            'NODE_ENV_MODE cannot be DEVELOPMENT in non-development environment',
+        );
+    }
+
+    return { IS_DEV, IS_STAG, IS_PROD };
 }
