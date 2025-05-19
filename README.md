@@ -67,7 +67,7 @@ pnpm install @cyberskill/shared
 
 ## 📂 **Project Structure**
 
-```plaintext
+```text
 ├── public/          → Static assets (images, fonts, etc.)
 ├──src/
     ├── config/      → App configuration files
