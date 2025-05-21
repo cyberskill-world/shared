@@ -222,7 +222,7 @@
         "commitlint": "tsx src/node/cli/index.ts commitlint"
     },
     "dependencies": {
-        "@antfu/eslint-config": "4.13.1",
+        "@antfu/eslint-config": "4.13.2",
         "@apollo/client": "3.13.8",
         "@apollo/server": "4.12.1",
         "@dotenvx/dotenvx": "1.44.1",
