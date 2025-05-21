@@ -1,4 +1,4 @@
-import cn from 'classnames';
+import clsx from 'clsx';
 import React from 'react';
 
 import type { I_LoadingProps } from './loading.type.js';
@@ -20,14 +20,14 @@ export function Loading({ full = false, block = false, className = '', message =
 
     if (full) {
         return (
-            <div className={cn(style['fullscreen'], className)}>
+            <div className={clsx(style['fullscreen'], className)}>
                 {_renderLoading()}
             </div>
         );
     }
     else if (block) {
         return (
-            <div className={cn(style['block'], className)}>
+            <div className={clsx(style['block'], className)}>
                 {_renderLoading()}
             </div>
         );
