@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/response-status.js';
-import { isObject } from '#util/index.js';
+import { deepClone, getNestedValue, isObject, regexSearchMapper, setNestedValue } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
@@ -162,6 +162,33 @@ export const mongo = {
                 writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
             }
         },
+    },
+    regexify<T>(filter?: T_FilterQuery<T>, fields?: (keyof T | string)[]): T_FilterQuery<T> {
+        if (!filter) {
+            return {} as T_FilterQuery<T>;
+        }
+
+        let newFilter = deepClone(filter);
+
+        if (!fields || fields.length === 0) {
+            return newFilter;
+        }
+
+        for (const field of fields) {
+            const path = field.toString().split('.');
+            const value = getNestedValue(newFilter, path);
+
+            if (typeof value === 'string' && value.length > 0) {
+                const regexValue = {
+                    $regex: `.*${regexSearchMapper(value)}.*`,
+                    $options: 'i',
+                };
+
+                newFilter = setNestedValue(newFilter, path, regexValue);
+            }
+        }
+
+        return newFilter;
     },
 };
 
