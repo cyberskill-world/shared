@@ -49,6 +49,11 @@
             "import": "./dist/config/lint-staged/index.js",
             "require": "./dist/config/lint-staged/index.cjs"
         },
+        "./config/vitest": {
+            "types": "./dist/config/vitest/index.d.ts",
+            "import": "./dist/config/vitest/index.js",
+            "require": "./dist/config/vitest/index.cjs"
+        },
         "./constant": {
             "types": "./dist/constant/index.d.ts",
             "import": "./dist/constant/index.js",
@@ -158,11 +163,6 @@
             "types": "./dist/react/toast/index.d.ts",
             "import": "./dist/react/toast/index.js",
             "require": "./dist/react/toast/index.cjs"
-        },
-        "./react/vitest": {
-            "types": "./dist/react/vitest/index.d.ts",
-            "import": "./dist/react/vitest/index.js",
-            "require": "./dist/react/vitest/index.cjs"
         },
         "./style/reset.css": {
             "import": "./dist/style/reset.css",

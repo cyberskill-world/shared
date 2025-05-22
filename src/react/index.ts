@@ -6,4 +6,3 @@ export * from './log/index.js';
 export * from './next-intl/index.js';
 export * from './storage/index.js';
 export * from './toast/index.js';
-export * from './vitest/index.js';

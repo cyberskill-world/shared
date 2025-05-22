@@ -75,9 +75,9 @@ export const PATH = {
     MIGRATE_MONGO_CONFIG: resolveWorkingPath(MIGRATE_MONGO_CONFIG),
     LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/lint-staged/index.js`),
     COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/commitlint/index.js`),
-    UNIT_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.js`),
-    UNIT_TEST_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.unit.setup.js`),
-    E2E_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/react/vitest/vitest.e2e.js`),
+    UNIT_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
+    UNIT_TEST_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.setup.js`),
+    E2E_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
 };
 
 export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>) {

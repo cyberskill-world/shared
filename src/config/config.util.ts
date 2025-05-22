@@ -2,7 +2,7 @@ import antfu from '@antfu/eslint-config';
 
 import type { T_Object } from '#typescript/common.js';
 
-import { vitestE2E, vitestUnit } from '#react/vitest/index.js';
+import { vitestE2E, vitestUnit } from '#config/vitest/index.js';
 import { deepMerge } from '#util/object/index.js';
 
 import type { T_ConfigHandler, T_ConfigType } from './config.type.js';
