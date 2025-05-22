@@ -1,6 +1,7 @@
 {
     "$schema": "./public/renovate.base.json",
     "ignoreDeps": [
+        "node",
         "express",
         "@types/express"
     ]

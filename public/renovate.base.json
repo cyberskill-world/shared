@@ -7,6 +7,5 @@
         ":configMigration",
         ":pinDevDependencies",
         "group:allNonMajor"
-    ],
-    "ignoreDeps": ["node"]
+    ]
 }
