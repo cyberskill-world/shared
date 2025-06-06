@@ -141,14 +141,14 @@ importers:
         specifier: 6.16.0
         version: 6.16.0
       mongoose:
-        specifier: 8.15.0
-        version: 8.15.0
+        specifier: 8.15.1
+        version: 8.15.1
       mongoose-aggregate-paginate-v2:
         specifier: 1.1.4
         version: 1.1.4
       mongoose-paginate-v2:
         specifier: 1.9.0
-        version: 1.9.0(mongoose@8.15.0)
+        version: 1.9.0(mongoose@8.15.1)
       next-intl:
         specifier: 4.1.0
         version: 4.1.0(next@15.3.2(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.0))(react@19.1.0)(typescript@5.8.3)
@@ -4840,8 +4840,8 @@ packages:
     resolution: {integrity: sha512-al4rsqadzg4TXcJVWI5WSaNUuSpzdtcPbabwXxbA7Euh6swuLkrrHrBmlGI6d3I4RMStdRAoD7k6wvB/x5zvaw==}
     engines: {node: '>=4.0.0'}
 
-  mongoose@8.15.0:
-    resolution: {integrity: sha512-WFKsY1q12ScGabnZWUB9c/QzZmz/ESorrV27OembB7Gz6rrh9m3GA4Srsv1uvW1s9AHO5DeZ6DdUTyF9zyNERQ==}
+  mongoose@8.15.1:
+    resolution: {integrity: sha512-RhQ4DzmBi5BNGcS0w4u1vdMRIKcteXTCNzDt1j7XRcdWYBz1MjMjulBhPaeC5jBCHOD1yinuOFTTSOWLLGexWw==}
     engines: {node: '>=16.20.1'}
 
   mpath@0.8.4:
@@ -11958,18 +11958,18 @@ snapshots:
 
   mongoose-aggregate-paginate-v2@1.1.4: {}
 
-  mongoose-lean-virtuals@1.1.1(mongoose@8.15.0):
+  mongoose-lean-virtuals@1.1.1(mongoose@8.15.1):
     dependencies:
-      mongoose: 8.15.0
+      mongoose: 8.15.1
       mpath: 0.8.4
 
-  mongoose-paginate-v2@1.9.0(mongoose@8.15.0):
+  mongoose-paginate-v2@1.9.0(mongoose@8.15.1):
     dependencies:
-      mongoose-lean-virtuals: 1.1.1(mongoose@8.15.0)
+      mongoose-lean-virtuals: 1.1.1(mongoose@8.15.1)
     transitivePeerDependencies:
       - mongoose
 
-  mongoose@8.15.0:
+  mongoose@8.15.1:
     dependencies:
       bson: 6.10.3
       kareem: 2.6.3
