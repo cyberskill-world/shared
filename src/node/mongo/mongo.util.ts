@@ -115,7 +115,7 @@ export const mongo = {
         return currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
     },
     validator: {
-        isEmpty<T>(): (this: T, value: unknown) => Promise<boolean> {
+        isRequired<T>(): (this: T, value: unknown) => Promise<boolean> {
             return async function (this: T, value: unknown): Promise<boolean> {
                 return !validate.isEmpty(value);
             };
