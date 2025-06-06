@@ -268,7 +268,7 @@
         "mongodb": "6.16.0",
         "mongoose": "8.15.1",
         "mongoose-aggregate-paginate-v2": "1.1.4",
-        "mongoose-paginate-v2": "1.9.0",
+        "mongoose-paginate-v2": "1.9.1",
         "next-intl": "4.1.0",
         "node-fetch": "3.3.2",
         "node-persist": "4.0.4",
