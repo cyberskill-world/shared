@@ -284,7 +284,7 @@
         "mongoose-paginate-v2": "1.9.1",
         "next-intl": "4.1.0",
         "node-fetch": "3.3.2",
-        "node-modules-inspector": "0.6.8",
+        "node-modules-inspector": "0.6.9",
         "node-persist": "4.0.4",
         "playwright": "1.52.0",
         "postcss-modules": "6.0.1",
