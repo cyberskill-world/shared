@@ -15,6 +15,7 @@ export const WORKING_DIRECTORY = env.CWD;
 export const CYBERSKILL_PACKAGE_NAME = '@cyberskill/shared';
 export const NODE_MODULES = 'node_modules';
 export const BUILD_DIRECTORY = 'dist';
+export const PUBLIC_DIRECTORY = 'public';
 export const PACKAGE_JSON = 'package.json';
 export const PACKAGE_LOCK_JSON = 'package-lock.json';
 export const TSCONFIG_JSON = 'tsconfig.json';
@@ -63,6 +64,7 @@ export const MIGRATE_MONGO_CLI = './node_modules/migrate-mongo/bin/migrate-mongo
 export const PATH = {
     CYBERSKILL_DIRECTORY,
     WORKING_DIRECTORY,
+    PUBLIC_DIRECTORY: resolveWorkingPath(PUBLIC_DIRECTORY),
     TS_CONFIG: resolveWorkingPath(TSCONFIG_JSON),
     GIT_IGNORE: resolveWorkingPath(GIT_IGNORE),
     GIT_HOOK: resolveWorkingPath(GIT_HOOK),
@@ -75,9 +77,11 @@ export const PATH = {
     MIGRATE_MONGO_CONFIG: resolveWorkingPath(MIGRATE_MONGO_CONFIG),
     LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/lint-staged/index.js`),
     COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/commitlint/index.js`),
-    UNIT_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
-    UNIT_TEST_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.setup.js`),
-    E2E_TEST_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
+    VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
+    VITEST_UNIT_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.setup.ts`),
+    VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
+    VITEST_STORYBOOK_NEXTJS: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/storybook/nextjs`),
+    VITEST_STORYBOOK_NEXTJS_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/storybook/nextjs/index.js`),
 };
 
 export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>) {
@@ -151,12 +155,12 @@ export const command = {
     testUnit: buildCommand({
         type: E_CommandType.CLI,
         packages: [{ name: VITEST_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
-        command: `${VITEST_CLI} --config ${PATH.UNIT_TEST_CONFIG}`,
+        command: `${VITEST_CLI} --config ${PATH.VITEST_UNIT_CONFIG}`,
     }),
     testE2e: buildCommand({
         type: E_CommandType.CLI,
         packages: [{ name: VITEST_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
-        command: `${VITEST_CLI} --config ${PATH.E2E_TEST_CONFIG}`,
+        command: `${VITEST_CLI} --config ${PATH.VITEST_E2E_CONFIG}`,
     }),
     mongoMigrateCreate: (migrateName: string) => buildCommand({
         type: E_CommandType.CLI,
