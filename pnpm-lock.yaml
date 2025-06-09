@@ -71,6 +71,12 @@ importers:
       '@storybook/nextjs-vite':
         specifier: 9.0.6
         version: 9.0.6(@babel/core@7.27.4)(next@15.3.3(@babel/core@7.27.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.1))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.42.0)(storybook@9.0.6(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.8.0))
+      '@storybook/react':
+        specifier: 9.0.6
+        version: 9.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(storybook@9.0.6(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)
+      '@storybook/react-vite':
+        specifier: 9.0.6
+        version: 9.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.42.0)(storybook@9.0.6(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(sass@1.89.1)(tsx@4.19.4)(yaml@2.8.0))
       '@testing-library/jest-dom':
         specifier: 6.6.3
         version: 6.6.3

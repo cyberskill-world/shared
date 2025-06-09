@@ -60,6 +60,7 @@ export const NODE_MODULES_INSPECT_PACKAGE_NAME = 'node-modules-inspector';
 export const NODE_MODULES_INSPECT_CLI = 'node-modules-inspector';
 export const MIGRATE_MONGO_PACKAGE_NAME = 'migrate-mongo';
 export const MIGRATE_MONGO_CLI = './node_modules/migrate-mongo/bin/migrate-mongo';
+export const STORYBOOK_CLI = 'storybook';
 
 export const PATH = {
     CYBERSKILL_DIRECTORY,
@@ -80,6 +81,8 @@ export const PATH = {
     VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
     VITEST_UNIT_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.setup.ts`),
     VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
+    VITEST_STORYBOOK_REACT: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/storybook/react`),
+    VITEST_STORYBOOK_REACT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/storybook/react/index.js`),
     VITEST_STORYBOOK_NEXTJS: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/storybook/nextjs`),
     VITEST_STORYBOOK_NEXTJS_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/storybook/nextjs/index.js`),
 };
@@ -223,5 +226,13 @@ export const command = {
     pnpmCleanCache: buildCommand({
         type: E_CommandType.STRING,
         command: `${PNPM_CLI} cache delete`,
+    }),
+    storybookReact: buildCommand({
+        type: E_CommandType.STRING,
+        command: `${STORYBOOK_CLI} dev --config-dir ${PATH.VITEST_STORYBOOK_REACT} --port 6006`,
+    }),
+    storybookNextJS: buildCommand({
+        type: E_CommandType.STRING,
+        command: `${STORYBOOK_CLI} dev --config-dir ${PATH.VITEST_STORYBOOK_NEXTJS} --port 6006`,
     }),
 };

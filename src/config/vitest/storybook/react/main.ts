@@ -1,14 +1,11 @@
-import type { StorybookConfig } from '@storybook/nextjs-vite';
+import type { StorybookConfig } from '@storybook/react-vite';
 
 import { PATH } from '#node/path/index.js';
 
-export const vitestStorybookNextJSMain: StorybookConfig = {
+export const vitestStorybookReactMain: StorybookConfig = {
     stories: [
         `${PATH.WORKING_DIRECTORY}/**/*.mdx`,
         `${PATH.WORKING_DIRECTORY}/**/*.stories.@(js|jsx|mjs|ts|tsx)`,
-        `!${PATH.WORKING_DIRECTORY}/public/**/*`,
-        `!${PATH.WORKING_DIRECTORY}/build/**/*`,
-        `!${PATH.WORKING_DIRECTORY}/dist/**/*`,
     ],
     addons: [
         '@storybook/addon-onboarding',
@@ -18,10 +15,12 @@ export const vitestStorybookNextJSMain: StorybookConfig = {
         '@storybook/addon-vitest',
     ],
     framework: {
-        name: '@storybook/nextjs-vite',
+        name: '@storybook/react-vite',
         options: {},
     },
     staticDirs: [
         PATH.PUBLIC_DIRECTORY,
     ],
 };
+
+export default vitestStorybookReactMain;
