@@ -11,6 +11,6 @@ export default [
             }],
             'dot-notation': 'off',
         },
-        ignores: ['build', 'dist'],
+        ignores: ['build', 'dist', '!.storybook'],
     },
 ];

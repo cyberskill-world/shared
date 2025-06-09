@@ -3,6 +3,8 @@ import { defineConfig } from 'vitest/config';
 
 import { PATH } from '#node/path/index.js';
 
+export * from './main.js';
+
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export function vitestStorybookNextJS() {
     return defineConfig({

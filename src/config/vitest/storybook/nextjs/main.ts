@@ -2,7 +2,7 @@ import type { StorybookConfig } from '@storybook/nextjs-vite';
 
 import { PATH } from '#node/path/index.js';
 
-const config: StorybookConfig = {
+export const vitestStorybookNextJSMain: StorybookConfig = {
     stories: [
         '**/*.mdx',
         '**/*.stories.@(js|jsx|mjs|ts|tsx)',
@@ -22,5 +22,3 @@ const config: StorybookConfig = {
         PATH.PUBLIC_DIRECTORY,
     ],
 };
-
-export default config;
