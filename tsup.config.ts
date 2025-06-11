@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup';
 export default defineConfig(({ watch, ...rest }) => {
     return {
         target: 'es5',
-        entry: ['src/**/*.{js,ts,jsx,tsx,css,scss}'],
+        entry: ['src/**/*.{js,ts,jsx,tsx,css,scss}', '!src/**/*.stories.{js,ts,jsx,tsx}'],
         loader: {
             '.css': 'copy',
             '.scss': 'copy',
