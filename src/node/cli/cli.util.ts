@@ -160,14 +160,6 @@ async function mongoMigrateDown() {
     await runCommand('Rolling back MongoDB migration', await command.mongoMigrateDown());
 }
 
-async function storybookReact() {
-    await runCommand('Running Storybook for React', await command.storybookReact());
-}
-
-async function storybookNextJS() {
-    await runCommand('Running Storybook for Next.js', await command.storybookNextJS());
-}
-
 (async () => {
     try {
         await yargs(hideBin(process.argv))
@@ -198,8 +190,6 @@ async function storybookNextJS() {
             })
             .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
             .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
-            .command('storybook:react', 'Run Storybook for React', storybookReact)
-            .command('storybook:nextjs', 'Run Storybook for Next.js', storybookNextJS)
             .demandCommand(1, 'Please specify a valid command.')
             .strict()
             .help()

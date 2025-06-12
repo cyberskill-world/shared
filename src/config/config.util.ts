@@ -1,5 +1,4 @@
 import antfu from '@antfu/eslint-config';
-import storybook from 'eslint-plugin-storybook';
 
 import type { T_Object } from '#typescript/common.js';
 
@@ -24,8 +23,6 @@ const handleESLint: T_ConfigHandler = (...config) => {
             : undefined;
 
     const configArray = [
-        // @ts-expect-error eslint-plugin-storybook is not typed
-        ...storybook.configs['flat/recommended'],
         rest,
         ...(normalizedIgnores ? [normalizedIgnores] : []),
     ];
