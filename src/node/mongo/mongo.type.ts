@@ -127,7 +127,7 @@ interface I_VirtualOptions {
     options?: I_VirtualNestedOptions;
 }
 
-export interface I_MongooseOptions<T extends Partial<C_Document>> {
+interface I_MongooseOptions<T> {
     mongoose: typeof mongoose;
     virtuals?: {
         name: keyof T | string;
@@ -136,7 +136,7 @@ export interface I_MongooseOptions<T extends Partial<C_Document>> {
     }[];
 }
 
-export interface I_CreateSchemaOptions<T extends Partial<C_Document>>
+export interface I_CreateSchemaOptions<T>
     extends I_MongooseOptions<T> {
     schema: T_Input_MongooseSchema<T>;
     standalone?: boolean;

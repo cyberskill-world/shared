@@ -66,7 +66,7 @@ export const mongo = {
             { timestamps: true },
         );
     },
-    createSchema<T extends Partial<C_Document>>({
+    createSchema<T>({
         mongoose,
         schema,
         virtuals = [],
