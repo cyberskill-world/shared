@@ -209,9 +209,6 @@ importers:
       slugify:
         specifier: 1.6.6
         version: 1.6.6
-      styled-jsx:
-        specifier: 5.1.7
-        version: 5.1.7(@babel/core@7.27.4)(react@19.1.0)
       tsup:
         specifier: 8.5.0
         version: 8.5.0(@microsoft/api-extractor@7.52.8(@types/node@24.0.1))(@swc/core@1.12.0)(jiti@2.4.2)(postcss@8.5.5)(tsx@4.20.2)(typescript@5.8.3)(yaml@2.8.0)
@@ -233,9 +230,6 @@ importers:
       vitest:
         specifier: 3.2.3
         version: 3.2.3(@types/debug@4.1.12)(@types/node@24.0.1)(@vitest/browser@3.2.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.89.2)(tsx@4.20.2)(yaml@2.8.0)
-      vitest-browser-react:
-        specifier: 0.2.0
-        version: 0.2.0(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(@vitest/browser@3.2.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.2.3)
       ws:
         specifier: 8.18.2
         version: 8.18.2
@@ -5941,19 +5935,6 @@ packages:
       babel-plugin-macros:
         optional: true
 
-  styled-jsx@5.1.7:
-    resolution: {integrity: sha512-HPLmEIYprxCeWDMLYiaaAhsV3yGfIlCqzuVOybE6fjF3SUJmH67nCoMDO+nAvHNHo46OfvpCNu4Rcue82dMNFg==}
-    engines: {node: '>= 12.0.0'}
-    peerDependencies:
-      '@babel/core': '*'
-      babel-plugin-macros: '*'
-      react: '>= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      babel-plugin-macros:
-        optional: true
-
   sucrase@3.35.0:
     resolution: {integrity: sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -6418,22 +6399,6 @@ packages:
       yaml:
         optional: true
 
-  vitest-browser-react@0.2.0:
-    resolution: {integrity: sha512-tVUVngdcTMFPSywxEo42hAAO074VjEF7Q1QkV8wqjI9oiYuguUfqp6Uw4mTbZ+DLFSITHXiked+PYQFH69XkLQ==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    peerDependencies:
-      '@types/react': '>18.0.0'
-      '@types/react-dom': '>18.0.0'
-      '@vitest/browser': '>=2.1.0'
-      react: '>18.0.0'
-      react-dom: '>18.0.0'
-      vitest: '>=2.1.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-
   vitest@3.2.3:
     resolution: {integrity: sha512-E6U2ZFXe3N/t4f5BwUaVCKRLHqUpk1CBWeMh78UT4VaTPH/2dyvH6ALl29JTovEPu9dVKr/K/J4PkXgrMbw4Ww==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -6641,8 +6606,8 @@ packages:
   zen-observable@0.8.15:
     resolution: {integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==}
 
-  zod@3.25.62:
-    resolution: {integrity: sha512-YCxsr4DmhPcrKPC9R1oBHQNlQzlJEyPAId//qTau/vBee9uO8K6prmRq4eMkOyxvBfH4wDPIPdLx9HVMWIY3xA==}
+  zod@3.25.63:
+    resolution: {integrity: sha512-3ttCkqhtpncYXfP0f6dsyabbYV/nEUW+Xlu89jiXbTBifUfjaSqXOG6JnQPLtqt87n7KAmnMqcjay6c0Wq0Vbw==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7359,7 +7324,7 @@ snapshots:
       '@eslint-react/eff': 1.52.1
       '@typescript-eslint/utils': 8.34.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       ts-pattern: 5.7.1
-      zod: 3.25.62
+      zod: 3.25.63
     transitivePeerDependencies:
       - eslint
       - supports-color
@@ -7371,7 +7336,7 @@ snapshots:
       '@eslint-react/kit': 1.52.1(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       '@typescript-eslint/utils': 8.34.0(eslint@9.28.0(jiti@2.4.2))(typescript@5.8.3)
       ts-pattern: 5.7.1
-      zod: 3.25.62
+      zod: 3.25.63
     transitivePeerDependencies:
       - eslint
       - supports-color
@@ -13218,13 +13183,6 @@ snapshots:
     optionalDependencies:
       '@babel/core': 7.27.4
 
-  styled-jsx@5.1.7(@babel/core@7.27.4)(react@19.1.0):
-    dependencies:
-      client-only: 0.0.1
-      react: 19.1.0
-    optionalDependencies:
-      '@babel/core': 7.27.4
-
   sucrase@3.35.0:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
@@ -13652,16 +13610,6 @@ snapshots:
       tsx: 4.20.2
       yaml: 2.8.0
 
-  vitest-browser-react@0.2.0(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(@vitest/browser@3.2.3)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(vitest@3.2.3):
-    dependencies:
-      '@vitest/browser': 3.2.3(playwright@1.53.0)(vite@6.3.5(@types/node@24.0.1)(jiti@2.4.2)(sass@1.89.2)(tsx@4.20.2)(yaml@2.8.0))(vitest@3.2.3)
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
-      vitest: 3.2.3(@types/debug@4.1.12)(@types/node@24.0.1)(@vitest/browser@3.2.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.89.2)(tsx@4.20.2)(yaml@2.8.0)
-    optionalDependencies:
-      '@types/react': 19.1.8
-      '@types/react-dom': 19.1.6(@types/react@19.1.8)
-
   vitest@3.2.3(@types/debug@4.1.12)(@types/node@24.0.1)(@vitest/browser@3.2.3)(jiti@2.4.2)(jsdom@26.1.0)(sass@1.89.2)(tsx@4.20.2)(yaml@2.8.0):
     dependencies:
       '@types/chai': 5.2.2
@@ -13897,6 +13845,6 @@ snapshots:
 
   zen-observable@0.8.15: {}
 
-  zod@3.25.62: {}
+  zod@3.25.63: {}
 
   zwitch@2.0.4: {}
