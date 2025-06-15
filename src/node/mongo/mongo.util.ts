@@ -14,7 +14,7 @@ import { deepClone, getNestedValue, isObject, regexSearchMapper, setNestedValue 
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_InsertManyResult, T_InsertOneResult, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
@@ -199,7 +199,7 @@ export class MongoController<D extends Partial<C_Document>> {
         this.collection = db.collection<D>(collectionName);
     }
 
-    async createOne(document: D | Partial<D>): Promise<I_Return<T_InsertOneResult<D>>> {
+    async createOne(document: D | Partial<D>): Promise<I_Return<D | Partial<D>>> {
         try {
             const finalDocument = {
                 ...mongo.createGenericFields(),
@@ -208,18 +208,26 @@ export class MongoController<D extends Partial<C_Document>> {
 
             const result = await this.collection.insertOne(finalDocument as unknown as T_OptionalUnlessRequiredId<D>);
 
+            if (!result.acknowledged) {
+                return {
+                    success: false,
+                    message: 'Document creation failed',
+                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+                };
+            }
+
             return {
                 success: true,
                 message: 'Document created successfully',
-                result,
+                result: finalDocument,
             };
         }
         catch (error) {
-            return catchError<T_InsertOneResult<D>>(error);
+            return catchError<(D | Partial<D>)>(error);
         }
     }
 
-    async createMany(documents: (D | Partial<D>)[]): Promise<I_Return<T_InsertManyResult<D>>> {
+    async createMany(documents: (D | Partial<D>)[]): Promise<I_Return<(D | Partial<D>)[]>> {
         try {
             const finalDocuments = documents.map(document => ({
                 ...mongo.createGenericFields(),
@@ -235,14 +243,15 @@ export class MongoController<D extends Partial<C_Document>> {
                     code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
+
             return {
                 success: true,
                 message: `${result.insertedCount} documents created successfully`,
-                result,
+                result: finalDocuments,
             };
         }
         catch (error) {
-            return catchError<T_InsertManyResult<D>>(error);
+            return catchError<(D | Partial<D>)[]>(error);
         }
     }
 
