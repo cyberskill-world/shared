@@ -60,8 +60,8 @@ export const mongo = {
     createGenericSchema(mongoose: typeof mongooseRaw) {
         return new mongoose.Schema<I_GenericDocument>(
             {
-                id: { type: String, default: uuidv4, required: true, unique: true },
-                isDel: { type: Boolean, default: false, required: true },
+                id: { type: String, default: uuidv4, unique: true },
+                isDel: { type: Boolean, default: false },
             },
             { timestamps: true },
         );
@@ -72,7 +72,7 @@ export const mongo = {
         virtuals = [],
         standalone = false,
     }: I_CreateSchemaOptions<T>): T_MongooseShema<T> {
-        const createdSchema = new mongoose.Schema<T>(schema, { strict: true });
+        const createdSchema = new mongoose.Schema<T>(schema);
 
         virtuals.forEach(({ name, options, get }) => {
             const virtualInstance = createdSchema.virtual(name as string, options);
