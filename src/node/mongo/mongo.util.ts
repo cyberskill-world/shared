@@ -199,7 +199,7 @@ export class MongoController<D extends Partial<C_Document>> {
         this.collection = db.collection<D>(collectionName);
     }
 
-    async createOne(document: D): Promise<I_Return<T_InsertOneResult<D>>> {
+    async createOne(document: D | Partial<D>): Promise<I_Return<T_InsertOneResult<D>>> {
         try {
             const finalDocument = {
                 ...mongo.createGenericFields(),
@@ -219,7 +219,7 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
-    async createMany(documents: D[]): Promise<I_Return<T_InsertManyResult<D>>> {
+    async createMany(documents: (D | Partial<D>)[]): Promise<I_Return<T_InsertManyResult<D>>> {
         try {
             const finalDocuments = documents.map(document => ({
                 ...mongo.createGenericFields(),
