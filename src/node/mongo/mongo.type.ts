@@ -114,6 +114,10 @@ export interface I_GenericDocument extends Partial<C_Document> {
     updatedAt: string | Date;
 }
 
+export type T_Omit_Create = 'id' | 'isDel' | 'createdAt' | 'updatedAt';
+
+export type T_Omit_Update = 'id' | 'createdAt' | 'updatedAt';
+
 interface I_VirtualNestedOptions {
     [key: string]: I_VirtualNestedOptions | number | string | boolean;
 }
