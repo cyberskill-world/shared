@@ -189,10 +189,14 @@ export interface I_Input_FindAll<T> extends T_PopulateOption {
     options?: T_QueryOptions<T>;
 }
 
-export interface I_Input_FindPaging<T> {
-    filter?: T_FilterQuery<T>;
-    options?: T_PaginateOptionsWithPopulate;
-}
+export type I_Input_FindPaging<T = undefined> = T extends undefined
+    ? {
+            options?: T_PaginateOptionsWithPopulate;
+        }
+    : {
+            filter?: T_FilterQuery<T>;
+            options?: T_PaginateOptionsWithPopulate;
+        };
 
 export interface I_Input_FindPagingAggregate {
     pipeline: T_PipelineStage[];
