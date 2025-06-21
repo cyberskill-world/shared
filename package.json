@@ -215,7 +215,7 @@
         "lint:fix": "tsx src/node/cli/index.ts lint:fix",
         "lint:inspect": "tsx src/node/cli/index.ts lint:inspect",
         "reset": "tsx src/node/cli/index.ts reset",
-        "prepare": "tsx src/node/cli/index.ts prepare",
+        "ready": "tsx src/node/cli/index.ts ready",
         "inspect": "tsx src/node/cli/index.ts inspect",
         "test:unit": "tsx src/node/cli/index.ts test:unit",
         "test:e2e": "tsx src/node/cli/index.ts test:e2e",

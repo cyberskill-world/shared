@@ -57,7 +57,7 @@ pnpm install @cyberskill/shared
 | `pnpm run lint:fix`     | 🔧 Fix linting issues               |
 | `pnpm run lint:inspect` | 🧐 Inspect linting config           |
 | `pnpm run reset`        | ♻️ Reset the project                |
-| `pnpm run prepare`      | 🏗️ Project prepare                  |
+| `pnpm run ready`        | 🏗️ Project ready                    |
 | `pnpm run inspect`      | 🔍 Inspect the project dependencies |
 | `pnpm run test:unit`    | 🔬 Run unit tests                   |
 | `pnpm run test:e2e`     | 🧪 Run end-to-end tests             |

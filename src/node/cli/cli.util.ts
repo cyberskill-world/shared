@@ -123,7 +123,7 @@ async function setupGitHook() {
     await runCommand('Setting up simple-git-hooks', await command.simpleGitHooks());
 }
 
-async function prepare() {
+async function ready() {
     await installDependencies();
     await setupGitHook();
 }
@@ -170,7 +170,7 @@ async function mongoMigrateDown() {
             .command('lint:inspect', 'View active ESLint configuration', inspectLint)
             .command('lint-staged', 'Run lint checks on staged files', lintStaged)
             .command('commitlint', 'Validate commit message format', commitLint)
-            .command('prepare', 'Initialize project and dependencies', prepare)
+            .command('ready', 'Initialize project and dependencies', ready)
             .command('reset', 'Reset the project and reinstall dependencies', reset)
             .command('inspect', 'Analyze installed project dependencies', inspect)
             .command('test:unit', 'Run unit test suite', testUnit)
