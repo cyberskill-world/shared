@@ -4,7 +4,7 @@ import { FaRepeat } from 'react-icons/fa6';
 import { ApolloErrorContext } from './apollo-error.context.js';
 import style from './apollo-error.module.scss';
 
-export function ApolloError() {
+export function ApolloErrorComponent() {
     const context = use(ApolloErrorContext);
 
     const error = context?.error;

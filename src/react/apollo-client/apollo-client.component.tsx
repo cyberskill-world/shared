@@ -5,7 +5,7 @@ import type { ComponentType } from 'react';
 // TODO: change imports to @apollo/client after migration to v4
 import {
     ApolloClient,
-    ApolloError as ApolloErrorDefault,
+    ApolloError,
     InMemoryCache,
 } from '@apollo/client/core/core.cjs';
 import { ApolloLink, from, split } from '@apollo/client/link/core/core.cjs';
@@ -23,7 +23,7 @@ import { FaInfo } from 'react-icons/fa6';
 
 import type { I_ApolloOptions, I_ApolloProviderProps } from './apollo-client.type.js';
 
-import { ApolloError, ApolloErrorProvider, showGlobalApolloError } from '../apollo-error/index.js';
+import { ApolloErrorComponent, ApolloErrorProvider, showGlobalApolloError } from '../apollo-error/index.js';
 import { log } from '../log/index.js';
 import { toast, Toaster } from '../toast/index.js';
 import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
@@ -79,7 +79,7 @@ function createApolloLinks(options: I_ApolloOptions) {
                     || protocolErrors?.[0]?.message
                     || networkError?.message
                     || 'Unexpected error';
-            const error = new ApolloErrorDefault({
+            const error = new ApolloError({
                 graphQLErrors: graphQLErrors || [],
                 protocolErrors: protocolErrors || [],
                 clientErrors: [],
@@ -190,7 +190,7 @@ export function ApolloProvider({
         <>
             <ApolloErrorProvider>
                 {renderedApollo}
-                <ApolloError />
+                <ApolloErrorComponent />
             </ApolloErrorProvider>
             <Toaster position="top-right" />
         </>
