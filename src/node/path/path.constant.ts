@@ -78,7 +78,7 @@ export const PATH = {
     LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/lint-staged/index.js`),
     COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/commitlint/index.js`),
     VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
-    VITEST_UNIT_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.setup.ts`),
+    VITEST_UNIT_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.setup.js`),
     VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
 };
 
