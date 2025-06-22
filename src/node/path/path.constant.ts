@@ -122,57 +122,131 @@ function buildCommand({ type, packages, command }: { type: E_CommandType; packag
 export const command = {
     simpleGitHooks: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: SIMPLE_GIT_HOOKS_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: SIMPLE_GIT_HOOKS_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+
+        ],
         command: SIMPLE_GIT_HOOK_CLI,
     }),
     eslintInspect: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: ESLINT_INSPECT_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name:
+                    ESLINT_INSPECT_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+
+        ],
         command: ESLINT_INSPECT_CLI,
     }),
     nodeModulesInspect: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: NODE_MODULES_INSPECT_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: NODE_MODULES_INSPECT_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+
+        ],
         command: NODE_MODULES_INSPECT_CLI,
     }),
     eslintCheck: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: ESLINT_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: ESLINT_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+
+        ],
         command: `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --no-cache`,
     }),
     eslintFix: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: ESLINT_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: ESLINT_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+
+        ],
         command: `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix --no-cache`,
     }),
     typescriptCheck: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: TSC_PACKAGE_NAME, type: E_PackageType.DEPENDENCY }],
+        packages: [
+            {
+                name: TSC_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+
+        ],
         command: `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit`,
     }),
     testUnit: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: VITEST_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: VITEST_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+        ],
         command: `${VITEST_CLI} --config ${PATH.VITEST_UNIT_CONFIG}`,
     }),
     testE2e: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: VITEST_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: VITEST_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+        ],
         command: `${VITEST_CLI} --config ${PATH.VITEST_E2E_CONFIG}`,
     }),
     mongoMigrateCreate: (migrateName: string) => buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: MIGRATE_MONGO_PACKAGE_NAME, type: E_PackageType.DEPENDENCY }],
+        packages: [
+            {
+                name: TSX_CLI,
+                type: E_PackageType.DEPENDENCY,
+            },
+            {
+                name: MIGRATE_MONGO_PACKAGE_NAME,
+                type: E_PackageType.DEPENDENCY,
+            },
+        ],
         command: `${TSX_CLI} ${MIGRATE_MONGO_CLI} create ${migrateName} -f ${PATH.MIGRATE_MONGO_CONFIG}`,
     })(),
     mongoMigrateUp: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: MIGRATE_MONGO_PACKAGE_NAME, type: E_PackageType.DEPENDENCY }],
+        packages: [
+            {
+                name: TSX_CLI,
+                type: E_PackageType.DEPENDENCY,
+            },
+            {
+                name: MIGRATE_MONGO_PACKAGE_NAME,
+                type: E_PackageType.DEPENDENCY,
+            },
+        ],
         command: `${TSX_CLI} ${MIGRATE_MONGO_CLI} up -f ${PATH.MIGRATE_MONGO_CONFIG}`,
     }),
     mongoMigrateDown: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: MIGRATE_MONGO_PACKAGE_NAME, type: E_PackageType.DEPENDENCY }],
+        packages: [
+            {
+                name: TSX_CLI,
+                type: E_PackageType.DEPENDENCY,
+            },
+            {
+                name: MIGRATE_MONGO_PACKAGE_NAME,
+                type: E_PackageType.DEPENDENCY,
+            },
+        ],
         command: `${TSX_CLI} ${MIGRATE_MONGO_CLI} down -f ${PATH.MIGRATE_MONGO_CONFIG}`,
     }),
     commitLint: buildCommand({
@@ -191,7 +265,12 @@ export const command = {
     }),
     lintStaged: buildCommand({
         type: E_CommandType.CLI,
-        packages: [{ name: LINT_STAGED_PACKAGE_NAME, type: E_PackageType.DEV_DEPENDENCY }],
+        packages: [
+            {
+                name: LINT_STAGED_PACKAGE_NAME,
+                type: E_PackageType.DEV_DEPENDENCY,
+            },
+        ],
         command: `${LINT_STAGED_CLI} --config ${PATH.LINT_STAGED_CONFIG}`,
     }),
     configureGitHook: buildCommand({

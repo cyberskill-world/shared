@@ -2,20 +2,21 @@ import type { FetchResult, Operation } from '@apollo/client';
 import type { Observable } from '@apollo/client/utilities';
 import type { ComponentType } from 'react';
 
+// TODO: change imports to @apollo/client after migration to v4
 import {
     ApolloClient,
     ApolloError as ApolloErrorDefault,
-    ApolloLink,
-    ApolloProvider as ApolloProviderDefault,
-    from,
-    HttpLink,
     InMemoryCache,
-    split,
-} from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
-import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename';
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import { getMainDefinition } from '@apollo/client/utilities';
+} from '@apollo/client/core/core.cjs';
+import { ApolloLink, from, split } from '@apollo/client/link/core/core.cjs';
+import { onError } from '@apollo/client/link/error/error.cjs';
+import { HttpLink } from '@apollo/client/link/http/http.cjs';
+import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename/remove-typename.cjs';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.cjs';
+import {
+    ApolloProvider as ApolloProviderDefault,
+} from '@apollo/client/react/react.cjs';
+import { getMainDefinition } from '@apollo/client/utilities/utilities.cjs';
 import { createClient } from 'graphql-ws';
 import React, { useMemo } from 'react';
 import { FaInfo } from 'react-icons/fa6';

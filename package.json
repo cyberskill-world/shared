@@ -164,9 +164,9 @@
             "import": "./dist/react/toast/index.js",
             "require": "./dist/react/toast/index.cjs"
         },
-        "./style/reset.css": {
-            "import": "./dist/style/reset.css",
-            "require": "./dist/style/reset.css"
+        "./react/index.css": {
+            "import": "./dist/react/index.css",
+            "require": "./dist/react/index.css"
         },
         "./typescript": {
             "types": "./dist/typescript/index.d.ts",
@@ -210,30 +210,26 @@
     ],
     "scripts": {
         "build": "tsup",
+        "commitlint": "tsx src/node/cli/index.ts commitlint",
         "dev": "tsup --watch",
+        "inspect": "tsx src/node/cli/index.ts inspect",
         "lint": "tsx src/node/cli/index.ts lint",
         "lint:fix": "tsx src/node/cli/index.ts lint:fix",
         "lint:inspect": "tsx src/node/cli/index.ts lint:inspect",
-        "reset": "tsx src/node/cli/index.ts reset",
         "ready": "tsx src/node/cli/index.ts ready",
-        "inspect": "tsx src/node/cli/index.ts inspect",
-        "test:unit": "tsx src/node/cli/index.ts test:unit",
+        "reset": "tsx src/node/cli/index.ts reset",
         "test:e2e": "tsx src/node/cli/index.ts test:e2e",
-        "commitlint": "tsx src/node/cli/index.ts commitlint"
+        "test:unit": "tsx src/node/cli/index.ts test:unit"
     },
     "dependencies": {
         "@antfu/eslint-config": "4.15.0",
         "@apollo/client": "3.13.8",
         "@apollo/server": "4.12.2",
-        "@commitlint/cli": "19.8.1",
-        "@commitlint/config-conventional": "19.8.1",
         "@dotenvx/dotenvx": "1.45.1",
         "@eddeee888/gcg-typescript-resolver-files": "0.12.1",
         "@eslint-react/eslint-plugin": "1.52.2",
-        "@eslint/config-inspector": "1.1.0",
         "@graphql-codegen/cli": "5.0.7",
         "@graphql-codegen/client-preset": "4.8.2",
-        "@microsoft/api-extractor": "7.52.8",
         "@nestjs/common": "11.1.3",
         "@nestjs/core": "11.1.3",
         "@next/eslint-plugin-next": "15.3.4",
@@ -250,9 +246,7 @@
         "cors": "2.8.5",
         "crypto-js": "4.2.0",
         "date-fns": "4.1.0",
-        "dotenv-cli": "8.0.0",
         "envalid": "8.0.0",
-        "eslint": "9.29.0",
         "eslint-config-next": "15.3.4",
         "eslint-plugin-format": "1.0.1",
         "eslint-plugin-react-hooks": "5.2.0",
@@ -266,20 +260,16 @@
         "graphql-ws": "6.0.5",
         "i18next": "25.2.1",
         "jsdom": "26.1.0",
-        "lint-staged": "16.1.2",
         "localforage": "1.10.0",
         "migrate-mongo": "12.1.3",
-        "modern-normalize": "3.0.1",
         "mongodb": "6.17.0",
         "mongoose": "8.16.0",
         "mongoose-aggregate-paginate-v2": "1.1.4",
         "mongoose-paginate-v2": "1.9.1",
         "next-intl": "4.1.0",
         "node-fetch": "3.3.2",
-        "node-modules-inspector": "0.6.9",
         "node-persist": "4.0.4",
         "playwright": "1.53.1",
-        "postcss-modules": "6.0.1",
         "qs": "6.14.0",
         "react": "19.1.0",
         "react-dom": "19.1.0",
@@ -287,23 +277,18 @@
         "react-i18next": "15.5.3",
         "react-icons": "5.5.0",
         "sass": "1.89.2",
-        "simple-git-hooks": "2.13.0",
         "slugify": "1.6.6",
-        "tsup": "8.5.0",
-        "tsx": "4.20.3",
-        "typescript": "5.8.3",
         "unorm": "1.6.0",
         "uuid": "11.1.0",
         "vite": "6.3.5",
-        "vitest": "3.2.4",
         "ws": "8.18.2",
         "yargs": "18.0.0"
     },
-    "publishConfig": {
-        "access": "public",
-        "registry": "https://registry.npmjs.org/"
-    },
     "devDependencies": {
+        "@commitlint/cli": "19.8.1",
+        "@commitlint/config-conventional": "19.8.1",
+        "@eslint/config-inspector": "1.1.0",
+        "@microsoft/api-extractor": "7.52.8",
         "@types/body-parser": "1.19.6",
         "@types/compression": "1.8.1",
         "@types/cookie-parser": "1.4.9",
@@ -321,6 +306,21 @@
         "@types/unorm": "1.3.31",
         "@types/uuid": "10.0.0",
         "@types/ws": "8.18.1",
-        "@types/yargs": "17.0.33"
+        "@types/yargs": "17.0.33",
+        "esbuild-sass-plugin": "3.3.1",
+        "eslint": "9.29.0",
+        "lint-staged": "16.1.2",
+        "node-modules-inspector": "0.6.9",
+        "postcss": "8.5.6",
+        "postcss-modules": "6.0.1",
+        "simple-git-hooks": "2.13.0",
+        "tsup": "8.5.0",
+        "tsx": "4.20.3",
+        "typescript": "5.8.3",
+        "vitest": "3.2.4"
+    },
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
     }
 }
