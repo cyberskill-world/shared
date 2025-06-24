@@ -1,5 +1,4 @@
 import React, { use } from 'react';
-import { FaRepeat } from 'react-icons/fa6';
 
 import { ApolloErrorContext } from './apollo-error.context.js';
 import style from './apollo-error.module.scss';
@@ -44,7 +43,7 @@ export function ApolloErrorComponent() {
                         className={style['btn-retry']}
                         onClick={() => window.location.reload()}
                     >
-                        <FaRepeat />
+                        Reload
                     </button>
                     {' '}
                     {error.message}

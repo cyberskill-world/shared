@@ -19,7 +19,6 @@ import {
 import { getMainDefinition } from '@apollo/client/utilities/utilities.cjs';
 import { createClient } from 'graphql-ws';
 import React, { useMemo } from 'react';
-import { FaInfo } from 'react-icons/fa6';
 
 import type { I_ApolloOptions, I_ApolloProviderProps } from './apollo-client.type.js';
 
@@ -94,8 +93,8 @@ function createApolloLinks(options: I_ApolloOptions) {
                 <>
                     {message}
                     &nbsp;
-                    <FaInfo
-                        cursor="pointer"
+                    <button
+                        type="button"
                         onClick={() => {
                             setTimeout(() => {
                                 showGlobalApolloError(error);
@@ -103,7 +102,9 @@ function createApolloLinks(options: I_ApolloOptions) {
 
                             toast.dismiss(t.id);
                         }}
-                    />
+                    >
+                        Show Details
+                    </button>
                 </>
             ));
         }

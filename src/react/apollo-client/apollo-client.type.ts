@@ -31,4 +31,5 @@ export type {
     ApolloCache,
     ApolloClient,
     ApolloClientOptions,
+    NormalizedCacheObject,
 } from '@apollo/client';
