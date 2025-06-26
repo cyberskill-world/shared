@@ -12,6 +12,7 @@ export const {
     readFileSync,
     unlinkSync,
     statSync,
+    createWriteStream,
 } = fsExtra;
 
 export const readJsonSync: typeof fsExtra.readJsonSync = fsExtra.readJsonSync;

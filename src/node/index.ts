@@ -8,4 +8,5 @@ export * from './mongo/index.js';
 export * from './package/index.js';
 export * from './path/index.js';
 export * from './storage/index.js';
+export * from './upload/index.js';
 export * from './ws/index.js';

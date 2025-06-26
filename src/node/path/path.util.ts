@@ -6,6 +6,8 @@ const env = getEnv();
 
 export const path = pathNode;
 
+export const dirname = path.dirname;
+
 export function resolveWorkingPath(...urls: string[]): string {
     return path.resolve(env.CWD, ...urls);
 }

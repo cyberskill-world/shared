@@ -114,6 +114,11 @@
             "import": "./dist/node/storage/index.js",
             "require": "./dist/node/storage/index.cjs"
         },
+        "./node/upload": {
+            "types": "./dist/node/upload/index.d.ts",
+            "import": "./dist/node/upload/index.js",
+            "require": "./dist/node/upload/index.cjs"
+        },
         "./node/ws": {
             "types": "./dist/node/ws/index.d.ts",
             "import": "./dist/node/ws/index.js",
