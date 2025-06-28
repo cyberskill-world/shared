@@ -74,7 +74,6 @@ pnpm install @cyberskill/shared
     ├── constant/    → Static values used across the app
     ├── node/        → NodeJS modules
     ├── react/       → ReactJS modules
-    ├── style/       → Global and component-specific style
     ├── typescript/  → TypeScript types and interfaces
     ├── util/        → Utility functions and helpers
 ```
