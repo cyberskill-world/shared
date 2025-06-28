@@ -1,20 +1,19 @@
-// TODO: change imports to @apollo/client after migration to v4
-import { ApolloProvider as ApolloProviderDefault } from '@apollo/client/react/react.cjs';
+import { ApolloNextAppProvider } from '@apollo/client-integration-nextjs';
 import React, { useMemo } from 'react';
 
-import type { I_ApolloProviderProps } from './apollo-client.type.js';
+import type { I_ApolloProviderProps } from '../apollo-client/index.js';
 
+import { ApolloClientProvider } from '../apollo-client/index.js';
 import { ApolloErrorComponent, ApolloErrorProvider } from '../apollo-error/index.js';
 import { Toaster } from '../toast/index.js';
-import { ApolloClientProvider } from './apollo-client.context.js';
-import { getClient } from './apollo-client.util.js';
+import { getClientNextJS } from './apollo-client.util.js';
 
-export function ApolloProvider({
+export function ApolloProviderNextJS({
     options,
     children,
 }: I_ApolloProviderProps) {
     const client = useMemo(
-        () => getClient(options || {}),
+        () => getClientNextJS(options || {}),
         [options],
     );
 
@@ -22,7 +21,7 @@ export function ApolloProvider({
         <>
             <ApolloErrorProvider>
                 <ApolloClientProvider client={client}>
-                    <ApolloProviderDefault client={client}>{children}</ApolloProviderDefault>
+                    <ApolloNextAppProvider makeClient={() => client}>{children}</ApolloNextAppProvider>
                 </ApolloClientProvider>
                 <ApolloErrorComponent />
             </ApolloErrorProvider>

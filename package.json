@@ -134,6 +134,11 @@
             "import": "./dist/react/apollo-client/index.js",
             "require": "./dist/react/apollo-client/index.cjs"
         },
+        "./react/apollo-client-nextjs": {
+            "types": "./dist/react/apollo-client-nextjs/index.d.ts",
+            "import": "./dist/react/apollo-client-nextjs/index.js",
+            "require": "./dist/react/apollo-client-nextjs/index.cjs"
+        },
         "./react/apollo-error": {
             "types": "./dist/react/apollo-error/index.d.ts",
             "import": "./dist/react/apollo-error/index.js",

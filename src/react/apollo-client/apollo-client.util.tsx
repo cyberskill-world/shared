@@ -2,13 +2,9 @@ import type { FetchResult, Operation } from '@apollo/client';
 import type { Observable } from '@apollo/client/utilities';
 
 import {
-    ApolloClient as ApolloClientNextJS,
-    InMemoryCache as InMemoryCacheNextJS,
-} from '@apollo/client-integration-nextjs';
-import {
-    ApolloClient as ApolloClientDefault,
+    ApolloClient,
     ApolloError,
-    InMemoryCache as InMemoryCacheDefault,
+    InMemoryCache,
 } from '@apollo/client/core/core.cjs';
 // TODO: change imports to @apollo/client after migration to v4
 import { ApolloLink, from, split } from '@apollo/client/link/core/core.cjs';
@@ -27,7 +23,7 @@ import { log } from '../log/index.js';
 import { toast } from '../toast/index.js';
 import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
 
-class DevLoggerLink extends ApolloLink {
+export class DevLoggerLink extends ApolloLink {
     private count = 0;
 
     override request(operation: Operation, forward: (op: Operation) => Observable<FetchResult>) {
@@ -44,7 +40,7 @@ class DevLoggerLink extends ApolloLink {
     }
 }
 
-function createApolloLinks(options: I_ApolloOptions) {
+export function createApolloLinks(options: I_ApolloOptions) {
     const { uri, wsUrl, customLinks } = options;
 
     const devLoggerLink = new DevLoggerLink();
@@ -149,20 +145,12 @@ function createApolloLinks(options: I_ApolloOptions) {
     ];
 }
 
-export function getClient(options: I_ApolloOptions = {}, isNextJS = false) {
+export function getClient(options: I_ApolloOptions = {}) {
     const link = from(createApolloLinks(options));
 
-    if (isNextJS) {
-        return new ApolloClientNextJS({
-            link,
-            cache: new InMemoryCacheNextJS(),
-            ...options,
-        });
-    }
-
-    return new ApolloClientDefault({
+    return new ApolloClient({
         link,
-        cache: new InMemoryCacheDefault(),
+        cache: new InMemoryCache(),
         ...options,
     });
 }
