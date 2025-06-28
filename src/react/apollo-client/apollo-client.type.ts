@@ -1,6 +1,5 @@
 import type {
     ApolloCache,
-    ApolloClient,
     ApolloClientOptions,
     ApolloLink,
     NormalizedCacheObject,
@@ -21,10 +20,6 @@ export interface I_ApolloProviderProps extends I_Children {
     isNextJS?: boolean;
     options?: I_ApolloOptions;
 }
-
-export interface I_RegisteredApolloClient {
-    getClient: () => ApolloClient<NormalizedCacheObject>;
-};
 
 export type {
     ApolloCache,

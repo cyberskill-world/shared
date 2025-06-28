@@ -1,5 +1,3 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
-
 import {
     ApolloNextAppProvider as ApolloProviderNextJS,
 } from '@apollo/client-integration-nextjs';
@@ -9,18 +7,12 @@ import {
 } from '@apollo/client/react/react.cjs';
 import React, { useMemo } from 'react';
 
-import type { I_ApolloProviderProps, I_RegisteredApolloClient } from './apollo-client.type.js';
+import type { I_ApolloProviderProps } from './apollo-client.type.js';
 
 import { ApolloErrorComponent, ApolloErrorProvider } from '../apollo-error/index.js';
 import { Toaster } from '../toast/index.js';
 import { ApolloClientProvider } from './apollo-client.context.js';
 import { getClient } from './apollo-client.util.js';
-
-function isRegisteredClient(
-    client: ApolloClient<NormalizedCacheObject> | I_RegisteredApolloClient,
-): client is I_RegisteredApolloClient {
-    return typeof (client as I_RegisteredApolloClient).getClient === 'function';
-}
 
 export function ApolloProvider({
     isNextJS,
@@ -32,17 +24,15 @@ export function ApolloProvider({
         [options, isNextJS],
     );
 
-    const actualClient = isRegisteredClient(client) ? client.getClient() : client;
-
     const renderedApollo = isNextJS
         // @ts-expect-error: Apollo client types are not fully compatible between classic and Next.js
-        ? <ApolloProviderNextJS makeClient={() => actualClient}>{children}</ApolloProviderNextJS>
-        : <ApolloProviderDefault client={actualClient}>{children}</ApolloProviderDefault>;
+        ? <ApolloProviderNextJS makeClient={() => client}>{children}</ApolloProviderNextJS>
+        : <ApolloProviderDefault client={client}>{children}</ApolloProviderDefault>;
 
     return (
         <>
             <ApolloErrorProvider>
-                <ApolloClientProvider client={actualClient}>
+                <ApolloClientProvider client={client}>
                     {renderedApollo}
                 </ApolloClientProvider>
                 <ApolloErrorComponent />
