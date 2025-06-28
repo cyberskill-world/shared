@@ -12,19 +12,19 @@ export function Userback({ token, options }: I_UserBackProps) {
         let observer: MutationObserver;
 
         const loadUserback = async () => {
-            const { hide, ...rest } = options;
+            const { hide, ...rest } = options || {};
 
             await UserbackWidget(token, rest);
 
             if (hide && hide.length > 0) {
-                hide.forEach((selector) => {
+                hide.forEach((selector: string) => {
                     document.querySelectorAll(selector).forEach(el => el.remove());
                 });
             }
 
             observer = new MutationObserver(() => {
                 if (hide && hide.length > 0) {
-                    hide.forEach((selector) => {
+                    hide.forEach((selector: string) => {
                         document.querySelectorAll(selector).forEach(el => el.remove());
                     });
                 }
