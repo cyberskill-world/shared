@@ -234,6 +234,7 @@
     "dependencies": {
         "@antfu/eslint-config": "4.16.1",
         "@apollo/client": "3.13.8",
+        "@apollo/client-integration-nextjs": "0.12.2",
         "@apollo/server": "4.12.2",
         "@dotenvx/dotenvx": "1.45.1",
         "@eddeee888/gcg-typescript-resolver-files": "0.12.1",

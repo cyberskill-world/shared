@@ -6,7 +6,6 @@ import type {
     NormalizedCacheObject,
     UriFunction,
 } from '@apollo/client';
-import type { ComponentType } from 'react';
 
 import type { I_Children } from '#typescript/react.js';
 
@@ -21,11 +20,11 @@ export interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCach
 export interface I_ApolloProviderProps extends I_Children {
     isNextJS?: boolean;
     options?: I_ApolloOptions;
-    client?: ApolloClient<NormalizedCacheObject>;
-    makeClient?: () => ApolloClient<NormalizedCacheObject>;
-    provider?: ComponentType<I_ApolloProviderProps>;
-    cache?: ApolloCache<NormalizedCacheObject>;
 }
+
+export interface I_RegisteredApolloClient {
+    getClient: () => ApolloClient<NormalizedCacheObject>;
+};
 
 export type {
     ApolloCache,

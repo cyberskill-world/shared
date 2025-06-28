@@ -1,196 +1,50 @@
-import type { FetchResult, Operation } from '@apollo/client';
-import type { Observable } from '@apollo/client/utilities';
-import type { ComponentType } from 'react';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
-// TODO: change imports to @apollo/client after migration to v4
 import {
-    ApolloClient,
-    ApolloError,
-    InMemoryCache,
-} from '@apollo/client/core/core.cjs';
-import { ApolloLink, from, split } from '@apollo/client/link/core/core.cjs';
-import { onError } from '@apollo/client/link/error/error.cjs';
-import { HttpLink } from '@apollo/client/link/http/http.cjs';
-import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename/remove-typename.cjs';
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.cjs';
+    ApolloNextAppProvider as ApolloProviderNextJS,
+} from '@apollo/client-integration-nextjs';
+// TODO: change imports to @apollo/client after migration to v4
 import {
     ApolloProvider as ApolloProviderDefault,
 } from '@apollo/client/react/react.cjs';
-import { getMainDefinition } from '@apollo/client/utilities/utilities.cjs';
-import { createClient } from 'graphql-ws';
 import React, { useMemo } from 'react';
 
-import type { I_ApolloOptions, I_ApolloProviderProps } from './apollo-client.type.js';
+import type { I_ApolloProviderProps, I_RegisteredApolloClient } from './apollo-client.type.js';
 
-import { ApolloErrorComponent, ApolloErrorProvider, showGlobalApolloError } from '../apollo-error/index.js';
-import { log } from '../log/index.js';
-import { toast, Toaster } from '../toast/index.js';
-import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
+import { ApolloErrorComponent, ApolloErrorProvider } from '../apollo-error/index.js';
+import { Toaster } from '../toast/index.js';
+import { ApolloClientProvider } from './apollo-client.context.js';
+import { getClient } from './apollo-client.util.js';
 
-class DevLoggerLink extends ApolloLink {
-    private count = 0;
-
-    override request(operation: Operation, forward: (op: Operation) => Observable<FetchResult>) {
-        const start = Date.now();
-        this.count += 1;
-
-        return forward(operation).map((result) => {
-            const duration = Date.now() - start;
-            const name = operation.operationName || 'Unnamed';
-            log.info(`[Apollo] #${this.count}: ${name} (${duration}ms)`);
-
-            return result;
-        });
-    }
-}
-
-function createApolloLinks(options: I_ApolloOptions) {
-    const { uri, wsUrl, customLinks } = options;
-
-    const devLoggerLink = new DevLoggerLink();
-
-    const errorLink = onError(({ graphQLErrors, networkError, protocolErrors, operation }) => {
-        const opName = operation?.operationName || 'Unknown';
-
-        if (graphQLErrors) {
-            graphQLErrors.forEach(({ message, locations, path }) => {
-                log.error(
-                    `[GraphQL error] ${opName}: ${message}, Location: ${JSON.stringify(locations, null, 4)}, Path: ${path}`,
-                );
-            });
-        }
-
-        if (protocolErrors) {
-            protocolErrors.forEach(({ message, extensions }) => {
-                log.error(
-                    `[Protocol error]: ${message}, Extensions: ${JSON.stringify(extensions, null, 4)}`,
-                );
-            });
-        }
-
-        if (networkError) {
-            log.error(`[Network error]: ${networkError}`);
-        }
-
-        if (graphQLErrors || protocolErrors || networkError) {
-            const message
-                = graphQLErrors?.[0]?.message
-                    || protocolErrors?.[0]?.message
-                    || networkError?.message
-                    || 'Unexpected error';
-            const error = new ApolloError({
-                graphQLErrors: graphQLErrors || [],
-                protocolErrors: protocolErrors || [],
-                clientErrors: [],
-                networkError: networkError || null,
-                errorMessage: message,
-                extraInfo: {
-                    operation,
-                },
-            });
-
-            toast.error((t: { id: string }) => (
-                <>
-                    {message}
-                    &nbsp;
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setTimeout(() => {
-                                showGlobalApolloError(error);
-                            }, 0);
-
-                            toast.dismiss(t.id);
-                        }}
-                    >
-                        Show Details
-                    </button>
-                </>
-            ));
-        }
-    });
-
-    const removeTypenameLink = removeTypenameFromVariables();
-
-    if (!uri) {
-        log.warn(`[Apollo] No GraphQL URI provided — using "${GRAPHQL_URI_DEFAULT}" as default`);
-    }
-
-    const httpLink = new HttpLink({
-        uri: uri ?? GRAPHQL_URI_DEFAULT,
-        credentials: 'include',
-    });
-
-    const wsLink = wsUrl
-        ? new GraphQLWsLink(createClient({ url: wsUrl }))
-        : ApolloLink.empty();
-
-    const splitLink = wsLink instanceof ApolloLink
-        ? split(
-                ({ query }) => {
-                    const def = getMainDefinition(query);
-
-                    return def.kind === 'OperationDefinition' && def.operation === 'subscription';
-                },
-                wsLink,
-                httpLink,
-            )
-        : httpLink;
-
-    if (splitLink === httpLink && wsUrl) {
-        log.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');
-    }
-
-    return [
-        devLoggerLink, // 🪵 custom logger
-        errorLink, // ⚠️ Apollo's error handling
-        removeTypenameLink, // 🧼 cleans up __typename
-        ...(customLinks ?? []), // 🔗 custom links
-        splitLink, // 📡 HTTP vs WS routing
-    ];
+function isRegisteredClient(
+    client: ApolloClient<NormalizedCacheObject> | I_RegisteredApolloClient,
+): client is I_RegisteredApolloClient {
+    return typeof (client as I_RegisteredApolloClient).getClient === 'function';
 }
 
 export function ApolloProvider({
     isNextJS,
     options,
     children,
-    client: CustomClient,
-    provider: CustomProvider,
-    cache: CustomCache,
 }: I_ApolloProviderProps) {
-    const { uri, wsUrl, customLinks, ...apolloOptions } = options || {};
-    const Client = CustomClient ?? ApolloClient;
+    const client = useMemo(
+        () => getClient(options || {}, isNextJS),
+        [options, isNextJS],
+    );
 
-    if (typeof Client !== 'function') {
-        throw new TypeError('Invalid ApolloClient provided. Ensure CustomClient is a class.');
-    }
-
-    const Provider = (CustomProvider || ApolloProviderDefault) as ComponentType<I_ApolloProviderProps>;
-
-    const link = useMemo(() => from(createApolloLinks({
-        uri: uri ?? GRAPHQL_URI_DEFAULT,
-        wsUrl: wsUrl ?? '',
-        customLinks: customLinks ?? [],
-    })), [uri, wsUrl, customLinks]);
-
-    const cache = useMemo(() => (
-        CustomCache instanceof InMemoryCache ? CustomCache : new InMemoryCache()
-    ), [CustomCache]);
-
-    const client = useMemo(() => new Client({
-        link,
-        cache,
-        ...apolloOptions,
-    }), [Client, link, cache, apolloOptions]);
+    const actualClient = isRegisteredClient(client) ? client.getClient() : client;
 
     const renderedApollo = isNextJS
-        ? <Provider makeClient={() => client}>{children}</Provider>
-        : <Provider client={client}>{children}</Provider>;
+        // @ts-expect-error: Apollo client types are not fully compatible between classic and Next.js
+        ? <ApolloProviderNextJS makeClient={() => actualClient}>{children}</ApolloProviderNextJS>
+        : <ApolloProviderDefault client={actualClient}>{children}</ApolloProviderDefault>;
 
     return (
         <>
             <ApolloErrorProvider>
-                {renderedApollo}
+                <ApolloClientProvider client={actualClient}>
+                    {renderedApollo}
+                </ApolloClientProvider>
                 <ApolloErrorComponent />
             </ApolloErrorProvider>
             <Toaster position="top-right" />
