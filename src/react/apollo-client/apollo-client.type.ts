@@ -1,5 +1,4 @@
 import type {
-    ApolloCache,
     ApolloClientOptions,
     ApolloLink,
     NormalizedCacheObject,
@@ -11,9 +10,7 @@ import type { I_Children } from '#typescript/react.js';
 export interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCacheObject>, 'cache'> {
     uri?: string | UriFunction;
     wsUrl?: string;
-    cache?: ApolloCache<NormalizedCacheObject>;
     customLinks?: ApolloLink[];
-    ssrMode?: boolean;
 }
 
 export interface I_ApolloProviderProps extends I_Children {

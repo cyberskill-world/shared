@@ -7,12 +7,12 @@ export type { NextFunction, Request, Response } from 'express';
 export { Router } from 'express';
 
 export interface I_ExpressOptions {
-    staticFolder?: string;
+    static?: string | string[];
 }
 
 export interface I_NestOptions {
     module: Type<object>;
-    staticFolder?: string;
+    static?: string | string[];
     filters?: ExceptionFilter[];
     pipes?: ValidationPipe[];
 }

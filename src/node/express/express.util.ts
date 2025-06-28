@@ -36,18 +36,28 @@ export function createSession(options: SessionOptions): RequestHandler {
     return session(options);
 }
 
-export function createExpress(options?: I_ExpressOptions): Application {
-    const app = express();
-
+function setupMiddleware(app: Application) {
     app.set('trust proxy', 1);
     app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
     app.use(compression());
     app.use(useragent.express());
+}
 
-    if (options?.staticFolder) {
-        app.use(express.static(options.staticFolder));
+function setupStaticFolders(app: Application, staticFolders?: string | string[]) {
+    if (staticFolders) {
+        const statics = Array.isArray(staticFolders) ? staticFolders : [staticFolders];
+        statics.forEach((folder) => {
+            app.use(express.static(folder));
+        });
     }
+}
+
+export function createExpress(options?: I_ExpressOptions): Application {
+    const app = express();
+
+    setupMiddleware(app);
+    setupStaticFolders(app, options?.static);
 
     return app;
 }
@@ -55,15 +65,8 @@ export function createExpress(options?: I_ExpressOptions): Application {
 export async function createNest(options: I_NestOptions): Promise<INestApplication> {
     const app = await NestFactory.create(options.module);
 
-    app.getHttpAdapter().getInstance().set('trust proxy', 1);
-    app.use(express.urlencoded({ extended: true }));
-    app.use(cookieParser());
-    app.use(compression());
-    app.use(useragent.express());
-
-    if (options.staticFolder) {
-        app.use(express.static(options.staticFolder));
-    }
+    setupMiddleware(app.getHttpAdapter().getInstance());
+    setupStaticFolders(app.getHttpAdapter().getInstance(), options.static);
 
     if (options.filters) {
         app.useGlobalFilters(...options.filters);

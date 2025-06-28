@@ -1,10 +1,6 @@
-import {
-    ApolloNextAppProvider as ApolloProviderNextJS,
-} from '@apollo/client-integration-nextjs';
+import { ApolloNextAppProvider as ApolloProviderNextJS } from '@apollo/client-integration-nextjs';
 // TODO: change imports to @apollo/client after migration to v4
-import {
-    ApolloProvider as ApolloProviderDefault,
-} from '@apollo/client/react/react.cjs';
+import { ApolloProvider as ApolloProviderDefault } from '@apollo/client/react/react.cjs';
 import React, { useMemo } from 'react';
 
 import type { I_ApolloProviderProps } from './apollo-client.type.js';

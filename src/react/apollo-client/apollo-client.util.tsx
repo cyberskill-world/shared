@@ -152,19 +152,17 @@ function createApolloLinks(options: I_ApolloOptions) {
 export function getClient(options: I_ApolloOptions = {}, isNextJS = false) {
     const link = from(createApolloLinks(options));
 
-    const { cache, ...rest } = options;
-
     if (isNextJS) {
         return new ApolloClientNextJS({
             link,
             cache: new InMemoryCacheNextJS(),
-            ...rest,
+            ...options,
         });
     }
 
     return new ApolloClientDefault({
         link,
         cache: new InMemoryCacheDefault(),
-        ...rest,
+        ...options,
     });
 }
