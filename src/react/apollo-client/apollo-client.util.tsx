@@ -4,7 +4,6 @@ import type { Observable } from '@apollo/client/utilities';
 import {
     ApolloClient as ApolloClientNextJS,
     InMemoryCache as InMemoryCacheNextJS,
-    registerApolloClient,
 } from '@apollo/client-integration-nextjs';
 import {
     ApolloClient as ApolloClientDefault,
@@ -156,11 +155,11 @@ export function getClient(options: I_ApolloOptions = {}, isNextJS = false) {
     const { cache, ...rest } = options;
 
     if (isNextJS) {
-        return registerApolloClient(() => new ApolloClientNextJS({
+        return new ApolloClientNextJS({
             link,
             cache: new InMemoryCacheNextJS(),
             ...rest,
-        }));
+        });
     }
 
     return new ApolloClientDefault({
