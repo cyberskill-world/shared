@@ -1,12 +1,12 @@
-import type { I_UploadConfig, I_UploadOptions, I_UploadResult, I_UploadValidationConfig } from './upload.type.js';
+import type { I_UploadConfig, I_UploadOptions, I_UploadResult, I_UploadTypeConfig, I_UploadValidationConfig } from './upload.type.js';
 
 import { createWriteStream, mkdirSync, pathExistsSync } from '../fs/index.js';
 import { dirname } from '../path/index.js';
+import { E_UploadType } from './upload.type.js';
 
 async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Promise<number> {
     return new Promise((resolve, reject) => {
         let size = 0;
-
         stream.on('data', (chunk) => {
             size += chunk.length;
         });
@@ -23,21 +23,23 @@ function validateFileExtension(filename: string, allowedExtensions: string[]): b
     }
 
     const extension = filename.substring(lastDotIndex + 1).toLowerCase();
-
     return allowedExtensions.includes(extension);
 }
 
 function validateUpload(
     config: I_UploadValidationConfig,
     uploadConfig: I_UploadConfig,
+    uploadType: E_UploadType,
 ): { isValid: boolean; error?: string } {
     const { filename, fileSize } = config;
-    const { allowedExtensions, sizeLimit } = uploadConfig;
+    const typeConfig: I_UploadTypeConfig = uploadConfig[uploadType];
+
+    const { allowedExtensions, sizeLimit } = typeConfig;
 
     if (!validateFileExtension(filename, allowedExtensions)) {
         return {
             isValid: false,
-            error: `File extension not allowed. Allowed extensions: ${allowedExtensions.join(', ')}`,
+            error: `File extension not allowed for ${uploadType.toLowerCase()} files. Allowed extensions: ${allowedExtensions.join(', ')}`,
         };
     }
 
@@ -45,15 +47,38 @@ function validateUpload(
         const maxSizeMB = Math.round(sizeLimit / (1024 * 1024));
         return {
             isValid: false,
-            error: `File size exceeds limit. Maximum size: ${maxSizeMB}MB`,
+            error: `File size exceeds limit for ${uploadType.toLowerCase()} files. Maximum size: ${maxSizeMB}MB`,
         };
     }
 
     return { isValid: true };
 }
 
+export function createUploadConfig(overrides?: Partial<I_UploadConfig>): I_UploadConfig {
+    const defaultConfig: I_UploadConfig = {
+        [E_UploadType.IMAGE]: {
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
+            sizeLimit: 5 * 1024 * 1024, // 5MB
+        },
+        [E_UploadType.VIDEO]: {
+            allowedExtensions: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm'],
+            sizeLimit: 500 * 1024 * 1024, // 500MB
+        },
+        [E_UploadType.DOCUMENT]: {
+            allowedExtensions: ['pdf', 'doc', 'docx', 'txt', 'rtf'],
+            sizeLimit: 10 * 1024 * 1024, // 10MB
+        },
+        [E_UploadType.OTHER]: {
+            allowedExtensions: ['zip', 'rar', 'tar', 'gz'],
+            sizeLimit: 5 * 1024 * 1024, // 5MB
+        },
+    };
+
+    return { ...defaultConfig, ...overrides };
+}
+
 export async function upload(options: I_UploadOptions): Promise<I_UploadResult> {
-    const { path, file, config } = options;
+    const { path, file, config, type } = options;
 
     if (!path || typeof path !== 'string') {
         return {
@@ -72,20 +97,23 @@ export async function upload(options: I_UploadOptions): Promise<I_UploadResult> 
     }
 
     if (config) {
-        if (!Array.isArray(config.allowedExtensions) || config.allowedExtensions.length === 0) {
-            return {
-                success: false,
-                message: 'Invalid allowedExtensions in config',
-                result: '',
-            };
-        }
+        const requiredTypes = [E_UploadType.IMAGE, E_UploadType.VIDEO, E_UploadType.DOCUMENT, E_UploadType.OTHER];
 
-        if (typeof config.sizeLimit !== 'number' || config.sizeLimit <= 0) {
-            return {
-                success: false,
-                message: 'Invalid sizeLimit in config',
-                result: '',
-            };
+        for (const requiredType of requiredTypes) {
+            if (!config[requiredType] || !Array.isArray(config[requiredType].allowedExtensions) || config[requiredType].allowedExtensions.length === 0) {
+                return {
+                    success: false,
+                    message: `Invalid config for ${requiredType.toLowerCase()} files`,
+                    result: '',
+                };
+            }
+            if (typeof config[requiredType].sizeLimit !== 'number' || config[requiredType].sizeLimit <= 0) {
+                return {
+                    success: false,
+                    message: `Invalid size limit for ${requiredType.toLowerCase()} files`,
+                    result: '',
+                };
+            }
         }
     }
 
@@ -100,6 +128,7 @@ export async function upload(options: I_UploadOptions): Promise<I_UploadResult> 
             const validationResult = validateUpload(
                 { filename, fileSize },
                 config,
+                type,
             );
 
             if (!validationResult.isValid) {
