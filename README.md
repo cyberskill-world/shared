@@ -125,6 +125,7 @@ const formatted = formatCurrency(1234.56, 'USD');
 ```tsx
 import { LoadingProvider, useLoading } from '@cyberskill/shared';
 
+// eslint-disable-next-line react-refresh/only-export-components
 function App() {
     return (
         <LoadingProvider>
@@ -133,6 +134,7 @@ function App() {
     );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 function MyComponent() {
     const { showLoading, hideLoading } = useLoading();
 

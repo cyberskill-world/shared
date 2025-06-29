@@ -1,17 +1,14 @@
-# dependencies
-node_modules
-
 # misc
 .DS_Store
 
-# tsup
-.tsup
+# build output
+dist
+
+# dependencies
+node_modules
 
 # local env files
 .env
-
-# build output
-dist
 
 # Ignore simple-git-hooks config
 .simple-git-hooks.json
