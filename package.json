@@ -14,10 +14,6 @@
         "url": "https://github.com/cyberskill-world/shared/issues"
     },
     "exports": {
-        "./favicon": {
-            "import": "./dist/favicon/favicon.ico",
-            "require": "./dist/favicon/favicon.ico"
-        },
         "./config": {
             "types": "./dist/src/config/index.d.ts",
             "import": "./dist/src/config/index.js",
@@ -181,11 +177,6 @@
         "./style.css": {
             "import": "./dist/style.css",
             "require": "./dist/style.css"
-        },
-        "./tsconfig.base.json": {
-            "types": "./dist/tsconfig.base.json",
-            "import": "./dist/tsconfig.base.json",
-            "require": "./dist/tsconfig.base.json"
         }
     },
     "bin": {

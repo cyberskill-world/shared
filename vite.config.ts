@@ -30,8 +30,8 @@ export default defineConfig({
         lib: {
             name: '@cyberskill/shared',
             cssFileName: 'style',
-            entry: glob.sync('src/**/*.{ts,tsx,js,jsx,css,scss,json}').reduce((entries, file) => {
-                const entryName = file.replace(/\.(ts|tsx|js|jsx|css|scss|json)$/, '');
+            entry: glob.sync('src/**/*.{ts,tsx,js,jsx}').reduce((entries, file) => {
+                const entryName = file.replace(/\.(ts|tsx|js|jsx)$/, '');
                 entries[entryName] = resolve(__dirname, file);
                 return entries;
             }, {}),
@@ -50,16 +50,6 @@ export default defineConfig({
 
                 return false;
             },
-            // output: {
-            //     preserveModules: true,
-            //     preserveModulesRoot: 'src',
-            //     exports: 'named',
-            //     globals: {
-            //         'react': 'React',
-            //         'react-dom': 'ReactDOM',
-            //         'react/jsx-runtime': 'jsxRuntime',
-            //     },
-            // },
         },
     },
     plugins: [dts()],

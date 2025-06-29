@@ -1,14 +1,5 @@
-# misc
 .DS_Store
-
-# build output
 dist
-
-# dependencies
 node_modules
-
-# local env files
 .env
-
-# Ignore simple-git-hooks config
 .simple-git-hooks.json
