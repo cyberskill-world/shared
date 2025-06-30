@@ -84,25 +84,27 @@ export function createApolloLinks(options: I_ApolloOptions) {
                 },
             });
 
-            toast.error((t: { id: string }) => (
-                <>
-                    {message}
-                    &nbsp;
-                    <button
-                        type="button"
-                        className="text-blue-500 hover:text-blue-700"
-                        onClick={() => {
-                            setTimeout(() => {
-                                showGlobalApolloError(error);
-                            }, 0);
+            if (typeof window !== 'undefined') {
+                toast.error((t: { id: string }) => (
+                    <>
+                        {message}
+                        &nbsp;
+                        <button
+                            type="button"
+                            className="text-blue-500 hover:text-blue-700"
+                            onClick={() => {
+                                setTimeout(() => {
+                                    showGlobalApolloError(error);
+                                }, 0);
 
-                            toast.dismiss(t.id);
-                        }}
-                    >
-                        Show Details
-                    </button>
-                </>
-            ));
+                                toast.dismiss(t.id);
+                            }}
+                        >
+                            Show Details
+                        </button>
+                    </>
+                ));
+            }
         }
     });
 
