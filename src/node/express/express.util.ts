@@ -10,6 +10,7 @@ import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
 import useragent from 'express-useragent';
+import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 
 import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from './express.type.js';
 
@@ -58,6 +59,7 @@ export function createExpress(options?: I_ExpressOptions): Application {
 
     setupMiddleware(app);
     setupStaticFolders(app, options?.static);
+    app.use(graphqlUploadExpress());
 
     return app;
 }
