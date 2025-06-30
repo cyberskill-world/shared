@@ -74,11 +74,11 @@ export const PATH = {
     PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
     NODE_MODULES: resolveWorkingPath(NODE_MODULES),
     MIGRATE_MONGO_CONFIG: resolveWorkingPath(MIGRATE_MONGO_CONFIG),
-    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/lint-staged/index.js`),
-    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/commitlint/index.js`),
-    VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
-    VITEST_UNIT_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.setup.js`),
-    VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
+    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/lint-staged/index.js`),
+    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/commitlint/index.js`),
+    VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/vitest/vitest.unit.js`),
+    VITEST_UNIT_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/vitest/vitest.unit.setup.js`),
+    VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/vitest/vitest.e2e.js`),
 };
 
 export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>) {
