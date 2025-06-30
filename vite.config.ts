@@ -30,9 +30,10 @@ export default defineConfig({
         lib: {
             name: '@cyberskill/shared',
             cssFileName: 'style',
-            entry: glob.sync('src/**/*.{ts,tsx,js,jsx}').reduce((entries, file) => {
+            entry: glob.sync('src/**/*.{ts,tsx,js,jsx}', { ignore: 'src/**/*.type.ts' }).reduce((entries, file) => {
                 const entryName = file.replace(/\.(ts|tsx|js|jsx)$/, '');
                 entries[entryName] = resolve(__dirname, file);
+
                 return entries;
             }, {}),
             formats: ['es', 'cjs'],
