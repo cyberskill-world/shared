@@ -3,26 +3,25 @@ import React, { useMemo } from 'react';
 
 import type { I_ApolloProviderProps } from '../apollo-client/index.js';
 
-import { ApolloClientProvider } from '../apollo-client/index.js';
 import { ApolloErrorComponent, ApolloErrorProvider } from '../apollo-error/index.js';
 import { Toaster } from '../toast/index.js';
-import { getClientNextJS } from './apollo-client.util.js';
+import { getClient } from './apollo-client-nextjs.util.js';
 
-export function ApolloProviderNextJS({
+export function ApolloProvider({
     options,
     children,
 }: I_ApolloProviderProps) {
-    const client = useMemo(
-        () => getClientNextJS(options || {}),
+    const makeClient = useMemo(
+        () => () => getClient(options || {}),
         [options],
     );
 
     return (
         <>
             <ApolloErrorProvider>
-                <ApolloClientProvider client={client}>
-                    <ApolloNextAppProvider makeClient={() => client}>{children}</ApolloNextAppProvider>
-                </ApolloClientProvider>
+                <ApolloNextAppProvider makeClient={makeClient}>
+                    {children}
+                </ApolloNextAppProvider>
                 <ApolloErrorComponent />
             </ApolloErrorProvider>
             <Toaster position="top-right" />

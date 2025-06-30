@@ -1,2 +1,2 @@
-export * from './apollo-client.component.js';
-export * from './apollo-client.util.js';
+export * from './apollo-client-nextjs.component.js';
+export * from './apollo-client-nextjs.util.js';

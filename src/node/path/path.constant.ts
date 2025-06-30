@@ -39,7 +39,6 @@ export const CYBERSKILL_CLI_PATH = 'src/node/cli/index.ts';
 export const ESLINT_PACKAGE_NAME = 'eslint';
 export const ESLINT_CLI = 'eslint';
 export const VITEST_PACKAGE_NAME = 'vitest';
-export const PLAYWRIGHT_PACKAGE_NAME = 'playwright';
 export const VITEST_CLI = 'vitest';
 export const COMMIT_LINT_PACKAGE_NAME = '@commitlint/cli';
 export const COMMIT_LINT_CONVENTIONAL_CONFIG_PACKAGE_NAME = '@commitlint/config-conventional';

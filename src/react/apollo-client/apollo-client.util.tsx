@@ -18,7 +18,7 @@ import React from 'react';
 
 import type { I_ApolloOptions } from './apollo-client.type.js';
 
-import { showGlobalApolloError } from '../apollo-error/index.js';
+import { showGlobalApolloError } from '../apollo-error/apollo-error.util.js';
 import { log } from '../log/index.js';
 import { toast } from '../toast/index.js';
 import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
@@ -90,6 +90,7 @@ export function createApolloLinks(options: I_ApolloOptions) {
                     &nbsp;
                     <button
                         type="button"
+                        className="text-blue-500 hover:text-blue-700"
                         onClick={() => {
                             setTimeout(() => {
                                 showGlobalApolloError(error);
