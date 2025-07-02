@@ -1,6 +1,5 @@
 import type mongooseRaw from 'mongoose';
 
-import { format } from 'date-fns';
 import migrate from 'migrate-mongo';
 import { Document } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
@@ -23,19 +22,12 @@ import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 export { aggregatePaginate, mongoosePaginate };
 
 export const mongo = {
-    getDateTime(now = new Date()): string {
-        return format(now, 'yyyy-MM-dd HH:mm:ss.SSS');
-    },
-    createGenericFields({
-        returnDateAs = 'string',
-    }: { returnDateAs?: 'string' | 'date' } = {}): I_GenericDocument {
-        const now = returnDateAs === 'string' ? mongo.getDateTime() : new Date();
-
+    createGenericFields(): I_GenericDocument {
         return {
             id: uuidv4(),
             isDel: false,
-            createdAt: now,
-            updatedAt: now,
+            createdAt: new Date(),
+            updatedAt: new Date(),
         };
     },
     applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) {
