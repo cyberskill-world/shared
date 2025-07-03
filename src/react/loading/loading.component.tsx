@@ -21,7 +21,7 @@ function injectNoScrollStyle() {
     document.head.appendChild(style);
 }
 
-export function Loading({ full = false, block = false, className = '', message = 'Loading', ...rest }: I_LoadingProps) {
+export function Loading({ full = false, className = '', message = 'Loading', ...rest }: I_LoadingProps) {
     useEffect(() => {
         if (full) {
             document.body.classList.add('noscroll');
@@ -54,18 +54,15 @@ export function Loading({ full = false, block = false, className = '', message =
 
     if (full) {
         return (
-            <div className={clsx(style['fullscreen'], className)}>
-                {_renderLoading()}
-            </div>
-        );
-    }
-    else if (block) {
-        return (
-            <div className={clsx(style['block'], className)}>
+            <div className={clsx(style['full'], className)}>
                 {_renderLoading()}
             </div>
         );
     }
 
-    return _renderLoading();
+    return (
+        <div className={clsx(style['block'], className)}>
+            {_renderLoading()}
+        </div>
+    );
 }
