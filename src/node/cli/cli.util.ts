@@ -52,7 +52,7 @@ async function showCheckResult() {
             printIssues('Warnings', warnings);
             printIssues('Errors', errors);
 
-            if (errors.length > 0 || warnings.length > 0) {
+            if (errors.length > 0) {
                 process.exit(1);
             }
         }

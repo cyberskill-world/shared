@@ -1,5 +1,5 @@
 import dotenvx from '@dotenvx/dotenvx';
-import { bool, cleanEnv, str } from 'envalid';
+import { cleanEnv, makeValidator, str } from 'envalid';
 import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
@@ -11,6 +11,17 @@ import type { I_Environment } from './env.type.js';
 import { CYBERSKILL_STORAGE_DIRECTORY } from './env.constant.js';
 
 let isEnvFileLoaded = false;
+
+const debugValidator = makeValidator((input) => {
+    if (typeof input === 'boolean') {
+        return input;
+    }
+    if (typeof input === 'string') {
+        return true;
+    }
+
+    return false;
+});
 
 export function loadEnvFile() {
     if (process.env.NODE_ENV !== E_Environment.PRODUCTION && !isEnvFileLoaded) {
@@ -24,7 +35,7 @@ export function getEnv(): I_Environment {
 
     const cleanedEnv = cleanEnv(process.env, {
         CWD: str({ default: process.cwd() }),
-        DEBUG: bool({ default: false }),
+        DEBUG: debugValidator({ default: false }),
         CYBERSKILL_STORAGE_DIRECTORY: str({ default: path.join(os.homedir(), CYBERSKILL_STORAGE_DIRECTORY) }),
     });
 
