@@ -13,6 +13,7 @@ import { HttpLink } from '@apollo/client/link/http/http.cjs';
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename/remove-typename.cjs';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.cjs';
 import { getMainDefinition } from '@apollo/client/utilities/utilities.cjs';
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 import { createClient } from 'graphql-ws';
 import React from 'react';
 
@@ -114,6 +115,14 @@ export function createApolloLinks(options: I_ApolloOptions) {
         log.warn(`[Apollo] No GraphQL URI provided — using "${GRAPHQL_URI_DEFAULT}" as default`);
     }
 
+    const uploadLink = createUploadLink({
+        uri: uri ?? GRAPHQL_URI_DEFAULT,
+        credentials: 'include',
+        headers: {
+            'apollo-require-preflight': 'true',
+        },
+    });
+
     const httpLink = new HttpLink({
         uri: uri ?? GRAPHQL_URI_DEFAULT,
         credentials: 'include',
@@ -143,6 +152,7 @@ export function createApolloLinks(options: I_ApolloOptions) {
         devLoggerLink, // 🪵 custom logger
         errorLink, // ⚠️ Apollo's error handling
         removeTypenameLink, // 🧼 cleans up __typename
+        uploadLink, // 📤 file uploads
         ...(customLinks ?? []), // 🔗 custom links
         splitLink, // 📡 HTTP vs WS routing
     ];
