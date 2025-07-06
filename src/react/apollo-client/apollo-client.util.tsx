@@ -146,9 +146,8 @@ export function createApolloLinks(options: I_ApolloOptions) {
         devLoggerLink, // 🪵 custom logger
         errorLink, // ⚠️ Apollo's error handling
         removeTypenameLink, // 🧼 cleans up __typename
-        uploadLink, // 📤 file uploads
         ...(customLinks ?? []), // 🔗 custom links
-        splitLink, // 📡 HTTP vs WS routing
+        splitLink, // 📡 HTTP vs WS routing (includes uploadLink)
     ];
 }
 
