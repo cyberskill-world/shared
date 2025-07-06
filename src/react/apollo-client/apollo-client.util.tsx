@@ -9,7 +9,6 @@ import {
 // TODO: change imports to @apollo/client after migration to v4
 import { ApolloLink, from, split } from '@apollo/client/link/core/core.cjs';
 import { onError } from '@apollo/client/link/error/error.cjs';
-import { HttpLink } from '@apollo/client/link/http/http.cjs';
 import { removeTypenameFromVariables } from '@apollo/client/link/remove-typename/remove-typename.cjs';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.cjs';
 import { getMainDefinition } from '@apollo/client/utilities/utilities.cjs';
@@ -123,11 +122,6 @@ export function createApolloLinks(options: I_ApolloOptions) {
         },
     });
 
-    const httpLink = new HttpLink({
-        uri: uri ?? GRAPHQL_URI_DEFAULT,
-        credentials: 'include',
-    });
-
     const wsLink = wsUrl
         ? new GraphQLWsLink(createClient({ url: wsUrl }))
         : ApolloLink.empty();
@@ -140,11 +134,11 @@ export function createApolloLinks(options: I_ApolloOptions) {
                     return def.kind === 'OperationDefinition' && def.operation === 'subscription';
                 },
                 wsLink,
-                httpLink,
+                uploadLink,
             )
-        : httpLink;
+        : uploadLink;
 
-    if (splitLink === httpLink && wsUrl) {
+    if (splitLink === uploadLink && wsUrl) {
         log.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');
     }
 
