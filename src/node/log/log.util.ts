@@ -7,7 +7,7 @@ import { GraphQLError } from 'graphql';
 import type { I_Return } from '#typescript/index.js';
 
 import { getEnv } from '#config/env/index.js';
-import { RESPONSE_STATUS } from '#constant/response-status.js';
+import { RESPONSE_STATUS } from '#constant/index.js';
 
 import type { I_CatchErrorOptions, I_IssueEntry, I_Log, T_ThrowError } from './log.type.js';
 

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import type { I_Return } from '#typescript/index.js';
 
-import { RESPONSE_STATUS } from '#constant/response-status.js';
+import { RESPONSE_STATUS } from '#constant/index.js';
 import { deepClone, getNestedValue, isObject, regexSearchMapper, setNestedValue } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';

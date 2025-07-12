@@ -6,10 +6,34 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
 const pkg = JSON.parse(fs.readFileSync(resolve(__dirname, 'package.json'), 'utf-8'));
+
 const allDeps = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
 ];
+
+const externalDeps = new Set(allDeps);
+const builtinModulesSet = new Set(builtinModules);
+const nodeBuiltinModulesSet = new Set(builtinModules.map(m => `node:${m}`));
+
+function isExternal(id) {
+    if (builtinModulesSet.has(id) || nodeBuiltinModulesSet.has(id)) {
+        return true;
+    }
+    if (externalDeps.has(id)) {
+        return true;
+    }
+    return allDeps.some(dep => id.startsWith(`${dep}/`));
+}
+
+const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts'], {
+    ignore: ['src/**/*.type.ts', 'src/**/*.d.ts'],
+    absolute: true,
+}).reduce((entries, file) => {
+    const entryName = file.replace(/^.*\/src\//, '').replace(/\.(ts|tsx)$/, '');
+    entries[entryName] = file;
+    return entries;
+}, {});
 
 export default defineConfig({
     resolve: {
@@ -28,46 +52,44 @@ export default defineConfig({
         lib: {
             name: '@cyberskill/shared',
             cssFileName: 'style',
-            entry: glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts'], {
-                ignore: ['src/**/*.type.ts'],
-            }).reduce((entries, file) => {
-                const entryName = file.replace(/^src\//, '').replace(/\.(ts|tsx)$/, '');
-                entries[entryName] = resolve(__dirname, file);
-                return entries;
-            }, {}),
-            formats: ['es'],
+            entry: entryPoints,
+            formats: ['es', 'cjs'],
         },
         rollupOptions: {
-            external: (id) => {
-                if (builtinModules.includes(id) || builtinModules.some(m => id === `node:${m}`)) {
-                    return true;
-                }
-                if (allDeps.some(dep => id === dep || id.startsWith(`${dep}/`))) {
-                    return true;
-                }
-                return false;
-            },
+            external: isExternal,
             output: {
                 sourcemap: false,
                 compact: true,
                 preserveModules: true,
                 preserveModulesRoot: 'src',
-                entryFileNames: '[name].js',
-                chunkFileNames: '[name].js',
-                assetFileNames: '[name].[ext]',
+                exports: 'named',
             },
             treeshake: {
                 moduleSideEffects: false,
                 propertyReadSideEffects: false,
                 unknownGlobalSideEffects: false,
+                tryCatchDeoptimization: false,
+                correctVarValueBeforeDeclaration: true,
             },
         },
         copyPublicDir: false,
+        cssCodeSplit: false,
+        target: 'es2015',
     },
     plugins: [
-        dts(),
+        dts({
+            logLevel: 'error',
+            insertTypesEntry: true,
+            compilerOptions: {
+                declaration: true,
+                declarationMap: false,
+                emitDeclarationOnly: true,
+            },
+        }),
     ],
-    optimizeDeps: {
-        include: allDeps.filter(dep => !dep.startsWith('@types/')),
+    esbuild: {
+        target: 'es2015',
+        treeShaking: true,
+        legalComments: 'none',
     },
 });

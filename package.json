@@ -17,138 +17,172 @@
     "exports": {
         "./config": {
             "types": "./dist/config/index.d.ts",
-            "import": "./dist/config/index.js"
+            "import": "./dist/config/index.js",
+            "require": "./dist/config/index.cjs"
         },
         "./config/commitlint": {
             "types": "./dist/config/commitlint/index.d.ts",
-            "import": "./dist/config/commitlint/index.js"
+            "import": "./dist/config/commitlint/index.js",
+            "require": "./dist/config/commitlint/index.cjs"
         },
         "./config/env": {
             "types": "./dist/config/env/index.d.ts",
-            "import": "./dist/config/env/index.js"
+            "import": "./dist/config/env/index.js",
+            "require": "./dist/config/env/index.cjs"
         },
         "./config/eslint": {
             "types": "./dist/config/eslint/index.d.ts",
-            "import": "./dist/config/eslint/index.js"
+            "import": "./dist/config/eslint/index.js",
+            "require": "./dist/config/eslint/index.cjs"
         },
         "./config/graphql-codegen": {
             "types": "./dist/config/graphql-codegen/index.d.ts",
-            "import": "./dist/config/graphql-codegen/index.js"
+            "import": "./dist/config/graphql-codegen/index.js",
+            "require": "./dist/config/graphql-codegen/index.cjs"
         },
         "./config/lint-staged": {
             "types": "./dist/config/lint-staged/index.d.ts",
-            "import": "./dist/config/lint-staged/index.js"
+            "import": "./dist/config/lint-staged/index.js",
+            "require": "./dist/config/lint-staged/index.cjs"
         },
         "./config/vitest": {
             "types": "./dist/config/vitest/index.d.ts",
-            "import": "./dist/config/vitest/index.js"
+            "import": "./dist/config/vitest/index.js",
+            "require": "./dist/config/vitest/index.cjs"
         },
         "./constant": {
             "types": "./dist/constant/index.d.ts",
-            "import": "./dist/constant/index.js"
+            "import": "./dist/constant/index.js",
+            "require": "./dist/constant/index.cjs"
         },
         "./node/apollo-server": {
             "types": "./dist/node/apollo-server/index.d.ts",
-            "import": "./dist/node/apollo-server/index.js"
+            "import": "./dist/node/apollo-server/index.js",
+            "require": "./dist/node/apollo-server/index.cjs"
         },
         "./node/cli": {
             "types": "./dist/node/cli/index.d.ts",
-            "import": "./dist/node/cli/index.js"
+            "import": "./dist/node/cli/index.js",
+            "require": "./dist/node/cli/index.cjs"
         },
         "./node/command": {
             "types": "./dist/node/command/index.d.ts",
-            "import": "./dist/node/command/index.js"
+            "import": "./dist/node/command/index.js",
+            "require": "./dist/node/command/index.cjs"
         },
         "./node/express": {
             "types": "./dist/node/express/index.d.ts",
-            "import": "./dist/node/express/index.js"
+            "import": "./dist/node/express/index.js",
+            "require": "./dist/node/express/index.cjs"
         },
         "./node/fs": {
             "types": "./dist/node/fs/index.d.ts",
-            "import": "./dist/node/fs/index.js"
+            "import": "./dist/node/fs/index.js",
+            "require": "./dist/node/fs/index.cjs"
         },
         "./node/log": {
             "types": "./dist/node/log/index.d.ts",
-            "import": "./dist/node/log/index.js"
+            "import": "./dist/node/log/index.js",
+            "require": "./dist/node/log/index.cjs"
         },
         "./node/mongo": {
             "types": "./dist/node/mongo/index.d.ts",
-            "import": "./dist/node/mongo/index.js"
+            "import": "./dist/node/mongo/index.js",
+            "require": "./dist/node/mongo/index.cjs"
         },
         "./node/package": {
             "types": "./dist/node/package/index.d.ts",
-            "import": "./dist/node/package/index.js"
+            "import": "./dist/node/package/index.js",
+            "require": "./dist/node/package/index.cjs"
         },
         "./node/path": {
             "types": "./dist/node/path/index.d.ts",
-            "import": "./dist/node/path/index.js"
+            "import": "./dist/node/path/index.js",
+            "require": "./dist/node/path/index.cjs"
         },
         "./node/storage": {
             "types": "./dist/node/storage/index.d.ts",
-            "import": "./dist/node/storage/index.js"
+            "import": "./dist/node/storage/index.js",
+            "require": "./dist/node/storage/index.cjs"
         },
         "./node/upload": {
             "types": "./dist/node/upload/index.d.ts",
-            "import": "./dist/node/upload/index.js"
+            "import": "./dist/node/upload/index.js",
+            "require": "./dist/node/upload/index.cjs"
         },
         "./node/ws": {
             "types": "./dist/node/ws/index.d.ts",
-            "import": "./dist/node/ws/index.js"
+            "import": "./dist/node/ws/index.js",
+            "require": "./dist/node/ws/index.cjs"
         },
         "./react/apollo-client": {
             "types": "./dist/react/apollo-client/index.d.ts",
-            "import": "./dist/react/apollo-client/index.js"
+            "import": "./dist/react/apollo-client/index.js",
+            "require": "./dist/react/apollo-client/index.cjs"
         },
         "./react/apollo-client-nextjs": {
             "types": "./dist/react/apollo-client-nextjs/index.d.ts",
-            "import": "./dist/react/apollo-client-nextjs/index.js"
+            "import": "./dist/react/apollo-client-nextjs/index.js",
+            "require": "./dist/react/apollo-client-nextjs/index.cjs"
         },
         "./react/apollo-client-nextjs/rsc": {
             "types": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.d.ts",
-            "import": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.js"
+            "import": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.js",
+            "require": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.cjs"
         },
         "./react/apollo-error": {
             "types": "./dist/react/apollo-error/index.d.ts",
-            "import": "./dist/react/apollo-error/index.js"
+            "import": "./dist/react/apollo-error/index.js",
+            "require": "./dist/react/apollo-error/index.cjs"
         },
         "./react/i18next": {
             "types": "./dist/react/i18next/index.d.ts",
-            "import": "./dist/react/i18next/index.js"
+            "import": "./dist/react/i18next/index.js",
+            "require": "./dist/react/i18next/index.cjs"
         },
         "./react/loading": {
             "types": "./dist/react/loading/index.d.ts",
-            "import": "./dist/react/loading/index.js"
+            "import": "./dist/react/loading/index.js",
+            "require": "./dist/react/loading/index.cjs"
         },
         "./react/log": {
             "types": "./dist/react/log/index.d.ts",
-            "import": "./dist/react/log/index.js"
+            "import": "./dist/react/log/index.js",
+            "require": "./dist/react/log/index.cjs"
         },
         "./react/next-intl": {
             "types": "./dist/react/next-intl/index.d.ts",
-            "import": "./dist/react/next-intl/index.js"
+            "import": "./dist/react/next-intl/index.js",
+            "require": "./dist/react/next-intl/index.cjs"
         },
         "./react/storage": {
             "types": "./dist/react/storage/index.d.ts",
-            "import": "./dist/react/storage/index.js"
+            "import": "./dist/react/storage/index.js",
+            "require": "./dist/react/storage/index.cjs"
         },
         "./react/toast": {
             "types": "./dist/react/toast/index.d.ts",
-            "import": "./dist/react/toast/index.js"
+            "import": "./dist/react/toast/index.js",
+            "require": "./dist/react/toast/index.cjs"
         },
         "./react/userback": {
             "types": "./dist/react/userback/index.d.ts",
-            "import": "./dist/react/userback/index.js"
+            "import": "./dist/react/userback/index.js",
+            "require": "./dist/react/userback/index.cjs"
         },
         "./typescript": {
             "types": "./dist/typescript/index.d.ts",
-            "import": "./dist/typescript/index.js"
+            "import": "./dist/typescript/index.js",
+            "require": "./dist/typescript/index.cjs"
         },
         "./util": {
             "types": "./dist/util/index.d.ts",
-            "import": "./dist/util/index.js"
+            "import": "./dist/util/index.js",
+            "require": "./dist/util/index.cjs"
         },
         "./style.css": {
-            "import": "./dist/style.css"
+            "import": "./dist/style.css",
+            "require": "./dist/style.css"
         }
     },
     "bin": {
