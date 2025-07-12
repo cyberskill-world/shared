@@ -28,12 +28,11 @@ export default defineConfig({
         lib: {
             name: '@cyberskill/shared',
             cssFileName: 'style',
-            entry: glob.sync('src/**/*.{ts,tsx,js,jsx}', {
+            entry: glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts'], {
                 ignore: ['src/**/*.type.ts'],
             }).reduce((entries, file) => {
-                const entryName = file.replace(/\.(ts|tsx|js|jsx)$/, '');
+                const entryName = file.replace(/^src\//, '').replace(/\.(ts|tsx)$/, '');
                 entries[entryName] = resolve(__dirname, file);
-
                 return entries;
             }, {}),
             formats: ['es'],
@@ -51,6 +50,11 @@ export default defineConfig({
             output: {
                 sourcemap: false,
                 compact: true,
+                preserveModules: true,
+                preserveModulesRoot: 'src',
+                entryFileNames: '[name].js',
+                chunkFileNames: '[name].js',
+                assetFileNames: '[name].[ext]',
             },
             treeshake: {
                 moduleSideEffects: false,
@@ -61,12 +65,7 @@ export default defineConfig({
         copyPublicDir: false,
     },
     plugins: [
-        dts({
-            outDir: 'dist/src',
-            include: ['src/**/*.{ts,tsx}'],
-            // exclude: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.ts', 'src/**/*.spec.ts'],
-            logLevel: 'error',
-        }),
+        dts(),
     ],
     optimizeDeps: {
         include: allDeps.filter(dep => !dep.startsWith('@types/')),
