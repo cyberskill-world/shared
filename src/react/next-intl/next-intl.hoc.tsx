@@ -3,7 +3,7 @@ import type { ComponentType } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
 import React from 'react';
 
-import type { I_Children } from '#typescript/react.js';
+import type { I_Children } from '#typescript/index.js';
 
 import type { I_NextIntlLanguage, T_NextIntlMessageList } from './next-intl.type.js';
 

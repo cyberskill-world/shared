@@ -5,7 +5,7 @@ import type {
     UriFunction,
 } from '@apollo/client';
 
-import type { I_Children } from '#typescript/react.js';
+import type { I_Children } from '#typescript/index.js';
 
 export interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCacheObject>, 'cache'> {
     uri?: string | UriFunction;

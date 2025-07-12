@@ -24,6 +24,7 @@ const debugValidator = makeValidator((input) => {
 });
 
 export function loadEnvFile() {
+    // @ts-expect-error ignore type error
     if (process.env.NODE_ENV !== E_Environment.PRODUCTION && !isEnvFileLoaded) {
         dotenvx.config();
         isEnvFileLoaded = true;

@@ -1,7 +1,7 @@
 import type { Locale } from 'date-fns';
 import type { AbstractIntlMessages, Timezone } from 'next-intl';
 
-import type { I_Children } from '#typescript/react.js';
+import type { I_Children } from '#typescript/index.js';
 
 export interface I_NextIntlLanguage {
     label: string;

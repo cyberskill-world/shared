@@ -1,4 +1,4 @@
-import type { T_Object } from '#typescript/common.js';
+import type { T_Object } from '#typescript/index.js';
 
 /**
  * Check if a string is a valid JSON string.

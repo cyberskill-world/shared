@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
-import type { I_Children } from '#typescript/react.js';
+import type { I_Children } from '#typescript/index.js';
 
 import { Loading } from './loading.component.js';
 import { LoadingContext } from './loading.context.js';

@@ -1,2 +1,2 @@
-export * from './common.js';
-export * from './react.js';
+export * from './common.type.js';
+export * from './react.type.js';

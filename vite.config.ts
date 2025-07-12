@@ -25,33 +25,50 @@ export default defineConfig({
         },
     },
     build: {
-        target: 'es2015',
-        outDir: 'dist',
         lib: {
             name: '@cyberskill/shared',
             cssFileName: 'style',
-            entry: glob.sync('src/**/*.{ts,tsx,js,jsx}', { ignore: 'src/**/*.type.ts' }).reduce((entries, file) => {
+            entry: glob.sync('src/**/*.{ts,tsx,js,jsx}', {
+                ignore: ['src/**/*.type.ts'],
+            }).reduce((entries, file) => {
                 const entryName = file.replace(/\.(ts|tsx|js|jsx)$/, '');
                 entries[entryName] = resolve(__dirname, file);
 
                 return entries;
             }, {}),
-            formats: ['es', 'cjs'],
+            formats: ['es'],
         },
         rollupOptions: {
             external: (id) => {
-                // Node.js built-ins
                 if (builtinModules.includes(id) || builtinModules.some(m => id === `node:${m}`)) {
                     return true;
                 }
-                // All dependencies and peerDependencies
                 if (allDeps.some(dep => id === dep || id.startsWith(`${dep}/`))) {
                     return true;
                 }
-
                 return false;
             },
+            output: {
+                sourcemap: false,
+                compact: true,
+            },
+            treeshake: {
+                moduleSideEffects: false,
+                propertyReadSideEffects: false,
+                unknownGlobalSideEffects: false,
+            },
         },
+        copyPublicDir: false,
     },
-    plugins: [dts()],
+    plugins: [
+        dts({
+            outDir: 'dist/src',
+            include: ['src/**/*.{ts,tsx}'],
+            // exclude: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.ts', 'src/**/*.spec.ts'],
+            logLevel: 'error',
+        }),
+    ],
+    optimizeDeps: {
+        include: allDeps.filter(dep => !dep.startsWith('@types/')),
+    },
 });

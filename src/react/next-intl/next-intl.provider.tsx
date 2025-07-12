@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import type { I_Children } from '#typescript/react.js';
+import type { I_Children } from '#typescript/index.js';
 
 import type { I_NextIntlLanguage, I_NextIntlProviderProps } from './next-intl.type.js';
 
