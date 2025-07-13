@@ -13,7 +13,6 @@ const env = getEnv();
 
 export const WORKING_DIRECTORY = env.CWD;
 export const CYBERSKILL_PACKAGE_NAME = '@cyberskill/shared';
-export const CYBERSKILL_SRC = 'src';
 export const NODE_MODULES = 'node_modules';
 export const BUILD_DIRECTORY = 'dist';
 export const PUBLIC_DIRECTORY = 'public';
@@ -30,7 +29,7 @@ export const CYBERSKILL_DIRECTORY = (() => {
     const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as T_PackageJson;
 
     const baseDirectory = packageJson.name === CYBERSKILL_PACKAGE_NAME
-        ? join(WORKING_DIRECTORY, CYBERSKILL_SRC)
+        ? join(WORKING_DIRECTORY, BUILD_DIRECTORY)
         : join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
 
     return baseDirectory;
