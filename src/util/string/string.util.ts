@@ -1,11 +1,10 @@
 import cryptoJS from 'crypto-js';
+import { isObject } from 'lodash-es';
 import slugifyRaw from 'slugify';
 
 import type { T_Object } from '#typescript/index.js';
 
 import type { I_SlugifyOptions } from './string.type.js';
-
-import { isObject } from '../object/index.js';
 
 const slugify = slugifyRaw.default || slugifyRaw;
 

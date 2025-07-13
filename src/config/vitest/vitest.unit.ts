@@ -1,11 +1,10 @@
 import type { UserConfig } from 'vite';
 
 import react from '@vitejs/plugin-react-swc';
+import { merge } from 'lodash-es';
 import { defineConfig } from 'vitest/config';
 
 import type { T_Object } from '#typescript/index.js';
-
-import { deepMerge } from '#util/object/index.js';
 
 export function vitestUnit(options: UserConfig) {
     const config = {
@@ -19,5 +18,5 @@ export function vitestUnit(options: UserConfig) {
         },
     };
 
-    return defineConfig(deepMerge(config, options as T_Object));
+    return defineConfig(merge(config, options as T_Object));
 }

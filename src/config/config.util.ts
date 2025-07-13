@@ -1,9 +1,9 @@
 import antfu from '@antfu/eslint-config';
+import { merge } from 'lodash-es';
 
 import type { T_Object } from '#typescript/index.js';
 
 import { vitestE2E, vitestUnit } from '#config/vitest/index.js';
-import { deepMerge } from '#util/object/index.js';
 
 import type { T_ConfigHandler, T_ConfigType } from './config.type.js';
 
@@ -11,7 +11,7 @@ import { E_ConfigType } from './config.type.js';
 import eslintBaseConfig from './eslint/index.js';
 
 const handleESLint: T_ConfigHandler = (...config) => {
-    const mergedConfig = deepMerge(
+    const mergedConfig = merge(
         eslintBaseConfig as unknown as T_Object,
         ...config.map(config => config as T_Object),
     ) as T_Object;
@@ -48,8 +48,8 @@ const handleESLint: T_ConfigHandler = (...config) => {
 
 const configHandlers: Record<E_ConfigType, T_ConfigHandler> = {
     [E_ConfigType.ESLINT]: config => handleESLint(config),
-    [E_ConfigType.COMMITLINT]: config => deepMerge(config),
-    [E_ConfigType.LINT_STAGED]: config => deepMerge(config),
+    [E_ConfigType.COMMITLINT]: config => merge(config),
+    [E_ConfigType.LINT_STAGED]: config => merge(config),
     [E_ConfigType.VITEST_REACT_UNIT]: config => vitestUnit(config) as T_Object,
     [E_ConfigType.VITEST_REACT_E2E]: config => vitestE2E(config) as T_Object,
 };

@@ -1,5 +1,6 @@
 import type mongooseRaw from 'mongoose';
 
+import { cloneDeep, isObject } from 'lodash-es';
 import migrate from 'migrate-mongo';
 import { Document } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
@@ -9,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
-import { deepClone, getNestedValue, isObject, regexSearchMapper, setNestedValue } from '#util/index.js';
+import { getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
@@ -160,7 +161,7 @@ export const mongo = {
             return {} as T_FilterQuery<T>;
         }
 
-        let newFilter = deepClone(filter);
+        let newFilter = cloneDeep(filter);
 
         if (!fields || fields.length === 0) {
             return newFilter;
