@@ -3,8 +3,6 @@ import type { UserConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vitest/config';
 
-import { PATH } from '#node/path/index.js';
-
 export function vitestUnit(options: UserConfig) {
     return defineConfig({
         plugins: [react()],
@@ -13,7 +11,7 @@ export function vitestUnit(options: UserConfig) {
             environment: 'jsdom',
             pool: 'vmThreads',
             include: ['**/*.test.unit.?(c|m)[jt]s?(x)'],
-            setupFiles: [PATH.VITEST_UNIT_SETUP_CONFIG],
+            setupFiles: ['./vitest.unit.setup.ts'],
         },
         ...options,
     });

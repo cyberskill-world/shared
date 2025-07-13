@@ -13,6 +13,7 @@ const env = getEnv();
 
 export const WORKING_DIRECTORY = env.CWD;
 export const CYBERSKILL_PACKAGE_NAME = '@cyberskill/shared';
+export const CYBERSKILL_SRC = 'src';
 export const NODE_MODULES = 'node_modules';
 export const BUILD_DIRECTORY = 'dist';
 export const PUBLIC_DIRECTORY = 'public';
@@ -29,10 +30,10 @@ export const CYBERSKILL_DIRECTORY = (() => {
     const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as T_PackageJson;
 
     const baseDirectory = packageJson.name === CYBERSKILL_PACKAGE_NAME
-        ? WORKING_DIRECTORY
-        : join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME);
+        ? join(WORKING_DIRECTORY, CYBERSKILL_SRC)
+        : join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
 
-    return join(baseDirectory, BUILD_DIRECTORY);
+    return baseDirectory;
 })();
 export const CYBERSKILL_CLI = 'cyberskill';
 export const CYBERSKILL_CLI_PATH = 'src/node/cli/index.ts';
@@ -74,11 +75,10 @@ export const PATH = {
     PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
     NODE_MODULES: resolveWorkingPath(NODE_MODULES),
     MIGRATE_MONGO_CONFIG: resolveWorkingPath(MIGRATE_MONGO_CONFIG),
-    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/lint-staged/index.js`),
-    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/commitlint/index.js`),
-    VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/vitest/vitest.unit.js`),
-    VITEST_UNIT_SETUP_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/vitest/vitest.unit.setup.js`),
-    VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/src/config/vitest/vitest.e2e.js`),
+    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/lint-staged/index.js`),
+    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/commitlint/index.js`),
+    VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
+    VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
 };
 
 export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>) {
