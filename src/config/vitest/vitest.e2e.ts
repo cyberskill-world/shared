@@ -5,7 +5,7 @@ import { defineConfig } from 'vitest/config';
 
 export function vitestE2E(options: UserConfig) {
     return defineConfig({
-        plugins: [react()],
+        plugins: [react(), ...(options.plugins ?? [])],
         test: {
             include: ['**/*.test.e2e.?(c|m)[jt]s?(x)'],
             browser: {
@@ -17,6 +17,7 @@ export function vitestE2E(options: UserConfig) {
                     { browser: 'webkit' },
                 ],
             },
+            ...(options.test ?? {}),
         },
         ...options,
     });
