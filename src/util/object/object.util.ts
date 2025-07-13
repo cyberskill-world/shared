@@ -1,3 +1,5 @@
+import { isArray, isPlainObject, mergeWith } from 'lodash-es';
+
 /**
  * Check if a string is a valid JSON string.
  * @param str - The string to check.
@@ -65,4 +67,26 @@ export function setNestedValue<T>(
             value,
         ),
     } as T;
+}
+
+/**
+ * Deep merges multiple objects or arrays into a single object or array.
+ * If all arguments are arrays, concatenates them.
+ * If all are objects, deeply merges (concatenating arrays within objects).
+ * Throws if mixed types.
+ */
+export function deepMerge<T = unknown>(...args: T[]): T {
+    if (args.every(isArray)) {
+        // All arrays: concatenate
+        return ([] as unknown[]).concat(...args) as T;
+    }
+    if (args.every(isPlainObject)) {
+        // All objects: deep merge
+        return mergeWith({}, ...args, (objValue: unknown, srcValue: unknown) => {
+            if (isArray(objValue) && isArray(srcValue)) {
+                return objValue.concat(srcValue);
+            }
+        }) as T;
+    }
+    throw new Error('deepMerge: All arguments must be either arrays or objects of the same type.');
 }
