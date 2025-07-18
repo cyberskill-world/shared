@@ -32,6 +32,7 @@ export function createGraphqlCodegenConfig({
                     },
                     config: {
                         useTypeImports: true,
+                        namingConvention: 'keep',
                     },
                 },
             }),

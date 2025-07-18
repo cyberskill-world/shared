@@ -49,7 +49,7 @@ function setupStaticFolders(app: Application, staticFolders?: string | string[])
     if (staticFolders) {
         const statics = Array.isArray(staticFolders) ? staticFolders : [staticFolders];
         statics.forEach((folder) => {
-            app.use(express.static(folder));
+            app.use(`/${folder}`, express.static(folder));
         });
     }
 }

@@ -1,10 +1,10 @@
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import {
     ApolloServerPluginLandingPageLocalDefault,
     ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default';
+import { expressMiddleware } from '@as-integrations/express5';
 
 import type { I_ApolloServerOptions } from './apollo-server.type.js';
 
