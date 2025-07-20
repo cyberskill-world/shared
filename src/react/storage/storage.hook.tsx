@@ -79,9 +79,12 @@ export function useStorage<T>(
 
     const set = useCallback(
         (newValue: T | ((val: T | undefined) => T)) => {
-            setValue(prev =>
-                typeof newValue === 'function' ? (newValue as (val: T | undefined) => T)(prev) : newValue,
-            );
+            setValue((prev) => {
+                if (typeof newValue === 'function') {
+                    return (newValue as (val: T | undefined) => T)(prev);
+                }
+                return newValue;
+            });
         },
         [],
     );

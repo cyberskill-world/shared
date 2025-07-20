@@ -31,7 +31,7 @@ export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...r
 
 export function createCors<T extends T_CorsType>(options: T_CorsOptions<T>) {
     return cors<cors.CorsRequest>(createCorsOptions(options));
-};
+}
 
 export function createSession(options: SessionOptions): RequestHandler {
     return session(options);

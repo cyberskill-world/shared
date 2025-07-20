@@ -12,20 +12,23 @@ export function ApolloErrorComponent() {
         return null;
     }
 
-    const renderErrorList = (label: string, list?: readonly { message: string }[]) =>
-        list?.length
-            ? (
-                    <div>
-                        <strong>
-                            {label}
-                            :
-                        </strong>
-                        <ul>
-                            {list.map(e => <li key={e.message}>{e.message}</li>)}
-                        </ul>
-                    </div>
-                )
-            : null;
+    const _renderErrorList = (label: string, list?: readonly { message: string }[]): React.ReactElement | null => {
+        if (!list?.length) {
+            return null;
+        }
+
+        return (
+            <div>
+                <strong>
+                    {label}
+                    :
+                </strong>
+                <ul>
+                    {list.map(e => <li key={e.message}>{e.message}</li>)}
+                </ul>
+            </div>
+        );
+    };
 
     return (
         <div className={style['modal-backdrop']}>
@@ -56,9 +59,9 @@ export function ApolloErrorComponent() {
                             {error.networkError.message}
                         </pre>
                     )}
-                    {renderErrorList('GraphQL Errors', [...error.graphQLErrors])}
-                    {renderErrorList('Protocol Errors', [...error.protocolErrors])}
-                    {renderErrorList('Client Errors', [...error.clientErrors])}
+                    {_renderErrorList('GraphQL Errors', [...error.graphQLErrors])}
+                    {_renderErrorList('Protocol Errors', [...error.protocolErrors])}
+                    {_renderErrorList('Client Errors', [...error.clientErrors])}
                     {error.extraInfo && (
                         <pre className="extra">
                             <strong>Extra Info:</strong>

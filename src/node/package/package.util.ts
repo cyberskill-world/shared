@@ -290,7 +290,7 @@ export async function setupPackages(
         const packagesData = await Promise.all(packages.map(getPackage));
 
         const validPackages = packagesData
-            .filter((pkg): pkg is { success: true; result: I_PackageInfo } => pkg.success && !!pkg.result && !pkg.result.isCurrentProject)
+            .filter((pkg): pkg is { success: true; result: I_PackageInfo } => pkg.success && Boolean(pkg.result) && !pkg.result.isCurrentProject)
             .map(pkg => pkg.result);
 
         const packagesToInstall = validPackages.filter(pkg => !pkg.isInstalled);

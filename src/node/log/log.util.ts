@@ -64,7 +64,9 @@ export const log: I_Log = {
         }
 
         issues.forEach(({ file, position, rule, message }) => {
-            consola.log(`${chalk.gray('File:')} ${chalk.blue(`${file}${position ? `:${position}` : ''}`)}`);
+            const positionSuffix = position ? `:${position}` : '';
+            const filePath = `${file}${positionSuffix}`;
+            consola.log(`${chalk.gray('File:')} ${chalk.blue(filePath)}`);
 
             if (rule) {
                 consola.log(`   ${chalkKeyword(color)('Rule:')} ${rule}`);

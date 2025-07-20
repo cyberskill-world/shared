@@ -17,7 +17,7 @@ export const {
 
 export const readJsonSync: typeof fsExtra.readJsonSync = fsExtra.readJsonSync;
 
-export function writeFileSync(file: fsExtra.PathOrFileDescriptor, data: string | NodeJS.ArrayBufferView, options?: fsExtra.WriteFileOptions): void {
+export function writeFileSync(file: fsExtra.PathOrFileDescriptor, data: string | Uint8Array, options?: fsExtra.WriteFileOptions): void {
     fsExtra.writeFileSync(file, data, options ?? 'utf-8');
 }
 

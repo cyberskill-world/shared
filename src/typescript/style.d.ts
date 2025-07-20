@@ -3,11 +3,11 @@ declare module '*.module.css' {
 
     export default style;
 }
-declare module '*.css' { };
+declare module '*.css' { }
 
 declare module '*.module.scss' {
     const style: { [className: string]: string };
 
     export default style;
 }
-declare module '*.scss' { };
+declare module '*.scss' { }

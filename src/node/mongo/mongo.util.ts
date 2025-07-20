@@ -628,19 +628,20 @@ export class MongooseController<T extends Partial<C_Document>> {
     async createShortId(id: string, length = 4): Promise<I_Return<string>> {
         try {
             const maxRetries = 10;
-            const existingShortIds = new Set();
+            const shortIds = Array.from({ length: maxRetries }, (_, index) =>
+                generateShortId(id, index + length));
 
-            for (let retries = 0; retries < maxRetries; retries++) {
-                const shortId = generateShortId(id, retries + length);
+            const existenceChecks = await Promise.all(
+                shortIds.map(shortId => this.model.exists({ shortId })),
+            );
 
-                if (!existingShortIds.has(shortId)) {
-                    existingShortIds.add(shortId);
+            const availableIndex = existenceChecks.findIndex(exists => !exists);
 
-                    const shortIdExists = await this.model.exists({ shortId });
+            if (availableIndex !== -1) {
+                const availableShortId = shortIds[availableIndex];
 
-                    if (!shortIdExists) {
-                        return { success: true, result: shortId };
-                    }
+                if (availableShortId) {
+                    return { success: true, result: availableShortId };
                 }
             }
 
@@ -677,14 +678,27 @@ export class MongooseController<T extends Partial<C_Document>> {
 
     async createUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string> {
         const baseSlug = generateSlug(slug);
-        let uniqueSlug = baseSlug;
-        let suffix = 1;
+        const maxAttempts = 100;
+        const slugsToCheck = Array.from({ length: maxAttempts }, (_, index) =>
+            index === 0 ? baseSlug : `${baseSlug}-${index}`);
 
-        while (await this.model.exists(this.createSlugQuery({ slug: uniqueSlug, field, isObject, filter }))) {
-            uniqueSlug = `${baseSlug}-${suffix++}`;
+        const existenceChecks = await Promise.all(
+            slugsToCheck.map(slugToCheck =>
+                this.model.exists(this.createSlugQuery({ slug: slugToCheck, field, isObject, filter })),
+            ),
+        );
+
+        const availableIndex = existenceChecks.findIndex(exists => !exists);
+
+        if (availableIndex !== -1) {
+            const availableSlug = slugsToCheck[availableIndex];
+
+            if (availableSlug) {
+                return availableSlug;
+            }
         }
 
-        return uniqueSlug;
+        return `${baseSlug}-${Date.now()}`;
     }
 
     async createSlug<R = string>({ field, from, filter }: I_Input_CreateSlug<T>): Promise<I_Return<R>> {
@@ -716,6 +730,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 isObject: false,
                 filter,
             });
+
             return { success: true, result: uniqueSlug as R };
         }
         catch (error) {
@@ -729,19 +744,24 @@ export class MongooseController<T extends Partial<C_Document>> {
             const isObjectValue = isObject(fieldValue);
 
             if (isObjectValue) {
-                for (const value of Object.values(fieldValue)) {
-                    const nestedSlug = generateSlug(value as string);
-                    const exists = await this.model.exists(this.createSlugQuery({
-                        slug: nestedSlug,
-                        field,
-                        isObject: true,
-                        filter,
-                    }));
+                const values = Object.values(fieldValue);
+                const nestedSlugs = values.map(value => generateSlug(value as string));
 
-                    if (exists) {
-                        return { success: true, result: true };
-                    }
+                const existenceChecks = await Promise.all(
+                    nestedSlugs.map(nestedSlug =>
+                        this.model.exists(this.createSlugQuery({
+                            slug: nestedSlug,
+                            field,
+                            isObject: true,
+                            filter,
+                        })),
+                    ),
+                );
+
+                if (existenceChecks.some(exists => exists)) {
+                    return { success: true, result: true };
                 }
+
                 return { success: true, result: false };
             }
 
