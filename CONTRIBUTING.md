@@ -110,9 +110,11 @@ pnpm run test
 Create a `.env` file in the root directory:
 
 ```env
-# Development
-NODE_ENV=development
-DEBUG=true
+# optional, default: false
+# DEBUG=false
+
+# optional, default: .cyberskill-storage
+# CYBERSKILL_STORAGE_DIRECTORY=.cyberskill-storage
 ```
 
 ---
