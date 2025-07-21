@@ -1,4 +1,4 @@
-export interface T_PackageJson {
+export interface I_PackageJson {
     name?: string;
     version?: string;
     dependencies?: Record<string, string>;
@@ -16,7 +16,7 @@ export interface I_PackageInfo {
     isDependency: boolean;
     isDevDependency: boolean;
     installedPath: string;
-    file: T_PackageJson;
+    file: I_PackageJson;
 }
 
 export enum E_PackageType {

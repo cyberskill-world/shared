@@ -1,31 +1,47 @@
+/**
+ * Interface representing an ESLint error structure.
+ */
 export interface I_EslintError {
     filePath: string;
     messages: Array<{
-        line: number;
-        column: number;
+        ruleId: string;
         severity: number;
         message: string;
-        ruleId: string;
+        line: number;
+        column: number;
     }>;
 }
 
+/**
+ * Interface representing the command execution context.
+ */
 export interface I_CommandContext {
     isCurrentProject: boolean;
 }
 
+/**
+ * Interface representing a command with raw flag and command string.
+ */
 export interface I_Command { raw: boolean; cmd: string }
 
+/**
+ * Type for a function that generates a command string based on context.
+ */
 export type T_CommandFunction = (context?: I_CommandContext) => string;
 
-export type T_Command
-    = | string
-        | I_Command
-        | T_CommandFunction;
+/**
+ * Type for a command, which can be a string, function that returns a string, or a raw command object.
+ */
+export type T_Command = string | T_CommandFunction | I_Command;
 
-export type T_CommandMap = Record<string, T_Command>;
+/**
+ * Type for a command map input, which can be a record or a function returning a record.
+ */
+export type T_CommandMapInput = Record<string, T_Command> | ((context: I_CommandContext) => Record<string, T_Command>);
 
-export type T_CommandMapInput = T_CommandMap | ((ctx: I_CommandContext) => T_CommandMap);
-
+/**
+ * Enum for command types: CLI, STRING, or FUNCTION.
+ */
 export enum E_CommandType {
     CLI = 'CLI',
     STRING = 'STRING',

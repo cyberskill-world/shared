@@ -1,6 +1,6 @@
 export type T_SerializerKnownTypes = 'Date' | 'Map' | 'Set' | 'RegExp' | 'BigInt';
 
-export interface T_SerializerValueMap {
+export interface I_SerializerValueMap {
     Date: Date;
     Map: Map<unknown, unknown>;
     Set: Set<unknown>;

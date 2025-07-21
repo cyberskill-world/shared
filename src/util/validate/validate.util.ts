@@ -1,6 +1,11 @@
+/**
+ * A collection of validation utility functions for common data validation tasks.
+ * This object provides methods to validate various data types and formats.
+ */
 export const validate = {
     /**
      * Checks if a value is empty.
+     * This function provides comprehensive empty checking for different data types:
      * - For strings, it checks if the string is empty or contains only whitespace.
      * - For arrays, it checks if the array has no elements.
      * - For objects, it checks if the object has no own properties.
@@ -10,7 +15,8 @@ export const validate = {
      * - For Dates, it returns false.
      * - For null and undefined, it returns true.
      * - For all other types, it returns false.
-     * @param value - The value to check.
+     *
+     * @param value - The value to check for emptiness.
      * @returns True if the value is empty, false otherwise.
      */
     isEmpty(value: unknown): boolean {
@@ -50,12 +56,12 @@ export const validate = {
     },
     /**
      * Checks if a string is a valid IP address (IPv4 or IPv6).
-     *
+     * This function validates IP addresses according to standard formats:
      * - IPv4: Four octets separated by dots, each between 0–255.
      * - IPv6: Eight groups of four hex digits, possibly compressed with `::`.
      *
      * @param ip - The IP address string to validate.
-     * @returns True if the IP is valid IPv4 or IPv6.
+     * @returns True if the IP is valid IPv4 or IPv6, false otherwise.
      */
     isValidIP(ip: string): boolean {
         const ipv4Parts = ip.split('.');

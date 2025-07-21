@@ -5,6 +5,12 @@ import type { I_LoadingProps } from './loading.type.js';
 
 import style from './loading.module.scss';
 
+/**
+ * Injects CSS styles to prevent scrolling when full-screen loading is active.
+ * This function creates and injects a style element that adds the 'noscroll' class
+ * to prevent body scrolling and sets a fixed height. It ensures the style is only
+ * injected once by checking for an existing style element with the same ID.
+ */
 function injectNoScrollStyle() {
     if (document.getElementById('noscroll-style')) {
         return;
@@ -21,6 +27,27 @@ function injectNoScrollStyle() {
     document.head.appendChild(style);
 }
 
+/**
+ * Loading component that displays animated loading indicators.
+ * This component provides a customizable loading interface with animated rings
+ * and optional full-screen overlay. It includes features for preventing user
+ * interaction during loading states and supports both inline and full-screen modes.
+ *
+ * Features:
+ * - Animated loading rings with multiple colors
+ * - Full-screen overlay mode with scroll prevention
+ * - Context menu prevention during full-screen loading
+ * - Customizable loading message
+ * - Responsive design with CSS modules
+ * - Accessibility considerations with reduced motion support
+ *
+ * @param props - Component props containing loading configuration.
+ * @param props.full - Whether to display the loading indicator in full-screen mode (default: false).
+ * @param props.className - Additional CSS classes to apply to the loading container.
+ * @param props.message - Custom message to display below the loading animation.
+ * @param props.rest - Additional props to spread to the loading container.
+ * @returns A React component displaying the loading animation with optional full-screen overlay.
+ */
 export function Loading({ full = false, className = '', message = 'Loading', ...rest }: I_LoadingProps) {
     useEffect(() => {
         if (full) {
@@ -40,6 +67,13 @@ export function Loading({ full = false, className = '', message = 'Loading', ...
         injectNoScrollStyle();
     }, []);
 
+    /**
+     * Renders the core loading animation with rings and message.
+     * This function creates the animated loading rings and optional message
+     * that are used in both full-screen and inline loading modes.
+     *
+     * @returns A React element containing the loading animation and message.
+     */
     function _renderLoading() {
         return (
             <div className={style['container']} {...rest}>

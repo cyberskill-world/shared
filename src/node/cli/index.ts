@@ -11,6 +11,13 @@ import { catchError, E_IssueType, log } from '../log/index.js';
 import { getPackage, installDependencies } from '../package/index.js';
 import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, resolve, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
+/**
+ * Retrieves the version from the package.json file.
+ * This function reads the package.json file and extracts the version number.
+ * If the file cannot be read or parsed, it returns a default version of '1.0.0'.
+ *
+ * @returns The version string from package.json or '1.0.0' as fallback.
+ */
 function getVersion(): string {
     try {
         const pkg = JSON.parse(
@@ -23,6 +30,14 @@ function getVersion(): string {
     }
 }
 
+/**
+ * Performs TypeScript validation if a TypeScript configuration file exists.
+ * This function checks for the presence of a TypeScript configuration file
+ * and runs TypeScript validation if found. If no configuration is found,
+ * it logs a warning and skips the type check.
+ *
+ * @returns A promise that resolves when the TypeScript validation is complete.
+ */
 async function checkTypescript() {
     if (pathExistsSync(PATH.TS_CONFIG)) {
         await runCommand('Performing TypeScript validation', await command.typescriptCheck());
@@ -32,6 +47,14 @@ async function checkTypescript() {
     }
 }
 
+/**
+ * Performs ESLint checking with optional auto-fix functionality.
+ * This function runs ESLint checks on the codebase and optionally applies
+ * automatic fixes to resolve linting issues.
+ *
+ * @param fix - Whether to apply automatic fixes to linting issues (default: false).
+ * @returns A promise that resolves when the ESLint check is complete.
+ */
 async function checkEslint(fix = false) {
     if (fix) {
         await runCommand('Running ESLint with auto-fix', await command.eslintFix());
@@ -41,6 +64,14 @@ async function checkEslint(fix = false) {
     }
 }
 
+/**
+ * Prints a formatted list of issues (errors or warnings) to the console.
+ * This function displays issues in a boxed format with appropriate color coding
+ * based on the issue type. It only displays issues if the list is not empty.
+ *
+ * @param type - The type of issues to display ('Errors' or 'Warnings').
+ * @param list - An array of issue entries to display.
+ */
 function printIssues(type: 'Errors' | 'Warnings', list: I_IssueEntry[]) {
     if (!list.length) {
         return;
@@ -50,6 +81,14 @@ function printIssues(type: 'Errors' | 'Warnings', list: I_IssueEntry[]) {
     log.printBoxedLog(type === 'Errors' ? '✖ Errors' : '⚠ Warnings', list, color);
 }
 
+/**
+ * Displays the final check results after all validation processes.
+ * This function retrieves stored error lists and displays them in a formatted manner.
+ * If no errors or warnings are found, it displays a success message. If errors are found,
+ * it exits the process with code 1 to indicate failure.
+ *
+ * @returns A promise that resolves when the results are displayed.
+ */
 async function showCheckResult() {
     setTimeout(async () => {
         const allResults = await getStoredErrorLists();
@@ -70,6 +109,14 @@ async function showCheckResult() {
     }, 0);
 }
 
+/**
+ * Executes lint-staged to check only staged files.
+ * This function runs lint-staged which executes linting tools only on files
+ * that are staged for commit. It includes building the package if it's the current project
+ * and displays the results after completion.
+ *
+ * @returns A promise that resolves when lint-staged execution is complete.
+ */
 async function lintStaged() {
     await clearAllErrorLists();
     const packageData = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
@@ -87,28 +134,64 @@ async function lintStaged() {
     showCheckResult();
 }
 
+/**
+ * Inspects the ESLint configuration to show active rules and settings.
+ * This function runs ESLint inspection to display the current configuration,
+ * including which rules are active and their settings.
+ *
+ * @returns A promise that resolves when the ESLint inspection is complete.
+ */
 async function inspectLint() {
     await runCommand('Inspecting ESLint configuration', await command.eslintInspect());
 }
 
+/**
+ * Performs comprehensive linting checks including TypeScript and ESLint.
+ * This function runs both TypeScript validation and ESLint checks in parallel,
+ * then displays the combined results.
+ *
+ * @returns A promise that resolves when all linting checks are complete.
+ */
 async function lintCheck() {
     await clearAllErrorLists();
     await Promise.all([checkTypescript(), checkEslint()]);
     showCheckResult();
 }
 
+/**
+ * Performs comprehensive linting checks with automatic fixes.
+ * This function runs both TypeScript validation and ESLint checks with auto-fix
+ * in parallel, then displays the combined results.
+ *
+ * @returns A promise that resolves when all linting checks with fixes are complete.
+ */
 async function lintFix() {
     await clearAllErrorLists();
     await Promise.all([checkTypescript(), checkEslint(true)]);
     showCheckResult();
 }
 
+/**
+ * Validates commit message format using commitlint.
+ * This function runs commitlint to check if the current commit message
+ * follows the conventional commit format and displays the results.
+ *
+ * @returns A promise that resolves when commit message validation is complete.
+ */
 async function commitLint() {
     await clearAllErrorLists();
     await runCommand('Validating commit message', await command.commitLint());
     showCheckResult();
 }
 
+/**
+ * Sets up Git hooks for automated code quality checks.
+ * This function configures Git hooks using simple-git-hooks, creates the necessary
+ * configuration files, and updates .gitignore to exclude hook configuration files.
+ * It also sets up the hooks to run linting and commit validation automatically.
+ *
+ * @returns A promise that resolves when Git hook setup is complete.
+ */
 async function setupGitHook() {
     await runCommand('Configuring Git hooks', await command.configureGitHook());
 
@@ -134,11 +217,26 @@ async function setupGitHook() {
     await runCommand('Setting up simple-git-hooks', await command.simpleGitHooks());
 }
 
+/**
+ * Initializes the project with dependencies and Git hooks.
+ * This function installs project dependencies and sets up Git hooks for
+ * automated code quality checks. It's typically run when setting up a new project.
+ *
+ * @returns A promise that resolves when project initialization is complete.
+ */
 async function ready() {
     await installDependencies();
     await setupGitHook();
 }
 
+/**
+ * Resets the project by removing dependencies and reinstalling them.
+ * This function removes node_modules and lock files, cleans the package manager cache,
+ * reinstalls dependencies, and sets up Git hooks. It's useful for resolving
+ * dependency-related issues.
+ *
+ * @returns A promise that resolves when project reset is complete.
+ */
 async function reset() {
     removeSync(PATH.NODE_MODULES, PATH.PNPM_LOCK_YAML);
     await runCommand('Pruning pnpm store', await command.pnpmPruneStore());
@@ -147,26 +245,69 @@ async function reset() {
     await setupGitHook();
 }
 
+/**
+ * Inspects project dependencies to analyze their status.
+ * This function runs dependency inspection to check for outdated packages,
+ * security vulnerabilities, and other dependency-related issues.
+ *
+ * @returns A promise that resolves when dependency inspection is complete.
+ */
 async function inspect() {
     await runCommand('Inspecting project dependencies', await command.nodeModulesInspect());
 }
 
+/**
+ * Runs the unit test suite.
+ * This function executes unit tests using the configured test runner
+ * and displays the test results.
+ *
+ * @returns A promise that resolves when unit tests are complete.
+ */
 async function testUnit() {
     await runCommand('Running unit tests', await command.testUnit());
 }
 
+/**
+ * Runs the end-to-end test suite.
+ * This function executes end-to-end tests using the configured test runner
+ * and displays the test results.
+ *
+ * @returns A promise that resolves when end-to-end tests are complete.
+ */
 async function testE2E() {
     await runCommand('Running end-to-end tests', await command.testE2e());
 }
 
+/**
+ * Creates a new MongoDB migration file.
+ * This function creates a new migration file with the specified name
+ * for database schema changes.
+ *
+ * @param migrationName - The name for the new migration file.
+ * @returns A promise that resolves when the migration file is created.
+ */
 async function mongoMigrateCreate(migrationName: string) {
     await runCommand('Creating MongoDB migration', await command.mongoMigrateCreate(migrationName));
 }
 
+/**
+ * Applies all pending MongoDB migrations.
+ * This function runs all pending database migrations to update the database schema
+ * to the latest version.
+ *
+ * @returns A promise that resolves when all migrations are applied.
+ */
 async function mongoMigrateUp() {
     await runCommand('Running MongoDB migrations', await command.mongoMigrateUp());
 }
 
+/**
+ * Rolls back the last applied MongoDB migration.
+ * This function reverts the most recent database migration, undoing
+ * the last schema change.
+ *
+ * @returns A promise that resolves when the migration is rolled back.
+ */
 async function mongoMigrateDown() {
     await runCommand('Rolling back MongoDB migration', await command.mongoMigrateDown());
 }

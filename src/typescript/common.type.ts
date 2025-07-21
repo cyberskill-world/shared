@@ -1,7 +1,13 @@
 import type consola from 'consola';
 
+/**
+ * Generic object type with string keys and values of type T (defaults to unknown).
+ */
 export type T_Object<T = unknown> = Record<string, T>;
 
+/**
+ * Logging interface for browser and Node.js environments, compatible with consola.
+ */
 export interface I_Log {
     silent: typeof consola['silent'];
     level: typeof consola['level'];

@@ -14,7 +14,7 @@ import { getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.j
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateOptionsWithPopulate, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
@@ -22,7 +22,19 @@ import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 
 export { aggregatePaginate, mongoosePaginate };
 
+/**
+ * MongoDB utility object providing comprehensive database operations and utilities.
+ * This object contains methods for creating generic fields, applying plugins and middlewares,
+ * creating schemas and models, validation functions, migration utilities, and regex filtering.
+ */
 export const mongo = {
+    /**
+     * Creates generic fields that are commonly used across MongoDB documents.
+     * This function generates standard fields including a UUID, deletion flag, and timestamps
+     * that can be applied to any document schema.
+     *
+     * @returns An object containing generic document fields (id, isDel, createdAt, updatedAt).
+     */
     createGenericFields(): I_GenericDocument {
         return {
             id: uuidv4(),
@@ -31,11 +43,26 @@ export const mongo = {
             updatedAt: new Date(),
         };
     },
+    /**
+     * Applies plugins to a Mongoose schema.
+     * This function filters out falsy plugins and applies the remaining valid plugins
+     * to the provided schema.
+     *
+     * @param schema - The Mongoose schema to apply plugins to.
+     * @param plugins - An array of plugin functions or false values to filter and apply.
+     */
     applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) {
         plugins
             .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
             .forEach(plugin => schema.plugin(plugin));
     },
+    /**
+     * Applies middleware functions to a Mongoose schema.
+     * This function configures pre and post middleware for specified methods on the schema.
+     *
+     * @param schema - The Mongoose schema to apply middleware to.
+     * @param middlewares - An array of middleware configurations with method, pre, and post functions.
+     */
     applyMiddlewares<T extends Partial<C_Document>>(
         schema: T_MongooseShema<T>,
         middlewares: I_MongooseModelMiddleware<T>[],
@@ -50,6 +77,14 @@ export const mongo = {
             }
         });
     },
+    /**
+     * Creates a generic Mongoose schema with common fields.
+     * This function creates a base schema with UUID field and deletion flag,
+     * configured with automatic timestamps.
+     *
+     * @param mongoose - The Mongoose instance to create the schema with.
+     * @returns A Mongoose schema with generic document fields.
+     */
     createGenericSchema(mongoose: typeof mongooseRaw) {
         return new mongoose.Schema<I_GenericDocument>(
             {
@@ -59,6 +94,18 @@ export const mongo = {
             { timestamps: true },
         );
     },
+    /**
+     * Creates a Mongoose schema with optional virtual fields and generic fields.
+     * This function creates a new Mongoose schema from the provided schema definition,
+     * optionally adds virtual fields, and includes generic fields (unless standalone is true).
+     *
+     * @param options - Configuration options including mongoose instance, schema definition, virtuals, and standalone flag.
+     * @param options.mongoose - The Mongoose instance to use for schema creation.
+     * @param options.schema - The schema definition object.
+     * @param options.virtuals - Optional array of virtual field configurations.
+     * @param options.standalone - Whether to exclude generic fields (default: false).
+     * @returns A configured Mongoose schema.
+     */
     createSchema<T>({
         mongoose,
         schema,
@@ -79,6 +126,22 @@ export const mongo = {
 
         return createdSchema;
     },
+    /**
+     * Creates a Mongoose model with plugins, middleware, and pagination support.
+     * This function creates a model from a schema with optional pagination and aggregation plugins,
+     * and applies any specified middleware. If a model with the same name already exists, it returns the existing model.
+     *
+     * @param options - Configuration options including mongoose instance, model name, schema, and feature flags.
+     * @param options.mongoose - The Mongoose instance to use for model creation.
+     * @param options.name - The name of the model to create.
+     * @param options.schema - The schema definition for the model.
+     * @param options.pagination - Whether to enable pagination plugin (default: false).
+     * @param options.aggregate - Whether to enable aggregation pagination plugin (default: false).
+     * @param options.virtuals - Optional array of virtual field configurations.
+     * @param options.middlewares - Optional array of middleware configurations.
+     * @returns A configured Mongoose model with extended functionality.
+     * @throws {Error} When the model name is not provided.
+     */
     createModel<T extends Partial<C_Document>>({
         mongoose: currentMongooseInstance,
         name,
@@ -107,12 +170,32 @@ export const mongo = {
 
         return currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
     },
+    /**
+     * Validation utilities for Mongoose schemas.
+     * This object provides common validation functions that can be used in Mongoose schema definitions.
+     */
     validator: {
+        /**
+         * Creates a required field validator.
+         * This function returns a validator that checks if a field value is not empty
+         * using the validate.isEmpty utility.
+         *
+         * @returns A validation function that returns true if the field is not empty.
+         */
         isRequired<T>(): (this: T, value: unknown) => Promise<boolean> {
             return async function (this: T, value: unknown): Promise<boolean> {
                 return !validate.isEmpty(value);
             };
         },
+        /**
+         * Creates a unique field validator.
+         * This function returns a validator that checks if a field value is unique
+         * across the specified fields in the collection.
+         *
+         * @param fields - An array of field names to check for uniqueness.
+         * @returns A validation function that returns true if the value is unique across the specified fields.
+         * @throws {Error} When fields is not a non-empty array of strings.
+         */
         isUnique<T extends { constructor: { exists: (query: Record<string, unknown>) => Promise<unknown> } }>(fields: string[]) {
             return async function (this: T, value: unknown): Promise<boolean> {
                 if (!Array.isArray(fields) || fields.length === 0) {
@@ -125,6 +208,15 @@ export const mongo = {
                 return !existingDocument;
             };
         },
+        /**
+         * Creates a regex pattern validator.
+         * This function returns a validator that checks if a string value matches
+         * all provided regular expressions.
+         *
+         * @param regexArray - An array of regular expressions to test against the value.
+         * @returns A validation function that returns true if the value matches all regex patterns.
+         * @throws {Error} When regexArray is not an array of valid RegExp objects.
+         */
         matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean> {
             return async function (value: string): Promise<boolean> {
                 if (!Array.isArray(regexArray) || regexArray.some(r => !(r instanceof RegExp))) {
@@ -135,8 +227,19 @@ export const mongo = {
             };
         },
     },
+    /**
+     * Migration utilities for MongoDB.
+     * This object extends the migrate-mongo library with additional configuration utilities.
+     */
     migrate: {
         ...migrate,
+        /**
+         * Sets the migration configuration and updates .gitignore.
+         * This function creates a migration configuration file and ensures it's properly
+         * excluded from version control.
+         *
+         * @param options - Migration configuration options to write to the config file.
+         */
         setConfig: (options: Partial<migrate.config.Config>) => {
             const optionsJS = `// This file is automatically generated by the Cyberskill CLI.\nmodule.exports = ${JSON.stringify(options, null, 4)}`;
 
@@ -156,6 +259,15 @@ export const mongo = {
             }
         },
     },
+    /**
+     * Converts string values in a filter to regex patterns for case-insensitive search.
+     * This function recursively processes a filter object and converts string values in specified fields
+     * to MongoDB regex patterns that support accented character matching.
+     *
+     * @param filter - The filter object to process.
+     * @param fields - An array of field names to convert to regex patterns.
+     * @returns A new filter object with string values converted to regex patterns.
+     */
     regexify<T>(filter?: T_FilterQuery<T>, fields?: (keyof T | string)[]): T_FilterQuery<T> {
         if (!filter) {
             return {} as T_FilterQuery<T>;
@@ -185,13 +297,31 @@ export const mongo = {
     },
 };
 
+/**
+ * MongoDB native driver controller for direct database operations.
+ * This class provides a simplified interface for MongoDB operations using the native driver,
+ * with automatic generic field generation and standardized response formatting.
+ */
 export class MongoController<D extends Partial<C_Document>> {
     private collection: C_Collection<D>;
 
+    /**
+     * Creates a new MongoDB controller instance.
+     *
+     * @param db - The MongoDB database instance.
+     * @param collectionName - The name of the collection to operate on.
+     */
     constructor(db: C_Db, collectionName: string) {
         this.collection = db.collection<D>(collectionName);
     }
 
+    /**
+     * Creates a single document in the collection.
+     * This method adds generic fields (id, isDel, timestamps) to the document before insertion.
+     *
+     * @param document - The document to create, with or without generic fields.
+     * @returns A promise that resolves to a standardized response with the created document.
+     */
     async createOne(document: D | Partial<D>): Promise<I_Return<D | Partial<D>>> {
         try {
             const finalDocument = {
@@ -220,6 +350,13 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Creates multiple documents in the collection.
+     * This method adds generic fields to each document before bulk insertion.
+     *
+     * @param documents - An array of documents to create.
+     * @returns A promise that resolves to a standardized response with the created documents.
+     */
     async createMany(documents: (D | Partial<D>)[]): Promise<I_Return<(D | Partial<D>)[]>> {
         try {
             const finalDocuments = documents.map(document => ({
@@ -248,6 +385,12 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Finds a single document by filter criteria.
+     *
+     * @param filter - The filter criteria to find the document.
+     * @returns A promise that resolves to a standardized response with the found document.
+     */
     async findOne(filter: T_Filter<D>): Promise<I_Return<T_WithId<D>>> {
         try {
             const result = await this.collection.findOne(filter);
@@ -262,6 +405,12 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Finds all documents matching the filter criteria.
+     *
+     * @param filter - The filter criteria to find documents (defaults to empty object for all documents).
+     * @returns A promise that resolves to a standardized response with the found documents.
+     */
     async findAll(
         filter: T_Filter<D> = {},
     ): Promise<I_Return<T_WithId<D>[]>> {
@@ -279,6 +428,12 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Counts documents matching the filter criteria.
+     *
+     * @param filter - The filter criteria to count documents (defaults to empty object for all documents).
+     * @returns A promise that resolves to a standardized response with the document count.
+     */
     async count(
         filter: T_Filter<D> = {},
     ): Promise<I_Return<number>> {
@@ -296,6 +451,13 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Updates a single document matching the filter criteria.
+     *
+     * @param filter - The filter criteria to find the document to update.
+     * @param update - The update data to apply to the document.
+     * @returns A promise that resolves to a standardized response with the update result.
+     */
     async updateOne(
         filter: T_Filter<D>,
         update: Partial<D>,
@@ -323,6 +485,13 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Updates multiple documents matching the filter criteria.
+     *
+     * @param filter - The filter criteria to find documents to update.
+     * @param update - The update data to apply to the documents.
+     * @returns A promise that resolves to a standardized response with the update result.
+     */
     async updateMany(
         filter: T_Filter<D>,
         update: Partial<D>,
@@ -350,6 +519,12 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Deletes a single document matching the filter criteria.
+     *
+     * @param filter - The filter criteria to find the document to delete.
+     * @returns A promise that resolves to a standardized response with the delete result.
+     */
     async deleteOne(
         filter: T_Filter<D>,
     ): Promise<I_Return<T_DeleteResult>> {
@@ -374,6 +549,12 @@ export class MongoController<D extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Deletes multiple documents matching the filter criteria.
+     *
+     * @param filter - The filter criteria to find documents to delete.
+     * @returns A promise that resolves to a standardized response with the delete result.
+     */
     async deleteMany(
         filter: T_Filter<D>,
     ): Promise<I_Return<T_DeleteResult>> {
@@ -399,12 +580,37 @@ export class MongoController<D extends Partial<C_Document>> {
     }
 }
 
+/**
+ * Mongoose controller for database operations with advanced features.
+ * This class provides a comprehensive interface for Mongoose operations including
+ * pagination, aggregation, slug generation, and short ID creation.
+ */
 export class MongooseController<T extends Partial<C_Document>> {
+    /**
+     * Creates a new Mongoose controller instance.
+     *
+     * @param model - The Mongoose model to operate on.
+     */
     constructor(private model: I_ExtendedModel<T>) { }
+
+    /**
+     * Gets the model name for logging and error messages.
+     *
+     * @returns The name of the model.
+     */
     private getModelName(): string {
         return this.model.modelName;
     }
 
+    /**
+     * Finds a single document with optional population and projection.
+     *
+     * @param filter - The filter criteria to find the document.
+     * @param projection - The fields to include/exclude in the result.
+     * @param options - Query options for the operation.
+     * @param populate - Population configuration for related documents.
+     * @returns A promise that resolves to a standardized response with the found document.
+     */
     async findOne(
         filter: T_FilterQuery<T> = {},
         projection: T_ProjectionType<T> = {},
@@ -435,6 +641,15 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Finds all documents with optional population and projection.
+     *
+     * @param filter - The filter criteria to find documents.
+     * @param projection - The fields to include/exclude in the result.
+     * @param options - Query options for the operation.
+     * @param populate - Population configuration for related documents.
+     * @returns A promise that resolves to a standardized response with the found documents.
+     */
     async findAll(
         filter: T_FilterQuery<T> = {},
         projection: T_ProjectionType<T> = {},
@@ -457,9 +672,16 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Finds documents with pagination support.
+     *
+     * @param filter - The filter criteria to find documents.
+     * @param options - Pagination options including page, limit, and population.
+     * @returns A promise that resolves to a standardized response with paginated results.
+     */
     async findPaging(
         filter: T_FilterQuery<T> = {},
-        options: T_PaginateOptionsWithPopulate = {},
+        options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
             const result = await this.model.paginate(filter, options);
@@ -471,9 +693,16 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Performs aggregation with pagination support.
+     *
+     * @param pipeline - The aggregation pipeline stages.
+     * @param options - Pagination options for the aggregation result.
+     * @returns A promise that resolves to a standardized response with paginated aggregation results.
+     */
     async findPagingAggregate(
         pipeline: T_PipelineStage[],
-        options: T_PaginateOptionsWithPopulate = {},
+        options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_AggregatePaginateResult<T>>> {
         try {
             const result = await this.model.aggregatePaginate(
@@ -488,6 +717,12 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Counts documents matching the filter criteria.
+     *
+     * @param filter - The filter criteria to count documents.
+     * @returns A promise that resolves to a standardized response with the document count.
+     */
     async count(filter: T_FilterQuery<T> = {}): Promise<I_Return<number>> {
         try {
             const result = await this.model.countDocuments(filter);
@@ -499,6 +734,12 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Creates a single document.
+     *
+     * @param doc - The document to create.
+     * @returns A promise that resolves to a standardized response with the created document.
+     */
     async createOne(doc: T | Partial<T>): Promise<I_Return<T>> {
         try {
             const result = await this.model.create(doc);
@@ -510,6 +751,13 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Creates multiple documents with bulk insertion.
+     *
+     * @param docs - An array of documents to create.
+     * @param options - Options for the bulk insertion operation.
+     * @returns A promise that resolves to a standardized response with the created documents.
+     */
     async createMany(
         docs: (T | Partial<T>)[],
         options: T_InsertManyOptions = {},
@@ -534,6 +782,14 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Updates a single document and returns the updated version.
+     *
+     * @param filter - The filter criteria to find the document to update.
+     * @param update - The update data to apply.
+     * @param options - Options for the update operation.
+     * @returns A promise that resolves to a standardized response with the updated document.
+     */
     async updateOne(
         filter: T_FilterQuery<T> = {},
         update: T_UpdateQuery<T> = {},
@@ -562,6 +818,14 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Updates multiple documents matching the filter criteria.
+     *
+     * @param filter - The filter criteria to find documents to update.
+     * @param update - The update data to apply.
+     * @param options - Options for the update operation.
+     * @returns A promise that resolves to a standardized response with the update result.
+     */
     async updateMany(
         filter: T_FilterQuery<T> = {},
         update: T_UpdateQuery<T> = {},
@@ -579,6 +843,13 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Deletes a single document and returns the deleted version.
+     *
+     * @param filter - The filter criteria to find the document to delete.
+     * @param options - Options for the delete operation.
+     * @returns A promise that resolves to a standardized response with the deleted document.
+     */
     async deleteOne(
         filter: T_FilterQuery<T> = {},
         options: I_DeleteOptionsExtended = {},
@@ -603,6 +874,13 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Deletes multiple documents matching the filter criteria.
+     *
+     * @param filter - The filter criteria to find documents to delete.
+     * @param options - Options for the delete operation.
+     * @returns A promise that resolves to a standardized response with the delete result.
+     */
     async deleteMany(
         filter: T_FilterQuery<T> = {},
         options: I_DeleteOptionsExtended = {},
@@ -625,6 +903,14 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Creates a unique short ID based on a given ID.
+     * This method generates multiple short IDs with increasing lengths and finds the first available one.
+     *
+     * @param id - The base ID to generate short IDs from.
+     * @param length - The initial length for short ID generation (default: 4).
+     * @returns A promise that resolves to a standardized response with the unique short ID.
+     */
     async createShortId(id: string, length = 4): Promise<I_Return<string>> {
         try {
             const maxRetries = 10;
@@ -656,6 +942,17 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Creates a query for slug existence checking.
+     * This method generates a query that checks for slug existence in both current and historical slug fields.
+     *
+     * @param options - Configuration for slug query generation including slug, field, and filter.
+     * @param options.slug - The slug string to check for existence.
+     * @param options.field - The field name for object-based slug checking.
+     * @param options.isObject - Whether the slug is stored as an object with nested fields.
+     * @param options.filter - Additional filter conditions to apply to the query.
+     * @returns A MongoDB query object for checking slug existence.
+     */
     createSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>) {
         const baseFilter = { ...(filter ?? {}) };
 
@@ -676,11 +973,27 @@ export class MongooseController<T extends Partial<C_Document>> {
                 };
     }
 
+    /**
+     * Creates a unique slug based on a given string.
+     * This method generates multiple slug variations and finds the first available one.
+     *
+     * @param options - Configuration for slug generation including slug, field, and filter.
+     * @param options.slug - The base slug string to make unique.
+     * @param options.field - The field name for object-based slug checking.
+     * @param options.isObject - Whether the slug is stored as an object with nested fields.
+     * @param options.filter - Additional filter conditions to apply when checking slug existence.
+     * @returns A promise that resolves to a unique slug string.
+     */
     async createUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string> {
         const baseSlug = generateSlug(slug);
         const maxAttempts = 100;
-        const slugsToCheck = Array.from({ length: maxAttempts }, (_, index) =>
-            index === 0 ? baseSlug : `${baseSlug}-${index}`);
+        const slugsToCheck = Array.from({ length: maxAttempts }, (_, index) => {
+            if (index === 0) {
+                return baseSlug;
+            }
+
+            return `${baseSlug}-${index}`;
+        });
 
         const existenceChecks = await Promise.all(
             slugsToCheck.map(slugToCheck =>
@@ -701,6 +1014,16 @@ export class MongooseController<T extends Partial<C_Document>> {
         return `${baseSlug}-${Date.now()}`;
     }
 
+    /**
+     * Creates a slug for a document field.
+     * This method handles both simple string fields and object fields with nested slug generation.
+     *
+     * @param options - Configuration for slug creation including field, source document, and filter.
+     * @param options.field - The field name to create a slug for.
+     * @param options.from - The source document containing the field value.
+     * @param options.filter - Additional filter conditions to apply when checking slug existence.
+     * @returns A promise that resolves to a standardized response with the created slug(s).
+     */
     async createSlug<R = string>({ field, from, filter }: I_Input_CreateSlug<T>): Promise<I_Return<R>> {
         try {
             const fieldValue = from[field as keyof T];
@@ -738,6 +1061,17 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Checks if a slug already exists in the collection.
+     * This method verifies slug existence in both current and historical slug fields.
+     *
+     * @param options - Configuration for slug checking including slug, field, source document, and filter.
+     * @param options.slug - The slug string to check for existence.
+     * @param options.field - The field name for object-based slug checking.
+     * @param options.from - The source document containing the field value.
+     * @param options.filter - Additional filter conditions to apply to the query.
+     * @returns A promise that resolves to a standardized response indicating whether the slug exists.
+     */
     async checkSlug({ slug, field, from, filter }: I_Input_CheckSlug<T>): Promise<I_Return<boolean>> {
         try {
             const fieldValue = from[field as keyof T];
@@ -780,6 +1114,12 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
     }
 
+    /**
+     * Performs aggregation operations on the collection.
+     *
+     * @param pipeline - The aggregation pipeline stages to execute.
+     * @returns A promise that resolves to a standardized response with the aggregation results.
+     */
     async aggregate(pipeline: T_PipelineStage[]): Promise<I_Return<T[]>> {
         try {
             const result = await this.model.aggregate<T>(pipeline);

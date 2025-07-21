@@ -4,6 +4,14 @@ import { createWriteStream, mkdirSync, pathExistsSync } from '../fs/index.js';
 import { dirname } from '../path/index.js';
 import { E_UploadType } from './upload.type.js';
 
+/**
+ * Calculates the size of a file from a readable stream.
+ * This function reads through the entire stream to determine the total byte size
+ * by accumulating the length of each data chunk.
+ *
+ * @param stream - The readable stream to calculate the size for.
+ * @returns A promise that resolves to the total size of the stream in bytes.
+ */
 async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Promise<number> {
     return new Promise((resolve, reject) => {
         let size = 0;
@@ -15,6 +23,15 @@ async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Promise<num
     });
 }
 
+/**
+ * Validates if a file has an allowed extension.
+ * This function extracts the file extension from the filename and checks if it's
+ * included in the list of allowed extensions (case-insensitive comparison).
+ *
+ * @param filename - The filename to check for valid extension.
+ * @param allowedExtensions - An array of allowed file extensions (without dots).
+ * @returns True if the file extension is allowed, false otherwise.
+ */
 function validateFileExtension(filename: string, allowedExtensions: string[]): boolean {
     const lastDotIndex = filename.lastIndexOf('.');
 
@@ -26,6 +43,18 @@ function validateFileExtension(filename: string, allowedExtensions: string[]): b
     return allowedExtensions.includes(extension);
 }
 
+/**
+ * Validates an upload against the specified configuration.
+ * This function performs comprehensive validation including:
+ * - File extension validation against allowed extensions
+ * - File size validation against size limits
+ * - Returns detailed error messages for validation failures
+ *
+ * @param config - The validation configuration including filename and optional file size.
+ * @param uploadConfig - The upload configuration containing allowed extensions and size limits.
+ * @param uploadType - The type of upload being validated.
+ * @returns An object indicating validation success and optional error message.
+ */
 function validateUpload(
     config: I_UploadValidationConfig,
     uploadConfig: I_UploadConfig,
@@ -54,6 +83,14 @@ function validateUpload(
     return { isValid: true };
 }
 
+/**
+ * Creates a default upload configuration with predefined settings for different file types.
+ * This function provides sensible defaults for image, video, document, and other file types,
+ * including allowed extensions and size limits. The configuration can be customized with overrides.
+ *
+ * @param overrides - Optional configuration overrides to merge with the default configuration.
+ * @returns A complete upload configuration object with defaults and any provided overrides.
+ */
 export function createUploadConfig(overrides?: Partial<I_UploadConfig>): I_UploadConfig {
     const defaultConfig: I_UploadConfig = {
         [E_UploadType.IMAGE]: {
@@ -77,6 +114,19 @@ export function createUploadConfig(overrides?: Partial<I_UploadConfig>): I_Uploa
     return { ...defaultConfig, ...overrides };
 }
 
+/**
+ * Uploads a file with comprehensive validation and error handling.
+ * This function processes file uploads with the following features:
+ * - Input validation for path and file parameters
+ * - Configuration validation for all upload types
+ * - File size and extension validation
+ * - Automatic directory creation
+ * - Stream-based file writing
+ * - Comprehensive error handling and reporting
+ *
+ * @param options - Upload configuration including file, path, type, and optional validation config.
+ * @returns A promise that resolves to an upload result with success status, message, and file path.
+ */
 export async function upload(options: I_UploadOptions): Promise<I_UploadResult> {
     const { path, file, config, type } = options;
 

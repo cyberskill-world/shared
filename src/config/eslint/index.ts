@@ -1,5 +1,9 @@
 import * as globals from 'globals';
 
+/**
+ * Base ESLint configuration.
+ * This config provides the foundation for ESLint rules.
+ */
 export default [
     {
         languageOptions: {

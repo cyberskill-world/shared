@@ -3,13 +3,12 @@
 
 # CyberSkill Shared
 
-**A comprehensive utility library for consistent development across CyberSkill projects**
+**Enterprise-grade utility library for consistent, scalable development across CyberSkill projects**
 
-[![npm version](https://img.shields.io/npm/v/@cyberskill/shared)](https://npmjs.com/package/@cyberskill/shared)
-[![npm downloads](https://img.shields.io/npm/dm/@cyberskill/shared)](https://npmjs.com/package/@cyberskill/shared)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![📦 npm version](https://img.shields.io/npm/v/@cyberskill/shared?style=for-the-badge&logo=npm)](https://npmjs.com/package/@cyberskill/shared)
+[![📥 npm downloads](https://img.shields.io/npm/dm/@cyberskill/shared?style=for-the-badge&logo=npm)](https://npmjs.com/package/@cyberskill/shared)
+[![📚 JSDoc Documentation](https://img.shields.io/badge/JSDoc-Documentation-blue?style=for-the-badge&logo=javascript)](https://www.jsdocs.io/package/@cyberskill/shared)
+[![📄 License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&logo=opensourceinitiative)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -17,70 +16,162 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Documentation](#documentation)
-- [API Reference](#api-reference)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Architecture](#️-architecture)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [API Reference](#-api-reference)
+- [Development](#️-development)
+- [Contributing](#-contributing)
+- [Support](#-support)
+- [License](#-license)
 
 ---
 
-## 📖 Overview
+## 🎯 Overview
 
-CyberSkill Shared is a modular, TypeScript-first utility library designed to standardize development practices across CyberSkill projects. Built with enterprise-grade architecture, it provides a comprehensive suite of utilities, configurations, and components that ensure consistency, maintainability, and developer productivity.
+CyberSkill Shared is a comprehensive, enterprise-grade utility library designed to standardize development practices across CyberSkill projects. Built with TypeScript-first architecture, it provides a robust foundation of utilities, configurations, and components that ensure consistency, maintainability, and developer productivity at scale.
 
-### 🎯 Key Benefits
+### 🏆 Why Choose CyberSkill Shared?
 
-- **🔄 Consistency**: Standardized patterns and utilities across all projects
-- **⚡ Productivity**: Pre-built solutions for common development tasks
-- **🛡️ Reliability**: Type-safe implementations with comprehensive testing
-- **📈 Scalability**: Modular architecture that grows with your needs
-- **🔧 Maintainability**: Well-documented, clean, and extensible codebase
+| Feature                | Benefit                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| **🔄 Consistency**     | Standardized patterns and utilities across all projects |
+| **⚡ Productivity**    | Pre-built solutions for common development tasks        |
+| **🛡️ Reliability**     | Type-safe implementations with comprehensive testing    |
+| **📈 Scalability**     | Modular architecture that grows with your needs         |
+| **🔧 Maintainability** | Well-documented, clean, and extensible codebase         |
+| **🚀 Performance**     | Optimized for production with minimal bundle impact     |
+| **🔒 Security**        | Built-in security best practices and validation         |
+
+### 🎯 Target Use Cases
+
+- **Enterprise Applications**: Large-scale applications requiring consistency and maintainability
+- **Microservices**: Distributed systems needing shared utilities and configurations
+- **Full-Stack Development**: Projects spanning frontend and backend with shared logic
+- **Team Collaboration**: Development teams requiring standardized tooling and patterns
+- **Rapid Prototyping**: Quick development with pre-built, tested components
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-### 🛠️ Core Utilities
+### 🛠️ Core Utilities & Helpers
+
+<details>
+<summary><strong>🔧 Utility Functions</strong></summary>
 
 - **Type-safe utilities** for common operations
 - **Object manipulation** and validation helpers
 - **String processing** and formatting functions
 - **Serialization** and data transformation tools
+- **Validation** frameworks with comprehensive error handling
 
-### ⚙️ Configuration Management
+</details>
 
-- **Environment configuration** with type safety
-- **ESLint configurations** for consistent code quality
-- **Testing setups** for unit and integration tests
-- **Build tool configurations** optimized for performance
+<details>
+<summary><strong>⚙️ Configuration Management</strong></summary>
 
-### 🌐 Node.js Modules
+- **Environment configuration** with type safety and validation
+- **ESLint configurations** for consistent code quality across projects
+- **Testing setups** for unit, integration, and e2e tests
+- **Build tool configurations** optimized for performance and DX
+- **Git hooks** and commit message validation
 
-- **Express.js utilities** for API development
-- **MongoDB integration** helpers
-- **WebSocket management** tools
-- **File system operations** with enhanced error handling
-- **CLI development** utilities
+</details>
 
-### ⚛️ React Components
+<details>
+<summary><strong>🌐 Node.js Integration</strong></summary>
 
-- **Apollo Client** integration and error handling
-- **Internationalization** (i18n) support
+- **Express.js utilities** for API development with middleware support
+- **MongoDB integration** with advanced query builders and validation
+- **WebSocket management** tools for real-time applications
+- **File system operations** with enhanced error handling and validation
+- **CLI development** utilities for command-line applications
+- **Package management** with dependency resolution and updates
+
+</details>
+
+<details>
+<summary><strong>⚛️ React Ecosystem</strong></summary>
+
+- **Apollo Client** integration with error handling and caching
+- **Internationalization** (i18n) support for multi-language applications
 - **Loading states** and user feedback components
-- **Storage management** hooks and utilities
-- **Toast notifications** system
+- **Storage management** hooks and utilities for client-side persistence
+- **Toast notifications** system with customizable themes
+- **User feedback** integration for product improvement
 
-### 📝 TypeScript Support
+</details>
 
-- **Comprehensive type definitions**
-- **React component types**
-- **Utility type helpers**
-- **Style declaration files**
+<details>
+<summary><strong>📝 TypeScript Excellence</strong></summary>
+
+- **Comprehensive type definitions** for all utilities and components
+- **React component types** with proper prop validation
+- **Utility type helpers** for advanced TypeScript patterns
+- **Style declaration files** for CSS-in-JS solutions
+- **Generic type support** for flexible, reusable components
+
+</details>
+
+---
+
+## 🏗️ Architecture
+
+### 📁 Project Structure
+
+```text
+shared/
+├── 📁 public/                    # Static assets and configuration
+│   ├── favicon/                  # Application icons and manifest
+│   └── tsconfig.base.json       # Base TypeScript configuration
+├── 📁 src/
+│   ├── 📁 config/               # Application configuration
+│   │   ├── commitlint/          # Git commit message validation
+│   │   ├── eslint/              # Code quality and style rules
+│   │   ├── env/                 # Environment variable management
+│   │   ├── graphql-codegen/     # GraphQL code generation setup
+│   │   ├── lint-staged/         # Pre-commit code quality checks
+│   │   └── vitest/              # Testing framework configuration
+│   ├── 📁 constant/             # Shared constants and enums
+│   ├── 📁 node/                 # Node.js utilities and modules
+│   │   ├── apollo-server/       # Apollo Server integration helpers
+│   │   ├── cli/                 # Command-line interface utilities
+│   │   ├── command/             # Command execution and management
+│   │   ├── express/             # Express.js framework utilities
+│   │   ├── fs/                  # File system operations
+│   │   ├── log/                 # Structured logging and error handling
+│   │   ├── mongo/               # MongoDB ODM and query builders
+│   │   ├── package/             # Package management and dependency resolution
+│   │   ├── path/                # Path manipulation and resolution
+│   │   ├── storage/             # Data persistence and caching
+│   │   ├── upload/              # File upload handling and validation
+│   │   └── ws/                  # WebSocket connection management
+│   ├── 📁 react/                # React utilities and components
+│   │   ├── apollo-client/       # Apollo Client setup and configuration
+│   │   ├── apollo-error/        # GraphQL error handling and display
+│   │   ├── i18next/             # Internationalization framework
+│   │   ├── loading/             # Loading state management and UI
+│   │   ├── log/                 # Client-side logging utilities
+│   │   ├── next-intl/           # Next.js internationalization
+│   │   ├── storage/             # Browser storage management
+│   │   ├── toast/               # Toast notification system
+│   │   └── userback/            # User feedback and analytics
+│   ├── 📁 typescript/           # TypeScript type definitions
+│   └── 📁 util/                 # Utility functions and helpers
+│       ├── common/              # Common utility types and functions
+│       ├── object/              # Object manipulation and transformation
+│       ├── serializer/          # Data serialization and deserialization
+│       ├── string/              # String processing and formatting
+│       └── validate/            # Data validation and sanitization
+├── 📄 package.json              # Project manifest and dependencies
+├── 📄 tsconfig.json             # TypeScript compiler configuration
+├── 📄 eslint.config.js          # ESLint configuration
+├── 📄 vite.config.ts            # Vite build tool configuration
+└── 📄 README.md                 # Project documentation
+```
 
 ---
 
@@ -88,10 +179,11 @@ CyberSkill Shared is a modular, TypeScript-first utility library designed to sta
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm 8+
+- **Node.js**: 18.0.0 or higher
+- **pnpm**: 8.0.0 or higher (recommended)
+- **TypeScript**: 5.0.0 or higher
 
-### Install Package
+### Package Installation
 
 ```bash
 # Using pnpm (recommended)
@@ -104,6 +196,21 @@ npm install @cyberskill/shared
 yarn add @cyberskill/shared
 ```
 
+### TypeScript Configuration
+
+Add to your `tsconfig.json`:
+
+```json
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@cyberskill/shared/*": ["node_modules/@cyberskill/shared/src/*"]
+        }
+    }
+}
+```
+
 ---
 
 ## 🏃 Quick Start
@@ -111,116 +218,144 @@ yarn add @cyberskill/shared
 ### Basic Usage
 
 ```typescript
-import { formatCurrency, validateEmail } from '@cyberskill/shared';
+import {
+    catchError,
+    formatCurrency,
+    isEmpty,
+    validateEmail
+} from '@cyberskill/shared';
 
-// Validate email
-const isValid = validateEmail('user@example.com');
+// Email validation
+const isValidEmail = validateEmail('user@example.com');
+console.log(isValidEmail); // true
 
-// Format currency
-const formatted = formatCurrency(1234.56, 'USD');
+// Currency formatting
+const formattedPrice = formatCurrency(1234.56, 'USD');
+console.log(formattedPrice); // "$1,234.56"
+
+// Empty value checking
+const isEmptyValue = isEmpty(null); // true
+const hasValue = isEmpty('hello'); // false
+
+// Error handling
+try {
+    // Your code here
+}
+catch (error) {
+    const handledError = catchError(error);
+    console.log(handledError.message);
+}
 ```
 
-### React Components
+### React Integration
 
 ```tsx
-import { LoadingProvider, useLoading } from '@cyberskill/shared';
+import {
+    ApolloProvider,
+    LoadingProvider,
+    useApolloError,
+    useLoading
+} from '@cyberskill/shared';
+import React from 'react';
 
+// Main application wrapper
+/**
+ *
+ */
 // eslint-disable-next-line react-refresh/only-export-components
 function App() {
     return (
-        <LoadingProvider>
-            <MyComponent />
-        </LoadingProvider>
+        <ApolloProvider options={{ uri: 'https://api.example.com/graphql' }}>
+            <LoadingProvider>
+                <MyApplication />
+            </LoadingProvider>
+        </ApolloProvider>
     );
 }
 
+// Component with loading and error handling
+/**
+ *
+ */
 // eslint-disable-next-line react-refresh/only-export-components
 function MyComponent() {
     const { showLoading, hideLoading } = useLoading();
+    const { showError } = useApolloError();
 
-    // Use loading states
-    return <div>Your component</div>;
+    const handleAsyncOperation = async () => {
+        try {
+            showLoading();
+            // Your async operation
+            await someAsyncTask();
+        }
+        catch (error) {
+            showError(error);
+        }
+        finally {
+            hideLoading();
+        }
+    };
+
+    return (
+        <div>
+            <button type="button" onClick={handleAsyncOperation}>
+                Perform Operation
+            </button>
+        </div>
+    );
 }
 ```
 
----
+### Node.js Integration
 
-## 📚 Documentation
+```typescript
+import {
+    createCorsOptions,
+    mongo,
+    RESPONSE_STATUS,
+    throwError
+} from '@cyberskill/shared';
+// Express.js setup with CORS
+import express from 'express';
 
-For detailed documentation, visit our [documentation site](https://docs.cyberskill.com/shared) or check the [JSDocs reference](https://www.jsdocs.io/package/@cyberskill/shared).
+const app = express();
 
-### Key Documentation Sections
+const corsOptions = createCorsOptions({
+    isDev: process.env.NODE_ENV === 'development',
+    whiteList: ['https://example.com', 'https://api.example.com']
+});
 
-- [Getting Started Guide](https://docs.cyberskill.com/shared/getting-started)
-- [API Reference](https://docs.cyberskill.com/shared/api)
-- [Migration Guide](https://docs.cyberskill.com/shared/migration)
-- [Best Practices](https://docs.cyberskill.com/shared/best-practices)
+app.use(cors(corsOptions));
 
----
+// MongoDB integration
+const mongoose = await mongo.connect({
+    uri: process.env.MONGODB_URI,
+    options: {
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000
+    }
+});
 
-## 🔧 API Reference
-
-### Core Modules
-
-| Module        | Description                 | Import Path                     |
-| ------------- | --------------------------- | ------------------------------- |
-| **Utils**     | Common utility functions    | `@cyberskill/shared/util`       |
-| **Constants** | Shared constants and enums  | `@cyberskill/shared/constant`   |
-| **Types**     | TypeScript type definitions | `@cyberskill/shared/typescript` |
-| **Config**    | Configuration utilities     | `@cyberskill/shared/config`     |
-
-### Node.js Modules
-
-| Module            | Description                    | Import Path                             |
-| ----------------- | ------------------------------ | --------------------------------------- |
-| **apollo-server** | Apollo Server utilities        | `@cyberskill/shared/node/apollo-server` |
-| **cli**           | Command-line interface helpers | `@cyberskill/shared/node/cli`           |
-| **command**       | Command execution utilities    | `@cyberskill/shared/node/command`       |
-| **express**       | Express.js utilities           | `@cyberskill/shared/node/express`       |
-| **fs**            | File system helpers            | `@cyberskill/shared/node/fs`            |
-| **log**           | Logging utilities              | `@cyberskill/shared/node/log`           |
-| **mongo**         | MongoDB helpers                | `@cyberskill/shared/node/mongo`         |
-| **package**       | Package management utilities   | `@cyberskill/shared/node/package`       |
-| **path**          | Path utilities                 | `@cyberskill/shared/node/path`          |
-| **storage**       | Storage helpers                | `@cyberskill/shared/node/storage`       |
-| **upload**        | File upload utilities          | `@cyberskill/shared/node/upload`        |
-| **ws**            | WebSocket utilities            | `@cyberskill/shared/node/ws`            |
-
-### React Modules
-
-| Module            | Description                  | Import Path                              |
-| ----------------- | ---------------------------- | ---------------------------------------- |
-| **apollo-client** | Apollo Client integration    | `@cyberskill/shared/react/apollo-client` |
-| **apollo-error**  | Apollo error handling        | `@cyberskill/shared/react/apollo-error`  |
-| **i18next**       | Internationalization (i18n)  | `@cyberskill/shared/react/i18next`       |
-| **loading**       | Loading state management     | `@cyberskill/shared/react/loading`       |
-| **log**           | Logging utilities            | `@cyberskill/shared/react/log`           |
-| **next-intl**     | Next.js internationalization | `@cyberskill/shared/react/next-intl`     |
-| **storage**       | Client-side storage          | `@cyberskill/shared/react/storage`       |
-| **toast**         | Toast notification system    | `@cyberskill/shared/react/toast`         |
-| **userback**      | User feedback integration    | `@cyberskill/shared/react/userback`      |
-
-### Util Modules
-
-| Module         | Description                      | Import Path                          |
-| -------------- | -------------------------------- | ------------------------------------ |
-| **common**     | Common utility types and helpers | `@cyberskill/shared/util/common`     |
-| **object**     | Object manipulation utilities    | `@cyberskill/shared/util/object`     |
-| **serializer** | Serialization and transformation | `@cyberskill/shared/util/serializer` |
-| **string**     | String processing utilities      | `@cyberskill/shared/util/string`     |
-| **validate**   | Validation helpers               | `@cyberskill/shared/util/validate`   |
+// Error handling
+app.use('/api/users', (req, res, next) => {
+    try {
+    // Your route logic
+    }
+    catch (error) {
+        throwError({
+            message: 'User operation failed',
+            status: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+            type: 'rest'
+        });
+    }
+});
+```
 
 ---
 
 ## 🛠️ Development
 
-### Prerequisites
-
-- Node.js 22+
-- pnpm 10+
-- Git
-
-### Setup
+### Quick Setup
 
 ```bash
 # Clone the repository
@@ -232,105 +367,60 @@ pnpm install
 
 # Build the project
 pnpm run build
+
+# Start development mode
+pnpm run dev
 ```
 
 ### Available Scripts
 
-| Command              | Description                            |
-| -------------------- | -------------------------------------- |
-| `pnpm run dev`       | Start development mode with hot reload |
-| `pnpm run build`     | Build for production                   |
-| `pnpm run lint`      | Check for linting issues               |
-| `pnpm run lint:fix`  | Fix linting issues automatically       |
-| `pnpm run test:unit` | Run unit tests                         |
-| `pnpm run test:e2e`  | Run end-to-end tests                   |
-| `pnpm run inspect`   | Inspect project dependencies           |
-| `pnpm run reset`     | Reset project state                    |
-| `pnpm run ready`     | Prepare project for development        |
+| Command             | Description                            | Usage        |
+| ------------------- | -------------------------------------- | ------------ |
+| `pnpm run dev`      | Start development mode with hot reload | Development  |
+| `pnpm run build`    | Build for production                   | Production   |
+| `pnpm run lint`     | Check for linting issues               | Code Quality |
+| `pnpm run lint:fix` | Fix linting issues automatically       | Code Quality |
+| `pnpm run test`     | Run tests                              | Testing      |
+| `pnpm run inspect`  | Inspect project dependencies           | Analysis     |
+| `pnpm run reset`    | Reset project state                    | Maintenance  |
+| `pnpm run ready`    | Prepare project for development        | Setup        |
 
-### Project Structure
-
-```text
-shared/
-├── public/                  # Static assets (favicons, manifest, etc.)
-├── src/
-│   ├── config/              # App configuration (commitlint, eslint, env, graphql-codegen, lint-staged, vitest)
-│   ├── constant/            # Static values and constants
-│   ├── node/                # Node.js utilities and modules
-│   │   ├── apollo-server/   # Apollo Server helpers
-│   │   ├── cli/             # CLI utilities
-│   │   ├── command/         # Command execution helpers
-│   │   ├── express/         # Express.js utilities
-│   │   ├── fs/              # File system helpers
-│   │   ├── log/             # Logging utilities
-│   │   ├── mongo/           # MongoDB helpers
-│   │   ├── package/         # Package management
-│   │   ├── path/            # Path utilities
-│   │   ├── storage/         # Storage helpers
-│   │   ├── upload/          # File upload utilities
-│   │   └── ws/              # WebSocket utilities
-│   ├── react/               # React utilities and modules
-│   │   ├── apollo-client/   # Apollo Client integration
-│   │   ├── apollo-error/    # Apollo error handling
-│   │   ├── i18next/         # Internationalization (i18n)
-│   │   ├── loading/         # Loading state management
-│   │   ├── log/             # Logging utilities
-│   │   ├── next-intl/       # Next.js internationalization
-│   │   ├── storage/         # Client-side storage
-│   │   ├── toast/           # Toast notifications
-│   │   └── userback/        # User feedback integration
-│   ├── typescript/          # TypeScript types and interfaces
-│   └── util/                # Utility functions and helpers
-│       ├── common/          # Common utilities
-│       ├── object/          # Object manipulation
-│       ├── serializer/      # Serialization helpers
-│       ├── string/          # String utilities
-│       └── validate/        # Validation helpers
-├── package.json             # Project manifest
-├── tsconfig.json            # TypeScript configuration
-└── ...                      # Other configuration and metadata files
-```
-
-### Testing
-
-```bash
-# Run all tests
-pnpm run test
-
-# Run unit tests only
-pnpm run test:unit
-
-# Run e2e tests only
-pnpm run test:e2e
-
-# Run tests with coverage
-pnpm run test:coverage
-```
+For detailed development guidelines, code standards, and contribution workflow, see our [Contributing Guide](CONTRIBUTING.md).
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+We welcome contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) for detailed information about our development process, code standards, and contribution workflow.
 
-### Development Workflow
+### Quick Start for Contributors
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass (`pnpm run test`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Make** your changes following our standards
+4. **Test** your changes thoroughly
+5. **Commit** with conventional commit messages
+6. **Push** to your branch and create a Pull Request
 
-### Code Standards
+For complete guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-- Follow TypeScript best practices
-- Write comprehensive tests
-- Update documentation for new features
-- Follow our ESLint configuration
-- Use conventional commit messages
+---
+
+## 🆘 Support
+
+### Getting Help
+
+- **🐛 Issues**: [GitHub Issues](https://github.com/cyberskill-world/shared/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/cyberskill-world/shared/discussions)
+- **📧 Email**: [support@cyberskill.world](mailto:support@cyberskill.world)
+
+### Community Resources
+
+- **📚 API Reference**: [JSDocs](https://www.jsdocs.io/package/@cyberskill/shared)
+
+### Migration Support
+
+- **📋 Changelog**: [Release Notes](https://github.com/cyberskill-world/shared/releases)
 
 ---
 
@@ -338,15 +428,30 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+**MIT License Benefits:**
+
+- ✅ Commercial use allowed
+- ✅ Modification permitted
+- ✅ Distribution allowed
+- ✅ Private use allowed
+- ✅ No warranty provided
+- ✅ No liability for damages
+
 ---
 
 ## 🏢 About CyberSkill
 
-CyberSkill JSC is a technology company focused on building innovative solutions for the cybersecurity industry. Our shared libraries and tools help developers create secure, scalable, and maintainable applications.
+CyberSkill JSC is a leading technology company focused on building innovative solutions for the cybersecurity industry. Our shared libraries and tools help developers create secure, scalable, and maintainable applications that meet enterprise-grade standards.
 
-- **Website**: [https://cyberskill.com](https://cyberskill.com)
-- **GitHub**: [https://github.com/cyberskill-world](https://github.com/cyberskill-world)
-- **Documentation**: [https://docs.cyberskill.com](https://docs.cyberskill.com)
+### Company Information
+
+- **🌐 Website**: [https://cyberskill.world](https://cyberskill.world)
+- **🐙 GitHub**: [https://github.com/cyberskill-world](https://github.com/cyberskill-world)
+- **📧 Contact**: [hello@cyberskill.world](mailto:hello@cyberskill.world)
+
+### Our Mission
+
+To provide developers with the tools and utilities they need to build secure, scalable, and maintainable applications that protect users and organizations in an increasingly complex digital landscape.
 
 ---
 
@@ -354,9 +459,12 @@ CyberSkill JSC is a technology company focused on building innovative solutions 
   <p>Made with ❤️ by the <a href="https://github.com/cyberskill-world">CyberSkill Team</a></p>
 
   <p>
-    <a href="https://cyberskill.com">Website</a> •
-    <a href="https://docs.cyberskill.com">Documentation</a> •
+    <a href="https://cyberskill.world">Website</a> •
     <a href="https://github.com/cyberskill-world/shared/issues">Issues</a> •
     <a href="https://github.com/cyberskill-world/shared/discussions">Discussions</a>
+  </p>
+
+  <p>
+    <sub>If this project helps you, please consider giving us a ⭐ on GitHub!</sub>
   </p>
 </div>

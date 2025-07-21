@@ -1,5 +1,10 @@
 import type { I_Log as I_LogCommon } from '#typescript/index.js';
 
+/**
+ * Enum representing the type of issues for logging and error handling.
+ * - Error: Represents an error issue.
+ * - Warning: Represents a warning issue.
+ */
 export enum E_IssueType {
     Error = 'error',
     Warning = 'warning',
@@ -13,7 +18,7 @@ export interface I_IssueEntry {
     rule?: string;
 }
 
-export interface T_ThrowError {
+export interface I_ThrowError {
     message?: string;
     status?: {
         CODE: string | number;

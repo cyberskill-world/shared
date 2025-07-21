@@ -4,6 +4,6 @@ import { mergeConfigs } from './dist/config/index.js';
 export default mergeConfigs('eslint', {
     ignores: ['public/favicon/manifest.json'],
     rules: {
-        'unicorn/prefer-node-protocol': 'off',
+        'jsdoc/require-jsdoc': 'error',
     },
 });

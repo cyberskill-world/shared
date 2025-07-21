@@ -7,6 +7,25 @@ import { serializer as defaultSerializer } from '#util/serializer/index.js';
 import { catchError } from '../log/index.js';
 import { storage } from './storage.util.js';
 
+/**
+ * React hook that provides persistent storage functionality with automatic serialization.
+ * This hook manages state that persists across browser sessions using localForage,
+ * with automatic serialization/deserialization of complex data types. It provides
+ * a React-friendly interface for storage operations with proper error handling.
+ *
+ * Features:
+ * - Automatic data serialization and deserialization
+ * - Persistent storage across browser sessions
+ * - Initial value handling and fallback
+ * - Error handling with graceful degradation
+ * - Automatic storage synchronization
+ * - Support for complex data types via custom serializers
+ *
+ * @param key - The unique storage key for the data.
+ * @param initialValue - Optional initial value to use if no stored value exists.
+ * @param serializer - Optional custom serializer for complex data types (defaults to JSON serializer).
+ * @returns An object containing the current value, set function, and remove function.
+ */
 export function useStorage<T>(
     key: string,
     initialValue?: T,

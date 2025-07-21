@@ -24,8 +24,11 @@ const upperCharMap: Record<string, string[]> = Object.entries(charMap).reduce(
 
 /**
  * Convert a string to a regex pattern that matches the string and its accented variations.
- * @param str - The string to convert.
- * @returns The regex pattern as a string.
+ * This function normalizes the input string and creates a regex pattern that can match
+ * both the original characters and their accented equivalents.
+ *
+ * @param str - The string to convert to a regex pattern.
+ * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
     str = unorm.nfkc(str);
@@ -42,8 +45,10 @@ export function regexSearchMapper(str: string) {
 
 /**
  * Remove accents from a string.
+ * This function normalizes the string using NFD normalization and removes all diacritical marks.
+ *
  * @param str - The string to remove accents from.
- * @returns The string without accents.
+ * @returns The string without any accents or diacritical marks.
  */
 export function removeAccent(str: string) {
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
@@ -51,9 +56,12 @@ export function removeAccent(str: string) {
 
 /**
  * Remove duplicates from an array based on a key function.
+ * This function can remove duplicates either by comparing values directly (when no keyFn is provided)
+ * or by using a custom key function to determine uniqueness.
+ *
  * @param arr - The array to remove duplicates from.
- * @param keyFn - A function that returns a unique key for each item in the array.
- * @returns A new array with duplicates removed.
+ * @param keyFn - Optional function that returns a unique key for each item in the array.
+ * @returns A new array with duplicates removed, maintaining the original order.
  */
 export function uniqueArray<T>(
     arr: T[],
@@ -78,9 +86,13 @@ export function uniqueArray<T>(
 }
 
 /**
+ * Map environment variables to boolean flags indicating the current environment.
+ * This function takes NODE_ENV and NODE_ENV_MODE variables and returns flags
+ * indicating whether the current environment is development, staging, or production.
  *
- * @param env - The environment variables to map.
- * @returns  An object containing flags for the environment.
+ * @param env - The environment variables object containing NODE_ENV and NODE_ENV_MODE.
+ * @returns An object containing boolean flags for the environment (IS_DEV, IS_STAG, IS_PROD).
+ * @throws {Error} When NODE_ENV is production but NODE_ENV_MODE is development.
  */
 export function mapEnvironment(env: I_NodeEnvInput): I_EnvFlags {
     const { NODE_ENV = E_Environment.DEVELOPMENT, NODE_ENV_MODE = E_Environment.DEVELOPMENT } = env;

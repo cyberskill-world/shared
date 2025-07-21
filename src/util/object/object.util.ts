@@ -2,7 +2,10 @@ import { isArray, isPlainObject, mergeWith } from 'lodash-es';
 
 /**
  * Check if a string is a valid JSON string.
- * @param str - The string to check.
+ * This function attempts to parse the string as JSON and returns true if successful,
+ * false if the string is not valid JSON.
+ *
+ * @param str - The string to check for valid JSON format.
  * @returns True if the string is a valid JSON string, false otherwise.
  */
 export function isJSON(str: string): boolean {
@@ -16,10 +19,13 @@ export function isJSON(str: string): boolean {
 }
 
 /**
- * Gets a nested value from an object.
+ * Gets a nested value from an object using a path array.
+ * This function traverses the object following the provided path and returns
+ * the value at the specified location, or undefined if the path doesn't exist.
+ *
  * @param obj - The object to get the value from.
- * @param path - The path to the value.
- * @returns The value at the specified path, or undefined if it does not exist.
+ * @param path - An array of keys representing the path to the desired value.
+ * @returns The value at the specified path, or undefined if the path doesn't exist.
  */
 export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
     return path.reduce<unknown>((acc, key) => {
@@ -31,12 +37,14 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
 }
 
 /**
- * Sets a nested value in an object.
- * If the path does not exist, it will be created.
+ * Sets a nested value in an object using a path array.
+ * This function creates the path if it doesn't exist and sets the value at the specified location.
+ * The function returns a new object with the updated value, maintaining immutability.
+ *
  * @param obj - The object to set the value in.
- * @param path - The path to the value.
- * @param value - The value to set.
- * @returns The updated object.
+ * @param path - An array of keys representing the path to the desired location.
+ * @param value - The value to set at the specified path.
+ * @returns A new object with the updated value at the specified path.
  */
 export function setNestedValue<T>(
     obj: T,
@@ -71,9 +79,14 @@ export function setNestedValue<T>(
 
 /**
  * Deep merges multiple objects or arrays into a single object or array.
- * If all arguments are arrays, concatenates them.
- * If all are objects, deeply merges (concatenating arrays within objects).
- * Throws if mixed types.
+ * This function handles different types of merging:
+ * - If all arguments are arrays, it concatenates them
+ * - If all arguments are objects, it deeply merges them (concatenating arrays within objects)
+ * - Throws an error if mixed types are provided
+ *
+ * @param args - The objects or arrays to merge.
+ * @returns The merged result - either a concatenated array or a deeply merged object.
+ * @throws {Error} When arguments are mixed types (some arrays, some objects).
  */
 export function deepMerge<T = unknown>(...args: T[]): T {
     if (args.every(isArray)) {

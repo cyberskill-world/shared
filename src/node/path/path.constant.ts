@@ -3,7 +3,7 @@ import fsExtra from 'fs-extra';
 import { getEnv } from '#config/env/index.js';
 
 import type { I_CommandContext } from '../command/index.js';
-import type { I_PackageInput, T_PackageJson } from '../package/index.js';
+import type { I_PackageInput, I_PackageJson } from '../package/index.js';
 
 import { E_CommandType, formatCommand, rawCommand } from '../command/index.js';
 import { E_PackageType, setupPackages } from '../package/index.js';
@@ -26,7 +26,7 @@ export const GIT_HOOK = '.git/hooks/';
 export const GIT_COMMIT_EDITMSG = '.git/COMMIT_EDITMSG';
 export const MIGRATE_MONGO_CONFIG = '.migrate-mongo.config.js';
 export const CYBERSKILL_DIRECTORY = (() => {
-    const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as T_PackageJson;
+    const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as I_PackageJson;
 
     const baseDirectory = packageJson.name === CYBERSKILL_PACKAGE_NAME
         ? join(WORKING_DIRECTORY, BUILD_DIRECTORY)
@@ -80,6 +80,15 @@ export const PATH = {
     VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
 };
 
+/**
+ * Creates Git hooks configuration based on whether this is the current project.
+ * This function generates a configuration object for Git hooks that includes
+ * pre-commit and commit-msg hooks, with an optional pre-push hook for the current project.
+ *
+ * @param context - Context object containing project information.
+ * @param context.isCurrentProject - Whether this is the current project being worked on.
+ * @returns A Git hooks configuration object with appropriate commands for each hook.
+ */
 export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>) {
     return {
         'pre-commit': LINT_STAGED_CLI,
@@ -88,6 +97,25 @@ export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandCont
     };
 }
 
+/**
+ * Builds a command function based on the specified type and configuration.
+ * This function creates a command executor that handles different command types
+ * including CLI commands and string commands. It manages package dependencies
+ * and formats commands appropriately for execution.
+ *
+ * The function supports:
+ * - CLI commands that require package installation
+ * - String commands that are executed directly
+ * - Automatic package dependency management
+ * - Command formatting and validation
+ *
+ * @param config - Configuration object containing type, packages, and command properties.
+ * @param config.type - The type of command to build (CLI or STRING).
+ * @param config.packages - Optional array of packages required for CLI commands.
+ * @param config.command - The command string to execute.
+ * @returns A function that returns a promise resolving to the formatted command string.
+ * @throws {Error} When an unsupported command type is provided.
+ */
 function buildCommand({ type, packages, command }: { type: E_CommandType; packages?: I_PackageInput[]; command: string }): () => Promise<string> {
     const uniquePackages = packages?.reduce((acc: I_PackageInput[], pkg) => {
         if (!acc.some(existingPkg => existingPkg.name === pkg.name)) {

@@ -171,7 +171,7 @@ export interface I_CreateModelOptions<T extends Partial<C_Document>>
 
 export type T_Input_Populate = string | string[] | T_PopulateOptions | T_PopulateOptions[];
 
-export interface T_PaginateOptionsWithPopulate
+export interface I_PaginateOptionsWithPopulate
     extends T_PaginateOptions,
     Omit<T_PopulateOption, 'populate'> {
     populate?: T_Input_Populate;
@@ -191,16 +191,16 @@ export interface I_Input_FindAll<T> extends T_PopulateOption {
 
 export type I_Input_FindPaging<T = undefined> = T extends undefined
     ? {
-            options?: T_PaginateOptionsWithPopulate;
+            options?: I_PaginateOptionsWithPopulate;
         }
     : {
             filter?: T_FilterQuery<T>;
-            options?: T_PaginateOptionsWithPopulate;
+            options?: I_PaginateOptionsWithPopulate;
         };
 
 export interface I_Input_FindPagingAggregate {
     pipeline: T_PipelineStage[];
-    options?: T_PaginateOptionsWithPopulate;
+    options?: I_PaginateOptionsWithPopulate;
 }
 
 export interface I_Input_CreateOne<T> {
