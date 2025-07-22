@@ -14,7 +14,7 @@ import { getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.j
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_DynamicRefFunction, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
@@ -115,9 +115,35 @@ export const mongo = {
         const createdSchema = new mongoose.Schema<T>(schema);
 
         virtuals.forEach(({ name, options, get }) => {
-            const virtualInstance = createdSchema.virtual(name as string, options);
-            if (get)
-                virtualInstance.get(get);
+            if (mongo.isDynamicVirtual(options)) {
+                // For dynamic virtuals, we store the configuration on the schema
+                // but don't create the virtual immediately since Mongoose doesn't
+                // support dynamic refs natively. Instead, we'll handle population manually.
+                if (!(createdSchema.statics as any)['_dynamicVirtuals']) {
+                    (createdSchema.statics as any)['_dynamicVirtuals'] = [];
+                }
+                (createdSchema.statics as any)['_dynamicVirtuals'].push({
+                    name: name as string,
+                    options: options
+                });
+                
+                // Create a virtual that returns undefined by default
+                // This allows the field to be included in JSON output when populated
+                const virtualInstance = createdSchema.virtual(name as string);
+                if (get) {
+                    virtualInstance.get(get);
+                } else {
+                    // Default getter for dynamic virtuals
+                    virtualInstance.get(function(this: any) {
+                        return this._populated?.[name as string] || (options.count ? 0 : (options.justOne ? null : []));
+                    });
+                }
+            } else {
+                // Handle regular static virtuals as before
+                const virtualInstance = createdSchema.virtual(name as string, options);
+                if (get)
+                    virtualInstance.get(get);
+            }
         });
 
         if (!standalone) {
@@ -294,6 +320,264 @@ export const mongo = {
         }
 
         return newFilter;
+    },
+    /**
+     * Enhanced query methods that support dynamic virtual population.
+     * These methods extend the standard Mongoose queries to automatically
+     * populate dynamic virtuals after the main query is executed.
+     */
+    query: {
+        /**
+         * Finds a single document with support for dynamic virtual population.
+         * 
+         * @param model - The Mongoose model to query.
+         * @param mongoose - The Mongoose instance.
+         * @param filter - The filter criteria to find the document.
+         * @param projection - The fields to include/exclude in the result.
+         * @param options - Query options for the operation.
+         * @param populate - Population configuration for static virtuals/refs.
+         * @param populateDynamic - Whether to populate dynamic virtuals (default: true).
+         * @returns A promise that resolves to the found document with populated dynamic virtuals.
+         */
+        async findOne<T extends Partial<C_Document>>(
+            model: I_ExtendedModel<T>,
+            mongoose: typeof mongooseRaw,
+            filter: T_FilterQuery<T> = {},
+            projection: T_ProjectionType<T> = {},
+            options: T_QueryOptions<T> = {},
+            populate?: T_Input_Populate,
+            populateDynamic: boolean = true
+        ): Promise<T | null> {
+            const query = model.findOne(filter, projection, options);
+
+            if (populate) {
+                query.populate(populate as T_PopulateOptions);
+            }
+
+            let result = await query.exec();
+
+            if (result && populateDynamic) {
+                const dynamicVirtuals = (model.schema.statics as any)?._dynamicVirtuals;
+                if (dynamicVirtuals?.length > 0) {
+                    const populated = await mongo.populateDynamicVirtuals(mongoose, [result], dynamicVirtuals);
+                    result = populated[0] || null;
+                }
+            }
+
+            return result;
+        },
+
+        /**
+         * Finds all documents with support for dynamic virtual population.
+         * 
+         * @param model - The Mongoose model to query.
+         * @param mongoose - The Mongoose instance.
+         * @param filter - The filter criteria to find documents.
+         * @param projection - The fields to include/exclude in the result.
+         * @param options - Query options for the operation.
+         * @param populate - Population configuration for static virtuals/refs.
+         * @param populateDynamic - Whether to populate dynamic virtuals (default: true).
+         * @returns A promise that resolves to the found documents with populated dynamic virtuals.
+         */
+        async findAll<T extends Partial<C_Document>>(
+            model: I_ExtendedModel<T>,
+            mongoose: typeof mongooseRaw,
+            filter: T_FilterQuery<T> = {},
+            projection: T_ProjectionType<T> = {},
+            options: T_QueryOptions<T> = {},
+            populate?: T_Input_Populate,
+            populateDynamic: boolean = true
+        ): Promise<T[]> {
+            const query = model.find(filter, projection, options);
+
+            if (populate) {
+                query.populate(populate as T_PopulateOptions);
+            }
+
+            let results = await query.exec();
+
+            if (results.length > 0 && populateDynamic) {
+                const dynamicVirtuals = (model.schema.statics as any)?._dynamicVirtuals;
+                if (dynamicVirtuals?.length > 0) {
+                    results = await mongo.populateDynamicVirtuals(mongoose, results, dynamicVirtuals);
+                }
+            }
+
+            return results;
+        },
+
+        /**
+         * Manually populates dynamic virtuals on already fetched documents.
+         * This is useful when you have documents that were fetched without dynamic population
+         * and you want to populate them afterwards.
+         * 
+         * @param model - The Mongoose model.
+         * @param mongoose - The Mongoose instance.
+         * @param documents - Array of documents to populate.
+         * @returns A promise that resolves to the documents with populated dynamic virtuals.
+         */
+        async populateDynamic<T extends Partial<C_Document>>(
+            model: I_ExtendedModel<T>,
+            mongoose: typeof mongooseRaw,
+            documents: T[]
+        ): Promise<T[]> {
+            if (!documents.length) return documents;
+
+            const dynamicVirtuals = (model.schema.statics as any)?._dynamicVirtuals;
+            if (dynamicVirtuals?.length > 0) {
+                return await mongo.populateDynamicVirtuals(mongoose, documents, dynamicVirtuals);
+            }
+
+            return documents;
+        }
+    },
+    /**
+     * Checks if a virtual options object has a dynamic ref function.
+     * 
+     * @param options - The virtual options to check.
+     * @returns True if the options contain a dynamic ref function.
+     */
+    isDynamicVirtual(options?: T_VirtualOptions): options is { ref: T_DynamicRefFunction; localField: string; foreignField: string; count?: boolean; justOne?: boolean; options?: any } {
+        return options != null && typeof options.ref === 'function';
+    },
+    /**
+     * Creates a populate configuration for dynamic virtuals by resolving ref functions.
+     * This function groups documents by their dynamic ref result and creates appropriate
+     * populate configurations for each model type.
+     * 
+     * @param documents - Array of documents to populate.
+     * @param virtualName - Name of the virtual field.
+     * @param virtualOptions - Virtual options containing the dynamic ref function.
+     * @returns Array of populate configurations grouped by model.
+     */
+    resolveDynamicPopulate<T>(
+        documents: T[],
+        virtualName: string,
+        virtualOptions: { ref: T_DynamicRefFunction; localField: string; foreignField: string; count?: boolean; justOne?: boolean }
+    ): Array<{ model: string; docs: T[]; populate: T_PopulateOptions }> {
+        const modelGroups = new Map<string, T[]>();
+        
+        // Group documents by their resolved model name
+        documents.forEach(doc => {
+            try {
+                const modelName = virtualOptions.ref(doc);
+                if (modelName && typeof modelName === 'string') {
+                    if (!modelGroups.has(modelName)) {
+                        modelGroups.set(modelName, []);
+                    }
+                    modelGroups.get(modelName)!.push(doc);
+                }
+            } catch (error) {
+                // Skip documents where ref function fails
+                console.warn(`Dynamic ref function failed for document:`, error);
+            }
+        });
+        
+        // Create populate configurations for each model group
+        return Array.from(modelGroups.entries()).map(([modelName, docs]) => ({
+            model: modelName,
+            docs,
+                            populate: {
+                    path: virtualName,
+                    model: modelName,
+                    localField: virtualOptions.localField,
+                    foreignField: virtualOptions.foreignField,
+                    justOne: virtualOptions.justOne,
+                    count: virtualOptions.count,
+                    options: {}
+                }
+        }));
+    },
+    /**
+     * Performs manual population for dynamic virtuals.
+     * This function manually populates virtual fields that use dynamic refs by
+     * querying each model type separately and merging the results.
+     * 
+     * @param mongoose - The Mongoose instance.
+     * @param documents - Array of documents to populate.
+     * @param virtualConfigs - Configuration for virtual fields with dynamic refs.
+     * @returns Promise that resolves to populated documents.
+     */
+    async populateDynamicVirtuals<T>(
+        mongoose: typeof mongooseRaw,
+        documents: T[],
+        virtualConfigs: Array<{ name: string; options: { ref: T_DynamicRefFunction; localField: string; foreignField: string; count?: boolean; justOne?: boolean } }>
+    ): Promise<T[]> {
+        if (!documents.length || !virtualConfigs.length) {
+            return documents;
+        }
+        
+        const populatedDocs = documents.slice(); // Create a copy
+        
+        for (const virtualConfig of virtualConfigs) {
+            const { name, options } = virtualConfig;
+            const populateGroups = mongo.resolveDynamicPopulate(documents, name, options);
+            
+            // Execute queries for each model group
+            for (const group of populateGroups) {
+                try {
+                    const Model = mongoose.models[group.model];
+                    if (!Model) {
+                        console.warn(`Model "${group.model}" not found for dynamic virtual "${name}"`);
+                        continue;
+                    }
+                    
+                    // Get unique local field values for this group
+                    const localValues = group.docs
+                        .map(doc => (doc as any)[options.localField])
+                        .filter(val => val != null);
+                    
+                    if (localValues.length === 0) continue;
+                    
+                    // Query the target model
+                    const query = { [options.foreignField]: { $in: localValues } };
+                    const populatedData = await Model.find(query).lean();
+                    
+                    // Map results back to documents
+                    if (options.count) {
+                        // For count virtuals, count matching documents
+                        const countMap = new Map<string, number>();
+                        populatedData.forEach((item: any) => {
+                            const key = item[options.foreignField]?.toString();
+                            if (key) {
+                                countMap.set(key, (countMap.get(key) || 0) + 1);
+                            }
+                        });
+                        
+                        group.docs.forEach(doc => {
+                            const localVal = (doc as any)[options.localField]?.toString();
+                            if (localVal) {
+                                (doc as any)[name] = countMap.get(localVal) || 0;
+                            }
+                        });
+                    } else {
+                        // For regular virtuals, map the actual documents
+                        const resultMap = new Map<string, any[]>();
+                        populatedData.forEach((item: any) => {
+                            const key = item[options.foreignField]?.toString();
+                            if (key) {
+                                if (!resultMap.has(key)) {
+                                    resultMap.set(key, []);
+                                }
+                                resultMap.get(key)!.push(item);
+                            }
+                        });
+                        
+                        group.docs.forEach(doc => {
+                            const localVal = (doc as any)[options.localField]?.toString();
+                            if (localVal) {
+                                const results = resultMap.get(localVal) || [];
+                                (doc as any)[name] = options.justOne ? results[0] : results;
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.warn(`Failed to populate dynamic virtual "${name}" for model "${group.model}":`, error);
+                }
+            }
+        }
+        
+        return populatedDocs;
     },
 };
 

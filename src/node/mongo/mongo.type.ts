@@ -122,6 +122,9 @@ interface I_VirtualNestedOptions {
     [key: string]: I_VirtualNestedOptions | number | string | boolean;
 }
 
+// Add new type for dynamic ref function
+export type T_DynamicRefFunction<T = any> = (doc: T) => string;
+
 interface I_VirtualOptions {
     ref: string;
     localField: string;
@@ -131,11 +134,24 @@ interface I_VirtualOptions {
     options?: I_VirtualNestedOptions;
 }
 
+// New interface for dynamic virtual options
+interface I_DynamicVirtualOptions {
+    ref: T_DynamicRefFunction;
+    localField: string;
+    foreignField: string;
+    count?: boolean;
+    justOne?: boolean;
+    options?: I_VirtualNestedOptions;
+}
+
+// Union type for both static and dynamic virtual options
+export type T_VirtualOptions = I_VirtualOptions | I_DynamicVirtualOptions;
+
 interface I_MongooseOptions<T> {
     mongoose: typeof mongoose;
     virtuals?: {
         name: keyof T | string;
-        options?: I_VirtualOptions;
+        options?: T_VirtualOptions;
         get?: (this: T) => void;
     }[];
 }
