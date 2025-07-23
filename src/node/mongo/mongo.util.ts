@@ -340,7 +340,6 @@ export const mongo = {
 
             return documents;
         } catch (error) {
-            // Log error but return original documents to maintain functionality
             catchError(new Error(`Failed to populate document virtuals: ${error instanceof Error ? error.message : String(error)}`));
             return documents;
         }
@@ -385,11 +384,8 @@ export const mongo = {
                     modelGroups.get(modelName)!.push(doc);
                 }
             } catch (error) {
-                // Log error through structured logging but continue processing other documents
-                // This ensures that one faulty ref function doesn't break the entire population
                 const errorResult = catchError(error);
                 if (errorResult.message) {
-                    // Enhance error context for better debugging
                     catchError(new Error(`Dynamic ref function failed for virtual "${virtualName}": ${errorResult.message}`));
                 }
             }
@@ -432,7 +428,6 @@ export const mongo = {
             return documents;
         }
 
-        // Process documents in-place to avoid unnecessary copying
         for (const virtualConfig of virtualConfigs) {
             const { name, options } = virtualConfig;
             const populateGroups = mongo.resolveDynamicPopulate(documents, name, options);
@@ -441,7 +436,6 @@ export const mongo = {
                 try {
                     const Model = mongoose.models[group.model];
                     if (!Model) {
-                        // Log missing model through structured logging but continue processing other groups
                         catchError(new Error(`Model "${group.model}" not found for dynamic virtual "${name}"`));
                         continue;
                     }
@@ -469,7 +463,6 @@ export const mongo = {
                         group.docs.forEach(doc => {
                             const docWithFields = doc as Record<string, unknown>;
                             const localVal = docWithFields[options.localField]?.toString();
-                            // Always set count value (0 if no match found)
                             docWithFields[name] = localVal ? (countMap.get(localVal) || 0) : 0;
                         });
                     } else {
@@ -491,13 +484,11 @@ export const mongo = {
                                 const results = resultMap.get(localVal) || [];
                                 docWithFields[name] = options.justOne ? (results[0] || null) : results;
                             } else {
-                                // Set default value when no local field value
                                 docWithFields[name] = options.justOne ? null : [];
                             }
                         });
                     }
                 } catch (error) {
-                    // Log population error through structured logging but continue processing other groups
                     catchError(new Error(`Failed to populate dynamic virtual "${name}" for model "${group.model}": ${error instanceof Error ? error.message : String(error)}`));
                 }
             }
@@ -927,6 +918,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const schemaStatics = this.model.schema.statics as Record<string, unknown>;
             const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
+
             if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.docs.length > 0) {
                 const populatedDocs = await mongo.populateDynamicVirtuals(this.model.base, result.docs, dynamicVirtuals);
                 (result as { docs: T[] }).docs = populatedDocs as T[];
