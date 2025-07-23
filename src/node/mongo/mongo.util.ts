@@ -329,15 +329,21 @@ export const mongo = {
         model: I_ExtendedModel<T>,
         documents: T[]
     ): Promise<T[]> {
-        if (!documents.length) return documents;
+        if (!documents.length || !model) return documents;
 
-        const schemaStatics = model.schema.statics as Record<string, unknown>;
-        const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
-        if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-            return await mongo.populateDynamicVirtuals(model.base, documents, dynamicVirtuals);
+        try {
+            const schemaStatics = model.schema.statics as Record<string, unknown>;
+            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
+            if (dynamicVirtuals && dynamicVirtuals.length > 0) {
+                return await mongo.populateDynamicVirtuals(model.base, documents, dynamicVirtuals);
+            }
+
+            return documents;
+        } catch (error) {
+            // Log error but return original documents to maintain functionality
+            catchError(new Error(`Failed to populate document virtuals: ${error instanceof Error ? error.message : String(error)}`));
+            return documents;
         }
-
-        return documents;
     },
     /**
      * Checks if a virtual options object has a dynamic ref function.
@@ -346,7 +352,7 @@ export const mongo = {
      * @returns True if the options contain a dynamic ref function.
      */
     isDynamicVirtual(options?: T_VirtualOptions): options is { ref: T_DynamicRefFunction; localField: string; foreignField: string; count?: boolean; justOne?: boolean; options?: I_VirtualNestedOptions } {
-        return options != null && typeof (options as { ref: unknown }).ref === 'function';
+        return Boolean(options && typeof options.ref === 'function');
     },
     /**
      * Creates a populate configuration for dynamic virtuals by resolving ref functions.
@@ -363,6 +369,10 @@ export const mongo = {
         virtualName: string,
         virtualOptions: { ref: T_DynamicRefFunction; localField: string; foreignField: string; count?: boolean; justOne?: boolean }
     ): Array<{ model: string; docs: T[]; populate: T_PopulateOptions }> {
+        if (!documents.length || !virtualName || !virtualOptions?.ref) {
+            return [];
+        }
+
         const modelGroups = new Map<string, T[]>();
 
         documents.forEach(doc => {
@@ -422,8 +432,7 @@ export const mongo = {
             return documents;
         }
 
-        const populatedDocs = documents.slice();
-
+        // Process documents in-place to avoid unnecessary copying
         for (const virtualConfig of virtualConfigs) {
             const { name, options } = virtualConfig;
             const populateGroups = mongo.resolveDynamicPopulate(documents, name, options);
@@ -450,7 +459,7 @@ export const mongo = {
 
                     if (options.count) {
                         const countMap = new Map<string, number>();
-                        populatedData.forEach((item: any) => {
+                        populatedData.forEach((item: Record<string, unknown>) => {
                             const key = item[options.foreignField]?.toString();
                             if (key) {
                                 countMap.set(key, (countMap.get(key) || 0) + 1);
@@ -460,9 +469,8 @@ export const mongo = {
                         group.docs.forEach(doc => {
                             const docWithFields = doc as Record<string, unknown>;
                             const localVal = docWithFields[options.localField]?.toString();
-                            if (localVal) {
-                                docWithFields[name] = countMap.get(localVal) || 0;
-                            }
+                            // Always set count value (0 if no match found)
+                            docWithFields[name] = localVal ? (countMap.get(localVal) || 0) : 0;
                         });
                     } else {
                         const resultMap = new Map<string, unknown[]>();
@@ -481,7 +489,10 @@ export const mongo = {
                             const localVal = docWithFields[options.localField]?.toString();
                             if (localVal) {
                                 const results = resultMap.get(localVal) || [];
-                                docWithFields[name] = options.justOne ? results[0] : results;
+                                docWithFields[name] = options.justOne ? (results[0] || null) : results;
+                            } else {
+                                // Set default value when no local field value
+                                docWithFields[name] = options.justOne ? null : [];
                             }
                         });
                     }
@@ -492,7 +503,7 @@ export const mongo = {
             }
         }
 
-        return populatedDocs;
+        return documents;
     },
     /**
      * Creates a Mongoose controller instance with dynamic virtual support.
