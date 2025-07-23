@@ -375,7 +375,13 @@ export const mongo = {
                     modelGroups.get(modelName)!.push(doc);
                 }
             } catch (error) {
-                console.warn(`Dynamic ref function failed for document:`, error);
+                // Log error through structured logging but continue processing other documents
+                // This ensures that one faulty ref function doesn't break the entire population
+                const errorResult = catchError(error);
+                if (errorResult.message) {
+                    // Enhance error context for better debugging
+                    catchError(new Error(`Dynamic ref function failed for virtual "${virtualName}": ${errorResult.message}`));
+                }
             }
         });
 
@@ -397,6 +403,10 @@ export const mongo = {
      * Performs manual population for dynamic virtuals.
      * This function manually populates virtual fields that use dynamic refs by
      * querying each model type separately and merging the results.
+     * 
+     * Errors during population are logged but do not prevent other virtuals from being populated.
+     * Documents that fail to populate will have their virtual field set to the default value
+     * (empty array for arrays, null for single documents, 0 for counts).
      * 
      * @param mongoose - The Mongoose instance.
      * @param documents - Array of documents to populate.
@@ -422,7 +432,8 @@ export const mongo = {
                 try {
                     const Model = mongoose.models[group.model];
                     if (!Model) {
-                        console.warn(`Model "${group.model}" not found for dynamic virtual "${name}"`);
+                        // Log missing model through structured logging but continue processing other groups
+                        catchError(new Error(`Model "${group.model}" not found for dynamic virtual "${name}"`));
                         continue;
                     }
 
@@ -475,7 +486,8 @@ export const mongo = {
                         });
                     }
                 } catch (error) {
-                    console.warn(`Failed to populate dynamic virtual "${name}" for model "${group.model}":`, error);
+                    // Log population error through structured logging but continue processing other groups
+                    catchError(new Error(`Failed to populate dynamic virtual "${name}" for model "${group.model}": ${error instanceof Error ? error.message : String(error)}`));
                 }
             }
         }
