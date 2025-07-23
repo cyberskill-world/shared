@@ -322,114 +322,28 @@ export const mongo = {
         return newFilter;
     },
     /**
-     * Enhanced query methods that support dynamic virtual population.
-     * These methods extend the standard Mongoose queries to automatically
-     * populate dynamic virtuals after the main query is executed.
+     * Manually populates dynamic virtuals on already fetched documents.
+     * This is useful when you have documents that were fetched without dynamic population
+     * and you want to populate them afterwards.
+     * 
+     * @param model - The Mongoose model.
+     * @param mongoose - The Mongoose instance.
+     * @param documents - Array of documents to populate.
+     * @returns A promise that resolves to the documents with populated dynamic virtuals.
      */
-    query: {
-        /**
-         * Finds a single document with support for dynamic virtual population.
-         * 
-         * @param model - The Mongoose model to query.
-         * @param mongoose - The Mongoose instance.
-         * @param filter - The filter criteria to find the document.
-         * @param projection - The fields to include/exclude in the result.
-         * @param options - Query options for the operation.
-         * @param populate - Population configuration for static virtuals/refs.
-         * @param populateDynamic - Whether to populate dynamic virtuals (default: true).
-         * @returns A promise that resolves to the found document with populated dynamic virtuals.
-         */
-        async findOne<T extends Partial<C_Document>>(
-            model: I_ExtendedModel<T>,
-            mongoose: typeof mongooseRaw,
-            filter: T_FilterQuery<T> = {},
-            projection: T_ProjectionType<T> = {},
-            options: T_QueryOptions<T> = {},
-            populate?: T_Input_Populate,
-            populateDynamic: boolean = true
-        ): Promise<T | null> {
-            const query = model.findOne(filter, projection, options);
+    async populateDocumentVirtuals<T extends Partial<C_Document>>(
+        model: I_ExtendedModel<T>,
+        mongoose: typeof mongooseRaw,
+        documents: T[]
+    ): Promise<T[]> {
+        if (!documents.length) return documents;
 
-            if (populate) {
-                query.populate(populate as T_PopulateOptions);
-            }
-
-            let result = await query.exec();
-
-            if (result && populateDynamic) {
-                const dynamicVirtuals = (model.schema.statics as any)?._dynamicVirtuals;
-                if (dynamicVirtuals?.length > 0) {
-                    const populated = await mongo.populateDynamicVirtuals(mongoose, [result], dynamicVirtuals);
-                    result = populated[0] || null;
-                }
-            }
-
-            return result;
-        },
-
-        /**
-         * Finds all documents with support for dynamic virtual population.
-         * 
-         * @param model - The Mongoose model to query.
-         * @param mongoose - The Mongoose instance.
-         * @param filter - The filter criteria to find documents.
-         * @param projection - The fields to include/exclude in the result.
-         * @param options - Query options for the operation.
-         * @param populate - Population configuration for static virtuals/refs.
-         * @param populateDynamic - Whether to populate dynamic virtuals (default: true).
-         * @returns A promise that resolves to the found documents with populated dynamic virtuals.
-         */
-        async findAll<T extends Partial<C_Document>>(
-            model: I_ExtendedModel<T>,
-            mongoose: typeof mongooseRaw,
-            filter: T_FilterQuery<T> = {},
-            projection: T_ProjectionType<T> = {},
-            options: T_QueryOptions<T> = {},
-            populate?: T_Input_Populate,
-            populateDynamic: boolean = true
-        ): Promise<T[]> {
-            const query = model.find(filter, projection, options);
-
-            if (populate) {
-                query.populate(populate as T_PopulateOptions);
-            }
-
-            let results = await query.exec();
-
-            if (results.length > 0 && populateDynamic) {
-                const dynamicVirtuals = (model.schema.statics as any)?._dynamicVirtuals;
-                if (dynamicVirtuals?.length > 0) {
-                    results = await mongo.populateDynamicVirtuals(mongoose, results, dynamicVirtuals);
-                }
-            }
-
-            return results;
-        },
-
-        /**
-         * Manually populates dynamic virtuals on already fetched documents.
-         * This is useful when you have documents that were fetched without dynamic population
-         * and you want to populate them afterwards.
-         * 
-         * @param model - The Mongoose model.
-         * @param mongoose - The Mongoose instance.
-         * @param documents - Array of documents to populate.
-         * @returns A promise that resolves to the documents with populated dynamic virtuals.
-         */
-        async populateDynamic<T extends Partial<C_Document>>(
-            model: I_ExtendedModel<T>,
-            mongoose: typeof mongooseRaw,
-            documents: T[]
-        ): Promise<T[]> {
-            if (!documents.length) return documents;
-
-            const dynamicVirtuals = (model.schema.statics as any)?._dynamicVirtuals;
-            if (dynamicVirtuals?.length > 0) {
-                return await mongo.populateDynamicVirtuals(mongoose, documents, dynamicVirtuals);
-            }
-
-            return documents;
+        const dynamicVirtuals = (model.schema.statics as any)?._dynamicVirtuals;
+        if (dynamicVirtuals?.length > 0) {
+            return await mongo.populateDynamicVirtuals(mongoose, documents, dynamicVirtuals);
         }
+
+        return documents;
     },
     /**
      * Checks if a virtual options object has a dynamic ref function.
@@ -578,6 +492,19 @@ export const mongo = {
         }
         
         return populatedDocs;
+    },
+    /**
+     * Creates a Mongoose controller instance with dynamic virtual support.
+     * 
+     * @param model - The Mongoose model to operate on.
+     * @param mongoose - The Mongoose instance.
+     * @returns A new MongooseController instance.
+     */
+    createController<T extends Partial<C_Document>>(
+        model: I_ExtendedModel<T>,
+        mongoose: typeof mongooseRaw
+    ): MongooseController<T> {
+        return new MongooseController(model, mongoose);
     },
 };
 
@@ -874,8 +801,12 @@ export class MongooseController<T extends Partial<C_Document>> {
      * Creates a new Mongoose controller instance.
      *
      * @param model - The Mongoose model to operate on.
+     * @param mongoose - The Mongoose instance for dynamic virtual population.
      */
-    constructor(private model: I_ExtendedModel<T>) { }
+    constructor(
+        private model: I_ExtendedModel<T>,
+        private mongoose: typeof mongooseRaw
+    ) { }
 
     /**
      * Gets the model name for logging and error messages.
@@ -888,6 +819,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
     /**
      * Finds a single document with optional population and projection.
+     * Automatically handles dynamic virtual population if configured.
      *
      * @param filter - The filter criteria to find the document.
      * @param projection - The fields to include/exclude in the result.
@@ -908,7 +840,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 query.populate(populate as T_PopulateOptions);
             }
 
-            const result = await query.exec();
+            let result = await query.exec();
 
             if (!result) {
                 return {
@@ -918,7 +850,14 @@ export class MongooseController<T extends Partial<C_Document>> {
                 };
             }
 
-            return { success: true, result };
+            // Handle dynamic virtual population
+            const dynamicVirtuals = (this.model.schema.statics as any)?._dynamicVirtuals;
+            if (dynamicVirtuals?.length > 0) {
+                const populated = await mongo.populateDynamicVirtuals(this.mongoose, [result], dynamicVirtuals);
+                result = (populated[0] || result) as any;
+            }
+
+            return { success: true, result: result as T };
         }
         catch (error) {
             return catchError<T>(error);
@@ -927,6 +866,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
     /**
      * Finds all documents with optional population and projection.
+     * Automatically handles dynamic virtual population if configured.
      *
      * @param filter - The filter criteria to find documents.
      * @param projection - The fields to include/exclude in the result.
@@ -947,9 +887,15 @@ export class MongooseController<T extends Partial<C_Document>> {
                 query.populate(populate as T_PopulateOptions);
             }
 
-            const result = await query.exec();
+            let result = await query.exec();
 
-            return { success: true, result };
+            // Handle dynamic virtual population
+            const dynamicVirtuals = (this.model.schema.statics as any)?._dynamicVirtuals;
+            if (dynamicVirtuals?.length > 0 && result.length > 0) {
+                result = await mongo.populateDynamicVirtuals(this.mongoose, result, dynamicVirtuals) as any;
+            }
+
+            return { success: true, result: result as T[] };
         }
         catch (error) {
             return catchError<T[]>(error);
@@ -958,6 +904,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
     /**
      * Finds documents with pagination support.
+     * Automatically handles dynamic virtual population if configured.
      *
      * @param filter - The filter criteria to find documents.
      * @param options - Pagination options including page, limit, and population.
@@ -968,7 +915,14 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
-            const result = await this.model.paginate(filter, options);
+            let result = await this.model.paginate(filter, options);
+
+            // Handle dynamic virtual population
+            const dynamicVirtuals = (this.model.schema.statics as any)?._dynamicVirtuals;
+            if (dynamicVirtuals?.length > 0 && result.docs.length > 0) {
+                const populatedDocs = await mongo.populateDynamicVirtuals(this.mongoose, result.docs, dynamicVirtuals) as any;
+                result = { ...result, docs: populatedDocs as T[] };
+            }
 
             return { success: true, result };
         }

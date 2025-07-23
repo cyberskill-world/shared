@@ -75,25 +75,33 @@ const Like = mongo.createModel<ILike>({
 ### 2. Query with Dynamic Population
 
 ```typescript
-// Method 1: Using enhanced query methods
-const likesWithEntities = await mongo.query.findAll(
-    Like,
-    mongoose,
-    { userId: 'user123' },
-    {},
-    {},
-    undefined, // static populate
-    true       // populate dynamic virtuals
-);
+// Create a controller with dynamic virtual support
+const likeController = mongo.createController(Like, mongoose);
 
-// Now each like has its entity populated!
+// Method 1: Using enhanced existing methods (automatic dynamic population)
+const likesResult = await likeController.findAll({ userId: 'user123' });
+const likesWithEntities = likesResult.result;
+
+// Now each like has its entity populated automatically!
 likesWithEntities.forEach(like => {
-    console.log(`User liked ${like.entityType}: ${like.entity?.title || like.entity?.name}`);
+    const entityName = (like.entity as any)?.title || (like.entity as any)?.name;
+    console.log(`User liked ${like.entityType}: ${entityName}`);
 });
 
-// Method 2: Manual population
+// Method 2: Single document
+const singleLikeResult = await likeController.findOne({ userId: 'user123' });
+const likeWithEntity = singleLikeResult.result;
+
+// Method 3: Pagination with dynamic virtuals
+const paginatedResult = await likeController.findPaging(
+    { userId: 'user123' }, 
+    { page: 1, limit: 10 }
+);
+const paginatedLikes = paginatedResult.result.docs; // All populated!
+
+// Method 4: Manual population for existing documents
 const plainLikes = await Like.find({ userId: 'user123' }).lean();
-const populatedLikes = await mongo.query.populateDynamic(Like, mongoose, plainLikes);
+const populatedLikes = await mongo.populateDocumentVirtuals(Like, mongoose, plainLikes);
 ```
 
 ## Advanced Features
@@ -190,24 +198,26 @@ type T_VirtualOptions = {
 
 ### Query Methods
 
-#### `mongo.query.findOne(model, mongoose, filter?, projection?, options?, populate?, populateDynamic?)`
+#### `mongo.createController(model, mongoose)`
 
-Find a single document with dynamic virtual population.
+Create a controller instance with dynamic virtual support.
 
 **Parameters:**
-- `model`: The Mongoose model to query
+- `model`: The Mongoose model to operate on
 - `mongoose`: The Mongoose instance
-- `filter`: Query filter (optional)
-- `projection`: Fields to include/exclude (optional)
-- `options`: Query options (optional)
-- `populate`: Static population config (optional)
-- `populateDynamic`: Whether to populate dynamic virtuals (default: true)
 
-#### `mongo.query.findAll(model, mongoose, filter?, projection?, options?, populate?, populateDynamic?)`
+**Returns:** MongooseController instance with automatic dynamic virtual population
 
-Find multiple documents with dynamic virtual population.
+#### Enhanced Controller Methods
 
-#### `mongo.query.populateDynamic(model, mongoose, documents)`
+All existing controller methods now automatically support dynamic virtual population:
+
+- `controller.findOne(filter?, projection?, options?, populate?)` - Find single document
+- `controller.findAll(filter?, projection?, options?, populate?)` - Find multiple documents  
+- `controller.findPaging(filter?, options?)` - Find with pagination
+- `controller.findPagingAggregate(pipeline, options?)` - Aggregate with pagination
+
+#### `mongo.populateDocumentVirtuals(model, mongoose, documents)`
 
 Manually populate dynamic virtuals on existing documents.
 
