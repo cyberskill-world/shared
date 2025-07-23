@@ -322,13 +322,11 @@ export const mongo = {
      * and you want to populate them afterwards.
      * 
      * @param model - The Mongoose model.
-     * @param mongoose - The Mongoose instance.
      * @param documents - Array of documents to populate.
      * @returns A promise that resolves to the documents with populated dynamic virtuals.
      */
     async populateDocumentVirtuals<T extends Partial<C_Document>>(
         model: I_ExtendedModel<T>,
-        mongoose: typeof mongooseRaw,
         documents: T[]
     ): Promise<T[]> {
         if (!documents.length) return documents;
@@ -336,7 +334,7 @@ export const mongo = {
         const schemaStatics = model.schema.statics as Record<string, unknown>;
         const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
         if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-            return await mongo.populateDynamicVirtuals(mongoose, documents, dynamicVirtuals);
+            return await mongo.populateDynamicVirtuals(model.base, documents, dynamicVirtuals);
         }
 
         return documents;
@@ -488,14 +486,12 @@ export const mongo = {
      * Creates a Mongoose controller instance with dynamic virtual support.
      * 
      * @param model - The Mongoose model to operate on.
-     * @param mongoose - The Mongoose instance.
      * @returns A new MongooseController instance.
      */
     createController<T extends Partial<C_Document>>(
-        model: I_ExtendedModel<T>,
-        mongoose: typeof mongooseRaw
+        model: I_ExtendedModel<T>
     ): MongooseController<T> {
-        return new MongooseController(model, mongoose);
+        return new MongooseController(model);
     },
 };
 
@@ -792,12 +788,8 @@ export class MongooseController<T extends Partial<C_Document>> {
      * Creates a new Mongoose controller instance.
      *
      * @param model - The Mongoose model to operate on.
-     * @param mongoose - The Mongoose instance for dynamic virtual population.
      */
-    constructor(
-        private model: I_ExtendedModel<T>,
-        private mongoose: typeof mongooseRaw
-    ) { }
+    constructor(private model: I_ExtendedModel<T>) { }
 
     /**
      * Gets the model name for logging and error messages.
@@ -845,7 +837,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
 
             if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-                const populated = await mongo.populateDynamicVirtuals(this.mongoose, [result], dynamicVirtuals);
+                const populated = await mongo.populateDynamicVirtuals(this.model.base, [result], dynamicVirtuals);
                 result = populated[0] || result;
             }
 
@@ -885,7 +877,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
 
             if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.length > 0) {
-                result = await mongo.populateDynamicVirtuals(this.mongoose, result, dynamicVirtuals);
+                result = await mongo.populateDynamicVirtuals(this.model.base, result, dynamicVirtuals);
             }
 
             return { success: true, result };
@@ -913,7 +905,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const schemaStatics = this.model.schema.statics as Record<string, unknown>;
             const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
             if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.docs.length > 0) {
-                const populatedDocs = await mongo.populateDynamicVirtuals(this.mongoose, result.docs, dynamicVirtuals);
+                const populatedDocs = await mongo.populateDynamicVirtuals(this.model.base, result.docs, dynamicVirtuals);
                 (result as { docs: T[] }).docs = populatedDocs as T[];
             }
 
