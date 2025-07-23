@@ -118,15 +118,15 @@ export type T_Omit_Create = 'id' | 'isDel' | 'createdAt' | 'updatedAt';
 
 export type T_Omit_Update = 'id' | 'createdAt' | 'updatedAt';
 
-interface I_VirtualNestedOptions {
+export interface I_VirtualNestedOptions {
     [key: string]: I_VirtualNestedOptions | number | string | boolean;
 }
 
 // Add new type for dynamic ref function
-export type T_DynamicRefFunction<T = any> = (doc: T) => string;
+export type T_DynamicRefFunction<T = unknown> = (doc: T) => string;
 
-interface I_VirtualOptions {
-    ref: string;
+// Base interface for common virtual properties
+interface I_VirtualBaseOptions {
     localField: string;
     foreignField: string;
     count?: boolean;
@@ -134,18 +134,24 @@ interface I_VirtualOptions {
     options?: I_VirtualNestedOptions;
 }
 
-// New interface for dynamic virtual options
-interface I_DynamicVirtualOptions {
+// Static virtual options
+interface I_VirtualOptions extends I_VirtualBaseOptions {
+    ref: string;
+}
+
+// Dynamic virtual options
+interface I_DynamicVirtualOptions extends I_VirtualBaseOptions {
     ref: T_DynamicRefFunction;
-    localField: string;
-    foreignField: string;
-    count?: boolean;
-    justOne?: boolean;
-    options?: I_VirtualNestedOptions;
 }
 
 // Union type for both static and dynamic virtual options
 export type T_VirtualOptions = I_VirtualOptions | I_DynamicVirtualOptions;
+
+// Type for stored dynamic virtual configuration
+export interface I_DynamicVirtualConfig {
+    name: string;
+    options: I_DynamicVirtualOptions;
+}
 
 interface I_MongooseOptions<T> {
     mongoose: typeof mongoose;
