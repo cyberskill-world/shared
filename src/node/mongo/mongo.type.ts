@@ -118,14 +118,21 @@ export type T_Omit_Create = 'id' | 'isDel' | 'createdAt' | 'updatedAt';
 
 export type T_Omit_Update = 'id' | 'createdAt' | 'updatedAt';
 
-export interface I_VirtualNestedOptions {
+interface I_VirtualNestedOptions {
     [key: string]: I_VirtualNestedOptions | number | string | boolean;
 }
 
-// Add new type for dynamic ref function
-export type T_DynamicRefFunction<T = unknown> = (doc: T) => string;
+/**
+ * Function type for dynamically determining the reference model name.
+ * Can return either a string (model name) or an enum value that represents the model.
+ * The function can also return undefined, which will be handled gracefully.
+ * This allows for optional properties in documents without requiring non-null assertions.
+ *
+ * @template T - The document type
+ * @template R - The return type (string or enum)
+ */
+type T_DynamicRefFunction<T = unknown, R extends string = string> = (doc: T) => R | undefined;
 
-// Base interface for common virtual properties
 interface I_VirtualBaseOptions {
     localField: string;
     foreignField: string;
@@ -134,36 +141,32 @@ interface I_VirtualBaseOptions {
     options?: I_VirtualNestedOptions;
 }
 
-// Static virtual options
 interface I_VirtualOptions extends I_VirtualBaseOptions {
     ref: string;
 }
 
-// Dynamic virtual options
-interface I_DynamicVirtualOptions extends I_VirtualBaseOptions {
-    ref: T_DynamicRefFunction;
+export interface I_DynamicVirtualOptions<T, R extends string = string> extends I_VirtualBaseOptions {
+    ref: T_DynamicRefFunction<T, R>;
 }
 
-// Union type for both static and dynamic virtual options
-export type T_VirtualOptions = I_VirtualOptions | I_DynamicVirtualOptions;
+export type T_VirtualOptions<T, R extends string = string> = I_VirtualOptions | I_DynamicVirtualOptions<T, R>;
 
-// Type for stored dynamic virtual configuration
-export interface I_DynamicVirtualConfig {
+export interface I_DynamicVirtualConfig<T, R extends string = string> {
     name: string;
-    options: I_DynamicVirtualOptions;
+    options: I_DynamicVirtualOptions<T, R>;
 }
 
-interface I_MongooseOptions<T> {
+interface I_MongooseOptions<T, R extends string = string> {
     mongoose: typeof mongoose;
     virtuals?: {
         name: keyof T | string;
-        options?: T_VirtualOptions;
+        options?: T_VirtualOptions<T, R>;
         get?: (this: T) => void;
     }[];
 }
 
-export interface I_CreateSchemaOptions<T>
-    extends I_MongooseOptions<T> {
+export interface I_CreateSchemaOptions<T, R extends string = string>
+    extends I_MongooseOptions<T, R> {
     schema: T_Input_MongooseSchema<T>;
     standalone?: boolean;
 }
@@ -182,8 +185,8 @@ export interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     post?: T_MongooseMiddlewarePostFunction<T>;
 }
 
-export interface I_CreateModelOptions<T extends Partial<C_Document>>
-    extends I_MongooseOptions<T> {
+export interface I_CreateModelOptions<T extends Partial<C_Document>, R extends string = string>
+    extends I_MongooseOptions<T, R> {
     schema: T_Input_MongooseSchema<T>;
     name: string;
     aggregate?: boolean;

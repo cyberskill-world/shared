@@ -14,13 +14,61 @@ import { getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.j
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, I_VirtualNestedOptions, T_AggregatePaginateResult, T_DeleteResult, T_DynamicRefFunction, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_VirtualOptions, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 
-export { aggregatePaginate, mongoosePaginate };
+/**
+ * Converts enum values to proper model names.
+ * Handles common naming conventions like converting 'USER' to 'User'.
+ *
+ * @param enumValue - The enum value to convert
+ * @returns The converted model name
+ */
+function convertEnumToModelName(enumValue: string): string {
+    if (enumValue === enumValue.toUpperCase()) {
+        return enumValue.charAt(0).toUpperCase() + enumValue.slice(1).toLowerCase();
+    }
+
+    return enumValue;
+}
+
+/**
+ * Checks if any dynamic virtuals are requested in the populate options.
+ * This helps determine whether to skip Mongoose's native populate for dynamic virtuals.
+ *
+ * @param populate - The populate options to check
+ * @param dynamicVirtualNames - Array of dynamic virtual field names
+ * @returns True if any dynamic virtuals are requested in populate
+ */
+function shouldSkipNativePopulate(
+    populate: T_Input_Populate | undefined,
+    dynamicVirtualNames: string[],
+): boolean {
+    if (!populate || dynamicVirtualNames.length === 0) {
+        return false;
+    }
+
+    if (Array.isArray(populate)) {
+        return populate.some((p) => {
+            if (typeof p === 'string') {
+                return dynamicVirtualNames.includes(p);
+            }
+            if (typeof p === 'object' && p.path) {
+                return dynamicVirtualNames.includes(p.path);
+            }
+            return false;
+        });
+    }
+
+    if (typeof populate === 'object' && populate.path) {
+        return dynamicVirtualNames.includes(populate.path);
+    }
+
+    return false;
+}
 
 /**
  * MongoDB utility object providing comprehensive database operations and utilities.
@@ -106,35 +154,39 @@ export const mongo = {
      * @param options.standalone - Whether to exclude generic fields (default: false).
      * @returns A configured Mongoose schema.
      */
-    createSchema<T>({
+    createSchema<T, R extends string = string>({
         mongoose,
         schema,
         virtuals = [],
         standalone = false,
-    }: I_CreateSchemaOptions<T>): T_MongooseShema<T> {
+    }: I_CreateSchemaOptions<T, R>): T_MongooseShema<T> {
         const createdSchema = new mongoose.Schema<T>(schema);
 
         virtuals.forEach(({ name, options, get }) => {
-            if (mongo.isDynamicVirtual(options)) {
+            if (mongo.isDynamicVirtual<T, R>(options)) {
                 const schemaStatics = createdSchema.statics as Record<string, unknown>;
 
                 if (!schemaStatics['_dynamicVirtuals']) {
                     schemaStatics['_dynamicVirtuals'] = [];
                 }
-                (schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[]).push({
+
+                (schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[]).push({
                     name: name as string,
-                    options: options
+                    options,
                 });
 
                 const virtualInstance = createdSchema.virtual(name as string);
+
                 if (get) {
                     virtualInstance.get(get);
-                } else {
+                }
+                else {
                     virtualInstance.get(function (this: T & { _populated?: Record<string, unknown> }) {
-                        return this._populated?.[name as string] || (options.count ? 0 : (options.justOne ? null : []));
+                        return this._populated?.[name as string] || (options?.count ? 0 : (options?.justOne ? null : []));
                     });
                 }
-            } else {
+            }
+            else {
                 const virtualInstance = createdSchema.virtual(name as string, options);
                 if (get)
                     virtualInstance.get(get);
@@ -163,7 +215,7 @@ export const mongo = {
      * @returns A configured Mongoose model with extended functionality.
      * @throws {Error} When the model name is not provided.
      */
-    createModel<T extends Partial<C_Document>>({
+    createModel<T extends Partial<C_Document>, R extends string = string>({
         mongoose: currentMongooseInstance,
         name,
         schema,
@@ -171,7 +223,7 @@ export const mongo = {
         aggregate = false,
         virtuals = [],
         middlewares = [],
-    }: I_CreateModelOptions<T>): I_ExtendedModel<T> {
+    }: I_CreateModelOptions<T, R>): I_ExtendedModel<T> {
         if (!name) {
             throw new Error('Model name is required.');
         }
@@ -317,56 +369,28 @@ export const mongo = {
         return newFilter;
     },
     /**
-     * Manually populates dynamic virtuals on already fetched documents.
-     * This is useful when you have documents that were fetched without dynamic population
-     * and you want to populate them afterwards.
-     * 
-     * @param model - The Mongoose model.
-     * @param documents - Array of documents to populate.
-     * @returns A promise that resolves to the documents with populated dynamic virtuals.
-     */
-    async populateDocumentVirtuals<T extends Partial<C_Document>>(
-        model: I_ExtendedModel<T>,
-        documents: T[]
-    ): Promise<T[]> {
-        if (!documents.length || !model) return documents;
-
-        try {
-            const schemaStatics = model.schema.statics as Record<string, unknown>;
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
-            if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-                return await mongo.populateDynamicVirtuals(model.base, documents, dynamicVirtuals);
-            }
-
-            return documents;
-        } catch (error) {
-            catchError(new Error(`Failed to populate document virtuals: ${error instanceof Error ? error.message : String(error)}`));
-            return documents;
-        }
-    },
-    /**
      * Checks if a virtual options object has a dynamic ref function.
-     * 
+     *
      * @param options - The virtual options to check.
      * @returns True if the options contain a dynamic ref function.
      */
-    isDynamicVirtual(options?: T_VirtualOptions): options is { ref: T_DynamicRefFunction; localField: string; foreignField: string; count?: boolean; justOne?: boolean; options?: I_VirtualNestedOptions } {
+    isDynamicVirtual<T, R extends string = string>(options?: T_VirtualOptions<T, R>): options is I_DynamicVirtualOptions<T, R> {
         return Boolean(options && typeof options.ref === 'function');
     },
     /**
      * Creates a populate configuration for dynamic virtuals by resolving ref functions.
      * This function groups documents by their dynamic ref result and creates appropriate
      * populate configurations for each model type.
-     * 
+     *
      * @param documents - Array of documents to populate.
      * @param virtualName - Name of the virtual field.
      * @param virtualOptions - Virtual options containing the dynamic ref function.
      * @returns Array of populate configurations grouped by model.
      */
-    resolveDynamicPopulate<T>(
+    resolveDynamicPopulate<T, R extends string = string>(
         documents: T[],
         virtualName: string,
-        virtualOptions: { ref: T_DynamicRefFunction; localField: string; foreignField: string; count?: boolean; justOne?: boolean }
+        virtualOptions: I_DynamicVirtualOptions<T, R>,
     ): Array<{ model: string; docs: T[]; populate: T_PopulateOptions }> {
         if (!documents.length || !virtualName || !virtualOptions?.ref) {
             return [];
@@ -374,17 +398,26 @@ export const mongo = {
 
         const modelGroups = new Map<string, T[]>();
 
-        documents.forEach(doc => {
+        documents.forEach((doc) => {
             try {
                 const modelName = virtualOptions.ref(doc);
-                if (modelName && typeof modelName === 'string') {
-                    if (!modelGroups.has(modelName)) {
-                        modelGroups.set(modelName, []);
-                    }
-                    modelGroups.get(modelName)!.push(doc);
+
+                if (modelName === undefined || modelName === null) {
+                    return;
                 }
-            } catch (error) {
-                // Simplified error logging to reduce overhead
+
+                const modelNameString = typeof modelName === 'string' ? modelName : String(modelName);
+
+                if (modelNameString && modelNameString.trim() !== '') {
+                    const convertedModelName = convertEnumToModelName(modelNameString);
+
+                    if (!modelGroups.has(convertedModelName)) {
+                        modelGroups.set(convertedModelName, []);
+                    }
+                    modelGroups.get(convertedModelName)!.push(doc);
+                }
+            }
+            catch (error) {
                 catchError(new Error(`Dynamic ref function failed for virtual "${virtualName}": ${error instanceof Error ? error.message : String(error)}`));
             }
         });
@@ -399,82 +432,79 @@ export const mongo = {
                 foreignField: virtualOptions.foreignField,
                 justOne: virtualOptions.justOne,
                 count: virtualOptions.count,
-                options: {}
-            }
+                options: {},
+            },
         }));
     },
     /**
      * Performs manual population for dynamic virtuals with optimized performance.
-     * 
+     *
      * Performance optimizations:
      * - Batches all virtuals per model into single database queries
      * - Deduplicates local values to avoid redundant data fetching
      * - Pre-allocates default values for consistency
      * - Minimizes memory allocations and iterations
-     * 
+     *
      * @param mongoose - The Mongoose instance.
      * @param documents - Array of documents to populate.
      * @param virtualConfigs - Configuration for virtual fields with dynamic refs.
      * @returns Promise that resolves to populated documents.
      */
-    async populateDynamicVirtuals<T>(
+    async populateDynamicVirtuals<T, R extends string = string>(
         mongoose: typeof mongooseRaw,
         documents: T[],
-        virtualConfigs: I_DynamicVirtualConfig[]
+        virtualConfigs: I_DynamicVirtualConfig<T, R>[],
     ): Promise<T[]> {
         if (!documents.length || !virtualConfigs.length) {
             return documents;
         }
 
-        // Pre-allocate default values for all virtuals to ensure consistency
-        documents.forEach(doc => {
+        documents.forEach((doc) => {
             const docWithFields = doc as Record<string, unknown>;
             virtualConfigs.forEach(({ name, options }) => {
                 if (!(name in docWithFields)) {
-                    docWithFields[name] = options.count ? 0 : (options.justOne ? null : []);
+                    const defaultValue = options.count ? 0 : (options.justOne ? null : []);
+                    docWithFields[name] = defaultValue;
                 }
             });
         });
 
-        // Group all virtual processing by model to minimize database queries
         const modelProcessingMap = new Map<string, {
-            virtuals: I_DynamicVirtualConfig[];
-            localValueSets: Map<string, Set<string>>; // virtualName -> set of localValues
-            docsByLocalValue: Map<string, T[]>; // localValue -> documents
+            virtuals: I_DynamicVirtualConfig<T, R>[];
+            localValueSets: Map<string, Set<string>>;
+            docsByLocalValue: Map<string, T[]>;
         }>();
 
-        // Build processing map by resolving all dynamic refs
         for (const virtualConfig of virtualConfigs) {
             const { name, options } = virtualConfig;
-            
+
             try {
                 const populateGroups = mongo.resolveDynamicPopulate(documents, name, options);
-                
+
                 for (const group of populateGroups) {
                     if (!modelProcessingMap.has(group.model)) {
                         modelProcessingMap.set(group.model, {
                             virtuals: [],
                             localValueSets: new Map(),
-                            docsByLocalValue: new Map()
+                            docsByLocalValue: new Map(),
                         });
                     }
-                    
+
                     const processing = modelProcessingMap.get(group.model)!;
-                    
-                    // Add virtual if not already added
+
                     if (!processing.virtuals.find(v => v.name === name)) {
                         processing.virtuals.push(virtualConfig);
                         processing.localValueSets.set(name, new Set());
                     }
-                    
-                    // Collect local values and map documents
+
                     const localValueSet = processing.localValueSets.get(name)!;
-                    group.docs.forEach(doc => {
+                    group.docs.forEach((doc) => {
                         const localVal = (doc as Record<string, unknown>)[options.localField];
+
                         if (localVal != null) {
                             const strVal = localVal.toString();
                             localValueSet.add(strVal);
-                            
+
                             if (!processing.docsByLocalValue.has(strVal)) {
                                 processing.docsByLocalValue.set(strVal, []);
                             }
@@ -482,23 +512,23 @@ export const mongo = {
                         }
                     });
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 catchError(new Error(`Failed to resolve dynamic populate for virtual "${name}": ${error instanceof Error ? error.message : String(error)}`));
             }
         }
 
-        // Process each model with all its virtuals in a single database query
         for (const [modelName, processing] of modelProcessingMap) {
             try {
                 const Model = mongoose.models[modelName];
+
                 if (!Model) {
                     catchError(new Error(`Model "${modelName}" not found`));
                     continue;
                 }
 
-                // Collect all unique foreign field values needed for this model
                 const allLocalValues = new Set<string>();
-                processing.localValueSets.forEach(localValueSet => {
+                processing.localValueSets.forEach((localValueSet) => {
                     localValueSet.forEach(val => allLocalValues.add(val));
                 });
 
@@ -506,60 +536,62 @@ export const mongo = {
                     continue;
                 }
 
-                // Build optimized query for all virtuals of this model
                 const foreignFields = [...new Set(processing.virtuals.map(v => v.options.foreignField))];
                 const localValuesArray = Array.from(allLocalValues);
-                
+
                 let query: Record<string, unknown>;
+
                 if (foreignFields.length === 1) {
                     query = {};
-                    query[foreignFields[0] as string] = { $in: localValuesArray };
-                } else {
+                    const foreignField = foreignFields[0] as string;
+                    query[foreignField] = { $in: localValuesArray };
+                }
+                else {
                     query = {
-                        $or: foreignFields.map(field => {
+                        $or: foreignFields.map((field) => {
                             const fieldQuery: Record<string, unknown> = {};
                             fieldQuery[field] = { $in: localValuesArray };
+
                             return fieldQuery;
-                        })
+                        }),
                     };
                 }
 
-                // Single database query for all virtuals of this model
                 const allPopulatedData = await Model.find(query).lean();
 
-                // Process each virtual efficiently
                 for (const virtualConfig of processing.virtuals) {
                     const { name, options } = virtualConfig;
-                    
-                    // Filter data relevant to this specific virtual
-                    const relevantData = allPopulatedData.filter(item => {
+
+                    const relevantData = allPopulatedData.filter((item) => {
                         const foreignVal = (item as Record<string, unknown>)[options.foreignField];
-                        return foreignVal != null && allLocalValues.has(foreignVal.toString());
+                        const hasMatch = foreignVal != null && allLocalValues.has(foreignVal.toString());
+
+                        return hasMatch;
                     });
 
                     if (options.count) {
-                        // Build count map once
                         const countMap = new Map<string, number>();
-                        relevantData.forEach(item => {
+                        relevantData.forEach((item) => {
                             const key = (item as Record<string, unknown>)[options.foreignField]?.toString();
+
                             if (key) {
                                 countMap.set(key, (countMap.get(key) || 0) + 1);
                             }
                         });
 
-                        // Apply counts to documents
-                        processing.localValueSets.get(name)!.forEach(localVal => {
+                        processing.localValueSets.get(name)!.forEach((localVal) => {
                             const docs = processing.docsByLocalValue.get(localVal) || [];
                             const count = countMap.get(localVal) || 0;
-                            docs.forEach(doc => {
+                            docs.forEach((doc) => {
                                 (doc as Record<string, unknown>)[name] = count;
                             });
                         });
-                    } else {
-                        // Build result map once
+                    }
+                    else {
                         const resultMap = new Map<string, unknown[]>();
-                        relevantData.forEach(item => {
+                        relevantData.forEach((item) => {
                             const key = (item as Record<string, unknown>)[options.foreignField]?.toString();
+
                             if (key) {
                                 if (!resultMap.has(key)) {
                                     resultMap.set(key, []);
@@ -568,34 +600,33 @@ export const mongo = {
                             }
                         });
 
-                        // Apply results to documents
-                        processing.localValueSets.get(name)!.forEach(localVal => {
+                        processing.localValueSets.get(name)!.forEach((localVal) => {
                             const docs = processing.docsByLocalValue.get(localVal) || [];
                             const results = resultMap.get(localVal) || [];
                             const value = options.justOne ? (results[0] || null) : results;
-                            docs.forEach(doc => {
-                                (doc as Record<string, unknown>)[name] = value;
+                            docs.forEach((doc) => {
+                                Object.defineProperty(doc as Record<string, unknown>, name, {
+                                    value,
+                                    writable: true,
+                                    enumerable: true,
+                                    configurable: true,
+                                });
                             });
                         });
                     }
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 catchError(new Error(`Failed to populate dynamic virtuals for model "${modelName}": ${error instanceof Error ? error.message : String(error)}`));
             }
         }
 
-        return documents;
-    },
-    /**
-     * Creates a Mongoose controller instance with dynamic virtual support.
-     * 
-     * @param model - The Mongoose model to operate on.
-     * @returns A new MongooseController instance.
-     */
-    createController<T extends Partial<C_Document>>(
-        model: I_ExtendedModel<T>
-    ): MongooseController<T> {
-        return new MongooseController(model);
+        const plainDocuments = documents.map((doc) => {
+            const docRecord = doc as Record<string, unknown>;
+            return Object.assign({}, docRecord) as T;
+        });
+
+        return plainDocuments;
     },
 };
 
@@ -744,7 +775,7 @@ export class MongoController<D extends Partial<C_Document>> {
 
             return {
                 success: true,
-                message: `Count retrieved successfully`,
+                message: `${result} documents counted successfully`,
                 result,
             };
         }
@@ -923,7 +954,11 @@ export class MongooseController<T extends Partial<C_Document>> {
         try {
             const query = this.model.findOne(filter, projection, options);
 
-            if (populate) {
+            const schemaStatics = this.model.schema.statics as Record<string, unknown>;
+            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtualNames = dynamicVirtuals?.map(v => v.name) || [];
+
+            if (populate && !shouldSkipNativePopulate(populate, dynamicVirtualNames)) {
                 query.populate(populate as T_PopulateOptions);
             }
 
@@ -936,9 +971,6 @@ export class MongooseController<T extends Partial<C_Document>> {
                     code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
-
-            const schemaStatics = this.model.schema.statics as Record<string, unknown>;
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
 
             if (dynamicVirtuals && dynamicVirtuals.length > 0) {
                 const populated = await mongo.populateDynamicVirtuals(this.model.base, [result], dynamicVirtuals);
@@ -971,14 +1003,15 @@ export class MongooseController<T extends Partial<C_Document>> {
         try {
             const query = this.model.find(filter, projection, options);
 
-            if (populate) {
+            const schemaStatics = this.model.schema.statics as Record<string, unknown>;
+            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtualNames = dynamicVirtuals?.map(v => v.name) || [];
+
+            if (populate && !shouldSkipNativePopulate(populate, dynamicVirtualNames)) {
                 query.populate(populate as T_PopulateOptions);
             }
 
             let result = await query.exec();
-
-            const schemaStatics = this.model.schema.statics as Record<string, unknown>;
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
 
             if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.length > 0) {
                 result = await mongo.populateDynamicVirtuals(this.model.base, result, dynamicVirtuals);
@@ -1004,10 +1037,14 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
-            let result = await this.model.paginate(filter, options);
-
             const schemaStatics = this.model.schema.statics as Record<string, unknown>;
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig[] | undefined;
+            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtualNames = dynamicVirtuals?.map(v => v.name) || [];
+
+            const filteredOptions = shouldSkipNativePopulate(options.populate, dynamicVirtualNames)
+                ? { ...options, populate: undefined }
+                : options;
+            const result = await this.model.paginate(filter, filteredOptions);
 
             if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.docs.length > 0) {
                 const populatedDocs = await mongo.populateDynamicVirtuals(this.model.base, result.docs, dynamicVirtuals);
@@ -1033,10 +1070,23 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_AggregatePaginateResult<T>>> {
         try {
+            const schemaStatics = this.model.schema.statics as Record<string, unknown>;
+            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtualNames = dynamicVirtuals?.map(v => v.name) || [];
+
+            const filteredOptions = shouldSkipNativePopulate(options.populate, dynamicVirtualNames)
+                ? { ...options, populate: undefined }
+                : options;
+
             const result = await this.model.aggregatePaginate(
                 this.model.aggregate(pipeline),
-                options,
+                filteredOptions,
             );
+
+            if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.docs.length > 0) {
+                const populatedDocs = await mongo.populateDynamicVirtuals(this.model.base, result.docs, dynamicVirtuals);
+                (result as { docs: T[] }).docs = populatedDocs as T[];
+            }
 
             return { success: true, result };
         }
@@ -1286,19 +1336,19 @@ export class MongooseController<T extends Partial<C_Document>> {
 
         return isObject
             ? {
-                ...baseFilter,
-                $or: [
-                    { [`slug.${field}`]: slug },
-                    { slugHistory: { $elemMatch: { [`slug.${field}`]: slug } } },
-                ],
-            }
+                    ...baseFilter,
+                    $or: [
+                        { [`slug.${field}`]: slug },
+                        { slugHistory: { $elemMatch: { [`slug.${field}`]: slug } } },
+                    ],
+                }
             : {
-                ...baseFilter,
-                $or: [
-                    { slug },
-                    { slugHistory: slug },
-                ],
-            };
+                    ...baseFilter,
+                    $or: [
+                        { slug },
+                        { slugHistory: slug },
+                    ],
+                };
     }
 
     /**
