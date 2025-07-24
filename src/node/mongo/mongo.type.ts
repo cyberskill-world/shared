@@ -122,8 +122,18 @@ interface I_VirtualNestedOptions {
     [key: string]: I_VirtualNestedOptions | number | string | boolean;
 }
 
-interface I_VirtualOptions {
-    ref: string;
+/**
+ * Function type for dynamically determining the reference model name.
+ * Can return either a string (model name) or an enum value that represents the model.
+ * The function can also return undefined, which will be handled gracefully.
+ * This allows for optional properties in documents without requiring non-null assertions.
+ *
+ * @template T - The document type
+ * @template R - The return type (string or enum)
+ */
+type T_DynamicRefFunction<T = unknown, R extends string = string> = (doc: T) => R | undefined;
+
+interface I_VirtualBaseOptions {
     localField: string;
     foreignField: string;
     count?: boolean;
@@ -131,17 +141,32 @@ interface I_VirtualOptions {
     options?: I_VirtualNestedOptions;
 }
 
-interface I_MongooseOptions<T> {
+interface I_VirtualOptions extends I_VirtualBaseOptions {
+    ref: string;
+}
+
+export interface I_DynamicVirtualOptions<T, R extends string = string> extends I_VirtualBaseOptions {
+    ref: T_DynamicRefFunction<T, R>;
+}
+
+export type T_VirtualOptions<T, R extends string = string> = I_VirtualOptions | I_DynamicVirtualOptions<T, R>;
+
+export interface I_DynamicVirtualConfig<T, R extends string = string> {
+    name: string;
+    options: I_DynamicVirtualOptions<T, R>;
+}
+
+interface I_MongooseOptions<T, R extends string = string> {
     mongoose: typeof mongoose;
     virtuals?: {
         name: keyof T | string;
-        options?: I_VirtualOptions;
+        options?: T_VirtualOptions<T, R>;
         get?: (this: T) => void;
     }[];
 }
 
-export interface I_CreateSchemaOptions<T>
-    extends I_MongooseOptions<T> {
+export interface I_CreateSchemaOptions<T, R extends string = string>
+    extends I_MongooseOptions<T, R> {
     schema: T_Input_MongooseSchema<T>;
     standalone?: boolean;
 }
@@ -160,8 +185,8 @@ export interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     post?: T_MongooseMiddlewarePostFunction<T>;
 }
 
-export interface I_CreateModelOptions<T extends Partial<C_Document>>
-    extends I_MongooseOptions<T> {
+export interface I_CreateModelOptions<T extends Partial<C_Document>, R extends string = string>
+    extends I_MongooseOptions<T, R> {
     schema: T_Input_MongooseSchema<T>;
     name: string;
     aggregate?: boolean;
