@@ -153,8 +153,10 @@ export const mongo = {
             }
             else {
                 const virtualInstance = createdSchema.virtual(name as string, options);
-                if (get)
+
+                if (get) {
                     virtualInstance.get(get);
+                }
             }
         });
 
