@@ -459,8 +459,8 @@ To provide developers with the tools and utilities they need to build secure, sc
   <p>Made with ❤️ by the <a href="https://github.com/cyberskill-world">CyberSkill Team</a></p>
 
   <p>
-    <a href="https://cyberskill.world">Website</a> •
-    <a href="https://github.com/cyberskill-world/shared/issues">Issues</a> •
+    <a href="https://cyberskill.world">Website</a>
+    <a href="https://github.com/cyberskill-world/shared/issues">Issues</a>
     <a href="https://github.com/cyberskill-world/shared/discussions">Discussions</a>
   </p>
 
