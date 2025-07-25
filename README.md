@@ -8,7 +8,7 @@
 [![📦 npm version](https://img.shields.io/npm/v/@cyberskill/shared?style=for-the-badge&logo=npm)](https://npmjs.com/package/@cyberskill/shared)
 [![📥 npm downloads](https://img.shields.io/npm/dm/@cyberskill/shared?style=for-the-badge&logo=npm)](https://npmjs.com/package/@cyberskill/shared)
 [![📚 JSDoc Documentation](https://img.shields.io/badge/JSDoc-Documentation-blue?style=for-the-badge&logo=javascript)](https://www.jsdocs.io/package/@cyberskill/shared)
-[![📄 License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&logo=opensourceinitiative)](https://opensource.org/licenses/MIT)
+[![📄 License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&logo=opensourceinitiative)](LICENSE)
 
 </div>
 
