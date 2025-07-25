@@ -125,7 +125,10 @@ export const mongo = {
         virtuals = [],
         standalone = false,
     }: I_CreateSchemaOptions<T, R>): T_MongooseShema<T> {
-        const createdSchema = new mongoose.Schema<T>(schema);
+        const createdSchema = new mongoose.Schema<T>(schema, {
+            toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
+            toObject: { virtuals: true }, // So `console.log()` and other functions that use `toObject()` include virtuals
+        });
 
         virtuals.forEach(({ name, options, get }) => {
             if (mongo.isDynamicVirtual<T, R>(options)) {
