@@ -361,6 +361,56 @@ function isMongooseDoc(obj: unknown): obj is { toObject: () => { [key: string]: 
 }
 
 /**
+ * Filters out dynamic virtuals from populate options to prevent Mongoose from trying to populate them.
+ * This function creates a new populate configuration that only includes regular virtuals.
+ *
+ * @template T - The document type
+ * @param populate - The original populate options
+ * @param dynamicVirtuals - Array of dynamic virtual configurations
+ * @returns Filtered populate options excluding dynamic virtuals
+ */
+function filterDynamicVirtualsFromPopulate<T>(
+    populate: T_Input_Populate | undefined,
+    dynamicVirtuals: I_DynamicVirtualConfig<T>[] | undefined,
+): T_Input_Populate | undefined {
+    if (!populate || !dynamicVirtuals || dynamicVirtuals.length === 0) {
+        return populate;
+    }
+
+    const dynamicVirtualNames = new Set(dynamicVirtuals.map(v => v.name));
+
+    if (Array.isArray(populate)) {
+        const filtered = populate.filter((p) => {
+            if (typeof p === 'string') {
+                return !dynamicVirtualNames.has(p);
+            }
+            if (typeof p === 'object' && p !== null) {
+                const popObj = p as { path?: string; populate?: string };
+
+                return !dynamicVirtualNames.has(popObj.path || popObj.populate || '');
+            }
+
+            return true;
+        });
+
+        return filtered.length > 0 ? (filtered as T_Input_Populate) : undefined;
+    }
+
+    if (typeof populate === 'string') {
+        return dynamicVirtualNames.has(populate) ? undefined : populate;
+    }
+
+    if (typeof populate === 'object' && populate !== null) {
+        const popObj = populate as { path?: string; populate?: string };
+        const virtualName = popObj.path || popObj.populate || '';
+
+        return dynamicVirtualNames.has(virtualName) ? undefined : populate;
+    }
+
+    return populate;
+}
+
+/**
  * Groups documents by the resolved model name for a dynamic virtual field.
  * Used to batch population queries for dynamic virtuals.
  *
@@ -934,6 +984,53 @@ export class MongooseController<T extends Partial<C_Document>> {
     }
 
     /**
+     * Gets the dynamic virtuals configuration from the model schema.
+     *
+     * @returns Array of dynamic virtual configurations or undefined if none exist.
+     */
+    private getDynamicVirtuals(): I_DynamicVirtualConfig<T>[] | undefined {
+        const schemaStatics = this.model.schema.statics as { [key: string]: unknown };
+
+        return schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+    }
+
+    /**
+     * Populates dynamic virtuals for a single document.
+     *
+     * @param result - The document to populate dynamic virtuals for.
+     * @param populate - The populate options to determine which virtuals to populate.
+     * @returns The document with dynamic virtuals populated.
+     */
+    private async populateDynamicVirtualsForDocument(result: T, populate?: T_Input_Populate): Promise<T> {
+        const dynamicVirtuals = this.getDynamicVirtuals();
+
+        if (dynamicVirtuals && dynamicVirtuals.length > 0) {
+            const populatedArr = await populateDynamicVirtuals(this.model.base, [result], dynamicVirtuals, populate);
+
+            return (populatedArr && populatedArr[0]) ? populatedArr[0] as T : result;
+        }
+
+        return result;
+    }
+
+    /**
+     * Populates dynamic virtuals for an array of documents.
+     *
+     * @param results - The documents to populate dynamic virtuals for.
+     * @param populate - The populate options to determine which virtuals to populate.
+     * @returns The documents with dynamic virtuals populated.
+     */
+    private async populateDynamicVirtualsForDocuments(results: T[], populate?: T_Input_Populate): Promise<T[]> {
+        const dynamicVirtuals = this.getDynamicVirtuals();
+
+        if (dynamicVirtuals && dynamicVirtuals.length > 0 && results.length > 0) {
+            return await populateDynamicVirtuals(this.model.base, results, dynamicVirtuals, populate) as T[];
+        }
+
+        return results;
+    }
+
+    /**
      * Finds a single document with optional population and projection.
      * Automatically handles dynamic virtual population if configured.
      *
@@ -951,11 +1048,12 @@ export class MongooseController<T extends Partial<C_Document>> {
     ): Promise<I_Return<T>> {
         try {
             const query = this.model.findOne(filter, projection, options);
-            const schemaStatics = this.model.schema.statics as { [key: string]: unknown };
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtuals = this.getDynamicVirtuals();
 
-            if (populate && (!dynamicVirtuals || dynamicVirtuals.length === 0)) {
-                query.populate(populate as T_PopulateOptions);
+            const regularPopulate = filterDynamicVirtualsFromPopulate(populate, dynamicVirtuals);
+
+            if (regularPopulate) {
+                query.populate(regularPopulate as T_PopulateOptions);
             }
 
             const result = await query.exec();
@@ -968,12 +1066,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 };
             }
 
-            let finalResult: T = result;
-
-            if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-                const populatedArr = await populateDynamicVirtuals(this.model.base, [result], dynamicVirtuals, populate);
-                finalResult = (populatedArr && populatedArr[0]) ? populatedArr[0] as T : result;
-            }
+            const finalResult = await this.populateDynamicVirtualsForDocument(result, populate);
 
             return { success: true, result: finalResult };
         }
@@ -1000,20 +1093,17 @@ export class MongooseController<T extends Partial<C_Document>> {
     ): Promise<I_Return<T[]>> {
         try {
             const query = this.model.find(filter, projection, options);
-            const schemaStatics = this.model.schema.statics as { [key: string]: unknown };
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtuals = this.getDynamicVirtuals();
 
-            if (populate && (!dynamicVirtuals || dynamicVirtuals.length === 0)) {
-                query.populate(populate as T_PopulateOptions);
+            const regularPopulate = filterDynamicVirtualsFromPopulate(populate, dynamicVirtuals);
+
+            if (regularPopulate) {
+                query.populate(regularPopulate as T_PopulateOptions);
             }
 
             const result = await query.exec();
 
-            let finalResult: T[] = result;
-
-            if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.length > 0) {
-                finalResult = await populateDynamicVirtuals(this.model.base, result, dynamicVirtuals, populate) as T[];
-            }
+            const finalResult = await this.populateDynamicVirtualsForDocuments(result, populate);
 
             return { success: true, result: finalResult };
         }
@@ -1035,22 +1125,17 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
-            const schemaStatics = this.model.schema.statics as { [key: string]: unknown };
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtuals = this.getDynamicVirtuals();
 
-            const baseOptions = { ...options };
+            const filteredOptions = { ...options };
 
-            if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-                baseOptions.populate = undefined;
+            if (options.populate) {
+                filteredOptions.populate = filterDynamicVirtualsFromPopulate(options.populate, dynamicVirtuals);
             }
 
-            const result = await this.model.paginate(filter, baseOptions);
+            const result = await this.model.paginate(filter, filteredOptions);
 
-            let finalDocs: T[] = result.docs;
-
-            if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.docs.length > 0) {
-                finalDocs = await populateDynamicVirtuals(this.model.base, result.docs, dynamicVirtuals, options.populate) as T[];
-            }
+            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
 
             return { success: true, result: { ...result, docs: finalDocs } };
         }
@@ -1071,25 +1156,20 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_AggregatePaginateResult<T>>> {
         try {
-            const schemaStatics = this.model.schema.statics as { [key: string]: unknown };
-            const dynamicVirtuals = schemaStatics['_dynamicVirtuals'] as I_DynamicVirtualConfig<T>[] | undefined;
+            const dynamicVirtuals = this.getDynamicVirtuals();
 
-            const baseOptions = { ...options };
+            const filteredOptions = { ...options };
 
-            if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-                baseOptions.populate = undefined;
+            if (options.populate) {
+                filteredOptions.populate = filterDynamicVirtualsFromPopulate(options.populate, dynamicVirtuals);
             }
 
             const result = await this.model.aggregatePaginate(
                 this.model.aggregate(pipeline),
-                baseOptions,
+                filteredOptions,
             );
 
-            let finalDocs: T[] = result.docs;
-
-            if (dynamicVirtuals && dynamicVirtuals.length > 0 && result.docs.length > 0) {
-                finalDocs = await populateDynamicVirtuals(this.model.base, result.docs, dynamicVirtuals, options.populate) as T[];
-            }
+            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
 
             return { success: true, result: { ...result, docs: finalDocs } };
         }
