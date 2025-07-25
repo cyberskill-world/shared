@@ -189,9 +189,9 @@ export interface I_CreateModelOptions<T extends Partial<C_Document>, R extends s
     extends I_MongooseOptions<T, R> {
     schema: T_Input_MongooseSchema<T>;
     name: string;
+    pagination?: boolean;
     aggregate?: boolean;
     middlewares?: I_MongooseModelMiddleware<T>[];
-    pagination?: boolean;
 }
 
 export type T_Input_Populate = string | string[] | T_PopulateOptions | T_PopulateOptions[];
@@ -214,14 +214,10 @@ export interface I_Input_FindAll<T> extends T_PopulateOption {
     options?: T_QueryOptions<T>;
 }
 
-export type I_Input_FindPaging<T = undefined> = T extends undefined
-    ? {
-            options?: I_PaginateOptionsWithPopulate;
-        }
-    : {
-            filter?: T_FilterQuery<T>;
-            options?: I_PaginateOptionsWithPopulate;
-        };
+export interface I_Input_FindPaging<T = undefined> {
+    filter?: T_FilterQuery<T>;
+    options?: I_PaginateOptionsWithPopulate;
+};
 
 export interface I_Input_FindPagingAggregate {
     pipeline: T_PipelineStage[];

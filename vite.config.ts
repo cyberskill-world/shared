@@ -59,6 +59,7 @@ const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts'], {
 }).reduce((entries, file) => {
     const entryName = file.replace(/^.*\/src\//, '').replace(/\.(ts|tsx)$/, '');
     entries[entryName] = file;
+
     return entries;
 }, {});
 
