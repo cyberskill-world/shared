@@ -1,7 +1,16 @@
-import type { I_UploadConfig, I_UploadOptions, I_UploadResult, I_UploadTypeConfig, I_UploadValidationConfig } from './upload.type.js';
+import { Buffer } from 'node:buffer';
+import { Transform } from 'node:stream';
+import { ReadableStream } from 'node:stream/web';
+
+import type { I_Return } from '#typescript/index.js';
+
+import { RESPONSE_STATUS } from '#constant/index.js';
+
+import type { I_UploadConfig, I_UploadFile, I_UploadFileData, I_UploadOptions, I_UploadTypeConfig, I_UploadValidationConfig } from './upload.type.js';
 
 import { createWriteStream, mkdirSync, pathExistsSync } from '../fs/index.js';
 import { dirname } from '../path/index.js';
+import { BYTES_PER_MB } from './upload.constant.js';
 import { E_UploadType } from './upload.type.js';
 
 /**
@@ -12,7 +21,7 @@ import { E_UploadType } from './upload.type.js';
  * @param stream - The readable stream to calculate the size for.
  * @returns A promise that resolves to the total size of the stream in bytes.
  */
-async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Promise<number> {
+export async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Promise<number> {
     return new Promise((resolve, reject) => {
         let size = 0;
         stream.on('data', (chunk) => {
@@ -24,6 +33,104 @@ async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Promise<num
 }
 
 /**
+ * Extracts and validates file data from an upload file.
+ * This function processes upload files by:
+ * - Extracting file metadata and creating a readable stream
+ * - Calculating the file size from the stream
+ * - Validating file size and extension against upload configuration
+ * - Returning a standardized response with success status and error codes
+ * - Providing validated file data for further processing
+ *
+ * @param type - The type of upload being processed (IMAGE, VIDEO, DOCUMENT, OTHER).
+ * @param file - The upload file object containing file metadata and stream creation method.
+ * @param config - Optional upload configuration. If not provided, uses default configuration.
+ * @returns A promise that resolves to a standardized response containing validated file data or error information.
+ */
+export async function getAndValidateFile(type: E_UploadType, file: I_UploadFile, config?: I_UploadConfig): Promise<I_Return<I_UploadFileData>> {
+    const fileData = await (await file).file;
+    const stream = fileData.createReadStream();
+    const fileSize = await getFileSizeFromStream(stream);
+    const uploadConfig = config ?? createUploadConfig();
+
+    const validationResult = validateUpload(
+        { filename: fileData.filename, fileSize },
+        uploadConfig,
+        type,
+    );
+
+    if (!validationResult.isValid) {
+        return {
+            success: false,
+            message: validationResult.error || 'File validation failed',
+            code: RESPONSE_STATUS.BAD_REQUEST.CODE,
+        };
+    }
+
+    return {
+        success: true,
+        result: fileData,
+        message: 'File validated successfully',
+    };
+}
+
+/**
+ * Creates a validated web-readable stream from an upload file with size validation.
+ * This function processes file uploads for web environments by:
+ * - Validating file data using getAndValidateFile function
+ * - Creating a size validation transform stream to monitor upload progress
+ * - Returning a web-compatible ReadableStream with real-time validation
+ * - Providing standardized error responses for validation failures
+ * - Wrapping the stream in a standardized response format
+ *
+ * @param type - The type of upload being processed (IMAGE, VIDEO, DOCUMENT, OTHER).
+ * @param file - The upload file object containing file metadata and stream creation method.
+ * @param config - Optional upload configuration. If not provided, uses default configuration.
+ * @returns A promise that resolves to a standardized response containing either a web ReadableStream or error information.
+ */
+export async function getFileWebStream(type: E_UploadType, file: I_UploadFile, config?: I_UploadConfig): Promise<I_Return<ReadableStream<Uint8Array>>> {
+    const uploadConfig = config ?? createUploadConfig();
+    const typeConfig = uploadConfig[type];
+
+    const fileData = await getAndValidateFile(type, file, config);
+
+    if (!fileData.success) {
+        return fileData;
+    }
+
+    const { createReadStream } = fileData.result;
+
+    let remainingBytes = typeConfig.sizeLimit;
+
+    const sizeValidationStream = new Transform({
+        transform(chunk: Buffer, _enc: BufferEncoding, cb) {
+            remainingBytes -= chunk.length;
+
+            if (remainingBytes < 0) {
+                cb(new Error(`File size exceeds limit of ${typeConfig.sizeLimit / BYTES_PER_MB}MB`));
+            }
+            else {
+                cb(null, chunk);
+            }
+        },
+    });
+    const originalStream = createReadStream();
+    const validatedStream = originalStream.pipe(sizeValidationStream);
+
+    return {
+        success: true,
+        result: new ReadableStream<Uint8Array>({
+            start(controller) {
+                validatedStream.on('data', (chunk: Buffer | string) => {
+                    controller.enqueue(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+                });
+                validatedStream.on('end', () => controller.close());
+                validatedStream.on('error', (err: unknown) => controller.error(err));
+            },
+        }),
+    };
+}
+
+/**
  * Validates if a file has an allowed extension.
  * This function extracts the file extension from the filename and checks if it's
  * included in the list of allowed extensions (case-insensitive comparison).
@@ -32,7 +139,7 @@ async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Promise<num
  * @param allowedExtensions - An array of allowed file extensions (without dots).
  * @returns True if the file extension is allowed, false otherwise.
  */
-function validateFileExtension(filename: string, allowedExtensions: string[]): boolean {
+export function validateFileExtension(filename: string, allowedExtensions: string[]): boolean {
     const lastDotIndex = filename.lastIndexOf('.');
 
     if (lastDotIndex === -1) {
@@ -40,6 +147,7 @@ function validateFileExtension(filename: string, allowedExtensions: string[]): b
     }
 
     const extension = filename.substring(lastDotIndex + 1).toLowerCase();
+
     return allowedExtensions.includes(extension);
 }
 
@@ -55,7 +163,7 @@ function validateFileExtension(filename: string, allowedExtensions: string[]): b
  * @param uploadType - The type of upload being validated.
  * @returns An object indicating validation success and optional error message.
  */
-function validateUpload(
+export function validateUpload(
     config: I_UploadValidationConfig,
     uploadConfig: I_UploadConfig,
     uploadType: E_UploadType,
@@ -74,6 +182,7 @@ function validateUpload(
 
     if (fileSize !== undefined && fileSize > sizeLimit) {
         const maxSizeMB = Math.round(sizeLimit / (1024 * 1024));
+
         return {
             isValid: false,
             error: `File size exceeds limit for ${uploadType.toLowerCase()} files. Maximum size: ${maxSizeMB}MB`,
@@ -119,22 +228,22 @@ export function createUploadConfig(overrides?: Partial<I_UploadConfig>): I_Uploa
  * This function processes file uploads with the following features:
  * - Input validation for path and file parameters
  * - Configuration validation for all upload types
- * - File size and extension validation
+ * - File validation using getAndValidateFile function
  * - Automatic directory creation
  * - Stream-based file writing
- * - Comprehensive error handling and reporting
+ * - Comprehensive error handling with standardized response codes
  *
  * @param options - Upload configuration including file, path, type, and optional validation config.
- * @returns A promise that resolves to an upload result with success status, message, and file path.
+ * @returns A promise that resolves to a standardized response with success status, message, file path, and response codes.
  */
-export async function upload(options: I_UploadOptions): Promise<I_UploadResult> {
+export async function upload(options: I_UploadOptions): Promise<I_Return<string>> {
     const { path, file, config, type } = options;
 
     if (!path || typeof path !== 'string') {
         return {
             success: false,
             message: 'Invalid path provided',
-            result: '',
+            code: RESPONSE_STATUS.BAD_REQUEST.CODE,
         };
     }
 
@@ -142,7 +251,7 @@ export async function upload(options: I_UploadOptions): Promise<I_UploadResult> 
         return {
             success: false,
             message: 'Invalid file provided',
-            result: '',
+            code: RESPONSE_STATUS.BAD_REQUEST.CODE,
         };
     }
 
@@ -154,41 +263,27 @@ export async function upload(options: I_UploadOptions): Promise<I_UploadResult> 
                 return {
                     success: false,
                     message: `Invalid config for ${requiredType.toLowerCase()} files`,
-                    result: '',
+                    code: RESPONSE_STATUS.BAD_REQUEST.CODE,
                 };
             }
             if (typeof config[requiredType].sizeLimit !== 'number' || config[requiredType].sizeLimit <= 0) {
                 return {
                     success: false,
                     message: `Invalid size limit for ${requiredType.toLowerCase()} files`,
-                    result: '',
+                    code: RESPONSE_STATUS.BAD_REQUEST.CODE,
                 };
             }
         }
     }
 
     try {
-        const fileData = await (await file).file;
-        const { filename, createReadStream } = fileData;
+        const fileData = await getAndValidateFile(type, await file, config);
 
-        if (config) {
-            const stream = createReadStream();
-            const fileSize = await getFileSizeFromStream(stream);
-
-            const validationResult = validateUpload(
-                { filename, fileSize },
-                config,
-                type,
-            );
-
-            if (!validationResult.isValid) {
-                return {
-                    success: false,
-                    message: validationResult.error || 'File validation failed',
-                    result: '',
-                };
-            }
+        if (!fileData.success) {
+            return fileData;
         }
+
+        const { createReadStream } = fileData.result;
 
         const dir = dirname(path);
 
@@ -208,15 +303,16 @@ export async function upload(options: I_UploadOptions): Promise<I_UploadResult> 
 
         return {
             success: true,
-            message: 'File uploaded successfully',
             result: path,
+            message: 'File uploaded successfully',
+            code: RESPONSE_STATUS.OK.CODE,
         };
     }
     catch (error) {
         return {
             success: false,
             message: error instanceof Error ? error.message : 'File upload failed',
-            result: '',
+            code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
         };
     }
 }

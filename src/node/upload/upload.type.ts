@@ -22,20 +22,18 @@ export interface I_UploadConfig {
     [E_UploadType.OTHER]: I_UploadTypeConfig;
 }
 
+export interface I_UploadFileData {
+    createReadStream: () => NodeJS.ReadableStream;
+    filename: string;
+}
+
+export interface I_UploadFile {
+    file: I_UploadFileData;
+}
+
 export interface I_UploadOptions {
-    file: Promise<{
-        file: {
-            createReadStream: () => NodeJS.ReadableStream;
-            filename: string;
-        };
-    }>;
+    file: Promise<I_UploadFile>;
     path: string;
     type: E_UploadType;
     config?: I_UploadConfig;
-}
-
-export interface I_UploadResult {
-    success: boolean;
-    message: string;
-    result: string;
 }
