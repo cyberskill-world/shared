@@ -209,11 +209,12 @@ export function deepMerge<T extends Record<string, unknown> | unknown[]>(
 
 /**
  * Normalizes MongoDB filters to support both dot notation strings and nested objects.
- * This function converts nested object filters to dot notation format to ensure
- * consistent behavior across different filter input formats.
+ * This function converts nested object filters to dot notation format while preserving
+ * MongoDB operators to ensure consistent behavior across different filter input formats.
  *
  * @param filter - The filter object to normalize.
- * @returns A normalized filter object with nested objects converted to dot notation.
+ * @returns A normalized filter object with nested objects converted to dot notation,
+ *          while preserving MongoDB operators as nested objects.
  *
  * @example
  * ```typescript
@@ -221,6 +222,10 @@ export function deepMerge<T extends Record<string, unknown> | unknown[]>(
  * normalizeMongoFilter({ "location.countryId": "240" })
  * normalizeMongoFilter({ location: { countryId: "240" } })
  * // Both return: { "location.countryId": "240" }
+ *
+ * // MongoDB operators are preserved:
+ * normalizeMongoFilter({ id: { $in: ["240", "59"] } })
+ * // Returns: { id: { $in: ["240", "59"] } }
  * ```
  */
 export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: T): T {
@@ -232,17 +237,23 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
 
     for (const [key, value] of Object.entries(filter)) {
         if (value && typeof value === 'object' && !Array.isArray(value)) {
-            // Recursively normalize nested objects
-            const nestedNormalized = normalizeMongoFilter(value as Record<string, unknown>);
+            const hasMongoOperator = Object.keys(value as Record<string, unknown>).some(
+                nestedKey => nestedKey.startsWith('$'),
+            );
 
-            // Convert nested object to dot notation
-            for (const [nestedKey, nestedValue] of Object.entries(nestedNormalized)) {
-                const dotKey = `${key}.${nestedKey}`;
-                normalized[dotKey] = nestedValue;
+            if (hasMongoOperator) {
+                normalized[key] = normalizeMongoFilter(value as Record<string, unknown>);
+            }
+            else {
+                const nestedNormalized = normalizeMongoFilter(value as Record<string, unknown>);
+
+                for (const [nestedKey, nestedValue] of Object.entries(nestedNormalized)) {
+                    const dotKey = `${key}.${nestedKey}`;
+                    normalized[dotKey] = nestedValue;
+                }
             }
         }
         else {
-            // Keep non-object values as is
             normalized[key] = value;
         }
     }

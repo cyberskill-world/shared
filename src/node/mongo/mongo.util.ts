@@ -1660,4 +1660,27 @@ export class MongooseController<T extends Partial<C_Document>> {
             return catchError<T[]>(error);
         }
     }
+
+    /**
+     * Retrieves distinct values for the specified key from the collection.
+     *
+     * @param key - The field for which to return distinct values.
+     * @param filter - The filter query to apply (optional).
+     * @param options - Additional options for the distinct operation (optional).
+     * @returns A promise that resolves to a standardized response with the array of distinct values.
+     */
+    async distinct(
+        key: string,
+        filter: T_FilterQuery<T> = {},
+        options: T_QueryOptions<T> = {},
+    ): Promise<I_Return<unknown[]>> {
+        try {
+            const result = await this.model.distinct(key, filter, options);
+
+            return { success: true, result };
+        }
+        catch (error) {
+            return catchError<unknown[]>(error);
+        }
+    }
 }
