@@ -1509,32 +1509,36 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a unique slug string.
      */
     async createUniqueSlug({ slug, field, isObject, haveHistory, filter }: I_Input_GenerateSlug<T>): Promise<string> {
+        if (!slug || typeof slug !== 'string') {
+            throw new Error('Invalid slug provided: must be a non-empty string');
+        }
+
         const baseSlug = generateSlug(slug);
-        const slugsToCheck = Array.from({ length: MONGO_SLUG_MAX_ATTEMPTS }, (_, index) => {
-            if (index === 0) {
-                return baseSlug;
-            }
 
-            return `${baseSlug}-${index}`;
-        });
-
-        const existenceChecks = await Promise.all(
-            slugsToCheck.map(slugToCheck =>
-                this.model.exists(this.createSlugQuery({ slug: slugToCheck, field, isObject, haveHistory, filter })),
-            ),
+        const baseExists = await this.model.exists(
+            this.createSlugQuery({ slug: baseSlug, field, isObject, haveHistory, filter }),
         );
 
-        const availableIndex = existenceChecks.findIndex(exists => !exists);
+        if (!baseExists) {
+            return baseSlug;
+        }
 
-        if (availableIndex !== -1) {
-            const availableSlug = slugsToCheck[availableIndex];
+        for (let index = 1; index <= MONGO_SLUG_MAX_ATTEMPTS; index++) {
+            const slugVariation = `${baseSlug}-${index}`;
 
-            if (availableSlug) {
-                return availableSlug;
+            const exists = await this.model.exists(
+                this.createSlugQuery({ slug: slugVariation, field, isObject, haveHistory, filter }),
+            );
+
+            if (!exists) {
+                return slugVariation;
             }
         }
 
-        return `${baseSlug}-${Date.now()}`;
+        const timestamp = Date.now();
+        const randomSuffix = Math.random().toString(36).substring(2, 8);
+
+        return `${baseSlug}-${timestamp}-${randomSuffix}`;
     }
 
     /**
