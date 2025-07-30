@@ -19,6 +19,7 @@ import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSche
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
+import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
 
 /**
  * Converts enum values to proper model names.
@@ -1476,7 +1477,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options.filter - Additional filter conditions to apply to the query.
      * @returns A MongoDB query object for checking slug existence.
      */
-    createSlugQuery({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>) {
+    createSlugQuery({ slug, field, isObject, haveHistory = false, filter }: I_Input_GenerateSlug<T>) {
         const baseFilter = { ...(filter ?? {}) };
 
         return isObject
@@ -1484,14 +1485,14 @@ export class MongooseController<T extends Partial<C_Document>> {
                     ...baseFilter,
                     $or: [
                         { [`slug.${field}`]: slug },
-                        { slugHistory: { $elemMatch: { [`slug.${field}`]: slug } } },
+                        ...(haveHistory ? [{ slugHistory: { $elemMatch: { [`slug.${field}`]: slug } } }] : []),
                     ],
                 }
             : {
                     ...baseFilter,
                     $or: [
                         { slug },
-                        { slugHistory: slug },
+                        ...(haveHistory ? [{ slugHistory: slug }] : []),
                     ],
                 };
     }
@@ -1507,10 +1508,9 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options.filter - Additional filter conditions to apply when checking slug existence.
      * @returns A promise that resolves to a unique slug string.
      */
-    async createUniqueSlug({ slug, field, isObject, filter }: I_Input_GenerateSlug<T>): Promise<string> {
+    async createUniqueSlug({ slug, field, isObject, haveHistory, filter }: I_Input_GenerateSlug<T>): Promise<string> {
         const baseSlug = generateSlug(slug);
-        const maxAttempts = 100;
-        const slugsToCheck = Array.from({ length: maxAttempts }, (_, index) => {
+        const slugsToCheck = Array.from({ length: MONGO_SLUG_MAX_ATTEMPTS }, (_, index) => {
             if (index === 0) {
                 return baseSlug;
             }
@@ -1520,7 +1520,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
         const existenceChecks = await Promise.all(
             slugsToCheck.map(slugToCheck =>
-                this.model.exists(this.createSlugQuery({ slug: slugToCheck, field, isObject, filter })),
+                this.model.exists(this.createSlugQuery({ slug: slugToCheck, field, isObject, haveHistory, filter })),
             ),
         );
 
@@ -1547,7 +1547,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options.filter - Additional filter conditions to apply when checking slug existence.
      * @returns A promise that resolves to a standardized response with the created slug(s).
      */
-    async createSlug<R = string>({ field, from, filter }: I_Input_CreateSlug<T>): Promise<I_Return<R>> {
+    async createSlug<R = string>({ field, from, filter, haveHistory }: I_Input_CreateSlug<T>): Promise<I_Return<R>> {
         try {
             const fieldValue = from[field as keyof T];
             const isObjectValue = isObject(fieldValue);
@@ -1560,6 +1560,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                                 slug: value as string,
                                 field: key,
                                 isObject: true,
+                                haveHistory,
                                 filter,
                             });
                             return [key, uniqueSlugForKey];
@@ -1574,6 +1575,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 slug: fieldValue as string,
                 field,
                 isObject: false,
+                haveHistory,
                 filter,
             });
 
@@ -1595,7 +1597,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options.filter - Additional filter conditions to apply to the query.
      * @returns A promise that resolves to a standardized response indicating whether the slug exists.
      */
-    async checkSlug({ slug, field, from, filter }: I_Input_CheckSlug<T>): Promise<I_Return<boolean>> {
+    async checkSlug({ slug, field, from, filter, haveHistory }: I_Input_CheckSlug<T>): Promise<I_Return<boolean>> {
         try {
             const fieldValue = from[field as keyof T];
             const isObjectValue = isObject(fieldValue);
@@ -1610,6 +1612,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                             slug: nestedSlug,
                             field,
                             isObject: true,
+                            haveHistory,
                             filter,
                         })),
                     ),

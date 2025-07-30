@@ -265,6 +265,7 @@ export interface I_Input_DeleteMany<T> {
 export interface I_InputSlug<T> {
     field: string;
     filter?: T_FilterQuery<T>;
+    haveHistory?: boolean;
 }
 
 export interface I_Input_CreateSlug<T> extends I_InputSlug<T> {
@@ -279,4 +280,5 @@ export interface I_Input_CheckSlug<T> extends I_InputSlug<T> {
 export interface I_Input_GenerateSlug<T> extends I_InputSlug<T> {
     slug: string;
     isObject: boolean;
+    haveHistory?: boolean;
 }
