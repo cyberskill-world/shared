@@ -242,7 +242,7 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
             );
 
             if (hasMongoOperator) {
-                normalized[key] = normalizeMongoFilter(value as Record<string, unknown>);
+                normalized[key] = value;
             }
             else {
                 const nestedNormalized = normalizeMongoFilter(value as Record<string, unknown>);
