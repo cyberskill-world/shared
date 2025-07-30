@@ -10,7 +10,7 @@ import type { I_UploadConfig, I_UploadFile, I_UploadFileData, I_UploadOptions, I
 
 import { createWriteStream, mkdirSync, pathExistsSync } from '../fs/index.js';
 import { dirname } from '../path/index.js';
-import { BYTES_PER_MB } from './upload.constant.js';
+import { BYTES_PER_MB, DEFAULT_UPLOAD_CONFIG } from './upload.constant.js';
 import { E_UploadType } from './upload.type.js';
 
 /**
@@ -201,30 +201,7 @@ export function validateUpload(
  * @returns A complete upload configuration object with defaults and any provided overrides.
  */
 export function createUploadConfig(overrides?: Partial<I_UploadConfig>): I_UploadConfig {
-    const defaultConfig: I_UploadConfig = {
-        [E_UploadType.IMAGE]: {
-            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
-            sizeLimit: 5 * 1024 * 1024, // 5MB
-        },
-        [E_UploadType.VIDEO]: {
-            allowedExtensions: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm'],
-            sizeLimit: 500 * 1024 * 1024, // 500MB
-        },
-        [E_UploadType.AUDIO]: {
-            allowedExtensions: ['mp3', 'wav', 'ogg', 'm4a', 'aac'],
-            sizeLimit: 50 * 1024 * 1024, // 50MB
-        },
-        [E_UploadType.DOCUMENT]: {
-            allowedExtensions: ['pdf', 'doc', 'docx', 'txt', 'rtf'],
-            sizeLimit: 10 * 1024 * 1024, // 10MB
-        },
-        [E_UploadType.OTHER]: {
-            allowedExtensions: ['zip', 'rar', 'tar', 'gz'],
-            sizeLimit: 5 * 1024 * 1024, // 5MB
-        },
-    };
-
-    return { ...defaultConfig, ...overrides };
+    return { ...DEFAULT_UPLOAD_CONFIG, ...overrides };
 }
 
 /**
