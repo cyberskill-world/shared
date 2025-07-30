@@ -206,3 +206,46 @@ export function deepMerge<T extends Record<string, unknown> | unknown[]>(
         'deepMerge: Invalid arguments provided. All arguments must be objects or arrays of the same type.',
     );
 }
+
+/**
+ * Normalizes MongoDB filters to support both dot notation strings and nested objects.
+ * This function converts nested object filters to dot notation format to ensure
+ * consistent behavior across different filter input formats.
+ *
+ * @param filter - The filter object to normalize.
+ * @returns A normalized filter object with nested objects converted to dot notation.
+ *
+ * @example
+ * ```typescript
+ * // Both of these will work the same way:
+ * normalizeMongoFilter({ "location.countryId": "240" })
+ * normalizeMongoFilter({ location: { countryId: "240" } })
+ * // Both return: { "location.countryId": "240" }
+ * ```
+ */
+export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: T): T {
+    if (!filter || typeof filter !== 'object') {
+        return filter;
+    }
+
+    const normalized: Record<string, unknown> = {};
+
+    for (const [key, value] of Object.entries(filter)) {
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+            // Recursively normalize nested objects
+            const nestedNormalized = normalizeMongoFilter(value as Record<string, unknown>);
+
+            // Convert nested object to dot notation
+            for (const [nestedKey, nestedValue] of Object.entries(nestedNormalized)) {
+                const dotKey = `${key}.${nestedKey}`;
+                normalized[dotKey] = nestedValue;
+            }
+        }
+        else {
+            // Keep non-object values as is
+            normalized[key] = value;
+        }
+    }
+
+    return normalized as T;
+}

@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
-import { getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.js';
+import { getNestedValue, normalizeMongoFilter, regexSearchMapper, setNestedValue } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
@@ -1101,7 +1101,8 @@ export class MongooseController<T extends Partial<C_Document>> {
         populate?: T_Input_Populate,
     ): Promise<I_Return<T>> {
         try {
-            const query = this.model.findOne(filter, projection, options);
+            const normalizedFilter = normalizeMongoFilter(filter);
+            const query = this.model.findOne(normalizedFilter, projection, options);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
             const regularPopulate = filterDynamicVirtualsFromPopulate(populate, dynamicVirtuals);
@@ -1146,7 +1147,8 @@ export class MongooseController<T extends Partial<C_Document>> {
         populate?: T_Input_Populate,
     ): Promise<I_Return<T[]>> {
         try {
-            const query = this.model.find(filter, projection, options);
+            const normalizedFilter = normalizeMongoFilter(filter);
+            const query = this.model.find(normalizedFilter, projection, options);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
             const regularPopulate = filterDynamicVirtualsFromPopulate(populate, dynamicVirtuals);
@@ -1179,6 +1181,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
+            const normalizedFilter = normalizeMongoFilter(filter);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
             const filteredOptions = { ...options };
@@ -1187,7 +1190,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 filteredOptions.populate = filterDynamicVirtualsFromPopulate(options.populate, dynamicVirtuals);
             }
 
-            const result = await this.model.paginate(filter, filteredOptions);
+            const result = await this.model.paginate(normalizedFilter, filteredOptions);
 
             const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
 
@@ -1240,7 +1243,8 @@ export class MongooseController<T extends Partial<C_Document>> {
      */
     async count(filter: T_FilterQuery<T> = {}): Promise<I_Return<number>> {
         try {
-            const result = await this.model.countDocuments(filter);
+            const normalizedFilter = normalizeMongoFilter(filter);
+            const result = await this.model.countDocuments(normalizedFilter);
 
             return { success: true, result };
         }
@@ -1311,8 +1315,9 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_UpdateOptionsExtended = {},
     ): Promise<I_Return<T>> {
         try {
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
-                .findOneAndUpdate(filter, update, {
+                .findOneAndUpdate(normalizedFilter, update, {
                     new: true,
                     ...options,
                 })
@@ -1347,8 +1352,9 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_UpdateOptionsExtended = {},
     ): Promise<I_Return<T_UpdateResult>> {
         try {
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
-                .updateMany(filter, update, options)
+                .updateMany(normalizedFilter, update, options)
                 .exec();
 
             return { success: true, result };
@@ -1370,8 +1376,9 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_DeleteOptionsExtended = {},
     ): Promise<I_Return<T>> {
         try {
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
-                .findOneAndDelete(filter, options)
+                .findOneAndDelete(normalizedFilter, options)
                 .exec();
 
             if (!result) {
@@ -1401,7 +1408,8 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_DeleteOptionsExtended = {},
     ): Promise<I_Return<T_DeleteResult>> {
         try {
-            const result = await this.model.deleteMany(filter, options).exec();
+            const normalizedFilter = normalizeMongoFilter(filter);
+            const result = await this.model.deleteMany(normalizedFilter, options).exec();
 
             if (result.deletedCount === 0) {
                 return {
