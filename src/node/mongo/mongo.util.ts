@@ -349,6 +349,60 @@ export const mongo = {
     isDynamicVirtual<T, R extends string = string>(options?: T_VirtualOptions<T, R>): options is I_DynamicVirtualOptions<T, R> {
         return Boolean(options && typeof options.ref === 'function');
     },
+
+    /**
+     * Generic utility function to get new records from the database
+     * @param controller - MongoController instance
+     * @param recordsToCheck - Array of records to check
+     * @param filterFn - Function to determine if a record already exists
+     * @returns Array of records that don't exist in the database
+     */
+    async getNewRecords<T extends I_GenericDocument>(
+        controller: MongoController<T>,
+        recordsToCheck: T[],
+        filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
+    ): Promise<T[]> {
+        const existingRecords = await controller.findAll({});
+
+        if (!existingRecords.success) {
+            return recordsToCheck;
+        }
+
+        const filteredRecords = recordsToCheck.filter(newRecord =>
+            !existingRecords.result.some((existingRecord: T_WithId<T>) =>
+                filterFn(existingRecord, newRecord),
+            ),
+        );
+
+        return filteredRecords;
+    },
+
+    /**
+     * Generic utility function to get existing records that match the filter criteria
+     * @param controller - MongoController instance
+     * @param recordsToCheck - Array of records to check
+     * @param filterFn - Function to determine if a record exists
+     * @returns Array of existing records that match the filter criteria
+     */
+    async getExistingRecords<T extends I_GenericDocument>(
+        controller: MongoController<T>,
+        recordsToCheck: T[],
+        filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
+    ): Promise<T_WithId<T>[]> {
+        const existingRecords = await controller.findAll({});
+
+        if (!existingRecords.success) {
+            return [];
+        }
+
+        const foundRecords = existingRecords.result.filter((existingRecord: T_WithId<T>) =>
+            recordsToCheck.some((newRecord: T) =>
+                filterFn(existingRecord, newRecord),
+            ),
+        );
+
+        return foundRecords;
+    },
 };
 
 /**

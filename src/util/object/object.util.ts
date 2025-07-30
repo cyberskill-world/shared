@@ -1,4 +1,4 @@
-import { isArray, isPlainObject, mergeWith } from 'lodash-es';
+import { isArray, mergeWith } from 'lodash-es';
 
 /**
  * Check if a string is a valid JSON string.
@@ -79,27 +79,130 @@ export function setNestedValue<T>(
 
 /**
  * Deep merges multiple objects or arrays into a single object or array.
- * This function handles different types of merging:
+ * This function handles different types of merging with improved type safety and error handling:
  * - If all arguments are arrays, it concatenates them
  * - If all arguments are objects, it deeply merges them (concatenating arrays within objects)
- * - Throws an error if mixed types are provided
+ * - Handles null/undefined values gracefully by treating them as empty objects
+ * - Provides better type inference and safety
+ * - Throws descriptive errors for invalid input
  *
- * @param args - The objects or arrays to merge.
+ * @param args - The objects or arrays to merge. Can be empty, in which case returns an empty object.
  * @returns The merged result - either a concatenated array or a deeply merged object.
- * @throws {Error} When arguments are mixed types (some arrays, some objects).
+ * @throws {Error} When arguments are mixed types (some arrays, some objects) or when all arguments are primitive values.
+ *
+ * @example
+ * ```typescript
+ * // Merge objects
+ * deepMerge({ a: 1 }, { b: 2 }, { a: 3 }) // { a: 3, b: 2 }
+ *
+ * // Merge arrays
+ * deepMerge([1, 2], [3, 4]) // [1, 2, 3, 4]
+ *
+ * // Handle null/undefined
+ * deepMerge({ a: 1 }, null, undefined, { b: 2 }) // { a: 1, b: 2 }
+ *
+ * // Nested objects with arrays
+ * deepMerge(
+ *   { items: [1, 2], config: { theme: 'dark' } },
+ *   { items: [3, 4], config: { size: 'large' } }
+ * ) // { items: [1, 2, 3, 4], config: { theme: 'dark', size: 'large' } }
+ * ```
  */
-export function deepMerge<T = unknown>(...args: T[]): T {
-    if (args.every(isArray)) {
-        // All arrays: concatenate
-        return ([] as unknown[]).concat(...args) as T;
+
+/**
+ * Deep merges multiple objects into a single object.
+ * @param args - The objects to merge. Can be empty, in which case returns an empty object.
+ * @returns The merged object.
+ */
+export function deepMerge<T extends Record<string, unknown>>(
+    ...args: (T | null | undefined)[]
+): T;
+
+/**
+ * Deep merges multiple arrays into a single array.
+ * @param args - The arrays to merge. Can be empty, in which case returns an empty array.
+ * @returns The merged array.
+ */
+export function deepMerge<T extends unknown[]>(
+    ...args: (T | null | undefined)[]
+): T;
+
+/**
+ * Implementation of deepMerge function.
+ * @param args - The objects or arrays to merge.
+ * @returns The merged result.
+ */
+export function deepMerge<T extends Record<string, unknown> | unknown[]>(
+    ...args: (T | null | undefined)[]
+): T {
+    // Handle empty arguments
+    if (args.length === 0) {
+        return {} as T;
     }
-    if (args.every(isPlainObject)) {
-        // All objects: deep merge
-        return mergeWith({}, ...args, (objValue: unknown, srcValue: unknown) => {
+
+    // Filter out null/undefined and convert to empty objects
+    const validArgs = args
+        .filter((arg): arg is T => arg !== null && arg !== undefined)
+        .map((arg) => {
+            // Handle primitive values by converting to empty object
+            if (typeof arg !== 'object') {
+                return {} as T;
+            }
+            return arg;
+        });
+
+    // If no valid arguments after filtering, return empty object
+    if (validArgs.length === 0) {
+        return {} as T;
+    }
+
+    // If only one argument, return it directly (performance optimization)
+    if (validArgs.length === 1) {
+        return validArgs[0] as T;
+    }
+
+    // Check if all arguments are arrays
+    if (validArgs.every(isArray)) {
+        return ([] as unknown[]).concat(...validArgs) as T;
+    }
+
+    // Check if all arguments are objects (but not arrays)
+    if (validArgs.every(arg =>
+        typeof arg === 'object'
+        && arg !== null
+        && !isArray(arg),
+    )) {
+        return mergeWith({}, ...validArgs, (objValue: unknown, srcValue: unknown) => {
+            // Handle array concatenation within objects
             if (isArray(objValue) && isArray(srcValue)) {
                 return objValue.concat(srcValue);
             }
+            // Return undefined to use lodash's default merge behavior for other cases
+            return undefined;
         }) as T;
     }
-    throw new Error('deepMerge: All arguments must be either arrays or objects of the same type.');
+
+    // Check if all arguments are primitive values
+    if (validArgs.every(arg => typeof arg !== 'object' || arg === null)) {
+        throw new Error(
+            'deepMerge: Cannot merge primitive values. All arguments must be objects or arrays.',
+        );
+    }
+
+    // Mixed types error
+    const hasArrays = validArgs.some(isArray);
+    const hasObjects = validArgs.some(arg =>
+        typeof arg === 'object' && arg !== null && !isArray(arg),
+    );
+
+    if (hasArrays && hasObjects) {
+        throw new Error(
+            'deepMerge: Cannot mix arrays and objects. All arguments must be either arrays or objects.',
+        );
+    }
+
+    // Fallback for unexpected cases
+    throw new Error(
+        'deepMerge: Invalid arguments provided. All arguments must be objects or arrays of the same type.',
+    );
 }
