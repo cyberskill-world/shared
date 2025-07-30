@@ -1,6 +1,7 @@
 export enum E_UploadType {
     IMAGE = 'IMAGE',
     VIDEO = 'VIDEO',
+    AUDIO = 'AUDIO',
     DOCUMENT = 'DOCUMENT',
     OTHER = 'OTHER',
 }
@@ -18,6 +19,7 @@ export interface I_UploadTypeConfig {
 export interface I_UploadConfig {
     [E_UploadType.IMAGE]: I_UploadTypeConfig;
     [E_UploadType.VIDEO]: I_UploadTypeConfig;
+    [E_UploadType.AUDIO]: I_UploadTypeConfig;
     [E_UploadType.DOCUMENT]: I_UploadTypeConfig;
     [E_UploadType.OTHER]: I_UploadTypeConfig;
 }
