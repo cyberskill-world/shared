@@ -13,13 +13,12 @@ import { getNestedValue, normalizeMongoFilter, regexSearchMapper, setNestedValue
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
-import type { C_Collection, C_Db, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_VirtualOptions, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
-import { C_Document } from './mongo.type.js';
 
 /**
  * Converts enum values to proper model names.
@@ -826,6 +825,7 @@ export class MongoController<D extends Partial<C_Document>> {
             if (!result) {
                 return { success: false, message: 'Document not found', code: RESPONSE_STATUS.NOT_FOUND.CODE };
             }
+
             return { success: true, message: 'Document found', result };
         }
         catch (error) {
@@ -936,6 +936,7 @@ export class MongoController<D extends Partial<C_Document>> {
                     code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
+
             return {
                 success: true,
                 message: 'Documents updated successfully',
@@ -996,6 +997,7 @@ export class MongoController<D extends Partial<C_Document>> {
                     code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
                 };
             }
+
             return {
                 success: true,
                 message: 'Documents deleted successfully',
@@ -1104,7 +1106,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 query.populate(regularPopulate as T_PopulateOptions);
             }
 
-            const result = await query.exec().then(data => data instanceof C_Document ? data.toObject() : data);
+            const result = await query.exec();
 
             if (!result) {
                 return {
@@ -1116,7 +1118,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const finalResult = await this.populateDynamicVirtualsForDocument(result, populate);
 
-            return { success: true, result: finalResult };
+            return { success: true, result: finalResult?.toObject?.() ?? finalResult };
         }
         catch (error) {
             return catchError<T>(error);
@@ -1150,11 +1152,11 @@ export class MongooseController<T extends Partial<C_Document>> {
                 query.populate(regularPopulate as T_PopulateOptions);
             }
 
-            const result = await query.exec().then(data => data?.map(item => item instanceof C_Document ? item.toObject() : item));
+            const result = await query.exec();
 
             const finalResult = await this.populateDynamicVirtualsForDocuments(result, populate);
 
-            return { success: true, result: finalResult };
+            return { success: true, result: finalResult.map(item => item?.toObject?.() ?? item) };
         }
         catch (error) {
             return catchError<T[]>(error);
@@ -1185,9 +1187,9 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const result = await this.model.paginate(normalizedFilter, filteredOptions);
 
-            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs.map(item => item instanceof C_Document ? item.toObject() : item), options.populate);
+            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
 
-            return { success: true, result: { ...result, docs: finalDocs } };
+            return { success: true, result: { ...result, docs: finalDocs.map(item => item?.toObject?.() ?? item) } };
         }
         catch (error) {
             return catchError<T_PaginateResult<T>>(error);
@@ -1219,9 +1221,9 @@ export class MongooseController<T extends Partial<C_Document>> {
                 filteredOptions,
             );
 
-            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs.map(item => item instanceof C_Document ? item.toObject() : item), options.populate);
+            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
 
-            return { success: true, result: { ...result, docs: finalDocs } };
+            return { success: true, result: { ...result, docs: finalDocs.map(item => item?.toObject?.() ?? item) } };
         }
         catch (error) {
             return catchError<T_AggregatePaginateResult<T>>(error);
@@ -1254,9 +1256,9 @@ export class MongooseController<T extends Partial<C_Document>> {
      */
     async createOne(doc: T | Partial<T>): Promise<I_Return<T>> {
         try {
-            const result = await this.model.create(doc).then(data => data instanceof C_Document ? data.toObject() : data);
+            const result = await this.model.create(doc);
 
-            return { success: true, result };
+            return { success: true, result: result?.toObject?.() ?? result };
         }
         catch (error) {
             return catchError<T>(error);
@@ -1275,9 +1277,9 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: T_InsertManyOptions = {},
     ): Promise<I_Return<T[]>> {
         try {
-            const createdDocuments = await this.model.insertMany(docs, options).then(data => data.map(item => item instanceof C_Document ? item.toObject() : item)) as T[];
+            const createdDocuments = await this.model.insertMany(docs, options);
 
-            return { success: true, result: createdDocuments };
+            return { success: true, result: createdDocuments.map(item => item?.toObject?.() ?? item) as T[] };
         }
         catch (error) {
             return catchError<T[]>(error);
@@ -1304,8 +1306,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                     new: true,
                     ...options,
                 })
-                .exec()
-                .then(data => data instanceof C_Document ? data.toObject() : data);
+                .exec();
 
             if (!result) {
                 return {
@@ -1315,7 +1316,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 };
             }
 
-            return { success: true, result };
+            return { success: true, result: result?.toObject?.() ?? result };
         }
         catch (error) {
             return catchError<T>(error);
@@ -1363,8 +1364,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
                 .findOneAndDelete(normalizedFilter, options)
-                .exec()
-                .then(data => data instanceof C_Document ? data.toObject() : data);
+                .exec();
 
             if (!result) {
                 return {
@@ -1374,7 +1374,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 };
             }
 
-            return { success: true, result };
+            return { success: true, result: result?.toObject?.() ?? result };
         }
         catch (error) {
             return catchError<T>(error);
