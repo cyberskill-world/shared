@@ -2,7 +2,6 @@ import type mongooseRaw from 'mongoose';
 
 import { cloneDeep, isObject } from 'lodash-es';
 import migrate from 'migrate-mongo';
-import { Document } from 'mongoose';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,12 +13,13 @@ import { getNestedValue, normalizeMongoFilter, regexSearchMapper, setNestedValue
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_VirtualOptions, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, I_CreateModelOptions, I_CreateSchemaOptions, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_MongooseModelMiddleware, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_MongoosePlugin, T_MongooseShema, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { catchError } from '../log/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
+import { C_Document } from './mongo.type.js';
 
 /**
  * Converts enum values to proper model names.
@@ -407,15 +407,6 @@ export const mongo = {
 };
 
 /**
- * Type guard to check if an object is a Mongoose Document (has toObject method).
- * @param obj - The object to check
- * @returns True if obj has a toObject function
- */
-function isMongooseDoc(obj: unknown): obj is { toObject: () => { [key: string]: unknown } } {
-    return obj !== null && typeof obj === 'object' && 'toObject' in obj && typeof (obj as { toObject: unknown }).toObject === 'function';
-}
-
-/**
  * Filters out dynamic virtuals from populate options to prevent Mongoose from trying to populate them.
  * This function creates a new populate configuration that only includes regular virtuals.
  *
@@ -568,15 +559,12 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
         return documents;
     }
 
-    const clonedDocuments = cloneDeep(documents.map(doc =>
-        isMongooseDoc(doc) ? doc['toObject']() : doc,
-    )) as T[];
+    const clonedDocuments = cloneDeep(documents);
 
     clonedDocuments.forEach((doc) => {
         requestedVirtuals.forEach(({ name, options }) => {
             if (!(name in doc)) {
-                const docToUpdate = doc as T & { [key: string]: unknown };
-                (docToUpdate as { [key: string]: unknown })[name as string] = options.count ? 0 : (options.justOne ? null : []);
+                (doc as { [key: string]: unknown })[name as string] = options.count ? 0 : (options.justOne ? null : []);
             }
         });
     });
@@ -609,7 +597,7 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
 
             const localValueSet = processing.localValueSets.get(name as string)!;
             group.docs.forEach((doc) => {
-                const localVal = (doc as T & { [key: string]: unknown })[options.localField];
+                const localVal = (doc as { [key: string]: unknown })[options.localField];
 
                 if (localVal != null) {
                     const strVal = String(localVal);
@@ -617,18 +605,18 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
 
                     let idx = -1;
 
-                    const docWithKeys = doc as T & { [key: string]: unknown };
+                    const docWithKeys = doc as { [key: string]: unknown };
 
                     if (docWithKeys['id'] !== undefined) {
                         idx = clonedDocuments.findIndex((d) => {
-                            const dWithKeys = d as T & { [key: string]: unknown };
+                            const dWithKeys = d as { [key: string]: unknown };
 
                             return dWithKeys['id'] === docWithKeys['id'];
                         });
                     }
                     else if (docWithKeys['_id'] !== undefined) {
                         idx = clonedDocuments.findIndex((d) => {
-                            const dWithKeys = d as T & { [key: string]: unknown };
+                            const dWithKeys = d as { [key: string]: unknown };
 
                             return dWithKeys['_id']?.toString?.() === docWithKeys['_id']?.toString?.();
                         });
@@ -663,7 +651,7 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
 
         const foreignFields = [...new Set(processing.virtuals.map(v => v.options.foreignField))];
         const localValuesArray = Array.from(allLocalValues);
-        let query: { [key: string]: unknown };
+        let query;
 
         if (foreignFields.length === 1) {
             query = { [String(foreignFields[0])]: { $in: localValuesArray } };
@@ -677,7 +665,7 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
         for (const virtualConfig of processing.virtuals) {
             const { name, options } = virtualConfig;
             const relevantData = allPopulatedData.filter((item) => {
-                const foreignVal = (item as T & { [key: string]: unknown })[options.foreignField];
+                const foreignVal = (item)[options.foreignField];
 
                 return foreignVal != null && allLocalValues.has(String(foreignVal));
             });
@@ -686,7 +674,7 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
                 const countMap = new Map<string, number>();
 
                 relevantData.forEach((item) => {
-                    const key = (item as T & { [key: string]: unknown })[options.foreignField]?.toString();
+                    const key = (item)[options.foreignField]?.toString();
 
                     if (key) {
                         countMap.set(key, (countMap.get(key) || 0) + 1);
@@ -698,32 +686,36 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
                     const count = countMap.get(localValue) || 0;
 
                     docs.forEach((idx) => {
-                        const docToUpdate = clonedDocuments[idx] as T & { [key: string]: unknown };
-                        if (docToUpdate[name as string] === undefined) {
-                            (docToUpdate as { [key: string]: unknown })[name as string] = count;
+                        const docToUpdate = clonedDocuments[idx] as { [key: string]: unknown };
+
+                        if (docToUpdate[name] === undefined) {
+                            docToUpdate[name] = count;
                         }
                     });
                 });
             }
             else {
-                const resultMap = new Map<string, (T & { [key: string]: unknown })[]>();
+                const resultMap = new Map<string, T[]>();
+
                 relevantData.forEach((item) => {
-                    const key = (item as T & { [key: string]: unknown })[options.foreignField]?.toString();
+                    const key = (item)[options.foreignField]?.toString();
 
                     if (key) {
                         if (!resultMap.has(key)) {
                             resultMap.set(key, []);
                         }
-                        resultMap.get(key)!.push(item as T & { [key: string]: unknown });
+                        resultMap.get(key)!.push(item);
                     }
                 });
+
                 processing.localValueSets.get(name as string)!.forEach((localVal) => {
                     const docs = processing.docsByLocalValue.get(localVal) || [];
                     const results = resultMap.get(localVal) || [];
                     const value = options.justOne ? (results[0] || null) : results;
+
                     docs.forEach((idx) => {
-                        const docToUpdate = clonedDocuments[idx] as T & { [key: string]: unknown };
-                        (docToUpdate as { [key: string]: unknown })[name as string] = value;
+                        const docToUpdate = clonedDocuments[idx] as { [key: string]: unknown };
+                        docToUpdate[name] = value;
                     });
                 });
             }
@@ -1112,7 +1104,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 query.populate(regularPopulate as T_PopulateOptions);
             }
 
-            const result = await query.exec();
+            const result = await query.exec().then(data => data instanceof C_Document ? data.toObject() : data);
 
             if (!result) {
                 return {
@@ -1158,7 +1150,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 query.populate(regularPopulate as T_PopulateOptions);
             }
 
-            const result = await query.exec();
+            const result = await query.exec().then(data => data?.map(item => item instanceof C_Document ? item.toObject() : item));
 
             const finalResult = await this.populateDynamicVirtualsForDocuments(result, populate);
 
@@ -1193,7 +1185,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const result = await this.model.paginate(normalizedFilter, filteredOptions);
 
-            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
+            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs.map(item => item instanceof C_Document ? item.toObject() : item), options.populate);
 
             return { success: true, result: { ...result, docs: finalDocs } };
         }
@@ -1227,7 +1219,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 filteredOptions,
             );
 
-            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
+            const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs.map(item => item instanceof C_Document ? item.toObject() : item), options.populate);
 
             return { success: true, result: { ...result, docs: finalDocs } };
         }
@@ -1262,7 +1254,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      */
     async createOne(doc: T | Partial<T>): Promise<I_Return<T>> {
         try {
-            const result = await this.model.create(doc);
+            const result = await this.model.create(doc).then(data => data instanceof C_Document ? data.toObject() : data);
 
             return { success: true, result };
         }
@@ -1283,19 +1275,9 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: T_InsertManyOptions = {},
     ): Promise<I_Return<T[]>> {
         try {
-            const createdDocuments = await this.model.insertMany(docs, options);
+            const createdDocuments = await this.model.insertMany(docs, options).then(data => data.map(item => item instanceof C_Document ? item.toObject() : item)) as T[];
 
-            const result = createdDocuments
-                .map((doc) => {
-                    if (doc instanceof Document) {
-                        return doc.toObject() as T;
-                    }
-
-                    return null;
-                })
-                .filter((doc): doc is T => doc !== null);
-
-            return { success: true, result };
+            return { success: true, result: createdDocuments };
         }
         catch (error) {
             return catchError<T[]>(error);
@@ -1322,7 +1304,8 @@ export class MongooseController<T extends Partial<C_Document>> {
                     new: true,
                     ...options,
                 })
-                .exec();
+                .exec()
+                .then(data => data instanceof C_Document ? data.toObject() : data);
 
             if (!result) {
                 return {
@@ -1380,7 +1363,8 @@ export class MongooseController<T extends Partial<C_Document>> {
             const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
                 .findOneAndDelete(normalizedFilter, options)
-                .exec();
+                .exec()
+                .then(data => data instanceof C_Document ? data.toObject() : data);
 
             if (!result) {
                 return {
@@ -1474,6 +1458,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options.slug - The slug string to check for existence.
      * @param options.field - The field name for object-based slug checking.
      * @param options.isObject - Whether the slug is stored as an object with nested fields.
+     * @param options.haveHistory - Whether to check historical slug fields for existence.
      * @param options.filter - Additional filter conditions to apply to the query.
      * @returns A MongoDB query object for checking slug existence.
      */
@@ -1505,6 +1490,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options.slug - The base slug string to make unique.
      * @param options.field - The field name for object-based slug checking.
      * @param options.isObject - Whether the slug is stored as an object with nested fields.
+     * @param options.haveHistory - Whether to check historical slug fields for uniqueness.
      * @param options.filter - Additional filter conditions to apply when checking slug existence.
      * @returns A promise that resolves to a unique slug string.
      */
@@ -1548,6 +1534,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options - Configuration for slug creation including field, source document, and filter.
      * @param options.field - The field name to create a slug for.
      * @param options.from - The source document containing the field value.
+     * @param options.haveHistory - Whether to check historical slug fields for uniqueness.
      * @param options.filter - Additional filter conditions to apply when checking slug existence.
      * @returns A promise that resolves to a standardized response with the created slug(s).
      */
@@ -1598,6 +1585,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param options.slug - The slug string to check for existence.
      * @param options.field - The field name for object-based slug checking.
      * @param options.from - The source document containing the field value.
+     * @param options.haveHistory - Whether to check historical slug fields for existence.
      * @param options.filter - Additional filter conditions to apply to the query.
      * @returns A promise that resolves to a standardized response indicating whether the slug exists.
      */
