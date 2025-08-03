@@ -503,6 +503,15 @@ function remapDynamicPopulate<T, R extends string = string>(
 }
 
 /**
+ * Type guard to check if an object is a Mongoose Document (has toObject method).
+ * @param obj - The object to check
+ * @returns True if obj has a toObject function
+ */
+function isMongooseDoc(obj: unknown): obj is { toObject: () => { [key: string]: unknown } } {
+    return obj !== null && typeof obj === 'object' && 'toObject' in obj && typeof (obj as { toObject: unknown }).toObject === 'function';
+}
+
+/**
  * Optimized batch population for dynamic virtuals.
  *
  * - Groups documents by model and batches queries for each model.
@@ -558,7 +567,7 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
         return documents;
     }
 
-    const clonedDocuments = cloneDeep(documents);
+    const clonedDocuments = cloneDeep(documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc)) as T[];
 
     clonedDocuments.forEach((doc) => {
         requestedVirtuals.forEach(({ name, options }) => {
