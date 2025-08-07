@@ -220,7 +220,7 @@
         "@nestjs/common": "11.1.5",
         "@nestjs/core": "11.1.5",
         "@userback/widget": "0.3.11",
-        "@vitejs/plugin-react-swc": "3.11.0",
+        "@vitejs/plugin-react-swc": "4.0.0",
         "apollo-upload-client": "18.0.1",
         "body-parser": "2.2.0",
         "chalk": "5.4.1",
