@@ -1,3 +1,8 @@
+import type { Request, Response } from 'express';
+import type { Buffer } from 'node:buffer';
+import type { IncomingMessage } from 'node:http';
+import type { Duplex } from 'node:stream';
+
 import { useServer as createGraphQLWSServer } from 'graphql-ws/use/ws';
 import { WebSocketServer } from 'ws';
 
@@ -12,10 +17,32 @@ import type { I_GraphqlWSOptions, I_WSOptions } from './ws.type.js';
  * @returns A configured WebSocket server instance ready to handle connections.
  */
 export function createWSServer(options: I_WSOptions): WebSocketServer {
-    return new WebSocketServer({
-        server: options.server,
-        path: options.path,
-    });
+    const { server, path, sessionParser } = options;
+
+    if (sessionParser) {
+        const wss = new WebSocketServer({ noServer: true });
+
+        server.on('upgrade', (req: IncomingMessage, socket: Duplex, head: Buffer) => {
+            try {
+                const url = new URL(req.url || '', 'http://localhost');
+                if (url.pathname !== path)
+                    return;
+
+                sessionParser(req as Request, {} as Response, () => {
+                    wss.handleUpgrade(req, socket, head, (ws) => {
+                        wss.emit('connection', ws, req);
+                    });
+                });
+            }
+            catch {
+                socket.destroy();
+            }
+        });
+
+        return wss;
+    }
+
+    return new WebSocketServer({ server, path });
 }
 
 /**
@@ -27,5 +54,24 @@ export function createWSServer(options: I_WSOptions): WebSocketServer {
  * @returns A configured GraphQL WebSocket server ready to handle GraphQL operations over WebSocket.
  */
 export function initGraphQLWS(options: I_GraphqlWSOptions) {
-    return createGraphQLWSServer({ schema: options.schema }, options.server);
+    const { schema, server, context: makeExtraContext, onConnect } = options;
+
+    return createGraphQLWSServer(
+        {
+            schema,
+            context: async (ctx) => {
+                const req = ctx.extra.request as IncomingMessage & { session?: any; user?: any };
+
+                const extra = makeExtraContext ? await makeExtraContext(req) : {};
+                return { req, ...extra };
+            },
+            onConnect: async (ctx) => {
+                if (onConnect) {
+                    const req = ctx.extra.request as IncomingMessage & { session?: any; user?: any };
+                    await onConnect(req);
+                }
+            },
+        },
+        server,
+    );
 }
