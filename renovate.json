@@ -7,8 +7,6 @@
         "group:allNonMajor"
     ],
     "ignoreDeps": [
-        "node",
-        "express",
-        "@types/express"
+        "node"
     ]
 }
