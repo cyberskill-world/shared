@@ -208,7 +208,7 @@
     },
     "dependencies": {
         "@antfu/eslint-config": "5.2.1",
-        "@apollo/client": "3.13.9",
+        "@apollo/client": "4.0.0",
         "@apollo/client-integration-nextjs": "0.12.3",
         "@apollo/server": "5.0.0",
         "@as-integrations/express5": "1.1.2",
