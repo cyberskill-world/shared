@@ -136,9 +136,6 @@ export function createApolloLinks(options: I_ApolloOptions): ApolloLink[] {
             )
         : uploadLink;
 
-    log.info('splitLink', splitLink);
-    log.info('uploadLink', uploadLink);
-
     if (wsUrl && splitLink === uploadLink) {
         log.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');
     }
