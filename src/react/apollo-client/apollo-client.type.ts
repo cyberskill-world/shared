@@ -14,4 +14,4 @@ export interface I_ApolloProviderProps extends I_Children {
     options?: I_ApolloOptions;
 }
 
-export type { ApolloCache, ApolloClient } from '@apollo/client';
+export type { ApolloCache, ApolloClient, ErrorLike } from '@apollo/client';
