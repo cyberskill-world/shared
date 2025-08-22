@@ -14,6 +14,7 @@ import { showGlobalApolloError } from '../apollo-error/index.js';
 import { log } from '../log/index.js';
 import { toast } from '../toast/index.js';
 import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
+import styles from './apollo-client.module.scss';
 import { createUploadLink } from './links/index.js';
 
 const roundTripLink = new ApolloLink((operation, forward) => {
@@ -67,12 +68,11 @@ const errorLink = new ErrorLink(({ error, operation }) => {
 
     if (error && errorMessage && typeof window !== 'undefined') {
         toast.error((t: { id: string }) => (
-            <>
+            <div className={styles['error-container']}>
                 {errorMessage}
-                &nbsp;
                 <button
                     type="button"
-                    className="text-blue-500 hover:text-blue-700"
+                    className={styles['error-details-button']}
                     onClick={() => {
                         setTimeout(() => {
                             showGlobalApolloError(error);
@@ -81,9 +81,9 @@ const errorLink = new ErrorLink(({ error, operation }) => {
                         toast.dismiss(t.id);
                     }}
                 >
-                    Show Details
+                    Error Details
                 </button>
-            </>
+            </div>
         ));
     }
 });
@@ -135,6 +135,9 @@ export function createApolloLinks(options: I_ApolloOptions): ApolloLink[] {
                 uploadLink as unknown as ApolloLink,
             )
         : uploadLink;
+
+    log.info('splitLink', splitLink);
+    log.info('uploadLink', uploadLink);
 
     if (wsUrl && splitLink === uploadLink) {
         log.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');

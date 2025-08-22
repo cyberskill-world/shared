@@ -1,5 +1,7 @@
 import React, { use } from 'react';
 
+import { validate } from '#util/validate/validate.util.js';
+
 import { ApolloErrorContext } from './apollo-error.context.js';
 import style from './apollo-error.module.scss';
 
@@ -49,7 +51,7 @@ export function ApolloErrorComponent() {
                         Reload
                     </button>
                     {' '}
-                    {errorMessage}
+                    {!validate.isEmpty(error) && errorMessage}
                 </div>
                 <div className={style['error-details']}>
                     {isGraphQLError && 'locations' in error && error.locations && (
@@ -77,7 +79,7 @@ export function ApolloErrorComponent() {
                         <pre className="error-details">
                             <strong>Error Details:</strong>
                             {' '}
-                            {JSON.stringify(error, null, 4)}
+                            {validate.isEmpty(error) ? errorMessage : JSON.stringify(error, null, 4)}
                         </pre>
                     )}
                 </div>
