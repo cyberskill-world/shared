@@ -3,7 +3,6 @@ import { ApolloLink } from '@apollo/client/link';
 import { ErrorLink } from '@apollo/client/link/error';
 import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-typename';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
-import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 import { OperationTypeNode } from 'graphql';
 import { createClient } from 'graphql-ws';
 import React from 'react';
@@ -15,6 +14,7 @@ import { showGlobalApolloError } from '../apollo-error/index.js';
 import { log } from '../log/index.js';
 import { toast } from '../toast/index.js';
 import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
+import { createUploadLink } from './links/index.js';
 
 const roundTripLink = new ApolloLink((operation, forward) => {
     operation.setContext({ start: new Date() });
