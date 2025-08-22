@@ -1,12 +1,12 @@
-import type { ApolloError } from '@apollo/client';
+import type { GraphQLError } from 'graphql';
 
 /**
  * Global callback function for displaying Apollo errors.
  * This variable holds the callback function that will be called when a global
  * Apollo error needs to be displayed. It is set by the ApolloErrorProvider
- * and used by the global error handling system.
+ * and used throughout the application for consistent error handling.
  */
-let showErrorCallback: ((err: ApolloError) => void) | null = null;
+let showErrorCallback: ((err: GraphQLError | Error) => void) | null = null;
 
 /**
  * Sets the global callback function for Apollo error handling.
@@ -17,7 +17,7 @@ let showErrorCallback: ((err: ApolloError) => void) | null = null;
  *
  * @param callback - The function to be called when a global Apollo error occurs.
  */
-export function setGlobalApolloErrorCallback(callback: (err: ApolloError) => void) {
+export function setGlobalApolloErrorCallback(callback: (err: GraphQLError | Error) => void) {
     showErrorCallback = callback;
 }
 
@@ -29,6 +29,6 @@ export function setGlobalApolloErrorCallback(callback: (err: ApolloError) => voi
  *
  * @param error - The Apollo error to display globally.
  */
-export function showGlobalApolloError(error: ApolloError) {
+export function showGlobalApolloError(error: GraphQLError | Error) {
     showErrorCallback?.(error);
 }

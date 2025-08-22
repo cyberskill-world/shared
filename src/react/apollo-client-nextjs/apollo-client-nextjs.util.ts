@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client-integration-nextjs';
-// TODO: change imports to @apollo/client after migration to v4
-import { from } from '@apollo/client/link/core/core.cjs';
+import { ApolloLink } from '@apollo/client/link';
 
 import type { I_ApolloOptions } from '../apollo-client/index.js';
 
@@ -17,7 +16,7 @@ import { createApolloLinks } from '../apollo-client/apollo-client.util.js';
  * @returns A Next.js optimized Apollo Client instance ready for use in Next.js applications.
  */
 export function getClient(options: I_ApolloOptions = {}) {
-    const link = from(createApolloLinks(options));
+    const link = ApolloLink.from(createApolloLinks(options));
 
     return new ApolloClient({
         link,

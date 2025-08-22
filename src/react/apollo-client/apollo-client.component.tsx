@@ -1,5 +1,4 @@
-// TODO: change imports to @apollo/client after migration to v4
-import { ApolloProvider as ApolloProviderDefault } from '@apollo/client/react/react.cjs';
+import { ApolloProvider as ApolloProviderDefault } from '@apollo/client/react';
 import React, { useMemo } from 'react';
 
 import type { I_ApolloProviderProps } from './apollo-client.type.js';
@@ -29,7 +28,7 @@ import { getClient } from './apollo-client.util.js';
  */
 export function ApolloProvider({ options, children }: I_ApolloProviderProps) {
     const client = useMemo(
-        () => getClient(options || {}),
+        () => getClient(options ?? {}),
         [options],
     );
 

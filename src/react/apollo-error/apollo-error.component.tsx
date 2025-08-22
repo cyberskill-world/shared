@@ -4,39 +4,9 @@ import { ApolloErrorContext } from './apollo-error.context.js';
 import style from './apollo-error.module.scss';
 
 /**
- * Renders a list of error messages in a structured format.
- * This helper function creates a formatted display of error messages with
- * a label and bulleted list, providing clear visual separation between
- * different types of errors.
- *
- * @param label - The label to display above the error list.
- * @param list - An array of error objects with message properties.
- * @returns A React element displaying the error list, or null if the list is empty.
- */
-function _renderErrorList(label: string, list?: readonly { message: string }[]): React.ReactElement | null {
-    if (!list?.length) {
-        return null;
-    }
-
-    return (
-        <div>
-            <strong>
-                {label}
-                :
-            </strong>
-            <ul>
-                {list.map(e => <li key={e.message}>{e.message}</li>)}
-            </ul>
-        </div>
-    );
-}
-
-/**
  * Apollo Error Component that displays detailed error information in a modal.
  * This component provides a comprehensive error display interface that shows
- * all types of Apollo errors including GraphQL errors, network errors, protocol
- * errors, and client errors. It includes a reload button for recovery and
- * detailed error information for debugging purposes.
+ * GraphQL errors and other error types with detailed information for debugging purposes.
  *
  * Features:
  * - Modal overlay with backdrop for focus
@@ -57,6 +27,9 @@ export function ApolloErrorComponent() {
         return null;
     }
 
+    const isGraphQLError = 'locations' in error || 'path' in error || 'extensions' in error;
+    const errorMessage = 'message' in error ? error.message : 'Unknown error occurred';
+
     return (
         <div className={style['modal-backdrop']}>
             <div className={style['modal-content']}>
@@ -76,24 +49,35 @@ export function ApolloErrorComponent() {
                         Reload
                     </button>
                     {' '}
-                    {error.message}
+                    {errorMessage}
                 </div>
                 <div className={style['error-details']}>
-                    {error.networkError && (
-                        <pre className="network">
-                            <strong>Network Error:</strong>
+                    {isGraphQLError && 'locations' in error && error.locations && (
+                        <pre className="locations">
+                            <strong>Locations:</strong>
                             {' '}
-                            {error.networkError.message}
+                            {JSON.stringify(error.locations, null, 4)}
                         </pre>
                     )}
-                    {_renderErrorList('GraphQL Errors', [...error.graphQLErrors])}
-                    {_renderErrorList('Protocol Errors', [...error.protocolErrors])}
-                    {_renderErrorList('Client Errors', [...error.clientErrors])}
-                    {error.extraInfo && (
-                        <pre className="extra">
-                            <strong>Extra Info:</strong>
+                    {isGraphQLError && 'path' in error && error.path && (
+                        <pre className="path">
+                            <strong>Path:</strong>
                             {' '}
-                            {JSON.stringify(error.extraInfo, null, 4)}
+                            {JSON.stringify(error.path, null, 4)}
+                        </pre>
+                    )}
+                    {isGraphQLError && 'extensions' in error && error.extensions && (
+                        <pre className="extensions">
+                            <strong>Extensions:</strong>
+                            {' '}
+                            {JSON.stringify(error.extensions, null, 4)}
+                        </pre>
+                    )}
+                    {!isGraphQLError && (
+                        <pre className="error-details">
+                            <strong>Error Details:</strong>
+                            {' '}
+                            {JSON.stringify(error, null, 4)}
                         </pre>
                     )}
                 </div>

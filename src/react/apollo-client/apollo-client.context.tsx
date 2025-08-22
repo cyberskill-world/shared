@@ -1,4 +1,4 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import type { ApolloClient } from '@apollo/client';
 
 import React, { createContext } from 'react';
 
@@ -7,7 +7,7 @@ import React, { createContext } from 'react';
  * This context allows components to access the Apollo Client instance without
  * prop drilling, enabling direct access to client methods and cache operations.
  */
-const ApolloClientContext = createContext<ApolloClient<NormalizedCacheObject> | null>(null);
+const ApolloClientContext = createContext<ApolloClient | null>(null);
 
 /**
  * Provider component that makes Apollo Client available to the component tree.
@@ -23,7 +23,7 @@ export function ApolloClientProvider({
     client,
     children,
 }: {
-    client: ApolloClient<NormalizedCacheObject>;
+    client: ApolloClient;
     children: React.ReactNode;
 }) {
     return (

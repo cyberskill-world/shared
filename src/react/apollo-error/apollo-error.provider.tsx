@@ -1,4 +1,4 @@
-import type { ApolloError } from '@apollo/client';
+import type { GraphQLError } from 'graphql';
 import type { ReactNode } from 'react';
 
 import React, { useEffect, useMemo, useState } from 'react';
@@ -22,7 +22,7 @@ import { setGlobalApolloErrorCallback } from './apollo-error.util.js';
  * @returns A React component that provides Apollo error context to its children.
  */
 export function ApolloErrorProvider({ children }: { children: ReactNode }) {
-    const [error, setError] = useState<ApolloError | null>(null);
+    const [error, setError] = useState<GraphQLError | Error | null>(null);
 
     useEffect(() => {
         setGlobalApolloErrorCallback(setError);

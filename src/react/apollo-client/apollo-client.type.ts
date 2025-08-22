@@ -1,14 +1,10 @@
-import type {
-    ApolloClientOptions,
-    ApolloLink,
-    NormalizedCacheObject,
-    UriFunction,
-} from '@apollo/client';
+import type { ApolloClient } from '@apollo/client';
+import type { ApolloLink } from '@apollo/client/link';
 
 import type { I_Children } from '#typescript/index.js';
 
-export interface I_ApolloOptions extends Omit<ApolloClientOptions<NormalizedCacheObject>, 'cache'> {
-    uri?: string | UriFunction;
+export interface I_ApolloOptions extends Omit<ApolloClient.Options, 'link' | 'cache'> {
+    uri?: string;
     wsUrl?: string;
     customLinks?: ApolloLink[];
 }
@@ -18,9 +14,4 @@ export interface I_ApolloProviderProps extends I_Children {
     options?: I_ApolloOptions;
 }
 
-export type {
-    ApolloCache,
-    ApolloClient,
-    ApolloClientOptions,
-    NormalizedCacheObject,
-} from '@apollo/client';
+export type { ApolloCache, ApolloClient } from '@apollo/client';

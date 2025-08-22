@@ -1,4 +1,4 @@
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client';
+import type { ApolloClient } from '@apollo/client';
 
 import { use } from 'react';
 
@@ -16,7 +16,7 @@ import { ApolloClientContext } from './apollo-client.context.js';
  * @returns The Apollo Client instance from the nearest ApolloClientProvider context.
  * @throws {Error} When used outside of an ApolloClientProvider context.
  */
-export function useApolloClient(): ApolloClient<NormalizedCacheObject> {
+export function useApolloClient(): ApolloClient {
     const client = use(ApolloClientContext);
 
     if (!client) {

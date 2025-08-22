@@ -1,9 +1,9 @@
-import type { ApolloError } from '@apollo/client';
+import type { GraphQLError } from 'graphql';
 
-export type { ApolloError } from '@apollo/client';
+export type { GraphQLError } from 'graphql';
 
 export interface I_ApolloErrorContext {
-    error: ApolloError | null;
-    showError: (error: ApolloError) => void;
+    error: GraphQLError | Error | null;
+    showError: (error: GraphQLError | Error) => void;
     hideError: () => void;
 }
