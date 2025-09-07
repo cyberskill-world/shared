@@ -269,7 +269,7 @@ export const mongo = {
          * @throws {Error} When regexArray is not an array of valid RegExp objects.
          */
         matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean> {
-            return async function (value: string): Promise<boolean> {
+            return async (value: string): Promise<boolean> => {
                 if (!Array.isArray(regexArray) || regexArray.some(r => !(r instanceof RegExp))) {
                     throw new Error('regexArray must be an array of valid RegExp objects.');
                 }
