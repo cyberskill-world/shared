@@ -4,8 +4,6 @@ import react from '@vitejs/plugin-react-swc';
 import { merge } from 'lodash-es';
 import { defineConfig } from 'vitest/config';
 
-import type { T_Object } from '#typescript/index.js';
-
 /**
  * Creates a Vitest configuration for unit testing with React support.
  * This function generates a Vitest configuration specifically designed for unit testing
@@ -36,5 +34,5 @@ export function vitestUnit(options: UserConfig) {
         },
     };
 
-    return defineConfig(merge(config, options as T_Object));
+    return defineConfig(merge(config, options));
 }
