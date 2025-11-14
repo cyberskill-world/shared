@@ -1,10 +1,11 @@
 import type { GraphQLError } from 'graphql';
-import type { ReactNode } from 'react';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
+import type { I_ApolloErrorProviderProps } from './apollo-error.type.js';
 
 import { ApolloErrorContext } from './apollo-error.context.js';
-import { setGlobalApolloErrorCallback } from './apollo-error.util.js';
+import { clearGlobalApolloErrorCallback, setGlobalApolloErrorCallback } from './apollo-error.util.js';
 
 /**
  * Provider component that manages Apollo error state and provides error context.
@@ -15,24 +16,42 @@ import { setGlobalApolloErrorCallback } from './apollo-error.util.js';
  * - Global Apollo error state management
  * - Error context provision to child components
  * - Automatic error handling and display
+ * - Optional custom error handling callbacks
  * - Integration with error boundaries
  *
  * @param props - Component props containing children.
  * @param props.children - React children that will have access to the error context.
+ * @param props.onError - Optional callback to override the default error modal/toast flow.
  * @returns A React component that provides Apollo error context to its children.
  */
-export function ApolloErrorProvider({ children }: { children: ReactNode }) {
+export function ApolloErrorProvider({ children, onError }: I_ApolloErrorProviderProps) {
     const [error, setError] = useState<GraphQLError | Error | null>(null);
 
+    const handleGlobalError = useCallback((apolloError: GraphQLError | Error) => {
+        if (onError) {
+            onError(apolloError);
+
+            return;
+        }
+
+        setError(apolloError);
+    }, [onError]);
+
     useEffect(() => {
-        setGlobalApolloErrorCallback(setError);
-    }, []);
+        setGlobalApolloErrorCallback(handleGlobalError, Boolean(onError));
+
+        return () => {
+            clearGlobalApolloErrorCallback();
+        };
+    }, [handleGlobalError, onError]);
+
+    const hideError = useCallback(() => setError(null), []);
 
     const contextValue = useMemo(() => ({
-        error,
-        showError: setError,
-        hideError: () => setError(null),
-    }), [error]);
+        error: onError ? null : error,
+        showError: handleGlobalError,
+        hideError,
+    }), [error, handleGlobalError, hideError, onError]);
 
     return (
         <ApolloErrorContext value={contextValue}>

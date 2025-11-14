@@ -20,12 +20,13 @@ import { getClient } from './apollo-client-nextjs.util.js';
  * - Automatic error handling
  * - Next.js specific optimizations
  *
- * @param props - Component props containing options and children.
+ * @param props - Component props containing options, children, and optional error override.
  * @param props.options - Apollo Client configuration options.
  * @param props.children - React children that will have access to Apollo Client context.
+ * @param props.onError - Optional callback to override the default modal/toast error handling.
  * @returns A React component that provides Apollo Client context to its children.
  */
-export function ApolloProvider({ options, children }: I_ApolloProviderProps) {
+export function ApolloProvider({ options, children, onError }: I_ApolloProviderProps) {
     const makeClient = useMemo(
         () => () => getClient(options || {}),
         [options],
@@ -33,11 +34,11 @@ export function ApolloProvider({ options, children }: I_ApolloProviderProps) {
 
     return (
         <>
-            <ApolloErrorProvider>
+            <ApolloErrorProvider onError={onError}>
                 <ApolloNextAppProvider makeClient={makeClient}>
                     {children}
                 </ApolloNextAppProvider>
-                <ApolloErrorComponent />
+                {!onError && <ApolloErrorComponent />}
             </ApolloErrorProvider>
             <Toaster position="top-right" />
         </>

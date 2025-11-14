@@ -10,7 +10,7 @@ import { tap } from 'rxjs';
 
 import type { I_ApolloOptions } from './apollo-client.type.js';
 
-import { showGlobalApolloError } from '../apollo-error/index.js';
+import { hasCustomApolloErrorHandler, showGlobalApolloError } from '../apollo-error/index.js';
 import { log } from '../log/index.js';
 import { toast } from '../toast/index.js';
 import { GRAPHQL_URI_DEFAULT } from './apollo-client.constant.js';
@@ -67,24 +67,27 @@ const errorLink = new ErrorLink(({ error, operation }) => {
     }
 
     if (error && errorMessage && typeof window !== 'undefined') {
-        toast.error((t: { id: string }) => (
-            <div className={styles['error-container']}>
-                {errorMessage}
-                <button
-                    type="button"
-                    className={styles['error-details-button']}
-                    onClick={() => {
-                        setTimeout(() => {
+        if (hasCustomApolloErrorHandler()) {
+            showGlobalApolloError(error);
+        }
+        else {
+            toast.error((t: { id: string }) => (
+                <div className={styles['error-container']}>
+                    {errorMessage}
+                    <button
+                        type="button"
+                        className={styles['error-details-button']}
+                        onClick={() => {
                             showGlobalApolloError(error);
-                        }, 0);
 
-                        toast.dismiss(t.id);
-                    }}
-                >
-                    Error Details
-                </button>
-            </div>
-        ));
+                            toast.dismiss(t.id);
+                        }}
+                    >
+                        Error Details
+                    </button>
+                </div>
+            ));
+        }
     }
 });
 

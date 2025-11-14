@@ -7,6 +7,7 @@ import type { GraphQLError } from 'graphql';
  * and used throughout the application for consistent error handling.
  */
 let showErrorCallback: ((err: GraphQLError | Error) => void) | null = null;
+let hasCustomHandler = false;
 
 /**
  * Sets the global callback function for Apollo error handling.
@@ -16,9 +17,32 @@ let showErrorCallback: ((err: GraphQLError | Error) => void) | null = null;
  * consistent error handling.
  *
  * @param callback - The function to be called when a global Apollo error occurs.
+ * @param isCustomHandler - Flag that identifies whether the handler was provided by the consumer.
  */
-export function setGlobalApolloErrorCallback(callback: (err: GraphQLError | Error) => void) {
+export function setGlobalApolloErrorCallback(
+    callback: (err: GraphQLError | Error) => void,
+    isCustomHandler = false,
+) {
     showErrorCallback = callback;
+    hasCustomHandler = isCustomHandler;
+}
+
+/**
+ * Clears the global callback function for Apollo error handling.
+ * Useful when the ApolloErrorProvider unmounts to avoid stale references.
+ */
+export function clearGlobalApolloErrorCallback() {
+    showErrorCallback = null;
+    hasCustomHandler = false;
+}
+
+/**
+ * Indicates whether a custom Apollo error handler is registered.
+ *
+ * @returns True if a custom handler is registered, otherwise false.
+ */
+export function hasCustomApolloErrorHandler() {
+    return hasCustomHandler;
 }
 
 /**

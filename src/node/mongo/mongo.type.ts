@@ -30,6 +30,7 @@ import type {
     Schema,
     SchemaDefinition,
     UpdateQuery,
+    UpdateWriteOpResult,
 } from 'mongoose';
 import type mongoose from 'mongoose';
 
@@ -47,7 +48,7 @@ export type T_InsertOneResult<T> = InsertOneResult<T>;
 
 export type T_InsertManyResult<T> = InsertManyResult<T>;
 
-export type T_UpdateResult = UpdateResult;
+export type T_UpdateResult = UpdateResult | UpdateWriteOpResult;
 
 export type T_DeleteResult = DeleteResult;
 
