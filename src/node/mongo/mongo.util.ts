@@ -101,7 +101,7 @@ export const mongo = {
     createGenericSchema(mongoose: typeof mongooseRaw) {
         return new mongoose.Schema<I_GenericDocument>(
             {
-                id: { type: String, default: uuidv4, unique: true },
+                id: { type: String, default: () => uuidv4(), unique: true },
                 isDel: { type: Boolean, default: false },
             },
             { timestamps: true },
@@ -1880,7 +1880,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         populate?: T_Input_Populate,
     ): Promise<I_Return<T>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const query = this.model.findOne(normalizedFilter, projection, options);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
@@ -1926,7 +1926,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         populate?: T_Input_Populate,
     ): Promise<I_Return<T[]>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const query = this.model.find(normalizedFilter, projection, options);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
@@ -1960,7 +1960,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const dynamicVirtuals = this.getDynamicVirtuals();
 
             const filteredOptions = { ...options };
@@ -2026,7 +2026,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      */
     async count(filter: T_FilterQuery<T> = {}): Promise<I_Return<number>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const result = await this.model.countDocuments(normalizedFilter);
 
             return { success: true, result };
@@ -2044,9 +2044,9 @@ export class MongooseController<T extends Partial<C_Document>> {
      */
     async createOne(doc: T | Partial<T>): Promise<I_Return<T>> {
         try {
-            const result = await this.model.create(doc);
+            const result = await this.model.create(doc as unknown as Parameters<typeof this.model.create>[0]);
 
-            return { success: true, result: result?.toObject?.() ?? result };
+            return { success: true, result: (result as T)?.toObject?.() ?? result };
         }
         catch (error) {
             return catchError<T>(error);
@@ -2088,7 +2088,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_UpdateOptionsExtended = {},
     ): Promise<I_Return<T>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const result = await this.model
                 .findOneAndUpdate(normalizedFilter, update, {
                     new: true,
@@ -2125,7 +2125,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_UpdateOptionsExtended = {},
     ): Promise<I_Return<T_UpdateResult>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const result = await this.model
                 .updateMany(normalizedFilter, update, options)
                 .exec();
@@ -2149,7 +2149,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_DeleteOptionsExtended = {},
     ): Promise<I_Return<T>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const result = await this.model
                 .findOneAndDelete(normalizedFilter, options)
                 .exec();
@@ -2181,7 +2181,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         options: I_DeleteOptionsExtended = {},
     ): Promise<I_Return<T_DeleteResult>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter);
+            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
             const result = await this.model.deleteMany(normalizedFilter, options).exec();
 
             if (result.deletedCount === 0) {
@@ -2290,7 +2290,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         const baseSlug = generateSlug(slug);
 
         const baseExists = await this.model.exists(
-            this.createSlugQuery({ slug: baseSlug, field, isObject, haveHistory, filter }),
+            this.createSlugQuery({ slug: baseSlug, field, isObject, haveHistory, filter }) as T_FilterQuery<T>,
         );
 
         if (!baseExists) {
@@ -2301,7 +2301,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const slugVariation = `${baseSlug}-${index}`;
 
             const exists = await this.model.exists(
-                this.createSlugQuery({ slug: slugVariation, field, isObject, haveHistory, filter }),
+                this.createSlugQuery({ slug: slugVariation, field, isObject, haveHistory, filter }) as T_FilterQuery<T>,
             );
 
             if (!exists) {
@@ -2394,7 +2394,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                             isObject: true,
                             haveHistory,
                             filter,
-                        })),
+                        }) as T_FilterQuery<T>),
                     ),
                 );
 
@@ -2411,7 +2411,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 field,
                 isObject: false,
                 filter,
-            }));
+            }) as T_FilterQuery<T>);
 
             return { success: true, result: exists !== null };
         }

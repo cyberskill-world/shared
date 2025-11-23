@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
-import useragent from 'express-useragent';
+import { express as useragent } from 'express-useragent';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 
 import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from './express.type.js';
@@ -79,7 +79,7 @@ function setupMiddleware(app: Application) {
     app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
     app.use(compression());
-    app.use(useragent.express());
+    app.use(useragent());
 }
 
 /**

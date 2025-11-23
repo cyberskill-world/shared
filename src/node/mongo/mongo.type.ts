@@ -13,7 +13,6 @@ import type {
     ClientSession,
     ErrorHandlingMiddlewareFunction,
     ErrorHandlingMiddlewareWithOption,
-    FilterQuery,
     InsertManyOptions,
     PaginateModel,
     PaginateOptions,
@@ -25,6 +24,7 @@ import type {
     PreMiddlewareFunction,
     PreSaveMiddlewareFunction,
     ProjectionType,
+    QueryFilter,
     QueryOptions,
     QueryWithHelpers,
     Schema,
@@ -68,7 +68,7 @@ export interface I_ExtendedModel<T extends Partial<C_Document>>
     extends Model<T>, PaginateModel<T>,
     AggregatePaginateModel<T> { }
 
-export type T_FilterQuery<T> = FilterQuery<T>;
+export type T_FilterQuery<T> = QueryFilter<T>;
 
 export type T_ProjectionType<T> = ProjectionType<T>;
 

@@ -312,6 +312,28 @@ async function mongoMigrateDown() {
     await runCommand('Rolling back MongoDB migration', await command.mongoMigrateDown());
 }
 
+/**
+ * Starts the Storybook development server.
+ * This function runs Storybook in development mode, allowing you to
+ * view and interact with your component stories in a browser.
+ *
+ * @returns A promise that resolves when the Storybook dev server is started.
+ */
+async function storybookDev() {
+    await runCommand('Starting Storybook development server', await command.storybookDev());
+}
+
+/**
+ * Builds Storybook for production deployment.
+ * This function creates a static build of Storybook that can be
+ * deployed to a web server or hosting service.
+ *
+ * @returns A promise that resolves when the Storybook build is complete.
+ */
+async function storybookBuild() {
+    await runCommand('Building Storybook', await command.storybookBuild());
+}
+
 (async () => {
     try {
         await yargs(hideBin(process.argv))
@@ -342,6 +364,8 @@ async function mongoMigrateDown() {
             })
             .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
             .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
+            .command('storybook:dev', 'Start Storybook development server', storybookDev)
+            .command('storybook:build', 'Build Storybook for production', storybookBuild)
             .demandCommand(1, 'Please specify a valid command.')
             .strict()
             .help()
