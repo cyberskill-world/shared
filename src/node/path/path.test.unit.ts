@@ -1,0 +1,22 @@
+import { describe, expect, it } from 'vitest';
+
+import { join, resolve } from './path.util';
+
+describe('path', () => {
+    describe('resolve', () => {
+        it('should resolve paths', () => {
+            const result = resolve('a', 'b');
+            // path.resolve behavior depends on OS, but basically it joins if absolute or current
+            // If we assume standard unix-like behavior for test env:
+            expect(result).toContain('a');
+            expect(result).toContain('b');
+        });
+    });
+
+    describe('join', () => {
+        it('should join paths', () => {
+            const result = join('a', 'b');
+            expect(result).toMatch(/a[/\\]b/);
+        });
+    });
+});
