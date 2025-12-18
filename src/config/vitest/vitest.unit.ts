@@ -1,8 +1,9 @@
 import type { UserConfig } from 'vite';
 
 import react from '@vitejs/plugin-react-swc';
-import { merge } from 'lodash-es';
 import { defineConfig } from 'vitest/config';
+
+import { deepMerge } from '../../util/object/index.js';
 
 /**
  * Creates a Vitest configuration for unit testing with React support.
@@ -34,5 +35,6 @@ export function vitestUnit(options: UserConfig) {
         },
     };
 
-    return defineConfig(merge(config, options));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return defineConfig(deepMerge(config as any, options as any) as UserConfig);
 }
