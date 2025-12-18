@@ -76,6 +76,52 @@ export function setNestedValue<T>(
 }
 
 /**
+ * Deep clones an object or array.
+ * This function creates a deep copy of the input, recursively cloning objects and arrays.
+ * Primitive values, dates, and other non-plain objects are returned as is (or cloned if supported).
+ * Note: This implementation focuses on plain objects and arrays. For complex types like Map/Set/Buffer/ObjectId,
+ * it returns the reference or handles them according to specific logic.
+ *
+ * @param obj - The object to clone.
+ * @returns A deep copy of the object.
+ */
+export function deepClone<T>(obj: T): T {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(item => deepClone(item)) as unknown as T;
+    }
+
+    if (obj instanceof Date) {
+        return new Date(obj.getTime()) as unknown as T;
+    }
+
+    if (obj instanceof RegExp) {
+        return new RegExp(obj.source, obj.flags) as unknown as T;
+    }
+
+    // Handle Mongoose ObjectId and other custom classes by returning reference
+    // structuredClone would fail here. We assume if it's not a plain object, we keep the reference
+    // unless we want to implement specific cloning logic for every type.
+    // However, we want to clone POJOs (Plain Old JavaScript Objects).
+    const proto = Object.getPrototypeOf(obj);
+    if (proto !== Object.prototype && proto !== null) {
+        return obj;
+    }
+
+    const result = {} as Record<string, unknown>;
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            result[key] = deepClone((obj as Record<string, unknown>)[key]);
+        }
+    }
+
+    return result as T;
+}
+
+/**
  * Deep merges multiple objects into a single object.
  * @param args - The objects to merge. Can be empty, in which case returns an empty object.
  * @returns The merged object.

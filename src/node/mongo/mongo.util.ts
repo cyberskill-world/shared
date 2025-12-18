@@ -9,7 +9,7 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import type { I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
-import { getNestedValue, normalizeMongoFilter, regexSearchMapper, setNestedValue } from '#util/index.js';
+import { deepClone, getNestedValue, normalizeMongoFilter, regexSearchMapper, setNestedValue } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
@@ -331,7 +331,7 @@ export const mongo = {
             return {} as T_FilterQuery<T>;
         }
 
-        let newFilter = structuredClone(filter);
+        let newFilter = deepClone(filter);
 
         if (!fields || fields.length === 0) {
             return newFilter;
@@ -1258,7 +1258,7 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
         return documents;
     }
 
-    const clonedDocuments = structuredClone(documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc)) as T[];
+    const clonedDocuments = deepClone(documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc)) as T[];
 
     clonedDocuments.forEach((doc) => {
         requestedVirtuals.forEach(({ name, options }) => {
