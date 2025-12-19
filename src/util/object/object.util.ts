@@ -26,20 +26,12 @@ export function isJSON(str: string): boolean {
  * @returns The value at the specified path, or undefined if the path doesn't exist.
  */
 export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
-    // Optimization: Loop is faster than reduce and allows early exit
-    let current: unknown = obj;
-    const len = path.length;
-
-    for (let i = 0; i < len; i++) {
-        if (current && typeof current === 'object' && path[i] in current) {
-            current = (current as Record<string | number, unknown>)[path[i]];
+    return path.reduce<unknown>((acc, key) => {
+        if (acc && typeof acc === 'object' && key in acc) {
+            return (acc as Record<string | number, unknown>)[key];
         }
-        else {
-            return undefined;
-        }
-    }
-
-    return current;
+        return undefined;
+    }, obj);
 }
 
 /**

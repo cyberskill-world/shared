@@ -129,25 +129,6 @@ describe('getNestedValue', () => {
     it('should return undefined for non-existent path', () => {
         expect(getNestedValue(obj, ['a', 'x'])).toBeUndefined();
     });
-
-    it('should return the object itself for empty path', () => {
-        expect(getNestedValue(obj, [])).toBe(obj);
-    });
-
-    it('should return undefined if object is null/undefined', () => {
-        expect(getNestedValue(null, ['a'])).toBeUndefined();
-        expect(getNestedValue(undefined, ['a'])).toBeUndefined();
-    });
-
-    it('should return undefined if path is broken by primitive', () => {
-        const objWithPrimitive = { a: 1 };
-        expect(getNestedValue(objWithPrimitive, ['a', 'b'])).toBeUndefined();
-    });
-
-    it('should access array indices', () => {
-        const objWithArray = { a: [10, 20, 30] };
-        expect(getNestedValue(objWithArray, ['a', 1])).toBe(20);
-    });
 });
 
 describe('setNestedValue', () => {

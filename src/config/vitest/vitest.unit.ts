@@ -31,7 +31,7 @@ export function vitestUnit(options: UserConfig) {
             environment: 'jsdom',
             pool: 'vmThreads',
             include: ['**/*.test.unit.?(c|m)[jt]s?(x)'],
-            setupFiles: ['src/config/vitest/vitest.unit.setup.ts'],
+            setupFiles: ['./vitest.unit.setup.ts'],
         },
     };
 
