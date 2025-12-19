@@ -237,20 +237,26 @@ export const command = {
         ],
         command: `${VITEST_CLI} --config ${PATH.VITEST_E2E_CONFIG}`,
     }),
-    mongoMigrateCreate: (migrateName: string) => buildCommand({
-        type: E_CommandType.CLI,
-        packages: [
-            {
-                name: TSX_CLI,
-                type: E_PackageType.DEPENDENCY,
-            },
-            {
-                name: MIGRATE_MONGO_PACKAGE_NAME,
-                type: E_PackageType.DEPENDENCY,
-            },
-        ],
-        command: `${TSX_CLI} ${MIGRATE_MONGO_CLI} create ${migrateName} -f ${PATH.MIGRATE_MONGO_CONFIG}`,
-    })(),
+    mongoMigrateCreate: (migrateName: string) => {
+        if (!/^[a-zA-Z0-9_-]+$/.test(migrateName)) {
+            throw new Error('Migration name must only contain alphanumeric characters, underscores, and hyphens.');
+        }
+
+        return buildCommand({
+            type: E_CommandType.CLI,
+            packages: [
+                {
+                    name: TSX_CLI,
+                    type: E_PackageType.DEPENDENCY,
+                },
+                {
+                    name: MIGRATE_MONGO_PACKAGE_NAME,
+                    type: E_PackageType.DEPENDENCY,
+                },
+            ],
+            command: `${TSX_CLI} ${MIGRATE_MONGO_CLI} create ${migrateName} -f ${PATH.MIGRATE_MONGO_CONFIG}`,
+        })();
+    },
     mongoMigrateUp: buildCommand({
         type: E_CommandType.CLI,
         packages: [
