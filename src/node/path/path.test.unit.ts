@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { join, resolve } from './path.util';
+import { join, resolve } from './path.util.js';
 
 describe('path', () => {
     describe('resolve', () => {

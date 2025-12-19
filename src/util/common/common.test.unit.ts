@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { E_Environment } from '#typescript/index.js';
 
-import { mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util';
+import { mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
 
 describe('regexSearchMapper', () => {
     it('should create regex pattern for accented characters', () => {
@@ -35,7 +35,7 @@ describe('uniqueArray', () => {
 
     it('should support key function', () => {
         const input = [{ id: 1 }, { id: 2 }, { id: 1 }];
-        const result = uniqueArray(input, item => item.id);
+        const result = uniqueArray(input, (item: { id: number }) => item.id);
         expect(result).toEqual([{ id: 1 }, { id: 2 }]);
     });
 });

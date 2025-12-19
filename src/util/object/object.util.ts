@@ -126,8 +126,8 @@ export function deepClone<T>(obj: T): T {
  * @param args - The objects to merge. Can be empty, in which case returns an empty object.
  * @returns The merged object.
  */
-export function deepMerge<T extends Record<string, any>>(
-    ...args: (T | null | undefined)[]
+export function deepMerge<T = Record<string, unknown>>(
+    ...args: (object | null | undefined)[]
 ): T;
 
 /**
@@ -135,8 +135,8 @@ export function deepMerge<T extends Record<string, any>>(
  * @param args - The arrays to merge. Can be empty, in which case returns an empty array.
  * @returns The merged array.
  */
-export function deepMerge<T extends unknown[]>(
-    ...args: (T | null | undefined)[]
+export function deepMerge<T = unknown[]>(
+    ...args: (unknown[] | null | undefined)[]
 ): T;
 
 /**
@@ -144,9 +144,8 @@ export function deepMerge<T extends unknown[]>(
  * @param args - The objects or arrays to merge.
  * @returns The merged result.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function deepMerge<T extends Record<string, any> | unknown[]>(
-    ...args: (T | null | undefined)[]
+export function deepMerge<T = Record<string, unknown> | unknown[]>(
+    ...args: (object | unknown[] | null | undefined)[]
 ): T {
     // Handle empty arguments
     if (args.length === 0) {
@@ -154,7 +153,7 @@ export function deepMerge<T extends Record<string, any> | unknown[]>(
     }
 
     // Filter out null/undefined and convert to empty objects/arrays
-    const validArgs = args.filter((arg): arg is T => arg !== null && arg !== undefined);
+    const validArgs = args.filter((arg): arg is object => arg !== null && arg !== undefined);
 
     // If no valid arguments after filtering, return empty object/array
     if (validArgs.length === 0) {

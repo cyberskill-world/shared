@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { serializer } from './serializer.util';
+import { serializer } from './serializer.util.js';
 
 describe('serializer', () => {
     it('should serialize and deserialize Map', () => {

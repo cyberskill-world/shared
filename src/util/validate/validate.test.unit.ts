@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { validate } from './validate.util';
+import { validate } from './validate.util.js';
 
 describe('validate', () => {
     describe('isEmpty', () => {

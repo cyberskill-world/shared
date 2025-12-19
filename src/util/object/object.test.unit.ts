@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { deepClone, deepMerge, getNestedValue, isJSON, normalizeMongoFilter, setNestedValue } from './object.util';
+import { deepClone, deepMerge, getNestedValue, isJSON, normalizeMongoFilter, setNestedValue } from './object.util.js';
 
 describe('deepMerge', () => {
     it('should merge two objects', () => {

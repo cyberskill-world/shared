@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { generateRandomPassword, generateShortId, generateSlug, getFileName, substringBetween } from './string.util';
+import { generateRandomPassword, generateShortId, generateSlug, getFileName, substringBetween } from './string.util.js';
 
 describe('generateShortId', () => {
     it('should generate a short ID of specified length', () => {
@@ -48,6 +48,12 @@ describe('generateSlug', () => {
         const input = { title: 'Hello World', desc: 'Foo Bar' };
         const result = generateSlug(input);
         expect(result).toEqual({ title: 'hello-world', desc: 'foo-bar' });
+    });
+
+    it('should keep already slugified string unchanged', () => {
+        const input = 'hello-world-123';
+        const result = generateSlug(input);
+        expect(result).toBe('hello-world-123');
     });
 });
 
