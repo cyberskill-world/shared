@@ -19,6 +19,22 @@ describe('regexSearchMapper', () => {
         // Should treat as 'é' and map it
         expect(result).toContain('é');
     });
+
+    it('should escape special regex characters', () => {
+        const input = '.';
+        const result = regexSearchMapper(input);
+        // Should be escaped to match literal dot
+        expect(result).toBe('\\.');
+    });
+
+    it('should escape complex regex characters to prevent injection', () => {
+        const input = '(a+)+';
+        const result = regexSearchMapper(input);
+        // Parentheses and plus sign should be escaped
+        expect(result).toContain('\\(');
+        expect(result).toContain('\\)');
+        expect(result).toContain('\\+');
+    });
 });
 
 describe('removeAccent', () => {
