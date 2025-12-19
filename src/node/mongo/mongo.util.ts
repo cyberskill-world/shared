@@ -23,7 +23,7 @@ import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
 /**
  * Checks if value is object-like (e.g., objects, arrays, etc.), not null.
  */
-function isObject(value: any): value is object {
+function isObject(value: unknown): value is object {
     return value != null && typeof value === 'object';
 }
 
