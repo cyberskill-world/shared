@@ -1,6 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 
-import { merge } from 'lodash-es';
+import { deepMerge } from '../../util/object/index.js';
 
 /**
  * Creates a Storybook main configuration for React projects using Vite.
@@ -31,5 +31,5 @@ export function storybookMain(options?: Partial<StorybookConfig>): StorybookConf
         },
     };
 
-    return merge(config, options) as StorybookConfig;
+    return deepMerge(config, options) as StorybookConfig;
 }

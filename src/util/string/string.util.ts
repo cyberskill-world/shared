@@ -1,12 +1,39 @@
-import cryptoJS from 'crypto-js';
-import { isObject } from 'lodash-es';
-import slugifyRaw from 'slugify';
-
 import type { T_Object } from '#typescript/index.js';
+import { removeAccent } from '../common/common.util.js';
 
 import type { I_SlugifyOptions } from './string.type.js';
 
-const slugify = slugifyRaw.default || slugifyRaw;
+/**
+ * Generates a slug from a string.
+ * The slug is a URL-friendly version of the string, removing special characters
+ * and converting spaces to hyphens.
+ *
+ * @param input - The string to be slugified.
+ * @param options - Options for slugification.
+ * @returns The slugified string.
+ */
+function slugify(input: string, options?: I_SlugifyOptions): string {
+    let slug = input.trim();
+
+    // 1. Remove accents
+    slug = removeAccent(slug);
+
+    // 2. To lower case if requested (default true)
+    if (options?.lower !== false) {
+        slug = slug.toLowerCase();
+    }
+
+    // 3. Replace invalid characters with space (keeping alphanumeric, hyphens, and spaces)
+    slug = slug.replace(/[^a-z0-9\s-]/gi, ' ');
+
+    // 4. Replace multiple spaces or hyphens with a single hyphen
+    slug = slug.replace(/[\s-]+/g, '-');
+
+    // 5. Remove leading/trailing hyphens
+    slug = slug.replace(/^-+|-+$/g, '');
+
+    return slug;
+}
 
 /**
  * Generates a slug from a string or an object containing strings.
@@ -23,13 +50,9 @@ export function generateSlug<T = string>(
     options?: I_SlugifyOptions,
 ): T {
     const slugifyWithOptions = (value: string) =>
-        slugify(value ?? '', {
-            lower: options?.lower ?? true,
-            locale: options?.locale ?? 'vi',
-            ...options,
-        });
+        slugify(value ?? '', options);
 
-    if (isObject(input)) {
+    if (typeof input === 'object' && input !== null) {
         const result: T_Object = {};
 
         for (const [key, value] of Object.entries(input)) {
@@ -44,15 +67,32 @@ export function generateSlug<T = string>(
 
 /**
  * Generates a short ID from a UUID.
- * The ID is a substring of the SHA256 hash of the UUID, providing a shorter
- * but still unique identifier based on the original UUID.
+ * The ID is a substring of the UUID, providing a shorter identifier.
+ * Note: This is NOT cryptographically secure and collisions are possible,
+ * but suitable for display purposes where uniqueness is handled elsewhere.
  *
  * @param uuid - The UUID to be converted to a short ID.
  * @param length - The desired length of the short ID (default: 4 characters).
- * @returns A short ID string of the specified length derived from the UUID's SHA256 hash.
+ * @returns A short ID string of the specified length derived from the UUID.
  */
 export function generateShortId(uuid: string, length = 4): string {
-    return cryptoJS.SHA256(uuid).toString(cryptoJS.enc.Hex).slice(0, length);
+    // Simple hash function (FNV-1a variant) to generate a hex string from the UUID
+    let hash = 0x811C9DC5;
+    for (let i = 0; i < uuid.length; i++) {
+        hash ^= uuid.charCodeAt(i);
+        hash = Math.imul(hash, 0x01000193);
+    }
+    // Convert to unsigned 32-bit integer hex string
+    const hex = (hash >>> 0).toString(16).padStart(8, '0');
+
+    // If we need more than 8 chars, we can just append part of the original UUID (stripped of dashes)
+    // or use a different strategy. For short IDs (usually < 8), the hash is fine.
+    // If length > 8, we fallback to just slicing the clean UUID.
+    if (length > 8) {
+        return uuid.replace(/-/g, '').slice(0, length);
+    }
+
+    return hex.slice(0, length);
 }
 
 /**

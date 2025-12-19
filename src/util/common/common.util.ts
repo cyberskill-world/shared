@@ -1,5 +1,3 @@
-import unorm from 'unorm';
-
 import { E_Environment } from '#typescript/index.js';
 
 import type { I_EnvFlags, I_NodeEnvInput } from './common.type.js';
@@ -31,7 +29,7 @@ const upperCharMap: Record<string, string[]> = Object.entries(charMap).reduce(
  * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
-    str = unorm.nfkc(str);
+    str = str.normalize('NFD');
     const combinedMap = { ...charMap, ...upperCharMap };
 
     for (const [baseChar, variations] of Object.entries(combinedMap)) {

@@ -1,5 +1,3 @@
-import { isArray, mergeWith } from 'lodash-es';
-
 /**
  * Check if a string is a valid JSON string.
  * This function attempts to parse the string as JSON and returns true if successful,
@@ -78,44 +76,58 @@ export function setNestedValue<T>(
 }
 
 /**
- * Deep merges multiple objects or arrays into a single object or array.
- * This function handles different types of merging with improved type safety and error handling:
- * - If all arguments are arrays, it concatenates them
- * - If all arguments are objects, it deeply merges them (concatenating arrays within objects)
- * - Handles null/undefined values gracefully by treating them as empty objects
- * - Provides better type inference and safety
- * - Throws descriptive errors for invalid input
+ * Deep clones an object or array.
+ * This function creates a deep copy of the input, recursively cloning objects and arrays.
+ * Primitive values, dates, and other non-plain objects are returned as is (or cloned if supported).
+ * Note: This implementation focuses on plain objects and arrays. For complex types like Map/Set/Buffer/ObjectId,
+ * it returns the reference or handles them according to specific logic.
  *
- * @param args - The objects or arrays to merge. Can be empty, in which case returns an empty object.
- * @returns The merged result - either a concatenated array or a deeply merged object.
- * @throws {Error} When arguments are mixed types (some arrays, some objects) or when all arguments are primitive values.
- *
- * @example
- * ```typescript
- * // Merge objects
- * deepMerge({ a: 1 }, { b: 2 }, { a: 3 }) // { a: 3, b: 2 }
- *
- * // Merge arrays
- * deepMerge([1, 2], [3, 4]) // [1, 2, 3, 4]
- *
- * // Handle null/undefined
- * deepMerge({ a: 1 }, null, undefined, { b: 2 }) // { a: 1, b: 2 }
- *
- * // Nested objects with arrays
- * deepMerge(
- *   { items: [1, 2], config: { theme: 'dark' } },
- *   { items: [3, 4], config: { size: 'large' } }
- * ) // { items: [1, 2, 3, 4], config: { theme: 'dark', size: 'large' } }
- * ```
+ * @param obj - The object to clone.
+ * @returns A deep copy of the object.
  */
+export function deepClone<T>(obj: T): T {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(item => deepClone(item)) as unknown as T;
+    }
+
+    if (obj instanceof Date) {
+        return new Date(obj.getTime()) as unknown as T;
+    }
+
+    if (obj instanceof RegExp) {
+        return new RegExp(obj.source, obj.flags) as unknown as T;
+    }
+
+    // Handle Mongoose ObjectId and other custom classes by returning reference
+    // structuredClone would fail here. We assume if it's not a plain object, we keep the reference
+    // unless we want to implement specific cloning logic for every type.
+    // However, we want to clone POJOs (Plain Old JavaScript Objects).
+    const proto = Object.getPrototypeOf(obj);
+    if (proto !== Object.prototype && proto !== null) {
+        return obj;
+    }
+
+    const result = {} as Record<string, unknown>;
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            result[key] = deepClone((obj as Record<string, unknown>)[key]);
+        }
+    }
+
+    return result as T;
+}
 
 /**
  * Deep merges multiple objects into a single object.
  * @param args - The objects to merge. Can be empty, in which case returns an empty object.
  * @returns The merged object.
  */
-export function deepMerge<T extends Record<string, unknown>>(
-    ...args: (T | null | undefined)[]
+export function deepMerge<T = Record<string, unknown>>(
+    ...args: (object | null | undefined)[]
 ): T;
 
 /**
@@ -123,8 +135,8 @@ export function deepMerge<T extends Record<string, unknown>>(
  * @param args - The arrays to merge. Can be empty, in which case returns an empty array.
  * @returns The merged array.
  */
-export function deepMerge<T extends unknown[]>(
-    ...args: (T | null | undefined)[]
+export function deepMerge<T = unknown[]>(
+    ...args: (unknown[] | null | undefined)[]
 ): T;
 
 /**
@@ -132,54 +144,73 @@ export function deepMerge<T extends unknown[]>(
  * @param args - The objects or arrays to merge.
  * @returns The merged result.
  */
-export function deepMerge<T extends Record<string, unknown> | unknown[]>(
-    ...args: (T | null | undefined)[]
+export function deepMerge<T = Record<string, unknown> | unknown[]>(
+    ...args: (object | unknown[] | null | undefined)[]
 ): T {
     // Handle empty arguments
     if (args.length === 0) {
         return {} as T;
     }
 
-    // Filter out null/undefined and convert to empty objects
-    const validArgs = args
-        .filter((arg): arg is T => arg !== null && arg !== undefined)
-        .map((arg) => {
-            // Handle primitive values by converting to empty object
-            if (typeof arg !== 'object') {
-                return {} as T;
-            }
-            return arg;
-        });
+    // Filter out null/undefined and convert to empty objects/arrays
+    const validArgs = args.filter((arg): arg is object => arg !== null && arg !== undefined);
 
-    // If no valid arguments after filtering, return empty object
+    // If no valid arguments after filtering, return empty object/array
     if (validArgs.length === 0) {
         return {} as T;
     }
 
-    // If only one argument, return it directly (performance optimization)
+    // If only one argument, return it directly
     if (validArgs.length === 1) {
         return validArgs[0] as T;
     }
 
     // Check if all arguments are arrays
-    if (validArgs.every(isArray)) {
+    if (validArgs.every(Array.isArray)) {
         return ([] as unknown[]).concat(...validArgs) as T;
     }
 
     // Check if all arguments are objects (but not arrays)
-    if (validArgs.every(arg =>
-        typeof arg === 'object'
-        && arg !== null
-        && !isArray(arg),
-    )) {
-        return mergeWith({}, ...validArgs, (objValue: unknown, srcValue: unknown) => {
-            // Handle array concatenation within objects
-            if (isArray(objValue) && isArray(srcValue)) {
-                return objValue.concat(srcValue);
+    if (validArgs.every(arg => typeof arg === 'object' && arg !== null && !Array.isArray(arg))) {
+        const result = {} as Record<string, unknown>;
+
+        for (const arg of validArgs) {
+            const obj = arg as Record<string, unknown>;
+            for (const key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                    const value = obj[key];
+                    if (Object.prototype.hasOwnProperty.call(result, key)) {
+                        const existingValue = result[key];
+                        if (
+                            typeof value === 'object' && value !== null
+                            && typeof existingValue === 'object' && existingValue !== null
+                        ) {
+                            if (Array.isArray(value) && Array.isArray(existingValue)) {
+                                result[key] = existingValue.concat(value);
+                            }
+                            else if (!Array.isArray(value) && !Array.isArray(existingValue)) {
+                                result[key] = deepMerge(
+                                    existingValue as Record<string, unknown>,
+                                    value as Record<string, unknown>
+                                );
+                            }
+                            else {
+                                // One is array, other is object (shouldn't happen with strict types but possible)
+                                // Overwrite
+                                result[key] = value;
+                            }
+                        }
+                        else {
+                            result[key] = value;
+                        }
+                    }
+                    else {
+                        result[key] = value;
+                    }
+                }
             }
-            // Return undefined to use lodash's default merge behavior for other cases
-            return undefined;
-        }) as T;
+        }
+        return result as T;
     }
 
     // Check if all arguments are primitive values
@@ -190,9 +221,9 @@ export function deepMerge<T extends Record<string, unknown> | unknown[]>(
     }
 
     // Mixed types error
-    const hasArrays = validArgs.some(isArray);
+    const hasArrays = validArgs.some(Array.isArray);
     const hasObjects = validArgs.some(arg =>
-        typeof arg === 'object' && arg !== null && !isArray(arg),
+        typeof arg === 'object' && arg !== null && !Array.isArray(arg),
     );
 
     if (hasArrays && hasObjects) {

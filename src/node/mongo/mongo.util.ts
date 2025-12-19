@@ -1,15 +1,15 @@
 import type mongooseRaw from 'mongoose';
 
-import { cloneDeep, isObject } from 'lodash-es';
+import { randomUUID } from 'node:crypto';
+
 import migrate from 'migrate-mongo';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
-import { v4 as uuidv4 } from 'uuid';
 
 import type { I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
-import { getNestedValue, normalizeMongoFilter, regexSearchMapper, setNestedValue } from '#util/index.js';
+import { deepClone, getNestedValue, normalizeMongoFilter, regexSearchMapper, setNestedValue } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 import { validate } from '#util/validate/index.js';
 
@@ -19,6 +19,13 @@ import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../
 import { catchError } from '../log/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
+
+/**
+ * Checks if value is object-like (e.g., objects, arrays, etc.), not null.
+ */
+function isObject(value: unknown): value is object {
+    return value != null && typeof value === 'object';
+}
 
 /**
  * Converts enum values to proper model names.
@@ -50,7 +57,7 @@ export const mongo = {
      */
     createGenericFields(): I_GenericDocument {
         return {
-            id: uuidv4(),
+            id: randomUUID(),
             isDel: false,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -101,7 +108,7 @@ export const mongo = {
     createGenericSchema(mongoose: typeof mongooseRaw) {
         return new mongoose.Schema<I_GenericDocument>(
             {
-                id: { type: String, default: () => uuidv4(), unique: true },
+                id: { type: String, default: () => randomUUID(), unique: true },
                 isDel: { type: Boolean, default: false },
             },
             { timestamps: true },
@@ -324,7 +331,7 @@ export const mongo = {
             return {} as T_FilterQuery<T>;
         }
 
-        let newFilter = cloneDeep(filter);
+        let newFilter = deepClone(filter);
 
         if (!fields || fields.length === 0) {
             return newFilter;
@@ -1251,7 +1258,7 @@ async function populateDynamicVirtuals<T extends object, R extends string = stri
         return documents;
     }
 
-    const clonedDocuments = cloneDeep(documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc)) as T[];
+    const clonedDocuments = deepClone(documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc)) as T[];
 
     clonedDocuments.forEach((doc) => {
         requestedVirtuals.forEach(({ name, options }) => {

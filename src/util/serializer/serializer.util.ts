@@ -78,7 +78,15 @@ export const serializer: I_Serializer<unknown> = {
      * @returns The serialized JSON string that can be safely stored or transmitted.
      */
     serialize(value) {
-        return JSON.stringify(value, (_key, val) => {
+        return JSON.stringify(value, function (_key, val) {
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            const context = this;
+            const originalValue = context[_key];
+
+            if (originalValue instanceof Date) {
+                return typeHandlers.Date.serialize(originalValue);
+            }
+
             for (const type of Object.keys(typeHandlers) as T_SerializerKnownTypes[]) {
                 const handler = typeHandlers[type];
 
