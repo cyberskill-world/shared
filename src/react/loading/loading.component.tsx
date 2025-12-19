@@ -76,11 +76,17 @@ export function Loading({ full = false, className = '', message = 'Loading', ...
      */
     function _renderLoading() {
         return (
-            <div className={style['container']} {...rest}>
-                <div className={style['ring']}></div>
-                <div className={style['ring']}></div>
-                <div className={style['ring']}></div>
-                <div className={style['ring']}></div>
+            <div
+                role="status"
+                aria-live="polite"
+                aria-label={message}
+                className={style['container']}
+                {...rest}
+            >
+                <div className={style['ring']} aria-hidden="true"></div>
+                <div className={style['ring']} aria-hidden="true"></div>
+                <div className={style['ring']} aria-hidden="true"></div>
+                <div className={style['ring']} aria-hidden="true"></div>
                 {message && <div className={style['message']}>{message}</div>}
             </div>
         );
