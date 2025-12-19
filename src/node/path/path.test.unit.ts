@@ -20,3 +20,18 @@ describe('path', () => {
         });
     });
 });
+
+import { command } from './path.constant.js';
+
+describe('command', () => {
+    describe('mongoMigrateCreate', () => {
+        it('should allow valid migration names', async () => {
+            const result = await command.mongoMigrateCreate('valid_name-123');
+            expect(result).toContain('valid_name-123');
+        });
+
+        it('should throw error for invalid migration names', async () => {
+            expect(() => command.mongoMigrateCreate('invalid; name')).toThrow('Migration name must only contain alphanumeric characters, underscores, and hyphens.');
+        });
+    });
+});
