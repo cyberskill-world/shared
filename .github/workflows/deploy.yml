@@ -24,8 +24,8 @@ jobs:
         run: |
           pnpm install --global semantic-release@latest @semantic-release/git@latest
 
-      - name: Lint & Build
-        uses: cyberskill-world/.github/actions/lint-build@main
+      - name: Build
+        uses: cyberskill-world/.github/actions/build@main
 
       - name: Deploy
         env:
