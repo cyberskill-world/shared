@@ -29,7 +29,7 @@ const upperCharMap: Record<string, string[]> = Object.entries(charMap).reduce(
  * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
-    str = str.normalize('NFD');
+    str = escapeRegExp(str.normalize('NFD'));
     const combinedMap = { ...charMap, ...upperCharMap };
 
     for (const [baseChar, variations] of Object.entries(combinedMap)) {
@@ -50,6 +50,18 @@ export function regexSearchMapper(str: string) {
  */
 export function removeAccent(str: string) {
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
+
+/**
+ * Escape special characters in a string for use in a regular expression.
+ * This function escapes characters that have special meaning in regular expressions
+ * to ensure they are treated as literal characters.
+ *
+ * @param str - The string to escape.
+ * @returns The escaped string safe for use in a RegExp.
+ */
+export function escapeRegExp(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
