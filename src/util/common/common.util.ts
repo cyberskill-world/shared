@@ -20,6 +20,16 @@ const upperCharMap: Record<string, string[]> = Object.entries(charMap).reduce(
     {} as Record<string, string[]>,
 );
 
+// Precompute the combined map
+const combinedMap = { ...charMap, ...upperCharMap };
+
+// Precompute the regex patterns and replacements
+const replacements = Object.entries(combinedMap).map(([baseChar, variations]) => {
+    const pattern = new RegExp(`[${baseChar}${variations.join('')}]`, 'g');
+    const replacement = `(${[baseChar, ...variations].join('|')})`;
+    return { pattern, replacement };
+});
+
 /**
  * Convert a string to a regex pattern that matches the string and its accented variations.
  * This function normalizes the input string and creates a regex pattern that can match
@@ -30,12 +40,10 @@ const upperCharMap: Record<string, string[]> = Object.entries(charMap).reduce(
  */
 export function regexSearchMapper(str: string) {
     str = str.normalize('NFD');
-    const combinedMap = { ...charMap, ...upperCharMap };
 
-    for (const [baseChar, variations] of Object.entries(combinedMap)) {
-        const pattern = `[${baseChar}${variations.join('')}]`;
-        const replacement = `(${[baseChar, ...variations].join('|')})`;
-        str = str.replace(new RegExp(pattern, 'g'), replacement);
+    // Use precomputed replacements
+    for (const { pattern, replacement } of replacements) {
+        str = str.replace(pattern, replacement);
     }
 
     return str;
