@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import session from 'express-session';
+import helmet from 'helmet';
 import { express as useragent } from 'express-useragent';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 
@@ -76,6 +77,7 @@ export function createSession(options: SessionOptions): RequestHandler {
  */
 function setupMiddleware(app: Application) {
     app.set('trust proxy', 1);
+    app.use(helmet());
     app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
     app.use(compression());
