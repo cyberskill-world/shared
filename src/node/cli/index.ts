@@ -91,7 +91,7 @@ function printIssues(type: 'Errors' | 'Warnings', list: I_IssueEntry[]) {
  */
 async function showCheckResult() {
     setTimeout(async () => {
-        const allResults = await getStoredErrorLists();
+        const allResults = (await getStoredErrorLists()) || [];
         const errors = allResults.filter(e => e.type === E_IssueType.Error);
         const warnings = allResults.filter(e => e.type === E_IssueType.Warning);
 

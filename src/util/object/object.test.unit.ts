@@ -115,7 +115,7 @@ describe('normalizeMongoFilter', () => {
     it('should handle mixed nested and operators', () => {
         const filter = { a: { b: 1 }, c: { $gt: 5 } };
         const result = normalizeMongoFilter(filter);
-        expect(result).toEqual({ 'a.b': 1, c: { $gt: 5 } });
+        expect(result).toEqual({ 'a.b': 1, 'c': { $gt: 5 } });
     });
 });
 

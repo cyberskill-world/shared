@@ -238,7 +238,7 @@ export const command = {
         command: `${VITEST_CLI} --config ${PATH.VITEST_E2E_CONFIG}`,
     }),
     mongoMigrateCreate: (migrateName: string) => {
-        if (!/^[a-zA-Z0-9_-]+$/.test(migrateName)) {
+        if (!/^[\w-]+$/.test(migrateName)) {
             throw new Error('Migration name must only contain alphanumeric characters, underscores, and hyphens.');
         }
 
