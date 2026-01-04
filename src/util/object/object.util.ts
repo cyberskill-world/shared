@@ -31,8 +31,9 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
     const len = path.length;
 
     for (let i = 0; i < len; i++) {
-        if (current && typeof current === 'object' && path[i] in current) {
-            current = (current as Record<string | number, unknown>)[path[i]];
+        const key = path[i];
+        if (key !== undefined && current && typeof current === 'object' && key in (current as Record<string | number, unknown>)) {
+            current = (current as Record<string | number, unknown>)[key];
         }
         else {
             return undefined;
@@ -199,7 +200,7 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                             else if (!Array.isArray(value) && !Array.isArray(existingValue)) {
                                 result[key] = deepMerge(
                                     existingValue as Record<string, unknown>,
-                                    value as Record<string, unknown>
+                                    value as Record<string, unknown>,
                                 );
                             }
                             else {

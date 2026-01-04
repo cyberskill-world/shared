@@ -38,6 +38,5 @@ export function vitestE2E(options: UserConfig) {
         },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return defineConfig(deepMerge(config as any, options as any) as UserConfig);
 }
