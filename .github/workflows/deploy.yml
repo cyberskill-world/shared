@@ -37,32 +37,31 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "🔮 Calculating next version..."
-
           DRY_RUN_OUTPUT=$(semantic-release --dry-run --branches release 2>&1 || true)
-
-          echo "--- Dry Run Output ---"
-          echo "$DRY_RUN_OUTPUT"
-          echo "----------------------"
-
           NEXT_VERSION=$(echo "$DRY_RUN_OUTPUT" | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || true)
 
           if [ -z "$NEXT_VERSION" ]; then
-            echo "✅ No release scheduled or version could not be parsed. Proceeding..."
+            echo "✅ No release scheduled."
           else
             echo "🎯 Targeted version: v$NEXT_VERSION"
 
+            # Check if tag exists remotely
             if git ls-remote --exit-code --tags origin "v$NEXT_VERSION" >/dev/null 2>&1; then
-              echo "⚠️ Tag v$NEXT_VERSION exists! Forcing a jump to the next patch version..."
+              echo "⚠️ Tag v$NEXT_VERSION exists! Executing 'Steal & Bump' strategy..."
 
-              git fetch --tags
+              # Setup User
               git config user.name "github-actions[bot]"
               git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-              git commit --allow-empty -m "feat: bump version to resolve tag conflict with v$NEXT_VERSION"
+              echo "🥷 Stealing tag v$NEXT_VERSION..."
+              git tag -f "v$NEXT_VERSION" HEAD
+              git push origin "v$NEXT_VERSION" --force
+
+              git commit --allow-empty -m "feat: bump version to v$(echo $NEXT_VERSION | awk -F. '{$2++; print $1"."$2".0"}') (forced jump)"
 
               git push origin HEAD:release
 
-              echo "🚀 Created and pushed empty commit to force version bump."
+              echo "🚀 Tag stolen and new commit pushed. Next run should trigger v2.22.0!"
             else
               echo "✅ Tag is free. Proceeding..."
             fi
