@@ -275,9 +275,13 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
 
     const normalized: Record<string, unknown> = {};
 
+    /**
+     *
+     */
     function flatten(current: Record<string, unknown>, prefix: string) {
         for (const key in current) {
-            if (!Object.prototype.hasOwnProperty.call(current, key)) continue;
+            if (!Object.prototype.hasOwnProperty.call(current, key))
+                continue;
 
             const value = current[key];
             const newKey = prefix ? `${prefix}.${key}` : key;

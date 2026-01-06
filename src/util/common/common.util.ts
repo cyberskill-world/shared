@@ -32,7 +32,7 @@ Object.entries(combinedMap).forEach(([baseChar, variations]) => {
     // Example: 'a', 'à', 'á'... all map to '(a|à|á...)'
     const replacement = `(${[baseChar, ...variations].join('|')})`;
 
-    [baseChar, ...variations].forEach(char => {
+    [baseChar, ...variations].forEach((char) => {
         replacementMap.set(char, replacement);
         charsToMatch.add(char);
     });
@@ -56,7 +56,7 @@ const searchRegex = new RegExp(`[${patternString}]`, 'g');
  */
 export function regexSearchMapper(str: string) {
     str = str.normalize('NFD');
-    return str.replace(searchRegex, (match) => replacementMap.get(match) || match);
+    return str.replace(searchRegex, match => replacementMap.get(match) || match);
 }
 
 /**
