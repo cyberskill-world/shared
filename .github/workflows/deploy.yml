@@ -38,7 +38,7 @@ jobs:
         run: |
           echo "🔮 Calculating next version..."
 
-          DRY_RUN_OUTPUT=$(npx semantic-release --dry-run --branches release 2>&1 || true)
+          DRY_RUN_OUTPUT=$(semantic-release --dry-run --branches release 2>&1 || true)
 
           echo "--- Dry Run Output ---"
           echo "$DRY_RUN_OUTPUT"
