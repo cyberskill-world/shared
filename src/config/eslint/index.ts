@@ -15,6 +15,6 @@ export default [
             }],
             'dot-notation': 'off',
         },
-        ignores: ['build', 'dist'],
+        ignores: ['**/node_modules/**', '**/.git/**', 'build', 'dist'],
     },
 ];

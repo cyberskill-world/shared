@@ -56,11 +56,21 @@ async function checkTypescript() {
  * @returns A promise that resolves when the ESLint check is complete.
  */
 async function checkEslint(fix = false) {
-    if (fix) {
-        await runCommand('Running ESLint with auto-fix', await command.eslintFix());
+    const commandToRun = fix ? await command.eslintFix() : await command.eslintCheck();
+    const label = fix ? 'Running ESLint with auto-fix' : 'Running ESLint check';
+
+    try {
+        await runCommand(label, commandToRun, { timeout: 60000, throwOnError: true });
     }
-    else {
-        await runCommand('Running ESLint check', await command.eslintCheck());
+    catch (error: any) {
+        if (error.code === 'ETIMEDOUT' || error.killed || error.signal === 'SIGTERM') {
+            log.warn('Lint check timed out. Retrying with debug mode enabled...');
+            process.env['DEBUG'] = 'true';
+            await runCommand(`${label} (Debug Mode)`, commandToRun);
+        }
+        else {
+            catchError(error);
+        }
     }
 }
 
@@ -91,7 +101,7 @@ function printIssues(type: 'Errors' | 'Warnings', list: I_IssueEntry[]) {
  */
 async function showCheckResult() {
     setTimeout(async () => {
-        const allResults = await getStoredErrorLists();
+        const allResults = (await getStoredErrorLists()) || [];
         const errors = allResults.filter(e => e.type === E_IssueType.Error);
         const warnings = allResults.filter(e => e.type === E_IssueType.Warning);
 
@@ -154,7 +164,8 @@ async function inspectLint() {
  */
 async function lintCheck() {
     await clearAllErrorLists();
-    await Promise.all([checkTypescript(), checkEslint()]);
+    await checkTypescript();
+    await checkEslint();
     showCheckResult();
 }
 
@@ -167,7 +178,8 @@ async function lintCheck() {
  */
 async function lintFix() {
     await clearAllErrorLists();
-    await Promise.all([checkTypescript(), checkEslint(true)]);
+    await checkTypescript();
+    await checkEslint(true);
     showCheckResult();
 }
 

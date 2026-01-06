@@ -1,7 +1,8 @@
 import type { T_Object } from '#typescript/index.js';
-import { removeAccent } from '../common/common.util.js';
 
 import type { I_SlugifyOptions } from './string.type.js';
+
+import { removeAccent } from '../common/common.util.js';
 
 /**
  * Generates a slug from a string.

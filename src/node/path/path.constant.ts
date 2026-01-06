@@ -97,7 +97,7 @@ export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandCont
     return {
         'pre-commit': LINT_STAGED_CLI,
         'commit-msg': COMMIT_LINT_CLI,
-        ...(isCurrentProject && { 'pre-push': rawCommand(`${GIT_CLI} pull`) }),
+        ...(isCurrentProject ? { 'pre-push': rawCommand(`${GIT_CLI} pull`) } : { 'pre-push': rawCommand(`${PNPM_CLI} build`) }),
     };
 }
 
@@ -238,7 +238,7 @@ export const command = {
         command: `${VITEST_CLI} --config ${PATH.VITEST_E2E_CONFIG}`,
     }),
     mongoMigrateCreate: (migrateName: string) => {
-        if (!/^[a-zA-Z0-9_-]+$/.test(migrateName)) {
+        if (!/^[\w-]+$/.test(migrateName)) {
             throw new Error('Migration name must only contain alphanumeric characters, underscores, and hyphens.');
         }
 

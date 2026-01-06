@@ -79,7 +79,7 @@ export const serializer: I_Serializer<unknown> = {
      */
     serialize(value) {
         return JSON.stringify(value, function (_key, val) {
-            // eslint-disable-next-line @typescript-eslint/no-this-alias
+            // eslint-disable-next-line ts/no-this-alias
             const context = this;
             const originalValue = context[_key];
 
