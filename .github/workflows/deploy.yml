@@ -39,6 +39,7 @@ jobs:
           echo "🔮 Calculating next version..."
           DRY_RUN_OUTPUT=$(npx semantic-release --dry-run --branches release 2>&1)
           NEXT_VERSION=$(echo "$DRY_RUN_OUTPUT" | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || true)
+
           if [ -z "$NEXT_VERSION" ]; then
             echo "✅ No release scheduled. Proceeding normally."
           else
@@ -47,8 +48,8 @@ jobs:
               echo "⚠️ Tag v$NEXT_VERSION exists! Forcing a jump to the next patch version..."
               git fetch --tags
               git config user.name "github-actions[bot]"
-              git config user.email "github-actions[bot]@users.noreply.github.com"
-              git commit --allow-empty -m "fix: bump version to resolve tag conflict with v$NEXT_VERSION"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git commit --allow-empty -m "feat: bump version to resolve tag conflict with v$NEXT_VERSION"
               echo "🚀 Created empty commit to force version bump. Ready for deployment."
             else
               echo "✅ Tag is free. Proceeding..."
