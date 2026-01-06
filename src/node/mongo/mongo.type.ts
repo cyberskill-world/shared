@@ -68,7 +68,7 @@ export interface I_ExtendedModel<T extends Partial<C_Document>>
     extends Model<T>, PaginateModel<T>,
     AggregatePaginateModel<T> { }
 
-export type T_FilterQuery<T> = QueryFilter<T>;
+export type T_QueryFilter<T> = QueryFilter<T>;
 
 export type T_ProjectionType<T> = ProjectionType<T>;
 
@@ -178,8 +178,6 @@ export type T_MongooseMiddlewarePreFunction<T> = T_PreMiddlewareFunction<T> & T_
 
 export type T_MongooseMiddlewarePostFunction<T> = T_PostMiddlewareFunction<T> & T_ErrorHandlingMiddlewareFunction<T> & T_ErrorHandlingMiddlewareWithOption<T>;
 
-export type T_MongooseHookNextFunction = (error?: Error) => void;
-
 export interface I_MongooseModelMiddleware<T extends Partial<C_Document>> {
     method: T_MongooseMiddlewareMethod;
     pre?: T_MongooseMiddlewarePreFunction<T & T_QueryWithHelpers<T>>;
@@ -204,19 +202,19 @@ export interface I_PaginateOptionsWithPopulate
 }
 
 export interface I_Input_FindOne<T> extends T_PopulateOption {
-    filter: T_FilterQuery<T>;
+    filter: T_QueryFilter<T>;
     projection?: T_ProjectionType<T>;
     options?: T_QueryOptions<T>;
 }
 
 export interface I_Input_FindAll<T> extends T_PopulateOption {
-    filter: T_FilterQuery<T>;
+    filter: T_QueryFilter<T>;
     projection?: T_ProjectionType<T>;
     options?: T_QueryOptions<T>;
 }
 
 export interface I_Input_FindPaging<T = undefined> {
-    filter?: T_FilterQuery<T>;
+    filter?: T_QueryFilter<T>;
     options?: I_PaginateOptionsWithPopulate;
 };
 
@@ -238,13 +236,13 @@ export interface I_UpdateOptionsExtended extends Omit<QueryOptions, 'session'> {
 }
 
 export interface I_Input_UpdateOne<T> extends T_PopulateOption {
-    filter: T_FilterQuery<T>;
+    filter: T_QueryFilter<T>;
     update: T_UpdateQuery<T>;
     options?: I_UpdateOptionsExtended;
 }
 
 export interface I_Input_UpdateMany<T> extends T_PopulateOption {
-    filter: T_FilterQuery<T>;
+    filter: T_QueryFilter<T>;
     update: T_UpdateQuery<T>;
     options?: I_UpdateOptionsExtended;
 }
@@ -254,18 +252,18 @@ export interface I_DeleteOptionsExtended extends Omit<QueryOptions, 'session'> {
 }
 
 export interface I_Input_DeleteOne<T> {
-    filter: T_FilterQuery<T>;
+    filter: T_QueryFilter<T>;
     options?: I_DeleteOptionsExtended;
 }
 
 export interface I_Input_DeleteMany<T> {
-    filter: T_FilterQuery<T>;
+    filter: T_QueryFilter<T>;
     options?: I_DeleteOptionsExtended;
 }
 
 export interface I_InputSlug<T> {
     field: string;
-    filter?: T_FilterQuery<T>;
+    filter?: T_QueryFilter<T>;
     haveHistory?: boolean;
 }
 

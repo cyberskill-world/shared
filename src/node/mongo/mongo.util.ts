@@ -9,7 +9,7 @@ import { deepClone, getNestedValue, regexSearchMapper, setNestedValue } from '#u
 import { validate } from '#util/validate/index.js';
 
 import type { MongoController } from './mongo.controller.js';
-import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, T_FilterQuery, T_Input_Populate, T_MongoosePlugin, T_MongooseShema, T_VirtualOptions, T_WithId } from './mongo.type.js';
+import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, T_Input_Populate, T_MongoosePlugin, T_MongooseShema, T_QueryFilter, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
 import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
@@ -313,9 +313,9 @@ export const mongo = {
      * @param fields - An array of field names to convert to regex patterns.
      * @returns A new filter object with string values converted to regex patterns.
      */
-    regexify<T>(filter?: T_FilterQuery<T>, fields?: (keyof T | string)[]): T_FilterQuery<T> {
+    regexify<T>(filter?: T_QueryFilter<T>, fields?: (keyof T | string)[]): T_QueryFilter<T> {
         if (!filter) {
-            return {} as T_FilterQuery<T>;
+            return {} as T_QueryFilter<T>;
         }
 
         let newFilter = deepClone(filter);

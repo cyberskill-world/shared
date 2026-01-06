@@ -6,7 +6,7 @@ import { RESPONSE_STATUS } from '#constant/index.js';
 import { deepClone, normalizeMongoFilter } from '#util/index.js';
 import { generateShortId, generateSlug } from '#util/string/index.js';
 
-import type { C_Collection, C_Db, C_Document, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_FilterQuery, T_Input_Populate, T_InsertManyOptions, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_Input_Populate, T_InsertManyOptions, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryFilter, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { catchError } from '../log/index.js';
 import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
@@ -834,13 +834,13 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a standardized response with the found document.
      */
     async findOne(
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         projection: T_ProjectionType<T> = {},
         options: T_QueryOptions<T> = {},
         populate?: T_Input_Populate,
     ): Promise<I_Return<T>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const query = this.model.findOne(normalizedFilter, projection, options);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
@@ -880,13 +880,13 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a standardized response with the found documents.
      */
     async findAll(
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         projection: T_ProjectionType<T> = {},
         options: T_QueryOptions<T> = {},
         populate?: T_Input_Populate,
     ): Promise<I_Return<T[]>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const query = this.model.find(normalizedFilter, projection, options);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
@@ -916,11 +916,11 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a standardized response with paginated results.
      */
     async findPaging(
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         options: I_PaginateOptionsWithPopulate = {},
     ): Promise<I_Return<T_PaginateResult<T>>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const dynamicVirtuals = this.getDynamicVirtuals();
 
             const filteredOptions = { ...options };
@@ -984,9 +984,9 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param filter - The filter criteria to count documents.
      * @returns A promise that resolves to a standardized response with the document count.
      */
-    async count(filter: T_FilterQuery<T> = {}): Promise<I_Return<number>> {
+    async count(filter: T_QueryFilter<T> = {}): Promise<I_Return<number>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model.countDocuments(normalizedFilter);
 
             return { success: true, result };
@@ -1043,12 +1043,12 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a standardized response with the updated document.
      */
     async updateOne(
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         update: T_UpdateQuery<T> = {},
         options: I_UpdateOptionsExtended = {},
     ): Promise<I_Return<T>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
                 .findOneAndUpdate(normalizedFilter, update, {
                     new: true,
@@ -1080,12 +1080,12 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a standardized response with the update result.
      */
     async updateMany(
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         update: T_UpdateQuery<T> = {},
         options: I_UpdateOptionsExtended = {},
     ): Promise<I_Return<T_UpdateResult>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
                 .updateMany(normalizedFilter, update, options)
                 .exec();
@@ -1105,11 +1105,11 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a standardized response with the deleted document.
      */
     async deleteOne(
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         options: I_DeleteOptionsExtended = {},
     ): Promise<I_Return<T>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model
                 .findOneAndDelete(normalizedFilter, options)
                 .exec();
@@ -1137,11 +1137,11 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns A promise that resolves to a standardized response with the delete result.
      */
     async deleteMany(
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         options: I_DeleteOptionsExtended = {},
     ): Promise<I_Return<T_DeleteResult>> {
         try {
-            const normalizedFilter = normalizeMongoFilter(filter as Record<string, unknown>) as T_FilterQuery<T>;
+            const normalizedFilter = normalizeMongoFilter(filter);
             const result = await this.model.deleteMany(normalizedFilter, options).exec();
 
             if (result.deletedCount === 0) {
@@ -1250,7 +1250,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         const baseSlug = generateSlug(slug);
 
         const baseExists = await this.model.exists(
-            this.createSlugQuery({ slug: baseSlug, field, isObject, haveHistory, filter }) as T_FilterQuery<T>,
+            this.createSlugQuery({ slug: baseSlug, field, isObject, haveHistory, filter }),
         );
 
         if (!baseExists) {
@@ -1261,7 +1261,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const slugVariation = `${baseSlug}-${index}`;
 
             const exists = await this.model.exists(
-                this.createSlugQuery({ slug: slugVariation, field, isObject, haveHistory, filter }) as T_FilterQuery<T>,
+                this.createSlugQuery({ slug: slugVariation, field, isObject, haveHistory, filter }),
             );
 
             if (!exists) {
@@ -1354,7 +1354,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                             isObject: true,
                             haveHistory,
                             filter,
-                        }) as T_FilterQuery<T>),
+                        })),
                     ),
                 );
 
@@ -1371,7 +1371,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 field,
                 isObject: false,
                 filter,
-            }) as T_FilterQuery<T>);
+            }));
 
             return { success: true, result: exists !== null };
         }
@@ -1407,7 +1407,7 @@ export class MongooseController<T extends Partial<C_Document>> {
      */
     async distinct(
         key: string,
-        filter: T_FilterQuery<T> = {},
+        filter: T_QueryFilter<T> = {},
         options: T_QueryOptions<T> = {},
     ): Promise<I_Return<unknown[]>> {
         try {
