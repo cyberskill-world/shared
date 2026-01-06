@@ -24,6 +24,23 @@
 - [ ] Documentation (making our life easier for future humans 📚)
 - [ ] Other (please describe):
 
+## ⚠️ Breaking Changes
+
+<!-- Will this change break the existing universe? -->
+<!-- If yes, please list what is breaking and what needs to be changed in the consuming applications. -->
+
+- [ ] No breaking changes (smooth sailing ⛵)
+- [ ] Yes (please describe below, and brace for impact 💥)
+
+## 🚀 Deployment & Ops
+
+<!-- Do we need to do anything special to deploy this? -->
+
+- [ ] New environment variables required (don't keep secrets to yourself 🤫)
+- [ ] Database migrations (shifting the tectonic plates 🌍)
+- [ ] Configuration changes (turning the knobs 🎛️)
+- [ ] None (just standard procedure)
+
 ## Testing
 
 <!-- How did you verify your changes? Include environment, test types, and relevant configurations -->
@@ -36,9 +53,19 @@
 
 <!-- OS, tools, dependencies, or any other wizardry -->
 
+## 🛡️ Security & Performance
+
+- [ ] I have checked for security vulnerabilities (no open doors 🚪)
+- [ ] I have verified performance impacts (no heavy lifting 🏋️)
+
 ## Screenshots (if applicable)
 
 <!-- A picture is worth a thousand words — show off your handiwork! 📸 -->
+<!-- Use Before/After comparisons if changing UI -->
+
+| Before  | After   |
+| ------- | ------- |
+| _Image_ | _Image_ |
 
 ## Checklist:
 
