@@ -6,6 +6,7 @@ jobs:
   deploy:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: write
       id-token: write
