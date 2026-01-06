@@ -67,7 +67,7 @@
 | ------- | ------- |
 | _Image_ | _Image_ |
 
-## Checklist:
+## Checklist
 
 <!-- Mark all applicable items with an `x`. If unsure, shout for help! -->
 
