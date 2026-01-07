@@ -75,9 +75,14 @@ export function createSession(options: SessionOptions): RequestHandler {
  *
  * @param app - The Express application instance to configure with middleware.
  */
-function setupMiddleware(app: Application) {
+function setupMiddleware(app: Application, isDev = false) {
     app.set('trust proxy', 1);
-    app.use(helmet());
+    app.use(
+        helmet({
+            crossOriginEmbedderPolicy: isDev ? false : undefined,
+            contentSecurityPolicy: isDev ? false : undefined,
+        }),
+    );
     app.use(cookieParser());
     app.use(express.urlencoded({ extended: true }));
     app.use(compression());
@@ -114,7 +119,7 @@ function setupStaticFolders(app: Application, staticFolders?: string | string[])
 export function createExpress(options?: I_ExpressOptions): Application {
     const app = express();
 
-    setupMiddleware(app);
+    setupMiddleware(app, options?.isDev);
     setupStaticFolders(app, options?.static);
     app.use(graphqlUploadExpress());
 
@@ -135,7 +140,7 @@ export function createExpress(options?: I_ExpressOptions): Application {
 export async function createNest(options: I_NestOptions): Promise<INestApplication> {
     const app = await NestFactory.create(options.module);
 
-    setupMiddleware(app.getHttpAdapter().getInstance());
+    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev);
     setupStaticFolders(app.getHttpAdapter().getInstance(), options.static);
 
     if (options.filters) {
