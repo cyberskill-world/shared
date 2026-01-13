@@ -1,4 +1,4 @@
-import React, { use } from 'react';
+import React, { use, useEffect } from 'react';
 
 import { validate } from '#util/validate/validate.util.js';
 
@@ -31,28 +31,47 @@ export function ApolloErrorComponent() {
 
     const isGraphQLError = 'locations' in error || 'path' in error || 'extensions' in error;
     const errorMessage = 'message' in error ? error.message : 'Unknown error occurred';
+    const errorTitleId = 'apollo-error-title';
+
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                context.hideError();
+            }
+        };
+
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [context]);
 
     return (
         <div className={style['modal-backdrop']}>
-            <div className={style['modal-content']}>
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={errorTitleId}
+                className={style['modal-content']}
+            >
                 <button
                     type="button"
                     className={style['btn-close']}
                     onClick={context.hideError}
+                    aria-label="Close error details"
                 >
                     ✕
                 </button>
-                <div className={style['error-title']}>
+                <h2 id={errorTitleId} className={style['error-title']}>
                     <button
                         type="button"
                         className={style['btn-retry']}
                         onClick={() => window.location.reload()}
+                        aria-label="Reload page"
                     >
                         Reload
                     </button>
                     {' '}
                     {!validate.isEmpty(error) && errorMessage}
-                </div>
+                </h2>
                 <div className={style['error-details']}>
                     {isGraphQLError && 'locations' in error && error.locations && (
                         <pre className="locations">
