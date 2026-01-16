@@ -61,27 +61,35 @@ export function setNestedValue<T>(
     if (path.length === 0)
         return obj;
 
-    const [head, ...rest] = path;
+    function setRecursive(
+        currentObj: unknown,
+        idx: number,
+    ): unknown {
+        const key = path[idx];
 
-    if (rest.length === 0) {
+        // Base case: last element in path
+        if (idx === path.length - 1) {
+            return {
+                ...(currentObj as Record<string | number, unknown>),
+                [key as string | number]: value,
+            };
+        }
+
+        const currentVal = (currentObj as Record<string | number, unknown>)[key as string | number];
+        const nextVal = typeof currentVal === 'object' && currentVal !== null
+            ? currentVal
+            : {};
+
         return {
-            ...(obj as Record<string | number, unknown>),
-            [head as string | number]: value,
-        } as T;
+            ...(currentObj as Record<string | number, unknown>),
+            [key as string | number | symbol]: setRecursive(
+                nextVal,
+                idx + 1,
+            ),
+        };
     }
 
-    const current = (obj as Record<string | number, unknown>)[head as string | number];
-
-    return {
-        ...(obj as Record<string | number, unknown>),
-        [head as string | number | symbol]: setNestedValue(
-            typeof current === 'object' && current !== null
-                ? (current as object)
-                : {},
-            rest,
-            value,
-        ),
-    } as T;
+    return setRecursive(obj, 0) as T;
 }
 
 /**
