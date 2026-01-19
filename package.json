@@ -212,7 +212,7 @@
         "test:unit": "tsx src/node/cli/index.ts test:unit"
     },
     "dependencies": {
-        "@antfu/eslint-config": "6.7.3",
+        "@antfu/eslint-config": "7.0.1",
         "@apollo/client": "4.0.11",
         "@apollo/client-integration-nextjs": "0.14.3",
         "@apollo/server": "5.2.0",
