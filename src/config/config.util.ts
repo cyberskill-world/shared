@@ -38,13 +38,8 @@ const handleESLint: T_ConfigHandler = (...config) => {
             stylistic: {
                 semi: true,
                 indent: 4,
-                quotes: 'single',
             },
-            formatters: {
-                css: true,
-                html: true,
-                markdown: 'prettier',
-            },
+            formatters: true,
             yaml: false,
             react: true,
         },

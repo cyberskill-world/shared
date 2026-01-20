@@ -61,6 +61,8 @@ export const MIGRATE_MONGO_PACKAGE_NAME = 'migrate-mongo';
 export const MIGRATE_MONGO_CLI = './node_modules/migrate-mongo/bin/migrate-mongo';
 export const STORYBOOK_PACKAGE_NAME = 'storybook';
 export const STORYBOOK_CLI = 'storybook';
+export const AG_KIT_PACKAGE_NAME = '@vudovn/ag-kit';
+export const DOT_AGENT = '.agent';
 
 export const PATH = {
     CYBERSKILL_DIRECTORY,
@@ -82,6 +84,7 @@ export const PATH = {
     VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
     STORYBOOK_MAIN_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/storybook/storybook.main.js`),
     STORYBOOK_PREVIEW_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/storybook/storybook.preview.js`),
+    DOT_AGENT: resolveWorkingPath(DOT_AGENT),
 };
 
 /**

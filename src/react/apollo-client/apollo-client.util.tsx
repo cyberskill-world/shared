@@ -5,7 +5,7 @@ import { RemoveTypenameFromVariablesLink } from '@apollo/client/link/remove-type
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { OperationTypeNode } from 'graphql';
 import { createClient } from 'graphql-ws';
-import React from 'react';
+import * as React from 'react';
 import { tap } from 'rxjs';
 
 import type { I_ApolloOptions } from './apollo-client.type.js';

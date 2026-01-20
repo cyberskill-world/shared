@@ -1,5 +1,6 @@
 import { ApolloProvider as ApolloProviderDefault } from '@apollo/client/react';
-import React, { useMemo } from 'react';
+import * as React from 'react';
+import { useMemo } from 'react';
 
 import type { I_ApolloProviderProps } from './apollo-client.type.js';
 
