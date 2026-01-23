@@ -58,12 +58,26 @@ export function setNestedValue<T>(
     path: (string | number)[],
     value: unknown,
 ): T {
-    if (path.length === 0)
+    return setNestedValueRecursive(obj, path, 0, value);
+}
+
+/**
+ * Recursive helper for setNestedValue.
+ * Uses index to avoid array slicing for performance.
+ */
+function setNestedValueRecursive<T>(
+    obj: T,
+    path: (string | number)[],
+    index: number,
+    value: unknown,
+): T {
+    if (index >= path.length) {
         return obj;
+    }
 
-    const [head, ...rest] = path;
+    const head = path[index];
 
-    if (rest.length === 0) {
+    if (index === path.length - 1) {
         return {
             ...(obj as Record<string | number, unknown>),
             [head as string | number]: value,
@@ -74,11 +88,12 @@ export function setNestedValue<T>(
 
     return {
         ...(obj as Record<string | number, unknown>),
-        [head as string | number | symbol]: setNestedValue(
+        [head as string | number | symbol]: setNestedValueRecursive(
             typeof current === 'object' && current !== null
                 ? (current as object)
                 : {},
-            rest,
+            path,
+            index + 1,
             value,
         ),
     } as T;
