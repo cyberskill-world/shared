@@ -44,6 +44,16 @@ const patternString = Array.from(charsToMatch).join('');
 const searchRegex = new RegExp(`[${patternString}]`, 'g');
 
 /**
+ * Escapes special characters in a string for use in a regular expression.
+ *
+ * @param string - The string to escape.
+ * @returns The escaped string.
+ */
+export function escapeRegExp(string: string): string {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * Convert a string to a regex pattern that matches the string and its accented variations.
  * This function normalizes the input string and creates a regex pattern that can match
  * both the original characters and their accented equivalents.
@@ -55,7 +65,7 @@ const searchRegex = new RegExp(`[${patternString}]`, 'g');
  * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
-    str = str.normalize('NFD');
+    str = escapeRegExp(str).normalize('NFD');
     return str.replace(searchRegex, match => replacementMap.get(match) || match);
 }
 

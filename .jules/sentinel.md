@@ -1,0 +1,4 @@
+## 2025-05-23 - Regex Injection in Utility Function
+**Vulnerability:** The `regexSearchMapper` utility used for creating MongoDB search patterns did not escape special regex characters from user input. This allowed attackers to inject arbitrary regex patterns (Regex Injection) and potentially cause a Denial of Service via ReDoS (Regular Expression Denial of Service) by supplying catastrophic backtracking patterns.
+**Learning:** Utility functions that transform user input into regex patterns must always treat the input as literal unless explicitly designed otherwise. "Normalizing" strings (e.g., handling accents) does not automatically sanitize regex special characters.
+**Prevention:** Always use an `escapeRegExp` function to escape user input before using it to construct a `RegExp` object or in a regex context, unless the specific goal is to allow the user to provide regex syntax.
