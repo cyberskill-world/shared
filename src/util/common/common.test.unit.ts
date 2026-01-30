@@ -19,6 +19,13 @@ describe('regexSearchMapper', () => {
         // Should treat as 'é' and map it
         expect(result).toContain('é');
     });
+
+    it('should generate regex that matches NFC target', () => {
+        const input = 'café'; // NFC
+        const pattern = regexSearchMapper(input);
+        const regex = new RegExp(pattern);
+        expect(regex.test('café')).toBe(true);
+    });
 });
 
 describe('removeAccent', () => {

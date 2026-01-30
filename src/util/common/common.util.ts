@@ -55,7 +55,7 @@ const searchRegex = new RegExp(`[${patternString}]`, 'g');
  * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
-    str = str.normalize('NFD');
+    str = str.normalize('NFC');
     return str.replace(searchRegex, match => replacementMap.get(match) || match);
 }
 
