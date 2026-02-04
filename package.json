@@ -216,7 +216,7 @@
         "@antfu/eslint-config": "7.1.0",
         "@apollo/client": "4.1.0",
         "@apollo/client-integration-nextjs": "0.14.4",
-        "@apollo/server": "5.2.0",
+        "@apollo/server": "5.4.0",
         "@as-integrations/express5": "1.1.2",
         "@dotenvx/dotenvx": "1.51.4",
         "@eddeee888/gcg-typescript-resolver-files": "0.15.0",
