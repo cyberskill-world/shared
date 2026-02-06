@@ -51,19 +51,21 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
  * @param obj - The object to set the value in.
  * @param path - An array of keys representing the path to the desired location.
  * @param value - The value to set at the specified path.
+ * @param index - Internal recursion index (optimization).
  * @returns A new object with the updated value at the specified path.
  */
 export function setNestedValue<T>(
     obj: T,
     path: (string | number)[],
     value: unknown,
+    index = 0,
 ): T {
-    if (path.length === 0)
+    if (path.length === 0 || index >= path.length)
         return obj;
 
-    const [head, ...rest] = path;
+    const head = path[index];
 
-    if (rest.length === 0) {
+    if (index === path.length - 1) {
         return {
             ...(obj as Record<string | number, unknown>),
             [head as string | number]: value,
@@ -78,8 +80,9 @@ export function setNestedValue<T>(
             typeof current === 'object' && current !== null
                 ? (current as object)
                 : {},
-            rest,
+            path,
             value,
+            index + 1,
         ),
     } as T;
 }
