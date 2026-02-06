@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { E_Environment } from '#typescript/index.js';
 
-import { mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
+import { escapeRegExp, mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
 
 describe('regexSearchMapper', () => {
     it('should create regex pattern for accented characters', () => {
@@ -18,6 +18,37 @@ describe('regexSearchMapper', () => {
         const result = regexSearchMapper(input);
         // Should treat as 'é' and map it
         expect(result).toContain('é');
+    });
+
+    it('should escape regex special characters', () => {
+        const input = 'a.b(c)';
+        const result = regexSearchMapper(input);
+
+        // . should be escaped to \.
+        // ( should be escaped to \(
+        // ) should be escaped to \)
+
+        expect(result).toContain('\\.');
+        expect(result).toContain('\\(');
+        expect(result).toContain('\\)');
+
+        // Construct a regex from it and test
+        const re = new RegExp(result);
+        expect(re.test('a.b(c)')).toBe(true); // Should match literal string
+        expect(re.test('axbzc')).toBe(false); // Should NOT match wildcard
+    });
+});
+
+describe('escapeRegExp', () => {
+    it('should escape all special regex characters', () => {
+        const input = '.*+?^${}()|[]\\';
+        const expected = '\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\';
+        expect(escapeRegExp(input)).toBe(expected);
+    });
+
+    it('should not change safe strings', () => {
+        const input = 'abc123';
+        expect(escapeRegExp(input)).toBe(input);
     });
 });
 
