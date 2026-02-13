@@ -57,13 +57,15 @@ export function setNestedValue<T>(
     obj: T,
     path: (string | number)[],
     value: unknown,
+    index = 0,
 ): T {
-    if (path.length === 0)
+    if (path.length === index)
         return obj;
 
-    const [head, ...rest] = path;
+    const head = path[index];
+    const nextIndex = index + 1;
 
-    if (rest.length === 0) {
+    if (path.length === nextIndex) {
         return {
             ...(obj as Record<string | number, unknown>),
             [head as string | number]: value,
@@ -78,8 +80,9 @@ export function setNestedValue<T>(
             typeof current === 'object' && current !== null
                 ? (current as object)
                 : {},
-            rest,
+            path,
             value,
+            nextIndex,
         ),
     } as T;
 }
