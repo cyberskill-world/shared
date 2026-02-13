@@ -1,63 +1,94 @@
+
 import { describe, expect, it } from 'vitest';
-
-import { E_Environment } from '#typescript/index.js';
-
+import { E_Environment } from '../../typescript/index.js';
 import { mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
 
-describe('regexSearchMapper', () => {
-    it('should create regex pattern for accented characters', () => {
-        const input = 'a';
-        // Expecting something like [aàáạảãâầấậẩẫăằắặẳẵAÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴ]...
-        const result = regexSearchMapper(input);
-        expect(result).toContain('a');
-        expect(result).toContain('à');
+describe('common.util', () => {
+    describe('mapEnvironment', () => {
+        it('should correctly map development environment', () => {
+            const result = mapEnvironment({
+                NODE_ENV: E_Environment.DEVELOPMENT,
+                NODE_ENV_MODE: E_Environment.DEVELOPMENT,
+            });
+            expect(result).toEqual({ IS_DEV: true, IS_STAG: false, IS_PROD: false });
+        });
+
+        it('should correctly map staging environment', () => {
+            const result = mapEnvironment({
+                NODE_ENV: E_Environment.PRODUCTION,
+                NODE_ENV_MODE: E_Environment.STAGING,
+            });
+            expect(result).toEqual({ IS_DEV: false, IS_STAG: true, IS_PROD: false });
+        });
+
+        it('should correctly map production environment', () => {
+            const result = mapEnvironment({
+                NODE_ENV: E_Environment.PRODUCTION,
+                NODE_ENV_MODE: E_Environment.PRODUCTION,
+            });
+            expect(result).toEqual({ IS_DEV: false, IS_STAG: false, IS_PROD: true });
+        });
+
+        it('should throw error for invalid production config', () => {
+            expect(() => mapEnvironment({
+                NODE_ENV: E_Environment.PRODUCTION,
+                NODE_ENV_MODE: E_Environment.DEVELOPMENT,
+            })).toThrow();
+        });
+
+        it('should default to development if values are missing', () => {
+            const result = mapEnvironment({});
+            expect(result).toEqual({ IS_DEV: true, IS_STAG: false, IS_PROD: false });
+        });
     });
 
-    it('should normalize input before mapping', () => {
-        const input = 'e\u0301'; // é decomposed
-        const result = regexSearchMapper(input);
-        // Should treat as 'é' and map it
-        expect(result).toContain('é');
-    });
-});
+    describe('regexSearchMapper', () => {
+        it('should map standard characters correctly', () => {
+            const input = 'hello';
+            const output = regexSearchMapper(input);
+            // Matches 'h' (unchanged), 'e' (accented), 'l' (unchanged), 'l' (unchanged), 'o' (accented)
+            expect(output).toContain('h');
+            expect(output).toContain('(e|è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)');
+            expect(output).toContain('ll');
+            expect(output).toContain('(o|ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)');
+        });
 
-describe('removeAccent', () => {
-    it('should remove accents from a string', () => {
-        expect(removeAccent('Héllò Wórld')).toBe('Hello World');
-        expect(removeAccent('Xin chào')).toBe('Xin chao');
-    });
-});
+        it('should map accented characters to the group', () => {
+            const input = 'héllò';
+            const output = regexSearchMapper(input);
+            expect(output).toContain('(e|è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)');
+            expect(output).toContain('(o|ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)');
+        });
 
-describe('uniqueArray', () => {
-    it('should return unique elements from array', () => {
-        expect(uniqueArray([1, 2, 2, 3])).toEqual([1, 2, 3]);
-    });
+        it('should escape special regex characters', () => {
+            const input = '.*+?^${}()|[]\\';
+            const output = regexSearchMapper(input);
+            // Should be escaped
+            expect(output).toBe('\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\');
+        });
 
-    it('should support key function', () => {
-        const input = [{ id: 1 }, { id: 2 }, { id: 1 }];
-        const result = uniqueArray(input, (item: { id: number }) => item.id);
-        expect(result).toEqual([{ id: 1 }, { id: 2 }]);
-    });
-});
-
-describe('mapEnvironment', () => {
-    it('should map development environment', () => {
-        const env = { NODE_ENV: E_Environment.DEVELOPMENT, NODE_ENV_MODE: E_Environment.DEVELOPMENT };
-        expect(mapEnvironment(env)).toEqual({ IS_DEV: true, IS_STAG: false, IS_PROD: false });
-    });
-
-    it('should map production environment', () => {
-        const env = { NODE_ENV: E_Environment.PRODUCTION, NODE_ENV_MODE: E_Environment.PRODUCTION };
-        expect(mapEnvironment(env)).toEqual({ IS_DEV: false, IS_STAG: false, IS_PROD: true });
+        it('should handle mixed content', () => {
+            const input = 'foo.*bar';
+            const output = regexSearchMapper(input);
+            expect(output).toContain('f(o|ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)(o|ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)\\.\\*b(a|à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)r');
+        });
     });
 
-    it('should map staging environment', () => {
-        const env = { NODE_ENV: E_Environment.PRODUCTION, NODE_ENV_MODE: E_Environment.STAGING };
-        expect(mapEnvironment(env)).toEqual({ IS_DEV: false, IS_STAG: true, IS_PROD: false });
+    describe('removeAccent', () => {
+        it('should remove accents', () => {
+            expect(removeAccent('héllò')).toBe('hello');
+            expect(removeAccent('Việt Nam')).toBe('Viet Nam');
+        });
     });
 
-    it('should throw error for invalid production config', () => {
-        const env = { NODE_ENV: E_Environment.PRODUCTION, NODE_ENV_MODE: E_Environment.DEVELOPMENT };
-        expect(() => mapEnvironment(env)).toThrow();
+    describe('uniqueArray', () => {
+        it('should return unique items', () => {
+            expect(uniqueArray([1, 2, 2, 3])).toEqual([1, 2, 3]);
+        });
+
+        it('should use key function', () => {
+            const items = [{ id: 1 }, { id: 2 }, { id: 1 }];
+            expect(uniqueArray(items, i => i.id)).toEqual([{ id: 1 }, { id: 2 }]);
+        });
     });
 });
