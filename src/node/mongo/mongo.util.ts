@@ -11,7 +11,7 @@ import { validate } from '#util/validate/index.js';
 import type { MongoController } from './mongo.controller.js';
 import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, T_Input_Populate, T_MongoosePlugin, T_MongooseShema, T_QueryFilter, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
-import { appendFileSync, pathExistsSync, readFileSync, writeFileSync } from '../fs/index.js';
+import { addGitIgnoreEntry, writeFileSync } from '../fs/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
 
 /**
@@ -290,18 +290,7 @@ export const mongo = {
 
             writeFileSync(PATH.MIGRATE_MONGO_CONFIG, optionsJS);
 
-            const gitIgnoreEntry = `\n${MIGRATE_MONGO_CONFIG}\n`;
-
-            if (pathExistsSync(PATH.GIT_IGNORE)) {
-                const gitignore = readFileSync(PATH.GIT_IGNORE, 'utf-8').split('\n');
-
-                if (!gitignore.includes(MIGRATE_MONGO_CONFIG)) {
-                    appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
-                }
-            }
-            else {
-                writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
-            }
+            addGitIgnoreEntry(PATH.GIT_IGNORE, MIGRATE_MONGO_CONFIG);
         },
     },
     /**

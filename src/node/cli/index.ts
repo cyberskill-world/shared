@@ -6,10 +6,10 @@ import yargs from 'yargs/yargs';
 import type { I_IssueEntry } from '../log/index.js';
 
 import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } from '../command/index.js';
-import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync } from '../fs/index.js';
+import { addGitIgnoreEntry, pathExistsSync, readFileSync, removeSync, writeFileSync } from '../fs/index.js';
 import { catchError, E_IssueType, log } from '../log/index.js';
 import { getPackage, installDependencies } from '../package/index.js';
-import { AG_KIT_PACKAGE_NAME, command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, resolve, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
+import { AG_KIT_PACKAGE_NAME, command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, DOT_AGENT, PATH, resolve, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
 /**
  * Retrieves the version from the package.json file.
@@ -213,20 +213,35 @@ async function gitHookSetup() {
 
     writeFileSync(PATH.SIMPLE_GIT_HOOKS_JSON, JSON.stringify(hooks, null, 4));
 
-    const gitIgnoreEntry = `\n${SIMPLE_GIT_HOOK_JSON}\n`;
-
-    if (pathExistsSync(PATH.GIT_IGNORE)) {
-        const gitignore = readFileSync(PATH.GIT_IGNORE, 'utf-8').split('\n');
-
-        if (!gitignore.includes(SIMPLE_GIT_HOOK_JSON)) {
-            appendFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
-        }
-    }
-    else {
-        writeFileSync(PATH.GIT_IGNORE, gitIgnoreEntry);
-    }
+    addGitIgnoreEntry(PATH.GIT_IGNORE, SIMPLE_GIT_HOOK_JSON);
 
     await runCommand('Setting up simple-git-hooks', await command.simpleGitHooks());
+}
+
+/**
+ * Sets up the AI agent environment.
+ * This function ensures the ag-kit package is installed globally, initializes
+ * or updates the AI agent configuration, and adds the agent directory
+ * to .gitignore to exclude it from version control.
+ *
+ * @returns A promise that resolves when the AI agent setup is complete.
+ */
+async function aiSetup() {
+    try {
+        await runCommand(`Checking for ${AG_KIT_PACKAGE_NAME}`, `pnpm list -g ${AG_KIT_PACKAGE_NAME}`);
+    }
+    catch {
+        await runCommand(`Installing ${AG_KIT_PACKAGE_NAME} globally`, `pnpm i -g ${AG_KIT_PACKAGE_NAME}`);
+    }
+
+    if (pathExistsSync(PATH.DOT_AGENT)) {
+        await runCommand('Updating AI agent', 'ag-kit update -y');
+    }
+    else {
+        await runCommand('Initializing AI agent', 'ag-kit init');
+    }
+
+    addGitIgnoreEntry(PATH.GIT_IGNORE, DOT_AGENT);
 }
 
 /**
@@ -345,29 +360,6 @@ async function storybookDev() {
  */
 async function storybookBuild() {
     await runCommand('Building Storybook', await command.storybookBuild());
-}
-
-/**
- * Sets up the AI agent environment.
- * This function checks for the presence of the @vudovn/ag-kit package and installs it globally if missing.
- * It then initializes or updates the agent configuration based on the existence of the .agent directory.
- *
- * @returns A promise that resolves when the setup is complete.
- */
-async function aiSetup() {
-    try {
-        await runCommand(`Checking for ${AG_KIT_PACKAGE_NAME}`, `pnpm list -g ${AG_KIT_PACKAGE_NAME}`);
-    }
-    catch {
-        await runCommand(`Installing ${AG_KIT_PACKAGE_NAME} globally`, `pnpm i -g ${AG_KIT_PACKAGE_NAME}`);
-    }
-
-    if (pathExistsSync(PATH.DOT_AGENT)) {
-        await runCommand('Updating AI agent', 'ag-kit update');
-    }
-    else {
-        await runCommand('Initializing AI agent', 'ag-kit init');
-    }
 }
 
 (async () => {

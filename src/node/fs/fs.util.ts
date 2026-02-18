@@ -102,3 +102,25 @@ export function copySync(src: string, dest: string, options: I_CopySyncOptions =
         ...rest,
     });
 }
+
+/**
+ * Adds an entry to the .gitignore file if it doesn't already exist.
+ * Creates the .gitignore file if it doesn't exist.
+ *
+ * @param gitIgnorePath - The absolute path to the .gitignore file.
+ * @param entry - The entry name to add (e.g. '.agent', '.simple-git-hooks.json').
+ */
+export function addGitIgnoreEntry(gitIgnorePath: string, entry: string): void {
+    const gitIgnoreContent = `\n${entry}\n`;
+
+    if (pathExistsSync(gitIgnorePath)) {
+        const gitignore = readFileSync(gitIgnorePath, 'utf-8').split('\n');
+
+        if (!gitignore.includes(entry)) {
+            appendFileSync(gitIgnorePath, gitIgnoreContent);
+        }
+    }
+    else {
+        writeFileSync(gitIgnorePath, gitIgnoreContent);
+    }
+}
