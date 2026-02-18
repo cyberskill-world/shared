@@ -35,6 +35,24 @@ describe('regexSearchMapper', () => {
         expect(result).toContain('\\)');
         expect(result).toContain('\\+');
     });
+
+    it('should handle NFD normalization safely without introducing unescaped metacharacters', () => {
+        // Test that accented characters with regex metacharacters are handled correctly
+        const input = 'é.()+*';
+        const result = regexSearchMapper(input);
+        
+        // After NFD normalization, 'é' becomes 'e' + combining diacritical mark (U+0301)
+        // The combining mark is NOT a regex metacharacter and doesn't need escaping
+        // All regex metacharacters (., (, ), +, *) should be escaped
+        expect(result).toContain('\\.');
+        expect(result).toContain('\\(');
+        expect(result).toContain('\\)');
+        expect(result).toContain('\\+');
+        expect(result).toContain('\\*');
+        
+        // The 'e' from decomposed 'é' should be mapped to accented variations
+        expect(result).toContain('e');
+    });
 });
 
 describe('removeAccent', () => {

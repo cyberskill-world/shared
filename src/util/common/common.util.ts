@@ -60,6 +60,12 @@ export function escapeRegExp(str: string): string {
  * This function normalizes the input string and creates a regex pattern that can match
  * both the original characters and their accented equivalents.
  *
+ * Security: The function applies NFD normalization first, then escapes regex metacharacters.
+ * NFD (Canonical Decomposition) decomposes accented characters into base characters + combining
+ * diacritical marks (U+0300-U+036F range). These combining marks are NOT regex metacharacters,
+ * so the order of operations is safe. Any regex metacharacters in the original input are properly
+ * escaped after normalization, preventing regex injection attacks.
+ *
  * Optimization: Uses pre-computed regex and map to perform replacement in a single pass (O(N)),
  * instead of iterating through all character groups (O(K*N)).
  *
@@ -67,6 +73,8 @@ export function escapeRegExp(str: string): string {
  * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
+    // Order of operations: normalize → escape → map accented variations
+    // NFD normalization produces combining diacriticals (not regex metacharacters), so it's safe to escape after
     str = escapeRegExp(str.normalize('NFD'));
     return str.replace(searchRegex, match => replacementMap.get(match) || match);
 }
