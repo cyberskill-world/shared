@@ -30,10 +30,8 @@ describe('regexSearchMapper', () => {
     it('should escape complex regex characters to prevent injection', () => {
         const input = '(a+)+';
         const result = regexSearchMapper(input);
-        // Parentheses and plus sign should be escaped
-        expect(result).toContain('\\(');
-        expect(result).toContain('\\)');
-        expect(result).toContain('\\+');
+        // Parentheses and plus sign should be escaped to match the literal string "(a+)+"
+        expect(result).toBe('\\(a\\+\\)\\+');
     });
 });
 
