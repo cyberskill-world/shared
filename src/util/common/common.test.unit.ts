@@ -30,10 +30,9 @@ describe('regexSearchMapper', () => {
     it('should escape complex regex characters to prevent injection', () => {
         const input = '(a+)+';
         const result = regexSearchMapper(input);
-        // Parentheses and plus sign should be escaped
-        expect(result).toContain('\\(');
-        expect(result).toContain('\\)');
-        expect(result).toContain('\\+');
+        // Should escape all parentheses and plus signs, and map 'a' to variations
+        // Expected format: \(a-variations\+\)\+
+        expect(result).toBe('\\((a|à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)\\+\\)\\+');
     });
 
     it('should handle NFD normalization safely without introducing unescaped metacharacters', () => {
@@ -44,14 +43,17 @@ describe('regexSearchMapper', () => {
         // After NFD normalization, 'é' becomes 'e' + combining diacritical mark (U+0301)
         // The combining mark is NOT a regex metacharacter and doesn't need escaping
         // All regex metacharacters (., (, ), +, *) should be escaped
+        // The 'e' from decomposed 'é' should be mapped to accented variations
+        
+        // Verify all metacharacters are escaped
         expect(result).toContain('\\.');
         expect(result).toContain('\\(');
         expect(result).toContain('\\)');
         expect(result).toContain('\\+');
         expect(result).toContain('\\*');
         
-        // The 'e' from decomposed 'é' should be mapped to accented variations
-        expect(result).toContain('e');
+        // Verify 'e' is mapped to its variations
+        expect(result).toMatch(/\(e\|[^)]+\)/);
     });
 });
 
