@@ -1,4 +1,5 @@
-import React, { use } from 'react';
+import * as React from 'react';
+import { use } from 'react';
 
 import { validate } from '#util/validate/validate.util.js';
 

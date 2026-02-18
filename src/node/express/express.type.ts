@@ -7,11 +7,13 @@ export type { NextFunction, Request, Response } from 'express';
 export { Router } from 'express';
 
 export interface I_ExpressOptions {
+    isDev?: boolean;
     static?: string | string[];
 }
 
 export interface I_NestOptions {
     module: Type<object>;
+    isDev?: boolean;
     static?: string | string[];
     filters?: ExceptionFilter[];
     pipes?: ValidationPipe[];

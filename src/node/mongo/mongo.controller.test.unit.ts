@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { I_ExtendedModel } from './mongo.type.js';
 
-import { MongooseController } from './mongo.util.js';
+import { MongooseController } from './mongo.controller.js';
 
 describe('MongooseController', () => {
     describe('createUniqueSlug', () => {

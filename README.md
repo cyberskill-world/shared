@@ -256,7 +256,7 @@ import {
     useApolloError,
     useLoading
 } from '@cyberskill/shared';
-import React from 'react';
+import * as React from 'react';
 
 // Main application wrapper
 /**

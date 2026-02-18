@@ -31,8 +31,9 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
     const len = path.length;
 
     for (let i = 0; i < len; i++) {
-        if (current && typeof current === 'object' && path[i] in current) {
-            current = (current as Record<string | number, unknown>)[path[i]];
+        const key = path[i];
+        if (key !== undefined && current && typeof current === 'object' && key in (current as Record<string | number, unknown>)) {
+            current = (current as Record<string | number, unknown>)[key];
         }
         else {
             return undefined;
@@ -199,7 +200,7 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                             else if (!Array.isArray(value) && !Array.isArray(existingValue)) {
                                 result[key] = deepMerge(
                                     existingValue as Record<string, unknown>,
-                                    value as Record<string, unknown>
+                                    value as Record<string, unknown>,
                                 );
                             }
                             else {
@@ -274,28 +275,41 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
 
     const normalized: Record<string, unknown> = {};
 
-    for (const [key, value] of Object.entries(filter)) {
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
-            const hasMongoOperator = Object.keys(value as Record<string, unknown>).some(
-                nestedKey => nestedKey.startsWith('$'),
-            );
+    /**
+     *
+     */
+    function flatten(current: Record<string, unknown>, prefix: string) {
+        for (const key in current) {
+            if (!Object.prototype.hasOwnProperty.call(current, key))
+                continue;
 
-            if (hasMongoOperator) {
-                normalized[key] = value;
-            }
-            else {
-                const nestedNormalized = normalizeMongoFilter(value as Record<string, unknown>);
+            const value = current[key];
+            const newKey = prefix ? `${prefix}.${key}` : key;
 
-                for (const [nestedKey, nestedValue] of Object.entries(nestedNormalized)) {
-                    const dotKey = `${key}.${nestedKey}`;
-                    normalized[dotKey] = nestedValue;
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                // Check for Mongo operator
+                let hasMongoOperator = false;
+                for (const subKey in value as Record<string, unknown>) {
+                    if (Object.prototype.hasOwnProperty.call(value, subKey) && subKey.startsWith('$')) {
+                        hasMongoOperator = true;
+                        break;
+                    }
+                }
+
+                if (hasMongoOperator) {
+                    normalized[newKey] = value;
+                }
+                else {
+                    flatten(value as Record<string, unknown>, newKey);
                 }
             }
-        }
-        else {
-            normalized[key] = value;
+            else {
+                normalized[newKey] = value;
+            }
         }
     }
+
+    flatten(filter, '');
 
     return normalized as T;
 }

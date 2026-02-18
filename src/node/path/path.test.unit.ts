@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { command } from './path.constant.js';
 import { join, resolve } from './path.util.js';
 
 describe('path', () => {
@@ -20,8 +21,6 @@ describe('path', () => {
         });
     });
 });
-
-import { command } from './path.constant.js';
 
 describe('command', () => {
     describe('mongoMigrateCreate', () => {

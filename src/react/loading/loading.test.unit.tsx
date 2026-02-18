@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import React from 'react';
+import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
 import { Loading } from './loading.component.js';
@@ -41,10 +41,13 @@ describe('Loading Component', () => {
     });
 
     it('renders in full screen mode', () => {
-        const { container } = render(<Loading full />);
-        // Check if the wrapper has the 'full' class (this relies on CSS module implementation details which might be flaky if class names are hashed)
-        // Better to check structure or if possible mocking the style import.
-        // For now, let's just ensure it still renders the accessible content.
-        expect(screen.getByRole('status')).toBeInTheDocument();
+        const { unmount } = render(<Loading full />);
+
+        // The component uses a side effect to add 'noscroll' class to the body
+        expect(document.body).toHaveClass('noscroll');
+
+        // Cleanup
+        unmount();
+        expect(document.body).not.toHaveClass('noscroll');
     });
 });

@@ -61,6 +61,8 @@ export const MIGRATE_MONGO_PACKAGE_NAME = 'migrate-mongo';
 export const MIGRATE_MONGO_CLI = './node_modules/migrate-mongo/bin/migrate-mongo';
 export const STORYBOOK_PACKAGE_NAME = 'storybook';
 export const STORYBOOK_CLI = 'storybook';
+export const AG_KIT_PACKAGE_NAME = '@vudovn/ag-kit';
+export const DOT_AGENT = '.agent';
 
 export const PATH = {
     CYBERSKILL_DIRECTORY,
@@ -82,6 +84,7 @@ export const PATH = {
     VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
     STORYBOOK_MAIN_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/storybook/storybook.main.js`),
     STORYBOOK_PREVIEW_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/storybook/storybook.preview.js`),
+    DOT_AGENT: resolveWorkingPath(DOT_AGENT),
 };
 
 /**
@@ -97,7 +100,7 @@ export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandCont
     return {
         'pre-commit': LINT_STAGED_CLI,
         'commit-msg': COMMIT_LINT_CLI,
-        ...(isCurrentProject && { 'pre-push': rawCommand(`${GIT_CLI} pull`) }),
+        ...(isCurrentProject ? { 'pre-push': rawCommand(`${GIT_CLI} pull`) } : { 'pre-push': rawCommand(`${PNPM_CLI} build`) }),
     };
 }
 
@@ -238,7 +241,7 @@ export const command = {
         command: `${VITEST_CLI} --config ${PATH.VITEST_E2E_CONFIG}`,
     }),
     mongoMigrateCreate: (migrateName: string) => {
-        if (!/^[a-zA-Z0-9_-]+$/.test(migrateName)) {
+        if (!/^[\w-]+$/.test(migrateName)) {
             throw new Error('Migration name must only contain alphanumeric characters, underscores, and hyphens.');
         }
 

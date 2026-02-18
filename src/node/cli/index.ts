@@ -9,7 +9,7 @@ import { clearAllErrorLists, getStoredErrorLists, resolveCommands, runCommand } 
 import { appendFileSync, pathExistsSync, readFileSync, removeSync, writeFileSync } from '../fs/index.js';
 import { catchError, E_IssueType, log } from '../log/index.js';
 import { getPackage, installDependencies } from '../package/index.js';
-import { command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, resolve, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
+import { AG_KIT_PACKAGE_NAME, command, createGitHooksConfig, CYBERSKILL_CLI, CYBERSKILL_PACKAGE_NAME, PATH, resolve, SIMPLE_GIT_HOOK_JSON } from '../path/index.js';
 
 /**
  * Retrieves the version from the package.json file.
@@ -56,11 +56,21 @@ async function checkTypescript() {
  * @returns A promise that resolves when the ESLint check is complete.
  */
 async function checkEslint(fix = false) {
-    if (fix) {
-        await runCommand('Running ESLint with auto-fix', await command.eslintFix());
+    const commandToRun = fix ? await command.eslintFix() : await command.eslintCheck();
+    const label = fix ? 'Running ESLint with auto-fix' : 'Running ESLint check';
+
+    try {
+        await runCommand(label, commandToRun, { timeout: 60000, throwOnError: true });
     }
-    else {
-        await runCommand('Running ESLint check', await command.eslintCheck());
+    catch (error: any) {
+        if (error.code === 'ETIMEDOUT' || error.killed || error.signal === 'SIGTERM') {
+            log.warn('Lint check timed out. Retrying with debug mode enabled...');
+            process.env['DEBUG'] = 'true';
+            await runCommand(`${label} (Debug Mode)`, commandToRun);
+        }
+        else {
+            catchError(error);
+        }
     }
 }
 
@@ -91,7 +101,7 @@ function printIssues(type: 'Errors' | 'Warnings', list: I_IssueEntry[]) {
  */
 async function showCheckResult() {
     setTimeout(async () => {
-        const allResults = await getStoredErrorLists();
+        const allResults = (await getStoredErrorLists()) || [];
         const errors = allResults.filter(e => e.type === E_IssueType.Error);
         const warnings = allResults.filter(e => e.type === E_IssueType.Warning);
 
@@ -154,7 +164,8 @@ async function inspectLint() {
  */
 async function lintCheck() {
     await clearAllErrorLists();
-    await Promise.all([checkTypescript(), checkEslint()]);
+    await checkTypescript();
+    await checkEslint();
     showCheckResult();
 }
 
@@ -167,7 +178,8 @@ async function lintCheck() {
  */
 async function lintFix() {
     await clearAllErrorLists();
-    await Promise.all([checkTypescript(), checkEslint(true)]);
+    await checkTypescript();
+    await checkEslint(true);
     showCheckResult();
 }
 
@@ -192,7 +204,7 @@ async function commitLint() {
  *
  * @returns A promise that resolves when Git hook setup is complete.
  */
-async function setupGitHook() {
+async function gitHookSetup() {
     await runCommand('Configuring Git hooks', await command.configureGitHook());
 
     removeSync(PATH.GIT_HOOK);
@@ -226,7 +238,7 @@ async function setupGitHook() {
  */
 async function ready() {
     await installDependencies();
-    await setupGitHook();
+    await gitHookSetup();
 }
 
 /**
@@ -242,7 +254,8 @@ async function reset() {
     await runCommand('Pruning pnpm store', await command.pnpmPruneStore());
     await runCommand('Clearing pnpm cache', await command.pnpmCleanCache());
     await installDependencies();
-    await setupGitHook();
+    await gitHookSetup();
+    await aiSetup();
 }
 
 /**
@@ -334,11 +347,35 @@ async function storybookBuild() {
     await runCommand('Building Storybook', await command.storybookBuild());
 }
 
+/**
+ * Sets up the AI agent environment.
+ * This function checks for the presence of the @vudovn/ag-kit package and installs it globally if missing.
+ * It then initializes or updates the agent configuration based on the existence of the .agent directory.
+ *
+ * @returns A promise that resolves when the setup is complete.
+ */
+async function aiSetup() {
+    try {
+        await runCommand(`Checking for ${AG_KIT_PACKAGE_NAME}`, `pnpm list -g ${AG_KIT_PACKAGE_NAME}`);
+    }
+    catch {
+        await runCommand(`Installing ${AG_KIT_PACKAGE_NAME} globally`, `pnpm i -g ${AG_KIT_PACKAGE_NAME}`);
+    }
+
+    if (pathExistsSync(PATH.DOT_AGENT)) {
+        await runCommand('Updating AI agent', 'ag-kit update');
+    }
+    else {
+        await runCommand('Initializing AI agent', 'ag-kit init');
+    }
+}
+
 (async () => {
     try {
         await yargs(hideBin(process.argv))
             .scriptName(CYBERSKILL_CLI)
             .usage('$0 <command> [options]')
+            .command('ai:setup', 'Setup AI agent environment', aiSetup)
             .command('lint', 'Check code for linting issues', lintCheck)
             .command('lint:fix', 'Fix linting issues automatically', lintFix)
             .command('lint:inspect', 'View active ESLint configuration', inspectLint)

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import React, { useEffect } from 'react';
+import * as React from 'react';
+import { useEffect } from 'react';
 
 import type { I_LoadingProps } from './loading.type.js';
 

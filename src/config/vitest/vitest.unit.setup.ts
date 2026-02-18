@@ -1,10 +1,6 @@
-import * as matchers from '@testing-library/jest-dom/matchers';
+import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach, expect } from 'vitest';
-
-const { default: _default, ...jestDomMatchers } = matchers;
-
-expect.extend(jestDomMatchers);
+import { afterEach } from 'vitest';
 
 afterEach(() => {
     cleanup();

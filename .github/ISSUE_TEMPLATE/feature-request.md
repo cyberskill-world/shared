@@ -6,9 +6,9 @@ labels: [feature]
 assignees:
 ---
 
-## Motivation
+## Is your feature request related to a problem?
 
-<!-- Why do you want this? What problem or opportunity does it address? -->
+<!-- Please describe the problem you are trying to solve. Ex. I'm always frustrated when... -->
 
 ## Proposed Solution
 
@@ -21,3 +21,23 @@ assignees:
 ## Additional Context
 
 <!-- Any extra info or inspiration? Hit us with it! -->
+
+## Impact
+
+<!-- Who will benefit from this feature? -->
+
+## Priority
+
+<!-- How important is this feature to you? -->
+
+- [ ] Critical (Blocked)
+- [ ] High (Important)
+- [ ] Medium (Nice to have)
+- [ ] Low (Future consideration)
+
+## Checklist
+
+<!-- Please check the following before submitting: -->
+
+- [ ] I have searched existing issues to ensure this is not a duplicate.
+- [ ] I have filled out all relevant sections of this form.

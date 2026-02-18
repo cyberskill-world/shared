@@ -12,7 +12,6 @@ import { getPackage } from '../package/index.js';
 import { CYBERSKILL_CLI, CYBERSKILL_CLI_PATH, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC_CLI, TSX_CLI } from '../path/index.js';
 import { storage } from '../storage/index.js';
 
-const env = getEnv();
 const execPromise = util.promisify(exec);
 
 /**
@@ -48,7 +47,10 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
     const packageName = await getPackageName();
 
     try {
-        await storage.set(packageName, errorList);
+        const existingErrors = await getStoredErrorLists();
+        const mergedErrors = [...existingErrors, ...errorList];
+
+        await storage.set(packageName, mergedErrors);
 
         setTimeout(async () => {
             const logPath = await storage.getLogLink(packageName);
@@ -107,7 +109,7 @@ export async function clearAllErrorLists(): Promise<void> {
  *
  * @param output - The raw text output from a command execution containing error information.
  */
-function parseTextErrors(output: string): void {
+async function parseTextErrors(output: string): Promise<void> {
     const errorList: I_IssueEntry[] = [];
     const unmatchedLines: string[] = [];
     let lastFilePath = '';
@@ -158,10 +160,10 @@ function parseTextErrors(output: string): void {
     });
 
     if (errorList.length) {
-        saveErrorListToStorage(errorList);
+        await saveErrorListToStorage(errorList);
     }
 
-    if (env.DEBUG && unmatchedLines.length) {
+    if (getEnv().DEBUG && unmatchedLines.length) {
         log.warn(`Unmatched lines:`);
         unmatchedLines.forEach(line => log.info(`  ${line}`));
     }
@@ -175,7 +177,7 @@ function parseTextErrors(output: string): void {
  *
  * @param output - The command output to parse, expected to be JSON-formatted error data.
  */
-function parseCommandOutput(output: string): void {
+async function parseCommandOutput(output: string): Promise<void> {
     try {
         const results: I_EslintError[] = JSON.parse(output);
         const errorList: I_IssueEntry[] = [];
@@ -193,11 +195,11 @@ function parseCommandOutput(output: string): void {
         });
 
         if (errorList.length) {
-            saveErrorListToStorage(errorList);
+            await saveErrorListToStorage(errorList);
         }
     }
     catch {
-        parseTextErrors(output);
+        await parseTextErrors(output);
     }
 }
 
@@ -210,7 +212,7 @@ function parseCommandOutput(output: string): void {
  * @param parser - The function to use for parsing command output (defaults to parseCommandOutput).
  * @returns A promise that resolves when the command execution is complete.
  */
-async function executeCommand(command: string | void, parser = parseCommandOutput): Promise<void> {
+async function executeCommand(command: string | void, parser = parseCommandOutput, options: { timeout?: number } = {}): Promise<void> {
     const controller = new AbortController();
 
     process.on('SIGINT', () => {
@@ -224,9 +226,10 @@ async function executeCommand(command: string | void, parser = parseCommandOutpu
             const { stdout, stderr } = await execPromise(command, {
                 maxBuffer: 1024 * 1024 * 100,
                 signal: controller.signal,
+                timeout: options.timeout,
             });
 
-            [stdout, stderr].forEach(output => output && parser(output));
+            await Promise.all([stdout, stderr].map(output => output && parser(output)));
         }
     }
     catch (error) {
@@ -236,7 +239,7 @@ async function executeCommand(command: string | void, parser = parseCommandOutpu
             message: string;
         };
 
-        [stdout, stderr].forEach(output => output && parser(output));
+        await Promise.all([stdout, stderr].map(output => output && parser(output)));
 
         if (!stderr && !stdout) {
             log.error(`Command failed: ${message}`);
@@ -332,18 +335,44 @@ export async function resolveCommands(input: T_CommandMapInput) {
  * @param command - The command string to execute, or undefined if no command should be run.
  * @returns A promise that resolves when the command execution is complete.
  */
-export async function runCommand(label: string, command: string | void) {
+export async function runCommand(label: string, command: string | void, options: { timeout?: number; throwOnError?: boolean } = {}) {
+    let timer: NodeJS.Timeout | undefined;
+
     try {
+        const startTime = Date.now();
         log.start(`${label}`);
 
-        if (env.DEBUG) {
+        if (getEnv().DEBUG) {
             log.info(`→ ${command}`);
         }
+        else {
+            timer = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
 
-        await executeCommand(command);
+                if (elapsed > 0) {
+                    process.stdout.write(`\r⏳ ${label}... ${elapsed}s`);
+                }
+            }, 100);
+        }
+
+        await executeCommand(command, parseCommandOutput, options);
+
+        if (timer) {
+            clearInterval(timer);
+            process.stdout.write(`\r\x1B[K`);
+        }
+
         log.success(`${label} done.`);
     }
     catch (error) {
+        if (timer) {
+            clearInterval(timer);
+            process.stdout.write(`\r\x1B[K`);
+        }
+
+        if (options.throwOnError) {
+            throw error;
+        }
         catchError(error);
     }
 }

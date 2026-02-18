@@ -1,6 +1,7 @@
 import type { GraphQLError } from 'graphql';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { I_ApolloErrorProviderProps } from './apollo-error.type.js';
 

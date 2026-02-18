@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 
 import { NextIntlClientProvider } from 'next-intl';
-import React from 'react';
+import * as React from 'react';
 
 import type { I_Children } from '#typescript/index.js';
 

@@ -20,37 +20,28 @@ const upperCharMap: Record<string, string[]> = Object.entries(charMap).reduce(
     {} as Record<string, string[]>,
 );
 
-/**
- * Convert a string to a regex pattern that matches the string and its accented variations.
- * This function normalizes the input string and creates a regex pattern that can match
- * both the original characters and their accented equivalents.
- *
- * @param str - The string to convert to a regex pattern.
- * @returns The regex pattern as a string that matches the original string and its accented variations.
- */
-export function regexSearchMapper(str: string) {
-    str = escapeRegExp(str.normalize('NFD'));
-    const combinedMap = { ...charMap, ...upperCharMap };
+const combinedMap = { ...charMap, ...upperCharMap };
 
-    for (const [baseChar, variations] of Object.entries(combinedMap)) {
-        const pattern = `[${baseChar}${variations.join('')}]`;
-        const replacement = `(${[baseChar, ...variations].join('|')})`;
-        str = str.replace(new RegExp(pattern, 'g'), replacement);
-    }
+// Pre-compute replacement map and search regex for better performance
+// This avoids rebuilding regexes and maps on every function call
+const replacementMap = new Map<string, string>();
+const charsToMatch = new Set<string>();
 
-    return str;
-}
+Object.entries(combinedMap).forEach(([baseChar, variations]) => {
+    // The replacement pattern is the same for the base char and all its variations
+    // Example: 'a', 'à', 'á'... all map to '(a|à|á...)'
+    const replacement = `(${[baseChar, ...variations].join('|')})`;
 
-/**
- * Remove accents from a string.
- * This function normalizes the string using NFD normalization and removes all diacritical marks.
- *
- * @param str - The string to remove accents from.
- * @returns The string without any accents or diacritical marks.
- */
-export function removeAccent(str: string) {
-    return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
-}
+    [baseChar, ...variations].forEach((char) => {
+        replacementMap.set(char, replacement);
+        charsToMatch.add(char);
+    });
+});
+
+// Construct a single regex that matches any character in our map
+const patternString = Array.from(charsToMatch).join('');
+// We use a character class regex: [abc...]
+const searchRegex = new RegExp(`[${patternString}]`, 'g');
 
 /**
  * Escape special characters in a string for use in a regular expression.
@@ -62,6 +53,33 @@ export function removeAccent(str: string) {
  */
 export function escapeRegExp(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Convert a string to a regex pattern that matches the string and its accented variations.
+ * This function normalizes the input string and creates a regex pattern that can match
+ * both the original characters and their accented equivalents.
+ *
+ * Optimization: Uses pre-computed regex and map to perform replacement in a single pass (O(N)),
+ * instead of iterating through all character groups (O(K*N)).
+ *
+ * @param str - The string to convert to a regex pattern.
+ * @returns The regex pattern as a string that matches the original string and its accented variations.
+ */
+export function regexSearchMapper(str: string) {
+    str = escapeRegExp(str.normalize('NFD'));
+    return str.replace(searchRegex, match => replacementMap.get(match) || match);
+}
+
+/**
+ * Remove accents from a string.
+ * This function normalizes the string using NFD normalization and removes all diacritical marks.
+ *
+ * @param str - The string to remove accents from.
+ * @returns The string without any accents or diacritical marks.
+ */
+export function removeAccent(str: string) {
+    return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
 
 /**
