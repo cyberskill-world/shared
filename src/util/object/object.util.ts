@@ -43,24 +43,8 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
     return current;
 }
 
-/**
- * Sets a nested value in an object using a path array.
- * This function creates the path if it doesn't exist and sets the value at the specified location.
- * The function returns a new object with the updated value, maintaining immutability.
- *
- * @param obj - The object to set the value in.
- * @param path - An array of keys representing the path to the desired location.
- * @param value - The value to set at the specified path.
- * @param index - Internal recursion index (optimization).
- * @returns A new object with the updated value at the specified path.
- */
-export function setNestedValue<T>(
-    obj: T,
-    path: (string | number)[],
-    value: unknown,
-    index = 0,
-): T {
-    if (path.length === 0 || index >= path.length)
+function setNestedValueHelper<T>(obj: T, path: (string | number)[], value: unknown, index: number): T {
+    if (index >= path.length)
         return obj;
 
     const head = path[index];
@@ -76,7 +60,7 @@ export function setNestedValue<T>(
 
     return {
         ...(obj as Record<string | number, unknown>),
-        [head as string | number | symbol]: setNestedValue(
+        [head as string | number | symbol]: setNestedValueHelper(
             typeof current === 'object' && current !== null
                 ? (current as object)
                 : {},
@@ -85,6 +69,23 @@ export function setNestedValue<T>(
             index + 1,
         ),
     } as T;
+}
+
+/**
+ * Sets a nested value in an object using a path array.
+ * This function creates the path if it doesn't exist and sets the value at the specified location.
+ * The function returns a new object with the updated value, maintaining immutability.
+ *
+ * @param obj - The object to set the value in.
+ * @param path - An array of keys representing the path to the desired location.
+ * @param value - The value to set at the specified path.
+ * @returns A new object with the updated value at the specified path.
+ */
+export function setNestedValue<T>(obj: T, path: (string | number)[], value: unknown): T {
+    if (path.length === 0)
+        return obj;
+
+    return setNestedValueHelper(obj, path, value, 0);
 }
 
 /**
