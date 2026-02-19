@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { E_Environment } from '#typescript/index.js';
 
-import { mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
+import { escapeRegExp, mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
 
 describe('regexSearchMapper', () => {
     it('should create regex pattern for accented characters', () => {
@@ -18,6 +18,25 @@ describe('regexSearchMapper', () => {
         const result = regexSearchMapper(input);
         // Should treat as 'é' and map it
         expect(result).toContain('é');
+    });
+
+    it('should escape regex special characters', () => {
+        const input = 'a+b.c(d)';
+        const result = regexSearchMapper(input);
+
+        // + and . and ( and ) should be escaped
+        expect(result).toContain('\\+');
+        expect(result).toContain('\\.');
+        expect(result).toContain('\\(');
+        expect(result).toContain('\\)');
+    });
+});
+
+describe('escapeRegExp', () => {
+    it('should escape all regex special characters', () => {
+        const specialChars = '.*+?^${}()|[]\\';
+        const escaped = escapeRegExp(specialChars);
+        expect(escaped).toBe('\\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\');
     });
 });
 
