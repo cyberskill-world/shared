@@ -62,13 +62,14 @@ export function escapeRegExp(str: string): string {
  *
  * Optimization: Uses pre-computed regex and map to perform replacement in a single pass (O(N)),
  * instead of iterating through all character groups (O(K*N)).
+ * Removed unnecessary NFD normalization which improves performance and fixes
+ * matching against NFC target strings.
  *
  * @param str - The string to convert to a regex pattern.
  * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
     str = escapeRegExp(str);
-    str = str.normalize('NFD');
     return str.replace(searchRegex, match => replacementMap.get(match) || match);
 }
 
