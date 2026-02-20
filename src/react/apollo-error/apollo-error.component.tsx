@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { use } from 'react';
+import { use, useEffect } from 'react';
 
 import { validate } from '#util/validate/validate.util.js';
 
@@ -24,6 +24,22 @@ import style from './apollo-error.module.scss';
 export function ApolloErrorComponent() {
     const context = use(ApolloErrorContext);
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                context?.hideError();
+            }
+        };
+
+        if (context?.error) {
+            window.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [context]);
+
     const error = context?.error;
 
     if (!error) {
@@ -35,19 +51,26 @@ export function ApolloErrorComponent() {
 
     return (
         <div className={style['modal-backdrop']}>
-            <div className={style['modal-content']}>
+            <div
+                className={style['modal-content']}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="apollo-error-title"
+            >
                 <button
                     type="button"
                     className={style['btn-close']}
                     onClick={context.hideError}
+                    aria-label="Close error details"
                 >
                     ✕
                 </button>
-                <div className={style['error-title']}>
+                <div id="apollo-error-title" className={style['error-title']}>
                     <button
                         type="button"
                         className={style['btn-retry']}
                         onClick={() => window.location.reload()}
+                        aria-label="Reload page"
                     >
                         Reload
                     </button>
