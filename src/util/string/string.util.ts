@@ -116,7 +116,7 @@ export function generateRandomPassword(length = 8): string {
 
         for (const value of values) {
             if (value < limit) {
-                result.push(charset[value % charset.length]);
+                result.push(charset[value % charset.length] as string);
             }
         }
     }
