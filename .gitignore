@@ -4,3 +4,4 @@ node_modules
 .env
 .simple-git-hooks.json
 .agent
+package-lock.json
