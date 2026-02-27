@@ -107,10 +107,21 @@ export function generateShortId(uuid: string, length = 4): string {
 export function generateRandomPassword(length = 8): string {
     const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?';
 
-    const values = new Uint32Array(length);
-    crypto.getRandomValues(values);
+    const limit = Math.floor(2 ** 32 / charset.length) * charset.length;
+    const result: string[] = [];
 
-    return Array.from(values, (value) => charset[value % charset.length]).join('');
+    while (result.length < length) {
+        const values = new Uint32Array(length - result.length);
+        crypto.getRandomValues(values);
+
+        for (const value of values) {
+            if (value < limit) {
+                result.push(charset[value % charset.length]);
+            }
+        }
+    }
+
+    return result.join('');
 }
 
 /**
