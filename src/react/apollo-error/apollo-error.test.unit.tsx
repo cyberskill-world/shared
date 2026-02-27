@@ -85,4 +85,29 @@ describe('ApolloErrorComponent', () => {
 
         expect(screen.queryByText('Test Error')).not.toBeInTheDocument();
     });
+
+    it('does not call hideError on Escape after error is cleared', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        const { rerender } = render(
+            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext.Provider>
+        );
+
+        // Re-render with error cleared
+        rerender(
+            <ApolloErrorContext.Provider value={{ error: null, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext.Provider>
+        );
+
+        // Ensure the dialog is no longer rendered
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+        // Verify Escape does not call hideError after error is cleared
+        fireEvent.keyDown(window, { key: 'Escape' });
+        expect(mockHideError).not.toHaveBeenCalled();
+    });
 });
