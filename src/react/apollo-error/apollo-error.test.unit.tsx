@@ -33,6 +33,49 @@ describe('ApolloErrorComponent', () => {
         expect(mockHideError).toHaveBeenCalled();
     });
 
+    it('cleans up Escape key listener on unmount', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        const { unmount } = render(
+            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext.Provider>
+        );
+
+        // Unmount the component to trigger cleanup
+        unmount();
+
+        // Verify Escape key no longer triggers hideError after unmount
+        fireEvent.keyDown(window, { key: 'Escape' });
+        expect(mockHideError).not.toHaveBeenCalled();
+    });
+
+    it('does not call hideError on Escape after error is cleared', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        const { rerender } = render(
+            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext.Provider>
+        );
+
+        // Re-render with error cleared
+        rerender(
+            <ApolloErrorContext.Provider value={{ error: null, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext.Provider>
+        );
+
+        // Ensure the dialog is no longer rendered
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+        // Verify Escape does not call hideError after error is cleared
+        fireEvent.keyDown(window, { key: 'Escape' });
+        expect(mockHideError).not.toHaveBeenCalled();
+    });
+
     it('does not render when no error is present', () => {
         render(
             <ApolloErrorContext.Provider value={{ error: null, hideError: vi.fn(), showError: vi.fn() }}>

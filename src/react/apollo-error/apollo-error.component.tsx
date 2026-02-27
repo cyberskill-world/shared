@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { use, useEffect } from 'react';
+import { use, useEffect, useRef } from 'react';
 
 import { validate } from '#util/validate/validate.util.js';
 
@@ -23,24 +23,30 @@ import style from './apollo-error.module.scss';
  */
 export function ApolloErrorComponent() {
     const context = use(ApolloErrorContext);
+    const { error, hideError } = context ?? {};
+    const dialogRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        if (!error || !hideError) return;
+
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
-                context?.hideError();
+                hideError();
             }
         };
 
-        if (context?.error) {
-            window.addEventListener('keydown', handleKeyDown);
-        }
+        window.addEventListener('keydown', handleKeyDown);
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [context]);
+    }, [error, hideError]);
 
-    const error = context?.error;
+    useEffect(() => {
+        if (error && dialogRef.current) {
+            dialogRef.current.focus();
+        }
+    }, [error]);
 
     if (!error) {
         return null;
@@ -52,15 +58,17 @@ export function ApolloErrorComponent() {
     return (
         <div className={style['modal-backdrop']}>
             <div
+                ref={dialogRef}
                 className={style['modal-content']}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="apollo-error-title"
+                tabIndex={-1}
             >
                 <button
                     type="button"
                     className={style['btn-close']}
-                    onClick={context.hideError}
+                    onClick={hideError}
                     aria-label="Close error details"
                 >
                     ✕
