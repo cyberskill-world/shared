@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { use } from 'react';
+import { use, useEffect, useRef } from 'react';
 
 import { validate } from '#util/validate/validate.util.js';
 
 import { ApolloErrorContext } from './apollo-error.context.js';
 import style from './apollo-error.module.scss';
+
+const FOCUSABLE_SELECTORS = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 /**
  * Apollo Error Component that displays detailed error information in a modal.
@@ -23,8 +25,62 @@ import style from './apollo-error.module.scss';
  */
 export function ApolloErrorComponent() {
     const context = use(ApolloErrorContext);
+    const { error, hideError } = context ?? {};
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const previousFocusRef = useRef<HTMLElement | null>(null);
 
-    const error = context?.error;
+    useEffect(() => {
+        if (!error || !hideError) return;
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                hideError();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [error, hideError]);
+
+    useEffect(() => {
+        if (error && dialogRef.current) {
+            previousFocusRef.current = document.activeElement as HTMLElement;
+            dialogRef.current.focus();
+        }
+        else if (!error && previousFocusRef.current) {
+            previousFocusRef.current.focus();
+            previousFocusRef.current = null;
+        }
+    }, [error]);
+
+    const handleFocusTrap = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key !== 'Tab' || !dialogRef.current) return;
+
+        const focusableElements = Array.from(
+            dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS),
+        ).filter(el => !el.hasAttribute('disabled'));
+
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (!firstElement || !lastElement) return;
+
+        if (event.shiftKey) {
+            if (document.activeElement === firstElement) {
+                event.preventDefault();
+                lastElement.focus();
+            }
+        }
+        else if (document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+        }
+    };
 
     if (!error) {
         return null;
@@ -35,19 +91,29 @@ export function ApolloErrorComponent() {
 
     return (
         <div className={style['modal-backdrop']}>
-            <div className={style['modal-content']}>
+            <div
+                ref={dialogRef}
+                className={style['modal-content']}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="apollo-error-title"
+                tabIndex={-1}
+                onKeyDown={handleFocusTrap}
+            >
                 <button
                     type="button"
                     className={style['btn-close']}
-                    onClick={context.hideError}
+                    onClick={hideError}
+                    aria-label="Close error details"
                 >
                     ✕
                 </button>
-                <div className={style['error-title']}>
+                <div id="apollo-error-title" className={style['error-title']}>
                     <button
                         type="button"
                         className={style['btn-retry']}
                         onClick={() => window.location.reload()}
+                        aria-label="Reload page"
                     >
                         Reload
                     </button>
