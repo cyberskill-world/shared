@@ -98,7 +98,7 @@ describe('ApolloErrorComponent', () => {
 
         const dialog = screen.getByRole('dialog');
         const buttons = screen.getAllByRole('button');
-        const lastButton = buttons[buttons.length - 1];
+        const lastButton = buttons[buttons.length - 1]!;
 
         // Simulate Tab from last focusable element — focus should wrap to first
         lastButton.focus();
@@ -118,8 +118,8 @@ describe('ApolloErrorComponent', () => {
 
         const dialog = screen.getByRole('dialog');
         const buttons = screen.getAllByRole('button');
-        const firstButton = buttons[0];
-        const lastButton = buttons[buttons.length - 1];
+        const firstButton = buttons[0]!;
+        const lastButton = buttons[buttons.length - 1]!;
 
         // Simulate Shift+Tab from first focusable element — focus should wrap to last
         firstButton.focus();
