@@ -105,6 +105,7 @@ export function ApolloErrorComponent() {
                     className={style['btn-close']}
                     onClick={hideError}
                     aria-label="Close error details"
+                    title="Close error details"
                 >
                     ✕
                 </button>
@@ -114,6 +115,7 @@ export function ApolloErrorComponent() {
                         className={style['btn-retry']}
                         onClick={() => window.location.reload()}
                         aria-label="Reload page"
+                        title="Reload page"
                     >
                         Reload
                     </button>

@@ -1,0 +1,3 @@
+## 2024-05-18 - Improve Keyboard Accessibility and Tooltips for Interactive Elements
+**Learning:** Found that custom buttons in modal components, specifically in `ApolloErrorComponent`, lacked explicit visual focus indicators (`:focus-visible`), hindering keyboard navigation accessibility. Additionally, icon-only or generic buttons can benefit from `title` tooltips for hover discovery, alongside their `aria-label` screen reader equivalents.
+**Action:** Always ensure that any interactive elements (buttons, links) define `:focus-visible` styles to provide clear visual feedback to keyboard users. When creating buttons that are icon-only or have brief text, add `title` attributes to assist mouse users.
