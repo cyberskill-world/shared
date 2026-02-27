@@ -125,6 +125,35 @@ export function generateRandomPassword(length = 8): string {
 }
 
 /**
+ * Generates a random string of a given length using a secure random number generator.
+ * This function is a cryptographically secure alternative to Math.random().toString(36).
+ *
+ * @param length - The desired length of the string (default: 8 characters).
+ * @param charset - The characters to use (default: lowercase alphanumeric).
+ * @returns A randomly generated string.
+ */
+export function generateRandomString(
+    length = 8,
+    charset = 'abcdefghijklmnopqrstuvwxyz0123456789',
+): string {
+    const limit = Math.floor(2 ** 32 / charset.length) * charset.length;
+    const result: string[] = [];
+
+    while (result.length < length) {
+        const values = new Uint32Array(length - result.length);
+        crypto.getRandomValues(values);
+
+        for (const value of values) {
+            if (value < limit) {
+                result.push(charset[value % charset.length] as string);
+            }
+        }
+    }
+
+    return result.join('');
+}
+
+/**
  * Get the file name from a URL.
  * This function extracts the file name from a URL, optionally including or excluding
  * the file extension. It handles URLs with query parameters and fragments.
