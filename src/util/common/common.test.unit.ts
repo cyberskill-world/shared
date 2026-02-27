@@ -30,6 +30,13 @@ describe('regexSearchMapper', () => {
         expect(result).toContain('\\(');
         expect(result).toContain('\\)');
     });
+
+    it('should match NFC target when input is NFC accented', () => {
+        const input = 'café';
+        const regexStr = regexSearchMapper(input);
+        const regex = new RegExp(regexStr);
+        expect(regex.test('café')).toBe(true);
+    });
 });
 
 describe('escapeRegExp', () => {
