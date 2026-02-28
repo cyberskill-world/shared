@@ -136,6 +136,14 @@ export function generateRandomString(
     length = 8,
     charset = 'abcdefghijklmnopqrstuvwxyz0123456789',
 ): string {
+    if (!Number.isSafeInteger(length) || length < 0) {
+        throw new RangeError('length must be a non-negative safe integer');
+    }
+
+    if (charset.length === 0 || charset.length > 2 ** 32) {
+        throw new RangeError('charset.length must be between 1 and 2^32');
+    }
+
     const limit = Math.floor(2 ** 32 / charset.length) * charset.length;
     const result: string[] = [];
 

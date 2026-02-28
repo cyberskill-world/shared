@@ -77,6 +77,26 @@ describe('generateRandomString', () => {
     it('should return empty string if length is 0', () => {
         expect(generateRandomString(0)).toBe('');
     });
+
+    it('should throw RangeError for negative length', () => {
+        expect(() => generateRandomString(-1)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for non-integer length', () => {
+        expect(() => generateRandomString(3.5)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for unsafe integer length', () => {
+        expect(() => generateRandomString(Number.MAX_SAFE_INTEGER + 1)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for Infinity length', () => {
+        expect(() => generateRandomString(Infinity)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for empty charset', () => {
+        expect(() => generateRandomString(5, '')).toThrow(RangeError);
+    });
 });
 
 describe('getFileName', () => {
