@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { generateRandomPassword, generateShortId, generateSlug, getFileName, substringBetween } from './string.util.js';
+import { generateRandomPassword, generateRandomString, generateShortId, generateSlug, getFileName, substringBetween } from './string.util.js';
 
 describe('generateShortId', () => {
     it('should generate a short ID of specified length', () => {
@@ -60,6 +60,42 @@ describe('generateSlug', () => {
 describe('generateRandomPassword', () => {
     it('should generate password of specified length', () => {
         expect(generateRandomPassword(10)).toHaveLength(10);
+    });
+});
+
+describe('generateRandomString', () => {
+    it('should generate string of specified length', () => {
+        expect(generateRandomString(10)).toHaveLength(10);
+    });
+
+    it('should use custom charset if provided', () => {
+        const charset = 'abc';
+        const result = generateRandomString(100, charset);
+        expect(result).toMatch(/^[abc]+$/);
+    });
+
+    it('should return empty string if length is 0', () => {
+        expect(generateRandomString(0)).toBe('');
+    });
+
+    it('should throw RangeError for negative length', () => {
+        expect(() => generateRandomString(-1)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for non-integer length', () => {
+        expect(() => generateRandomString(3.5)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for unsafe integer length', () => {
+        expect(() => generateRandomString(Number.MAX_SAFE_INTEGER + 1)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for Infinity length', () => {
+        expect(() => generateRandomString(Infinity)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError for empty charset', () => {
+        expect(() => generateRandomString(5, '')).toThrow(RangeError);
     });
 });
 

@@ -4,7 +4,7 @@ import type { I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
 import { deepClone, normalizeMongoFilter } from '#util/index.js';
-import { generateShortId, generateSlug } from '#util/string/index.js';
+import { generateRandomString, generateShortId, generateSlug } from '#util/string/index.js';
 
 import type { C_Collection, C_Db, C_Document, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Filter, T_Input_Populate, T_InsertManyOptions, T_OptionalUnlessRequiredId, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryFilter, T_QueryOptions, T_UpdateQuery, T_UpdateResult, T_WithId } from './mongo.type.js';
 
@@ -1270,7 +1270,7 @@ export class MongooseController<T extends Partial<C_Document>> {
         }
 
         const timestamp = Date.now();
-        const randomSuffix = Math.random().toString(36).substring(2, 8);
+        const randomSuffix = generateRandomString(6);
 
         return `${baseSlug}-${timestamp}-${randomSuffix}`;
     }

@@ -97,24 +97,29 @@ export function generateShortId(uuid: string, length = 4): string {
 }
 
 /**
- * Generates a random password of a given length.
- * The password contains a mix of letters (both cases), numbers, and special characters
- * to ensure complexity and security.
+ * Internal helper that fills `length` characters from `charset` using
+ * rejection-sampling over `crypto.getRandomValues` to avoid modulo bias.
+ * Random values are requested in bounded chunks to keep allocations small.
  *
- * @param length - The desired length of the password (default: 8 characters).
- * @returns A randomly generated password string with the specified length.
+ * @param length - Number of characters to generate.
+ * @param charset - The pool of characters to draw from.
+ * @returns A randomly generated string of the requested length.
  */
-export function generateRandomPassword(length = 8): string {
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?';
-
+function generateRandomFromCharset(length: number, charset: string): string {
     const limit = Math.floor(2 ** 32 / charset.length) * charset.length;
     const result: string[] = [];
+    const MAX_UINT32_VALUES_PER_CALL = 16384;
 
     while (result.length < length) {
-        const values = new Uint32Array(length - result.length);
+        const remaining = length - result.length;
+        const chunkSize = remaining > MAX_UINT32_VALUES_PER_CALL ? MAX_UINT32_VALUES_PER_CALL : remaining;
+        const values = new Uint32Array(chunkSize);
         crypto.getRandomValues(values);
 
         for (const value of values) {
+            if (result.length >= length) {
+                break;
+            }
             if (value < limit) {
                 result.push(charset[value % charset.length] as string);
             }
@@ -122,6 +127,50 @@ export function generateRandomPassword(length = 8): string {
     }
 
     return result.join('');
+}
+
+/**
+ * Generates a random password of a given length.
+ * The password contains a mix of letters (both cases), numbers, and special characters
+ * to ensure complexity and security.
+ *
+ * @param length - The desired length of the password (default: 8 characters).
+ * @returns A randomly generated password string with the specified length.
+ * @throws {RangeError} If `length` is not a non-negative safe integer.
+ */
+export function generateRandomPassword(length = 8): string {
+    if (!Number.isSafeInteger(length) || length < 0) {
+        throw new RangeError('length must be a non-negative safe integer');
+    }
+
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+
+    return generateRandomFromCharset(length, charset);
+}
+
+/**
+ * Generates a random string of a given length using a secure random number generator.
+ * This function is a cryptographically secure alternative to Math.random().toString(36).
+ *
+ * @param length - The desired length of the string (default: 8 characters).
+ * @param charset - The characters to use (default: lowercase alphanumeric).
+ * @returns A randomly generated string.
+ * @throws {RangeError} If `length` is not a non-negative safe integer.
+ * @throws {RangeError} If `charset` is empty or exceeds 2^32 characters.
+ */
+export function generateRandomString(
+    length = 8,
+    charset = 'abcdefghijklmnopqrstuvwxyz0123456789',
+): string {
+    if (!Number.isSafeInteger(length) || length < 0) {
+        throw new RangeError('length must be a non-negative safe integer');
+    }
+
+    if (charset.length === 0 || charset.length > 2 ** 32) {
+        throw new RangeError('charset.length must be between 1 and 2^32');
+    }
+
+    return generateRandomFromCharset(length, charset);
 }
 
 /**
