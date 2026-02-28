@@ -31,8 +31,15 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
     const len = path.length;
 
     for (let i = 0; i < len; i++) {
+        // Optimization: Early return if current value is null/undefined or not an object
+        // This avoids unnecessary key lookups and type checks
+        if (current == null || typeof current !== 'object') {
+            return undefined;
+        }
+
         const key = path[i];
-        if (key !== undefined && current && typeof current === 'object' && key in (current as Record<string | number, unknown>)) {
+
+        if (key !== undefined && key in (current as Record<string | number, unknown>)) {
             current = (current as Record<string | number, unknown>)[key];
         }
         else {
