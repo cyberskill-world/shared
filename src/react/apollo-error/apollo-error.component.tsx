@@ -115,7 +115,6 @@ export function ApolloErrorComponent() {
                         className={style['btn-retry']}
                         onClick={() => window.location.reload()}
                         aria-label="Reload page"
-                        title="Reload page"
                     >
                         Reload
                     </button>
