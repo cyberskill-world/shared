@@ -146,12 +146,18 @@ export function generateRandomString(
 
     const limit = Math.floor(2 ** 32 / charset.length) * charset.length;
     const result: string[] = [];
+    const MAX_UINT32_VALUES_PER_CALL = 16384;
 
     while (result.length < length) {
-        const values = new Uint32Array(length - result.length);
+        const remaining = length - result.length;
+        const chunkSize = remaining > MAX_UINT32_VALUES_PER_CALL ? MAX_UINT32_VALUES_PER_CALL : remaining;
+        const values = new Uint32Array(chunkSize);
         crypto.getRandomValues(values);
 
         for (const value of values) {
+            if (result.length >= length) {
+                break;
+            }
             if (value < limit) {
                 result.push(charset[value % charset.length] as string);
             }
