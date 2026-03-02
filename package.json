@@ -14,9 +14,6 @@
         "url": "https://github.com/cyberskill-world/shared/issues"
     },
     "sideEffects": false,
-    "engines": {
-        "node": ">=24.0.0"
-    },
     "exports": {
         "./config": {
             "types": "./dist/config/index.d.ts",
@@ -200,6 +197,9 @@
         "dist",
         "public"
     ],
+    "engines": {
+        "node": ">=24.0.0"
+    },
     "scripts": {
         "ai:setup": "tsx src/node/cli/index.ts ai:setup",
         "build": "vite build",
@@ -316,5 +316,10 @@
         "access": "public",
         "registry": "https://registry.npmjs.org/",
         "provenance": true
+    },
+    "pnpm": {
+        "overrides": {
+            "minimatch": ">=10.2.3"
+        }
     }
 }
