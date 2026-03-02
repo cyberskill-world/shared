@@ -102,7 +102,7 @@ export default defineConfig({
         },
         copyPublicDir: false,
         cssCodeSplit: false,
-        target: 'es2015',
+        target: 'es2022',
     },
     plugins: [
         dts({
@@ -116,7 +116,7 @@ export default defineConfig({
         }),
     ],
     esbuild: {
-        target: 'es2015',
+        target: 'es2022',
         treeShaking: true,
         legalComments: 'none',
     },

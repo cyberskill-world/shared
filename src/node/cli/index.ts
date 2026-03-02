@@ -241,7 +241,7 @@ async function aiSetup() {
         await runCommand('Initializing AI agent', 'ag-kit init');
     }
 
-    addGitIgnoreEntry(PATH.GIT_IGNORE, DOT_AGENT);
+    addGitIgnoreEntry(PATH.GIT_EXCLUDE, DOT_AGENT);
 }
 
 /**
@@ -383,14 +383,14 @@ async function storybookBuild() {
                     describe: 'Migration name',
                     type: 'string',
                 }), async (argv) => {
-                if (!argv.name) {
-                    log.error('Migration name is required.');
+                    if (!argv.name) {
+                        log.error('Migration name is required.');
 
-                    return;
-                }
+                        return;
+                    }
 
-                await mongoMigrateCreate(argv.name);
-            })
+                    await mongoMigrateCreate(argv.name);
+                })
             .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
             .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
             .command('storybook:dev', 'Start Storybook development server', storybookDev)

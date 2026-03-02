@@ -32,6 +32,17 @@ export function vitestUnit(options: UserConfig) {
             pool: 'vmThreads',
             include: ['**/*.test.unit.?(c|m)[jt]s?(x)'],
             setupFiles: ['./vitest.unit.setup.ts'],
+            coverage: {
+                provider: 'istanbul',
+                reporter: ['text', 'lcov'],
+                reportsDirectory: './coverage',
+                thresholds: {
+                    statements: 80,
+                    branches: 80,
+                    functions: 80,
+                    lines: 80,
+                },
+            },
         },
     };
 

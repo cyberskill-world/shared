@@ -9,15 +9,23 @@ on:
       - release
 jobs:
   check:
-    name: 🧪 Check
+    name: 🧪 Check (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'from cyberskill-world/release') == false
+    strategy:
+      matrix:
+        node-version: [24]
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
       - name: Env & Deps
         uses: cyberskill-world/.github/actions/env-deps@main
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Security Audit
+        run: pnpm audit --audit-level=high
 
       - name: Lint
         uses: cyberskill-world/.github/actions/lint@main

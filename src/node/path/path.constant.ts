@@ -24,6 +24,7 @@ export const SIMPLE_GIT_HOOK_JSON = '.simple-git-hooks.json';
 export const PNPM_LOCK_YAML = 'pnpm-lock.yaml';
 export const GIT_HOOK = '.git/hooks/';
 export const GIT_COMMIT_EDITMSG = '.git/COMMIT_EDITMSG';
+export const GIT_EXCLUDE = '.git/info/exclude';
 export const MIGRATE_MONGO_CONFIG = '.migrate-mongo.config.js';
 export const CYBERSKILL_DIRECTORY = (() => {
     const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as I_PackageJson;
@@ -72,6 +73,7 @@ export const PATH = {
     GIT_IGNORE: resolveWorkingPath(GIT_IGNORE),
     GIT_HOOK: resolveWorkingPath(GIT_HOOK),
     GIT_COMMIT_MSG: resolveWorkingPath(GIT_COMMIT_EDITMSG),
+    GIT_EXCLUDE: resolveWorkingPath(GIT_EXCLUDE),
     SIMPLE_GIT_HOOKS_JSON: resolveWorkingPath(SIMPLE_GIT_HOOK_JSON),
     PACKAGE_JSON: resolveWorkingPath(PACKAGE_JSON),
     PACKAGE_LOCK_JSON: resolveWorkingPath(PACKAGE_LOCK_JSON),
@@ -100,7 +102,7 @@ export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandCont
     return {
         'pre-commit': LINT_STAGED_CLI,
         'commit-msg': COMMIT_LINT_CLI,
-        ...(isCurrentProject ? { 'pre-push': rawCommand(`${GIT_CLI} pull`) } : { 'pre-push': rawCommand(`${PNPM_CLI} build`) }),
+        ...(isCurrentProject ? { 'pre-push': rawCommand(`${GIT_CLI} pull`) } : { 'pre-push': rawCommand(`TAG_ONLY=true; while read local_ref local_oid remote_ref remote_oid; do case \"$local_ref\" in refs/tags/*) ;; *) TAG_ONLY=false; break ;; esac; done; if [ \"$TAG_ONLY\" = true ]; then echo '[pre-push] Tag-only push, skipping build.'; exit 0; fi; ${PNPM_CLI} build`) }),
     };
 }
 

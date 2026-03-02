@@ -1,0 +1,14 @@
+# Default owners for everything
+* @cyberskill-world/maintainers
+
+# CI/CD workflows
+.github/ @cyberskill-world/maintainers
+
+# Root configuration files
+/*.json @cyberskill-world/maintainers
+/*.ts @cyberskill-world/maintainers
+/*.js @cyberskill-world/maintainers
+/*.md @cyberskill-world/maintainers
+
+# Source code
+/src/ @cyberskill-world/maintainers

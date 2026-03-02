@@ -62,7 +62,7 @@ jobs:
 
               git push origin HEAD:release
 
-              echo "🚀 Tag stolen and new commit pushed. Next run should trigger v2.22.0!"
+              echo "🚀 Tag stolen and new commit pushed. Next run should trigger the bumped version!"
             else
               echo "✅ Tag is free. Proceeding..."
             fi
