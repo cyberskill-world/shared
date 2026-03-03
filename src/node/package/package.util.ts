@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 import type { I_Return } from '#typescript/index.js';
 
 import { getEnv } from '#config/env/index.js';

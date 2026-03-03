@@ -9,6 +9,9 @@ export { Router } from 'express';
 export interface I_ExpressOptions {
     isDev?: boolean;
     static?: string | string[];
+    maxFileSize?: number;
+    maxFiles?: number;
+    jsonLimit?: string;
 }
 
 export interface I_NestOptions {
@@ -17,6 +20,7 @@ export interface I_NestOptions {
     static?: string | string[];
     filters?: ExceptionFilter[];
     pipes?: ValidationPipe[];
+    jsonLimit?: string;
 }
 
 export type T_CorsType = 'node' | 'nest';

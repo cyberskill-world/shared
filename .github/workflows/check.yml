@@ -7,6 +7,7 @@ on:
   pull_request:
     branches-ignore:
       - release
+permissions: {}
 jobs:
   check:
     name: 🧪 Check (Node ${{ matrix.node-version }})
@@ -29,3 +30,15 @@ jobs:
 
       - name: Lint
         uses: cyberskill-world/.github/actions/lint@main
+
+      - name: Build
+        run: pnpm build
+
+      - name: Validate Exports
+        run: npx tsx scripts/validate-exports.ts
+
+      - name: Test
+        run: pnpm test
+
+      - name: Dry-run Publish
+        run: pnpm publish --dry-run --no-git-checks

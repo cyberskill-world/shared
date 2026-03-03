@@ -81,12 +81,11 @@ export default defineConfig({
             name: '@cyberskill/shared',
             cssFileName: 'style',
             entry: entryPoints,
-            formats: ['es', 'cjs'],
+            formats: ['es'],
         },
         rollupOptions: {
             external: isExternal,
             output: {
-                sourcemap: false,
                 compact: true,
                 preserveModules: true,
                 preserveModulesRoot: 'src',
@@ -100,6 +99,7 @@ export default defineConfig({
                 correctVarValueBeforeDeclaration: true,
             },
         },
+        sourcemap: true,
         copyPublicDir: false,
         cssCodeSplit: false,
         target: 'es2022',

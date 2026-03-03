@@ -1,4 +1,4 @@
-import { exec } from 'node:child_process';
+import { exec, execFile } from 'node:child_process';
 import process from 'node:process';
 import * as util from 'node:util';
 
@@ -13,6 +13,8 @@ import { CYBERSKILL_CLI, CYBERSKILL_CLI_PATH, CYBERSKILL_PACKAGE_NAME, PNPM_EXEC
 import { storage } from '../storage/index.js';
 
 const execPromise = util.promisify(exec);
+const execFilePromise = util.promisify(execFile);
+const SHELL_METACHARACTERS = /[|&;<>`$(){}\[\]!#~*?]/;
 
 /**
  * Retrieves the package name for the current project.
@@ -113,11 +115,9 @@ async function parseTextErrors(output: string): Promise<void> {
     const errorList: I_IssueEntry[] = [];
     const unmatchedLines: string[] = [];
     let lastFilePath = '';
-    // eslint-disable-next-line regexp/no-super-linear-backtracking
-    const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+?)\s+(\S+)$/;
+    const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+)\s+(\S+)$/;
     const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
-    // eslint-disable-next-line regexp/no-super-linear-backtracking
-    const commitlintRegex = /^✖\s+(.*?)\s+\[(.*?)\]$/;
+    const commitlintRegex = /^✖\s+(.+)\s+\[([^\]]*)\]$/;
 
     output.split('\n').forEach((line) => {
         if (line.startsWith('/')) {
@@ -223,13 +223,23 @@ async function executeCommand(command: string | void, parser = parseCommandOutpu
 
     try {
         if (typeof command === 'string') {
-            const { stdout, stderr } = await execPromise(command, {
-                maxBuffer: 1024 * 1024 * 100,
+            const execOptions = {
+                maxBuffer: 10 * 1024 * 1024,
                 signal: controller.signal,
                 timeout: options.timeout,
-            });
+            };
 
-            await Promise.all([stdout, stderr].map(output => output && parser(output)));
+            let result: { stdout: string; stderr: string };
+
+            if (SHELL_METACHARACTERS.test(command)) {
+                result = await execPromise(command, execOptions);
+            }
+            else {
+                const parts = command.split(/\s+/).filter(Boolean);
+                result = await execFilePromise(parts[0]!, parts.slice(1), execOptions);
+            }
+
+            await Promise.all([result.stdout, result.stderr].map(output => output && parser(output)));
         }
     }
     catch (error) {

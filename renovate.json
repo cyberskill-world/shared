@@ -9,5 +9,14 @@
     ],
     "ignoreDeps": [
         "node"
-    ]
+    ],
+    "rangeStrategy": "bump",
+    "schedule": [
+        "before 8am on Monday"
+    ],
+    "automerge": true,
+    "automergeType": "pr",
+    "major": {
+        "automerge": false
+    }
 }

@@ -2,6 +2,8 @@ import type { INestApplication } from '@nestjs/common';
 import type { Application, RequestHandler } from 'express';
 import type { SessionOptions } from 'express-session';
 
+import process from 'node:process';
+
 import { NestFactory } from '@nestjs/core';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -61,7 +63,21 @@ export function createCors<T extends T_CorsType>(options: T_CorsOptions<T>) {
  * @returns A session middleware function ready to be used in Express applications.
  */
 export function createSession(options: SessionOptions): RequestHandler {
-    return session(options);
+    const secureDefaults: Partial<SessionOptions> = {
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: process.env['NODE_ENV'] === 'production',
+        },
+    };
+
+    return session({
+        ...secureDefaults,
+        ...options,
+        cookie: { ...secureDefaults.cookie, ...options.cookie },
+    });
 }
 
 /**
@@ -75,7 +91,7 @@ export function createSession(options: SessionOptions): RequestHandler {
  *
  * @param app - The Express application instance to configure with middleware.
  */
-function setupMiddleware(app: Application, isDev = false) {
+function setupMiddleware(app: Application, isDev = false, jsonLimit = '1mb') {
     app.set('trust proxy', 1);
     app.use(
         helmet({
@@ -84,7 +100,8 @@ function setupMiddleware(app: Application, isDev = false) {
         }),
     );
     app.use(cookieParser());
-    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json({ limit: jsonLimit }));
+    app.use(express.urlencoded({ extended: true, limit: jsonLimit }));
     app.use(compression());
     app.use(useragent());
 }
@@ -119,9 +136,12 @@ function setupStaticFolders(app: Application, staticFolders?: string | string[])
 export function createExpress(options?: I_ExpressOptions): Application {
     const app = express();
 
-    setupMiddleware(app, options?.isDev);
+    setupMiddleware(app, options?.isDev, options?.jsonLimit);
     setupStaticFolders(app, options?.static);
-    app.use(graphqlUploadExpress());
+    app.use(graphqlUploadExpress({
+        maxFileSize: options?.maxFileSize ?? 10_000_000,
+        maxFiles: options?.maxFiles ?? 10,
+    }));
 
     return app;
 }
@@ -140,7 +160,7 @@ export function createExpress(options?: I_ExpressOptions): Application {
 export async function createNest(options: I_NestOptions): Promise<INestApplication> {
     const app = await NestFactory.create(options.module);
 
-    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev);
+    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev, options.jsonLimit);
     setupStaticFolders(app.getHttpAdapter().getInstance(), options.static);
 
     if (options.filters) {

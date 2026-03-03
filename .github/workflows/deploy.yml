@@ -2,6 +2,9 @@
 name: 🚀 CI - Deploy
 on:
   workflow_dispatch:
+concurrency:
+  group: deploy
+  cancel-in-progress: false
 jobs:
   deploy:
     name: 🚀 Deploy
@@ -25,10 +28,6 @@ jobs:
       - name: Env & Deps
         uses: cyberskill-world/.github/actions/env-deps@main
 
-      - name: Install semantic-release globally
-        run: |
-          pnpm install --global semantic-release@latest @semantic-release/git@latest
-
       - name: Build
         uses: cyberskill-world/.github/actions/build@main
 
@@ -38,8 +37,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           echo "🔮 Calculating next version..."
-          DRY_RUN_OUTPUT=$(semantic-release --dry-run --branches release 2>&1 || true)
-          NEXT_VERSION=$(echo "$DRY_RUN_OUTPUT" | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || true)
+          DRY_RUN_OUTPUT=$(pnpm exec semantic-release --dry-run --branches release 2>&1 || true)
+          NEXT_VERSION=$(echo "$DRY_RUN_OUTPUT" | sed -n 's/.*The next release version is \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' | head -1)
 
           if [ -z "$NEXT_VERSION" ]; then
             echo "✅ No release scheduled."
@@ -72,7 +71,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: semantic-release
+        run: pnpm exec semantic-release
 
       - name: Create PR to main
         uses: cyberskill-world/.github/actions/create-pr@main

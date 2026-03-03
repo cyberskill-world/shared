@@ -86,7 +86,7 @@ graph TD
 ## Build System
 
 - **Bundler**: Vite 7 with Rollup
-- **Output**: Dual ESM + CJS (`preserveModules: true`)
+- **Output**: ESM-only (`preserveModules: true`, `formats: ['es']`)
 - **Target**: ES2022
 - **Types**: `vite-plugin-dts` for `.d.ts` generation
 - **Tree-shaking**: Aggressive (`sideEffects: false`)
