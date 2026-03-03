@@ -39,6 +39,3 @@ jobs:
 
       - name: Test
         run: pnpm test
-
-      - name: Dry-run Publish
-        run: pnpm publish --dry-run --no-git-checks
