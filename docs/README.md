@@ -70,19 +70,17 @@ Add to your `tsconfig.json`:
 ### Utility Functions
 
 ```typescript
-import { catchError, isEmpty, validateEmail } from '@cyberskill/shared';
+import { validateEmail } from '@cyberskill/shared/util';
+import { RESPONSE_STATUS } from '@cyberskill/shared/constant';
 
 validateEmail('user@example.com'); // true
-isEmpty(null);                     // true
-
-try { /* ... */ }
-catch (error) { catchError(error); }
 ```
 
 ### React Integration
 
 ```tsx
-import { ApolloProvider, LoadingProvider, useLoading } from '@cyberskill/shared';
+import { ApolloProvider } from '@cyberskill/shared/react/apollo-client';
+import { LoadingProvider, useLoading } from '@cyberskill/shared/react/loading';
 
 function App() {
     return (
@@ -98,7 +96,10 @@ function App() {
 ### Node.js Integration
 
 ```typescript
-import { createCorsOptions, mongo, RESPONSE_STATUS, throwError } from '@cyberskill/shared';
+import { createCorsOptions } from '@cyberskill/shared/node/express';
+import { mongo } from '@cyberskill/shared/node/mongo';
+import { RESPONSE_STATUS } from '@cyberskill/shared/constant';
+import cors from 'cors';
 import express from 'express';
 
 const app = express();

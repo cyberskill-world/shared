@@ -10,7 +10,7 @@ We use [Semantic Versioning](https://semver.org/):
 
 ## Automated Releases
 
-Releases are fully automated via [semantic-release](https://github.com/semantic-release/semantic-release) and the [Deploy workflow](../.github/workflows/deploy.yml):
+Releases are fully automated via [semantic-release](https://github.com/semantic-release/semantic-release) and the org-level **Deploy** workflow (`cyberskill-world/.github`):
 
 1. Merge changes to `main` branch
 2. Trigger the **Deploy** workflow via `workflow_dispatch`

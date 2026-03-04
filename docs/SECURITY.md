@@ -2,10 +2,11 @@
 
 ## Supported Versions
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 2.x     | ✅ Active support  |
-| 1.x     | ❌ End of life     |
+| Version | Supported              |
+| ------- | ---------------------- |
+| 3.x     | ✅ Active support      |
+| 2.x     | ⚠️ Security fixes only |
+| 1.x     | ❌ End of life         |
 
 ## Reporting a Vulnerability
 

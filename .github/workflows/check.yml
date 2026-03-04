@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'from cyberskill-world/release') == false
     strategy:
+      fail-fast: false
       matrix:
         node-version: [24]
     steps:
@@ -37,5 +38,11 @@ jobs:
       - name: Validate Exports
         run: npx tsx scripts/validate-exports.ts
 
-      - name: Test
-        run: pnpm test
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test with Coverage
+        run: pnpm test:unit -- --coverage
+
+      - name: Test E2E
+        run: pnpm test:e2e

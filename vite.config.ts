@@ -54,9 +54,9 @@ function isExternal(id: string) {
  * Entry names are derived from the file path relative to src/.
  */
 const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts'], {
-    ignore: ['src/**/*.type.ts', 'src/**/*.d.ts'],
+    ignore: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.*.ts', 'src/**/*.test.*.tsx'],
     absolute: true,
-}).reduce((entries, file) => {
+}).reduce<Record<string, string>>((entries, file) => {
     const entryName = file.replace(/^.*\/src\//, '').replace(/\.(ts|tsx)$/, '');
     entries[entryName] = file;
 
@@ -108,6 +108,7 @@ export default defineConfig({
         dts({
             logLevel: 'error',
             insertTypesEntry: true,
+            exclude: ['src/**/*.test.*.ts', 'src/**/*.test.*.tsx'],
             compilerOptions: {
                 declaration: true,
                 declarationMap: false,

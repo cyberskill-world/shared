@@ -19,31 +19,7 @@ Thank you for your interest in contributing to CyberSkill Shared! This document 
 
 ## 🤝 Code of Conduct
 
-### Our Pledge
-
-We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
-
-### Our Standards
-
-Examples of behavior that contributes to a positive environment for our community include:
-
-- ✅ Using welcoming and inclusive language
-- ✅ Being respectful of differing opinions and viewpoints
-- ✅ Gracefully accepting constructive criticism
-- ✅ Focusing on what is best for the community
-- ✅ Showing empathy towards other community members
-
-Examples of unacceptable behavior include:
-
-- ❌ The use of sexualized language or imagery, and sexual attention or advances
-- ❌ Trolling, insulting or derogatory comments, and personal or political attacks
-- ❌ Public or private harassment
-- ❌ Publishing others' private information without explicit permission
-- ❌ Other conduct which could reasonably be considered inappropriate
-
-### Enforcement
-
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at [support@cyberskill.world](mailto:support@cyberskill.world). All complaints will be reviewed and investigated promptly and fairly.
+Please review our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing. We are committed to providing a welcoming and inclusive experience for everyone.
 
 ---
 
@@ -53,7 +29,7 @@ Instances of abusive, harassing, or otherwise unacceptable behavior may be repor
 
 Before you begin contributing, ensure you have the following installed:
 
-- **Node.js**: 22.0.0 or higher
+- **Node.js**: 24.0.0 or higher (see `.nvmrc`)
 - **pnpm**: 10.0.0 or higher
 - **Git**: Latest version
 - **VS Code**: Recommended with extensions (see below)
@@ -384,7 +360,7 @@ describe('formatPhoneNumber', () => {
 
 ### Test Requirements
 
-- **Coverage**: Minimum 95% code coverage
+- **Coverage**: Minimum 80% code coverage (statements, branches, functions, lines)
 - **Unit Tests**: Test individual functions and components
 - **Integration Tests**: Test module interactions
 - **E2E Tests**: Test complete user workflows
@@ -466,39 +442,24 @@ We use [Semantic Versioning](https://semver.org/):
 
 ### Release Steps
 
-1. **Update version** in package.json
-2. **Update CHANGELOG.md** with release notes
-3. **Create release branch** from main
-4. **Run full test suite** including integration tests
-5. **Build and verify** the package
-6. **Create GitHub release** with release notes
-7. **Publish to npm** (automated via CI/CD)
+Releases are **fully automated** via [semantic-release](https://github.com/semantic-release/semantic-release):
 
-### Changelog Format
+1. **Merge your PR** into `main` using conventional commit messages
+2. A maintainer triggers the **Deploy** workflow (`workflow_dispatch`)
+3. The CI automatically:
+   - Rebases `main` → `release`
+   - Builds and validates the package
+   - Resolves version conflicts (Zombie Tag strategy)
+   - Calculates the next version from commit history
+   - Updates `CHANGELOG.md` and `package.json`
+   - Publishes to npm with provenance
+   - Creates a GitHub Release
+   - Opens a PR back to `main`
 
-```markdown
-## [1.2.0] - 2024-01-15
-
-### Added
-
-- New `formatPhoneNumber` utility function
-- Support for international phone number formats
-- React hook for phone number validation
-
-### Changed
-
-- Improved error handling in `validateEmail` function
-- Updated TypeScript types for better type safety
-
-### Fixed
-
-- Bug in currency formatting for zero values
-- Memory leak in Apollo Client integration
-
-### Breaking Changes
-
-- `formatCurrency` now requires currency code parameter
-```
+> **Conventional Commits** drive versioning:
+> - `fix:` → PATCH bump
+> - `feat:` → MINOR bump
+> - `feat!:` or `BREAKING CHANGE:` → MAJOR bump
 
 ---
 

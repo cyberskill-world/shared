@@ -10,5 +10,7 @@
 /*.js @cyberskill-world/maintainers
 /*.md @cyberskill-world/maintainers
 
-# Source code
+# Source code — as the team scales, consider splitting by domain:
+# /src/react/    @cyberskill-world/frontend
+# /src/node/     @cyberskill-world/backend
 /src/ @cyberskill-world/maintainers
