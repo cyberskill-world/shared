@@ -1,3 +1,11 @@
+## [3.2.1](https://github.com/cyberskill-world/shared/compare/v3.2.0...v3.2.1) (2026-03-06)
+
+
+### Bug Fixes
+
+* ci ([d0b90b3](https://github.com/cyberskill-world/shared/commit/d0b90b3e0e284c4fa5fdcec30f66b2f9bde893f4))
+* ci ([59b84e6](https://github.com/cyberskill-world/shared/commit/59b84e6de1e215d94751c2f97c88ceda00070d74))
+
 # [3.2.0](https://github.com/cyberskill-world/shared/compare/v3.1.0...v3.2.0) (2026-03-06)
 
 
