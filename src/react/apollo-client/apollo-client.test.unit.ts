@@ -8,16 +8,20 @@ import { createApolloLinks, getClient } from './apollo-client.util.js';
 // All vi.mock factories are hoisted to the top of the file by vitest.
 // Classes used with `new` in the source code MUST be mock-constructors, not arrow functions.
 
-vi.mock('@apollo/client/core', () => ({
-    ApolloClient: vi.fn().mockImplementation(function (this: any, opts: any) {
-        Object.assign(this, opts);
-        this.__isApolloClient = true;
-    }),
-    InMemoryCache: vi.fn().mockImplementation(() => { }),
-    CombinedGraphQLErrors: { is: vi.fn().mockReturnValue(false) },
-    CombinedProtocolErrors: { is: vi.fn().mockReturnValue(false) },
-    ServerError: { is: vi.fn().mockReturnValue(false) },
-}));
+vi.mock('@apollo/client/core', () => {
+    class MockApolloClient {
+        __isApolloClient = true;
+        constructor(opts: any) { Object.assign(this, opts); }
+    }
+    class MockInMemoryCache { }
+    return {
+        ApolloClient: MockApolloClient,
+        InMemoryCache: MockInMemoryCache,
+        CombinedGraphQLErrors: { is: vi.fn().mockReturnValue(false) },
+        CombinedProtocolErrors: { is: vi.fn().mockReturnValue(false) },
+        ServerError: { is: vi.fn().mockReturnValue(false) },
+    };
+});
 
 vi.mock('@apollo/client/link', () => {
     class MockLink { }
@@ -30,17 +34,27 @@ vi.mock('@apollo/client/link', () => {
     };
 });
 
-vi.mock('@apollo/client/link/error', () => ({
-    ErrorLink: vi.fn().mockImplementation(() => { }),
-}));
+vi.mock('@apollo/client/link/error', () => {
+    class MockErrorLink {
+        static instances: MockErrorLink[] = [];
+        constructor(public handler: any) {
+            MockErrorLink.instances.push(this);
+        }
+    }
+    return { ErrorLink: MockErrorLink };
+});
 
-vi.mock('@apollo/client/link/remove-typename', () => ({
-    RemoveTypenameFromVariablesLink: vi.fn().mockImplementation(() => { }),
-}));
+vi.mock('@apollo/client/link/remove-typename', () => {
+    class MockRemoveTypename { }
+    return { RemoveTypenameFromVariablesLink: MockRemoveTypename };
+});
 
-vi.mock('@apollo/client/link/subscriptions', () => ({
-    GraphQLWsLink: vi.fn().mockImplementation(() => { }),
-}));
+vi.mock('@apollo/client/link/subscriptions', () => {
+    class MockGraphQLWsLink {
+        constructor(_client: any) { }
+    }
+    return { GraphQLWsLink: MockGraphQLWsLink };
+});
 
 vi.mock('graphql-ws', () => ({
     createClient: vi.fn(() => ({})),
@@ -133,8 +147,8 @@ describe('errorLink callback', () => {
      *
      */
     function getErrorHandler() {
-        const calls = vi.mocked(ErrorLink).mock.calls;
-        return calls[0]?.[0] as (args: { error: any; operation: any }) => void;
+        const instance = (ErrorLink as any).instances[0];
+        return instance?.handler as (args: { error: any; operation: any }) => void;
     }
 
     const mockOperation = { operationName: 'TestOp' };
