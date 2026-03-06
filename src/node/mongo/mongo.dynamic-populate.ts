@@ -37,7 +37,7 @@ export function filterDynamicVirtualsFromPopulate<T>(
     if (Array.isArray(populate)) {
         const filtered = populate.filter((p) => {
             if (typeof p === 'string') {
-                return !Array.from(dynamicVirtualNames).some(virtualName =>
+                return ![...dynamicVirtualNames].some(virtualName =>
                     p === virtualName || p.startsWith(`${virtualName}.`),
                 );
             }
@@ -46,7 +46,7 @@ export function filterDynamicVirtualsFromPopulate<T>(
                 const popObj = p as { path?: string; populate?: string };
                 const path = popObj.path || popObj.populate || '';
 
-                return !Array.from(dynamicVirtualNames).some(virtualName =>
+                return ![...dynamicVirtualNames].some(virtualName =>
                     path === virtualName || path.startsWith(`${virtualName}.`),
                 );
             }
@@ -58,7 +58,7 @@ export function filterDynamicVirtualsFromPopulate<T>(
     }
 
     if (typeof populate === 'string') {
-        return Array.from(dynamicVirtualNames).some(virtualName =>
+        return [...dynamicVirtualNames].some(virtualName =>
             populate === virtualName || populate.startsWith(`${virtualName}.`),
         )
             ? undefined
@@ -69,7 +69,7 @@ export function filterDynamicVirtualsFromPopulate<T>(
         const popObj = populate as { path?: string; populate?: string };
         const path = popObj.path || popObj.populate || '';
 
-        return Array.from(dynamicVirtualNames).some(virtualName =>
+        return [...dynamicVirtualNames].some(virtualName =>
             path === virtualName || path.startsWith(`${virtualName}.`),
         )
             ? undefined
@@ -125,7 +125,7 @@ export function remapDynamicPopulate<T, R extends string = string>(
         }
     });
 
-    return Array.from(modelGroups.entries()).map(([model, docs]) => ({ model, docs }));
+    return Array.from(modelGroups.entries(), ([model, docs]) => ({ model, docs }));
 }
 
 /**
@@ -238,7 +238,7 @@ export async function populateDynamicVirtuals<T extends object, R extends string
 
             const processing = modelProcessingMap.get(group.model)!;
 
-            if (!processing.virtuals.find(v => v.name === name)) {
+            if (!processing.virtuals.some(v => v.name === name)) {
                 processing.virtuals.push(virtualConfig);
                 processing.localValueSets.set(name as string, new Set());
             }
@@ -281,7 +281,7 @@ export async function populateDynamicVirtuals<T extends object, R extends string
         }
     }
 
-    await Promise.all(Array.from(modelProcessingMap.entries()).map(async ([modelName, processing]) => {
+    await Promise.all(Array.from(modelProcessingMap.entries(), async ([modelName, processing]) => {
         const Model = mongoose.models[modelName];
 
         if (!Model) {
@@ -298,7 +298,7 @@ export async function populateDynamicVirtuals<T extends object, R extends string
         }
 
         const foreignFields = [...new Set(processing.virtuals.map(v => v.options.foreignField))];
-        const localValuesArray = Array.from(allLocalValues);
+        const localValuesArray = [...allLocalValues];
         let query;
 
         if (foreignFields.length === 1) {

@@ -7,6 +7,7 @@
 
 import fs from 'node:fs';
 import { resolve } from 'node:path';
+import process from 'node:process';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const pkg = JSON.parse(fs.readFileSync(resolve(ROOT, 'package.json'), 'utf-8'));

@@ -53,11 +53,14 @@ function isExternal(id: string) {
  *
  * Entry names are derived from the file path relative to src/.
  */
-const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts'], {
-    ignore: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.*.ts', 'src/**/*.test.*.tsx'],
+const RE_SRC_PREFIX = /^.*\/src\//;
+const RE_TS_EXT = /\.(ts|tsx)$/;
+
+const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts', 'src/config/vitest/vitest.*.ts'], {
+    ignore: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.*.ts', 'src/**/*.test.*.tsx', 'src/**/*.setup.ts'],
     absolute: true,
 }).reduce<Record<string, string>>((entries, file) => {
-    const entryName = file.replace(/^.*\/src\//, '').replace(/\.(ts|tsx)$/, '');
+    const entryName = file.replace(RE_SRC_PREFIX, '').replace(RE_TS_EXT, '');
     entries[entryName] = file;
 
     return entries;

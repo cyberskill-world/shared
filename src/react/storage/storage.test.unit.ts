@@ -15,7 +15,7 @@ vi.mock('localforage', () => ({
 }));
 
 vi.mock('../log/index.js', () => ({
-    catchError: vi.fn((_error: unknown, opts?: { returnValue?: unknown }) => opts?.returnValue ?? undefined),
+    catchError: vi.fn((_error: unknown, opts?: { returnValue?: unknown }) => opts?.returnValue !== undefined ? opts.returnValue : undefined),
 }));
 
 describe('storage', () => {

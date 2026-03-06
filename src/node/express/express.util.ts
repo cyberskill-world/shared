@@ -2,8 +2,6 @@ import type { INestApplication } from '@nestjs/common';
 import type { Application, RequestHandler } from 'express';
 import type { SessionOptions } from 'express-session';
 
-import process from 'node:process';
-
 import { NestFactory } from '@nestjs/core';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -14,6 +12,7 @@ import session from 'express-session';
 import { express as useragent } from 'express-useragent';
 import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 import helmet from 'helmet';
+import process from 'node:process';
 
 import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from './express.type.js';
 

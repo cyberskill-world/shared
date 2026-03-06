@@ -30,7 +30,8 @@ export function ApolloErrorComponent() {
     const previousFocusRef = useRef<HTMLElement | null>(null);
 
     useEffect(() => {
-        if (!error || !hideError) return;
+        if (!error || !hideError)
+            return;
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
@@ -57,18 +58,19 @@ export function ApolloErrorComponent() {
     }, [error]);
 
     const handleFocusTrap = (event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key !== 'Tab' || !dialogRef.current) return;
+        if (event.key !== 'Tab' || !dialogRef.current)
+            return;
 
-        const focusableElements = Array.from(
-            dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS),
-        ).filter(el => !el.hasAttribute('disabled'));
+        const focusableElements = [...dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)].filter(el => !el.hasAttribute('disabled'));
 
-        if (focusableElements.length === 0) return;
+        if (focusableElements.length === 0)
+            return;
 
         const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
+        const lastElement = focusableElements.at(-1);
 
-        if (!firstElement || !lastElement) return;
+        if (!firstElement || !lastElement)
+            return;
 
         if (event.shiftKey) {
             if (document.activeElement === firstElement) {

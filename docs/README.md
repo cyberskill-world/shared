@@ -18,25 +18,25 @@
 
 CyberSkill Shared is a comprehensive TypeScript-first utility library that standardizes development across CyberSkill projects. It provides shared utilities, configurations, and components for both frontend and backend development.
 
-| Feature                | Benefit                                                 |
-| ---------------------- | ------------------------------------------------------- |
-| **🔄 Consistency**     | Standardized patterns and utilities across all projects |
-| **⚡ Productivity**    | Pre-built solutions for common development tasks        |
-| **🛡️ Reliability**     | Type-safe implementations with comprehensive testing    |
-| **📈 Scalability**     | Modular architecture that grows with your needs         |
-| **🚀 Performance**     | Optimized for production with minimal bundle impact     |
-| **🔒 Security**        | Built-in security best practices and npm provenance     |
+| Feature             | Benefit                                                 |
+| ------------------- | ------------------------------------------------------- |
+| **🔄 Consistency**  | Standardized patterns and utilities across all projects |
+| **⚡ Productivity** | Pre-built solutions for common development tasks        |
+| **🛡️ Reliability**  | Type-safe implementations with comprehensive testing    |
+| **📈 Scalability**  | Modular architecture that grows with your needs         |
+| **🚀 Performance**  | Optimized for production with minimal bundle impact     |
+| **🔒 Security**     | Built-in security best practices and npm provenance     |
 
 ---
 
 ## ✨ Key Features
 
-| Module      | Highlights                                                               |
-| ----------- | ------------------------------------------------------------------------ |
-| **config/** | ESLint, Vitest, Commitlint, env parsing, GraphQL Codegen, Storybook      |
+| Module      | Highlights                                                                  |
+| ----------- | --------------------------------------------------------------------------- |
+| **config/** | ESLint, Vitest, Commitlint, env parsing, GraphQL Codegen, Storybook         |
 | **node/**   | Express middleware, MongoDB ODM, WebSocket, CLI tools, file upload, logging |
-| **react/**  | Apollo Client, i18n (i18next + next-intl), Loading, Toast, Storage hooks |
-| **util/**   | String processing, object manipulation, validation, serialization         |
+| **react/**  | Apollo Client, i18n (i18next + next-intl), Loading, Toast, Storage hooks    |
+| **util/**   | String processing, object manipulation, validation, serialization           |
 
 > For the full module map and architecture, see [CODEBASE.md](CODEBASE.md).
 
@@ -135,14 +135,14 @@ pnpm install && pnpm run build
 
 ## 📚 Documentation
 
-| Document                                      | Description                              |
-| --------------------------------------------- | ---------------------------------------- |
-| [CODEBASE.md](CODEBASE.md)                    | Architecture, modules, and conventions   |
-| [CONTRIBUTING.md](CONTRIBUTING.md)             | Development guidelines and code standards |
-| [RELEASING.md](RELEASING.md)                   | Release process and versioning           |
-| [SECURITY.md](SECURITY.md)                     | Vulnerability disclosure policy          |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)       | Community guidelines                     |
-| [CHANGELOG.md](../CHANGELOG.md)               | Release history                          |
+| Document                                 | Description                               |
+| ---------------------------------------- | ----------------------------------------- |
+| [CODEBASE.md](CODEBASE.md)               | Architecture, modules, and conventions    |
+| [CONTRIBUTING.md](CONTRIBUTING.md)       | Development guidelines and code standards |
+| [RELEASING.md](RELEASING.md)             | Release process and versioning            |
+| [SECURITY.md](SECURITY.md)               | Vulnerability disclosure policy           |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community guidelines                      |
+| [CHANGELOG.md](../CHANGELOG.md)          | Release history                           |
 
 ---
 

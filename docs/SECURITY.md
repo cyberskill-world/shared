@@ -17,18 +17,18 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 1. **Do NOT** open a public GitHub issue for security vulnerabilities
 2. **Email** [support@cyberskill.world](mailto:support@cyberskill.world) with details
 3. Include:
-   - Description of the vulnerability
-   - Steps to reproduce
-   - Affected versions
-   - Potential impact
+    - Description of the vulnerability
+    - Steps to reproduce
+    - Affected versions
+    - Potential impact
 
 ### Response Timeline
 
-| Action                  | Timeline        |
-| ----------------------- | --------------- |
-| Initial acknowledgment  | Within 48 hours |
-| Assessment and triage   | Within 1 week   |
-| Fix and release         | Within 2 weeks  |
+| Action                 | Timeline        |
+| ---------------------- | --------------- |
+| Initial acknowledgment | Within 48 hours |
+| Assessment and triage  | Within 1 week   |
+| Fix and release        | Within 2 weeks  |
 
 ### What to Expect
 

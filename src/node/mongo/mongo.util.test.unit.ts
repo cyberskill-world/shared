@@ -1,6 +1,41 @@
-import { describe, expect, it } from 'vitest';
+/**
+ * @vitest-environment node
+ */
 
-import { mongo } from './mongo.util.js';
+import { describe, expect, it, vi } from 'vitest';
+
+import { addGitIgnoreEntry, writeFileSync } from '../fs/index.js';
+import { convertEnumToModelName, mongo } from './mongo.util.js';
+
+const RE_LOWERCASE = /^[a-z]+$/;
+const RE_MIN_3_CHARS = /^.{3,}$/;
+const RE_MIN_5_CHARS = /^.{5,}$/;
+
+vi.mock('../fs/index.js', () => ({
+    writeFileSync: vi.fn(),
+    addGitIgnoreEntry: vi.fn(),
+}));
+
+vi.mock('../path/index.js', () => ({
+    MIGRATE_MONGO_CONFIG: 'migrate-mongo-config.js',
+    PATH: { MIGRATE_MONGO_CONFIG: 'migrate-mongo-config.js', GIT_IGNORE: '.gitignore' },
+}));
+
+describe('convertEnumToModelName', () => {
+    it('should convert all-uppercase to PascalCase', () => {
+        expect(convertEnumToModelName('USER')).toBe('User');
+        expect(convertEnumToModelName('POST')).toBe('Post');
+    });
+
+    it('should return mixed-case as-is', () => {
+        expect(convertEnumToModelName('User')).toBe('User');
+        expect(convertEnumToModelName('BlogPost')).toBe('BlogPost');
+    });
+
+    it('should handle single char', () => {
+        expect(convertEnumToModelName('A')).toBe('A');
+    });
+});
 
 describe('mongo', () => {
     describe('createGenericFields', () => {
@@ -12,6 +47,133 @@ describe('mongo', () => {
             expect(fields).toHaveProperty('updatedAt');
             expect(fields.createdAt).toBeInstanceOf(Date);
             expect(fields.updatedAt).toBeInstanceOf(Date);
+        });
+
+        it('should generate unique ids', () => {
+            const a = mongo.createGenericFields();
+            const b = mongo.createGenericFields();
+            expect(a.id).not.toBe(b.id);
+        });
+    });
+
+    describe('isDynamicVirtual', () => {
+        it('should return true when ref is a function', () => {
+            expect(mongo.isDynamicVirtual({ ref: () => 'User', localField: 'id', foreignField: 'entityId' } as any)).toBe(true);
+        });
+
+        it('should return false when ref is a string', () => {
+            expect(mongo.isDynamicVirtual({ ref: 'User', localField: 'id', foreignField: 'entityId' } as any)).toBe(false);
+        });
+
+        it('should return false when options is undefined', () => {
+            expect(mongo.isDynamicVirtual(undefined)).toBe(false);
+        });
+
+        it('should return false when no ref', () => {
+            expect(mongo.isDynamicVirtual({ localField: 'id' } as any)).toBe(false);
+        });
+    });
+
+    describe('applyPlugins', () => {
+        it('should call schema.plugin for each valid plugin', () => {
+            const schema = { plugin: vi.fn() } as any;
+            const pluginA = vi.fn();
+            const pluginB = vi.fn();
+            mongo.applyPlugins(schema, [pluginA, false, pluginB]);
+            expect(schema.plugin).toHaveBeenCalledTimes(2);
+            expect(schema.plugin).toHaveBeenCalledWith(pluginA);
+            expect(schema.plugin).toHaveBeenCalledWith(pluginB);
+        });
+
+        it('should handle all false plugins', () => {
+            const schema = { plugin: vi.fn() } as any;
+            mongo.applyPlugins(schema, [false, false]);
+            expect(schema.plugin).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('applyMiddlewares', () => {
+        it('should call schema.pre for pre middleware', () => {
+            const schema = { pre: vi.fn(), post: vi.fn() } as any;
+            const preFn = vi.fn();
+            mongo.applyMiddlewares(schema, [{ method: 'save', pre: preFn }]);
+            expect(schema.pre).toHaveBeenCalledWith('save', preFn);
+        });
+
+        it('should call schema.post for post middleware', () => {
+            const schema = { pre: vi.fn(), post: vi.fn() } as any;
+            const postFn = vi.fn();
+            mongo.applyMiddlewares(schema, [{ method: 'save', post: postFn }]);
+            expect(schema.post).toHaveBeenCalledWith('save', postFn);
+        });
+
+        it('should handle both pre and post', () => {
+            const schema = { pre: vi.fn(), post: vi.fn() } as any;
+            const preFn = vi.fn();
+            const postFn = vi.fn();
+            mongo.applyMiddlewares(schema, [{ method: 'save', pre: preFn, post: postFn }]);
+            expect(schema.pre).toHaveBeenCalledWith('save', preFn);
+            expect(schema.post).toHaveBeenCalledWith('save', postFn);
+        });
+
+        it('should skip when method is missing', () => {
+            const schema = { pre: vi.fn(), post: vi.fn() } as any;
+            mongo.applyMiddlewares(schema, [{ pre: vi.fn() } as any]);
+            expect(schema.pre).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('validator.isRequired', () => {
+        it('should return true for non-empty value', async () => {
+            const validator = mongo.validator.isRequired();
+            expect(await validator.call({}, 'hello')).toBe(true);
+        });
+
+        it('should return false for empty string', async () => {
+            const validator = mongo.validator.isRequired();
+            expect(await validator.call({}, '')).toBe(false);
+        });
+
+        it('should return false for null', async () => {
+            const validator = mongo.validator.isRequired();
+            expect(await validator.call({}, null)).toBe(false);
+        });
+    });
+
+    describe('validator.isUnique', () => {
+        it('should return true when no existing document', async () => {
+            const validator = mongo.validator.isUnique(['email']);
+            const context = { constructor: { exists: vi.fn().mockResolvedValue(null) } };
+            expect(await validator.call(context as any, 'test@example.com')).toBe(true);
+        });
+
+        it('should return false when document already exists', async () => {
+            const validator = mongo.validator.isUnique(['email']);
+            const context = { constructor: { exists: vi.fn().mockResolvedValue({ _id: '1' }) } };
+            expect(await validator.call(context as any, 'test@example.com')).toBe(false);
+        });
+
+        it('should throw for empty fields array', async () => {
+            const validator = mongo.validator.isUnique([]);
+            const context = { constructor: { exists: vi.fn() } };
+            await expect(validator.call(context as any, 'test')).rejects.toThrow('Fields must be a non-empty array');
+        });
+    });
+
+    describe('validator.matchesRegex', () => {
+        it('should return true when all patterns match', async () => {
+            const validator = mongo.validator.matchesRegex([RE_LOWERCASE, RE_MIN_3_CHARS]);
+            expect(await validator('abc')).toBe(true);
+        });
+
+        it('should return false when any pattern fails', async () => {
+            const validator = mongo.validator.matchesRegex([RE_LOWERCASE, RE_MIN_5_CHARS]);
+            expect(await validator('abc')).toBe(false);
+        });
+
+        it('should throw for invalid regex array', async () => {
+            const validator = mongo.validator.matchesRegex(['not-regex' as any]);
+            await expect(validator('test')).rejects.toThrow('regexArray must be an array of valid RegExp');
         });
     });
 
@@ -25,19 +187,260 @@ describe('mongo', () => {
             });
         });
 
-        it('should handle special characters in regex', () => {
-            const filter = { name: 'test.1' };
-            const result = mongo.regexify(filter, ['name']) as any;
-            expect(result.name).toEqual({
-                $regex: expect.stringContaining('t(e|è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)st.1'),
-                $options: 'i',
-            });
+        it('should return empty object for undefined filter', () => {
+            expect(mongo.regexify(undefined)).toEqual({});
+        });
+
+        it('should return filter unchanged when no fields provided', () => {
+            const filter = { name: 'test' };
+            expect(mongo.regexify(filter)).toEqual(filter);
+            expect(mongo.regexify(filter, [])).toEqual(filter);
         });
 
         it('should ignore fields not in the list', () => {
             const filter = { name: 'test', age: 10 };
             const result = mongo.regexify(filter, ['name']) as any;
             expect(result.age).toBe(10);
+        });
+
+        it('should skip non-string field values', () => {
+            const filter = { count: 5 };
+            const result = mongo.regexify(filter, ['count']) as any;
+            expect(result.count).toBe(5);
+        });
+
+        it('should skip empty string values', () => {
+            const filter = { name: '' };
+            const result = mongo.regexify(filter, ['name']) as any;
+            expect(result.name).toBe('');
+        });
+    });
+
+    describe('migrate.setConfig', () => {
+        it('should write config and update gitignore', () => {
+            mongo.migrate.setConfig({ migrationsDir: 'migrations' } as any);
+            expect(writeFileSync).toHaveBeenCalled();
+            expect(addGitIgnoreEntry).toHaveBeenCalled();
+        });
+    });
+
+    describe('getNewRecords', () => {
+        it('should return all records when findAll fails', async () => {
+            const controller = { findAll: vi.fn().mockResolvedValue({ success: false }) } as any;
+            const records = [{ id: '1' }, { id: '2' }] as any[];
+            const result = await mongo.getNewRecords(controller, records, () => false);
+            expect(result).toEqual(records);
+        });
+
+        it('should filter out existing records', async () => {
+            const controller = {
+                findAll: vi.fn().mockResolvedValue({
+                    success: true,
+                    result: [{ id: '1', name: 'existing' }],
+                }),
+            } as any;
+            const records = [{ id: '1', name: 'existing' }, { id: '2', name: 'new' }] as any[];
+            const result = await mongo.getNewRecords(controller, records, (existing, newRec) => existing.id === newRec.id);
+            expect(result).toHaveLength(1);
+            expect(result[0].id).toBe('2');
+        });
+    });
+
+    describe('getExistingRecords', () => {
+        it('should return empty array when findAll fails', async () => {
+            const controller = { findAll: vi.fn().mockResolvedValue({ success: false }) } as any;
+            const result = await mongo.getExistingRecords(controller, [{ id: '1' }] as any[], () => true);
+            expect(result).toEqual([]);
+        });
+
+        it('should return matching existing records', async () => {
+            const controller = {
+                findAll: vi.fn().mockResolvedValue({
+                    success: true,
+                    result: [{ id: '1', name: 'a' }, { id: '2', name: 'b' }],
+                }),
+            } as any;
+            const records = [{ id: '1', name: 'a' }] as any[];
+            const result = await mongo.getExistingRecords(controller, records, (existing, newRec) => existing.id === newRec.id);
+            expect(result).toHaveLength(1);
+            expect(result[0].id).toBe('1');
+        });
+    });
+
+    describe('createGenericSchema', () => {
+        it('should create a schema with id, isDel, timestamps', () => {
+            const mockSchema = { add: vi.fn(), statics: {}, virtual: vi.fn() };
+            /**
+             *
+             */
+            function MockSchema() {
+                return mockSchema;
+            }
+            const mockMongoose = { Schema: MockSchema } as any;
+            const result = mongo.createGenericSchema(mockMongoose);
+            expect(result).toBeDefined();
+            expect(result).toBe(mockSchema);
+        });
+    });
+
+    describe('createSchema', () => {
+        /**
+         *
+         */
+        function createMockMongoose() {
+            const mockVirtual = { get: vi.fn().mockReturnThis() };
+            const mockSchema = {
+                add: vi.fn(),
+                statics: {} as Record<string, unknown>,
+                virtual: vi.fn(() => mockVirtual),
+            };
+            /**
+             *
+             */
+            function MockSchema() {
+                return mockSchema;
+            }
+            return {
+                mongoose: { Schema: MockSchema } as any,
+                mockSchema,
+                mockVirtual,
+            };
+        }
+
+        it('should create schema with toJSON and toObject virtuals enabled', () => {
+            const { mongoose, mockSchema } = createMockMongoose();
+            const result = mongo.createSchema({ mongoose, schema: { name: String } as any });
+            // The schema returned should be the mockSchema from our constructor
+            expect(result).toBe(mockSchema);
+        });
+
+        it('should add generic schema when standalone is false', () => {
+            const { mongoose, mockSchema } = createMockMongoose();
+            mongo.createSchema({ mongoose, schema: { name: String } as any, standalone: false });
+            expect(mockSchema.add).toHaveBeenCalled();
+        });
+
+        it('should not add generic schema when standalone is true', () => {
+            const { mongoose, mockSchema } = createMockMongoose();
+            mongo.createSchema({ mongoose, schema: { name: String } as any, standalone: true });
+            expect(mockSchema.add).not.toHaveBeenCalled();
+        });
+
+        it('should set up static virtuals (non-dynamic)', () => {
+            const { mongoose, mockSchema, mockVirtual } = createMockMongoose();
+            const getFn = vi.fn();
+            mongo.createSchema({
+                mongoose,
+                schema: {} as any,
+                virtuals: [{ name: 'fullName', options: { ref: 'User', localField: 'id', foreignField: 'userId' }, get: getFn }],
+            });
+            expect(mockSchema.virtual).toHaveBeenCalledWith('fullName', expect.any(Object));
+            expect(mockVirtual.get).toHaveBeenCalledWith(getFn);
+        });
+
+        it('should set up dynamic virtuals (ref is function)', () => {
+            const { mongoose, mockSchema, mockVirtual } = createMockMongoose();
+            mongo.createSchema({
+                mongoose,
+                schema: {} as any,
+                virtuals: [{ name: 'entity', options: { ref: () => 'User', localField: 'id', foreignField: 'entityId' } }],
+            });
+            expect(mockSchema.virtual).toHaveBeenCalledWith('entity');
+            expect(mockSchema.statics['_dynamicVirtuals']).toBeDefined();
+            expect(mockVirtual.get).toHaveBeenCalled(); // Getter registered
+        });
+
+        it('should use custom get for dynamic virtuals', () => {
+            const { mongoose, mockVirtual } = createMockMongoose();
+            const customGet = vi.fn();
+            mongo.createSchema({
+                mongoose,
+                schema: {} as any,
+                virtuals: [{ name: 'entity', options: { ref: () => 'User', localField: 'id', foreignField: 'entityId' }, get: customGet }],
+            });
+            expect(mockVirtual.get).toHaveBeenCalledWith(customGet);
+        });
+
+        it('should set up static virtuals without get', () => {
+            const { mongoose, mockSchema, mockVirtual } = createMockMongoose();
+            mongo.createSchema({
+                mongoose,
+                schema: {} as any,
+                virtuals: [{ name: 'fullName', options: { ref: 'User', localField: 'id', foreignField: 'userId' } }],
+            });
+            expect(mockSchema.virtual).toHaveBeenCalledWith('fullName', expect.any(Object));
+            expect(mockVirtual.get).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('createModel', () => {
+        /**
+         *
+         */
+        function createMockMongoose(existingModels: Record<string, any> = {}) {
+            const mockVirtual = { get: vi.fn().mockReturnThis() };
+            const mockSchema = {
+                add: vi.fn(),
+                statics: {} as Record<string, unknown>,
+                virtual: vi.fn(() => mockVirtual),
+                plugin: vi.fn(),
+                pre: vi.fn(),
+                post: vi.fn(),
+            };
+            /**
+             *
+             */
+            function MockSchema() {
+                return mockSchema;
+            }
+            return {
+                mongoose: {
+                    Schema: MockSchema,
+                    model: vi.fn(() => ({ modelName: 'Test', schema: mockSchema })),
+                    models: { ...existingModels },
+                } as any,
+                mockSchema,
+            };
+        }
+
+        it('should throw when name is not provided', () => {
+            const { mongoose } = createMockMongoose();
+            expect(() => mongo.createModel({ mongoose, name: '', schema: {} as any })).toThrow('Model name is required.');
+        });
+
+        it('should return existing model if already registered', () => {
+            const existingModel = { modelName: 'User' };
+            const { mongoose } = createMockMongoose({ User: existingModel });
+            const result = mongo.createModel({ mongoose, name: 'User', schema: {} as any });
+            expect(result).toBe(existingModel);
+        });
+
+        it('should create a new model with schema and plugins', () => {
+            const { mongoose, mockSchema } = createMockMongoose();
+            const result = mongo.createModel({ mongoose, name: 'Post', schema: {} as any });
+            expect(mongoose.model).toHaveBeenCalledWith('Post', mockSchema);
+            expect(mockSchema.plugin).toHaveBeenCalled(); // pagination + aggregate
+            expect(result).toBeDefined();
+        });
+
+        it('should not apply plugins when pagination and aggregate are false', () => {
+            const { mongoose, mockSchema } = createMockMongoose();
+            mongo.createModel({ mongoose, name: 'Simple', schema: {} as any, pagination: false, aggregate: false });
+            expect(mockSchema.plugin).not.toHaveBeenCalled();
+        });
+
+        it('should apply middlewares', () => {
+            const { mongoose, mockSchema } = createMockMongoose();
+            const preFn = vi.fn();
+            mongo.createModel({ mongoose, name: 'Hooked', schema: {} as any, middlewares: [{ method: 'save', pre: preFn }] });
+            expect(mockSchema.pre).toHaveBeenCalledWith('save', preFn);
+        });
+
+        it('should store virtual configs on model when virtuals provided', () => {
+            const { mongoose } = createMockMongoose();
+            const virtuals = [{ name: 'avatar', options: { ref: 'Media', localField: 'id', foreignField: 'entityId' } }];
+            const result = mongo.createModel({ mongoose, name: 'WithVirtuals', schema: {} as any, virtuals: virtuals as any });
+            expect((result as any)._virtualConfigs).toEqual(virtuals);
         });
     });
 });

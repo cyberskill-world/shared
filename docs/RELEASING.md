@@ -15,23 +15,23 @@ Releases are fully automated via [semantic-release](https://github.com/semantic-
 1. Merge changes to `main` branch
 2. Trigger the **Deploy** workflow via `workflow_dispatch`
 3. The workflow will:
-   - Rebase `main` → `release`
-   - Build the project
-   - Run `semantic-release` to determine the next version
-   - Publish to [npm](https://www.npmjs.com/package/@cyberskill/shared)
-   - Create a GitHub Release with auto-generated notes
-   - Open a PR from `release` → `main`
+    - Rebase `main` → `release`
+    - Build the project
+    - Run `semantic-release` to determine the next version
+    - Publish to [npm](https://www.npmjs.com/package/@cyberskill/shared)
+    - Create a GitHub Release with auto-generated notes
+    - Open a PR from `release` → `main`
 
 ## Commit Message Convention
 
 Version bumps are determined automatically from commit messages following [Conventional Commits](https://www.conventionalcommits.org/):
 
-| Prefix       | Version Bump | Example                              |
-| ------------ | ------------ | ------------------------------------ |
-| `fix:`       | Patch        | `fix: handle null input in validate` |
-| `feat:`      | Minor        | `feat: add formatPhoneNumber util`   |
-| `feat!:`     | Major        | `feat!: remove deprecated API`       |
-| `BREAKING CHANGE:` | Major | In commit body or footer             |
+| Prefix             | Version Bump | Example                              |
+| ------------------ | ------------ | ------------------------------------ |
+| `fix:`             | Patch        | `fix: handle null input in validate` |
+| `feat:`            | Minor        | `feat: add formatPhoneNumber util`   |
+| `feat!:`           | Major        | `feat!: remove deprecated API`       |
+| `BREAKING CHANGE:` | Major        | In commit body or footer             |
 
 ## Manual Steps (if needed)
 

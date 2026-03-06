@@ -486,19 +486,19 @@ export class MongooseController<T extends Partial<C_Document>> {
 
         return isObject
             ? {
-                ...baseFilter,
-                $or: [
-                    { [`slug.${field}`]: slug },
-                    ...(haveHistory ? [{ slugHistory: { $elemMatch: { [`slug.${field}`]: slug } } }] : []),
-                ],
-            }
+                    ...baseFilter,
+                    $or: [
+                        { [`slug.${field}`]: slug },
+                        ...(haveHistory ? [{ slugHistory: { $elemMatch: { [`slug.${field}`]: slug } } }] : []),
+                    ],
+                }
             : {
-                ...baseFilter,
-                $or: [
-                    { slug },
-                    ...(haveHistory ? [{ slugHistory: slug }] : []),
-                ],
-            };
+                    ...baseFilter,
+                    $or: [
+                        { slug },
+                        ...(haveHistory ? [{ slugHistory: slug }] : []),
+                    ],
+                };
     }
 
     /**

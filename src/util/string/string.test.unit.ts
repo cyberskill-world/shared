@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { generateRandomPassword, generateRandomString, generateShortId, generateSlug, getFileName, substringBetween } from './string.util.js';
 
+const RE_ABC_ONLY = /^[abc]+$/;
+
 describe('generateShortId', () => {
     it('should generate a short ID of specified length', () => {
         const uuid = '123e4567-e89b-12d3-a456-426614174000';
@@ -71,7 +73,7 @@ describe('generateRandomString', () => {
     it('should use custom charset if provided', () => {
         const charset = 'abc';
         const result = generateRandomString(100, charset);
-        expect(result).toMatch(/^[abc]+$/);
+        expect(result).toMatch(RE_ABC_ONLY);
     });
 
     it('should return empty string if length is 0', () => {
@@ -120,5 +122,59 @@ describe('substringBetween', () => {
 
     it('should return empty string if markers not found', () => {
         expect(substringBetween('start end', '[', ']')).toBe('');
+    });
+
+    it('should return empty string if end marker not found', () => {
+        expect(substringBetween('start [middle', '[', ']')).toBe('');
+    });
+});
+
+describe('generateSlug (branch coverage)', () => {
+    it('should preserve case when lower is false', () => {
+        expect(generateSlug('Hello World', { lower: false })).toBe('Hello-World');
+    });
+
+    it('should handle null-ish values gracefully', () => {
+        expect(generateSlug(null as any)).toBe('');
+    });
+});
+
+describe('generateRandomPassword (branch coverage)', () => {
+    it('should generate default 8-char password', () => {
+        expect(generateRandomPassword()).toHaveLength(8);
+    });
+
+    it('should throw RangeError for negative length', () => {
+        expect(() => generateRandomPassword(-1)).toThrow(RangeError);
+    });
+
+    it('should generate empty password for length 0', () => {
+        expect(generateRandomPassword(0)).toBe('');
+    });
+});
+
+describe('getFileName (branch coverage)', () => {
+    it('should handle URL with no path', () => {
+        expect(getFileName('')).toBe('');
+    });
+
+    it('should handle filename without extension', () => {
+        expect(getFileName('http://example.com/README')).toBe('README');
+    });
+
+    it('should handle fragment URLs', () => {
+        expect(getFileName('http://example.com/file.png#section')).toBe('file');
+    });
+});
+
+describe('generateShortId (branch coverage)', () => {
+    it('should use hash for length <= 8', () => {
+        const id = generateShortId('test-uuid', 4);
+        expect(id).toHaveLength(4);
+    });
+
+    it('should use default length of 4', () => {
+        const id = generateShortId('test-uuid');
+        expect(id).toHaveLength(4);
     });
 });

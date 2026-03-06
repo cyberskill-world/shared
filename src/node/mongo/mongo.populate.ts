@@ -34,7 +34,7 @@ export async function applyNestedPopulate<T extends object>(
             await applyStringPopulate(mongoose, documents, populateOption, virtualConfigs, currentModel);
         }
         else if (populateOption && typeof populateOption === 'object') {
-            const popObj = populateOption as { path?: string; populate?: T_Input_Populate;[key: string]: unknown };
+            const popObj = populateOption as { path?: string; populate?: T_Input_Populate; [key: string]: unknown };
 
             await applyObjectPopulate(mongoose, documents, popObj, virtualConfigs, currentModel);
         }
@@ -191,7 +191,7 @@ async function applyStringPopulate<T extends object>(
 async function applyObjectPopulate<T extends object>(
     mongoose: typeof mongooseRaw,
     documents: T[],
-    populateOption: { path?: string; populate?: T_Input_Populate;[key: string]: unknown },
+    populateOption: { path?: string; populate?: T_Input_Populate; [key: string]: unknown },
     virtualConfigs?: I_DynamicVirtualConfig<unknown, string>[],
     currentModel?: any,
 ): Promise<void> {

@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { serializer } from './serializer.util.js';
 
+const RE_ABC_I = /abc/i;
+
 describe('serializer', () => {
     it('should serialize and deserialize Map', () => {
         const map = new Map([['a', 1]]);
@@ -28,7 +30,7 @@ describe('serializer', () => {
     });
 
     it('should serialize and deserialize RegExp', () => {
-        const regex = /abc/i;
+        const regex = RE_ABC_I;
         const json = serializer.serialize(regex);
         const result = serializer.deserialize(json);
         expect(result).toBeInstanceOf(RegExp);

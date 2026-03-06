@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { deepClone, deepMerge, getNestedValue, isJSON, normalizeMongoFilter, setNestedValue } from './object.util.js';
 
+const RE_ABC_I = /abc/i;
+const RE_TEST_GI = /test/gi;
+
 describe('deepMerge', () => {
     it('should merge two objects', () => {
         const obj1 = { a: 1, b: { c: 2 } };
@@ -56,7 +59,7 @@ describe('deepClone', () => {
     });
 
     it('should clone Date and RegExp', () => {
-        const obj = { d: new Date(), r: /abc/i };
+        const obj = { d: new Date(), r: RE_ABC_I };
         const clone = deepClone(obj);
         expect(clone.d).toBeInstanceOf(Date);
         expect(clone.d).not.toBe(obj.d);
@@ -162,5 +165,98 @@ describe('setNestedValue', () => {
         const result = setNestedValue(obj, ['b'], 2);
         expect(obj).toEqual({ a: 1 });
         expect(result).toEqual({ a: 1, b: 2 });
+    });
+
+    it('should return original object for empty path', () => {
+        const obj = { a: 1 };
+        expect(setNestedValue(obj, [], 'ignored')).toBe(obj);
+    });
+
+    it('should overwrite nested non-object values', () => {
+        const obj = { a: 'string' };
+        const result = setNestedValue(obj, ['a', 'b'], 1);
+        expect(result).toEqual({ a: { b: 1 } });
+    });
+});
+
+describe('deepMerge (branch coverage)', () => {
+    it('should return empty object for no arguments', () => {
+        expect(deepMerge()).toEqual({});
+    });
+
+    it('should return empty object when all args are null/undefined', () => {
+        expect(deepMerge(null, undefined)).toEqual({});
+    });
+
+    it('should return single argument directly', () => {
+        const obj = { a: 1 };
+        expect(deepMerge(obj)).toBe(obj);
+    });
+
+    it('should throw when mixing arrays and objects', () => {
+        expect(() => deepMerge([1], { a: 1 })).toThrow('Cannot mix arrays and objects');
+    });
+
+    it('should handle object-vs-array overwrite in nested merge', () => {
+        const obj1 = { a: [1, 2] };
+        const obj2 = { a: { b: 1 } };
+        const result = deepMerge(obj1, obj2);
+        expect(result).toEqual({ a: { b: 1 } });
+    });
+});
+
+describe('deepClone (branch coverage)', () => {
+    it('should return primitives as-is', () => {
+        expect(deepClone(42)).toBe(42);
+        expect(deepClone('hello')).toBe('hello');
+        expect(deepClone(true)).toBe(true);
+        expect(deepClone(null)).toBeNull();
+        expect(deepClone(undefined)).toBeUndefined();
+    });
+
+    it('should clone standalone Date', () => {
+        const date = new Date('2024-01-01');
+        const cloned = deepClone(date);
+        expect(cloned).toBeInstanceOf(Date);
+        expect(cloned).not.toBe(date);
+        expect(cloned.getTime()).toBe(date.getTime());
+    });
+
+    it('should clone standalone RegExp', () => {
+        const regex = RE_TEST_GI;
+        const cloned = deepClone(regex);
+        expect(cloned).toBeInstanceOf(RegExp);
+        expect(cloned).not.toBe(regex);
+        expect(cloned.source).toBe('test');
+        expect(cloned.flags).toBe('gi');
+    });
+
+    it('should clone standalone array', () => {
+        const arr = [1, 2, 3];
+        const cloned = deepClone(arr);
+        expect(cloned).toEqual(arr);
+        expect(cloned).not.toBe(arr);
+    });
+});
+
+describe('normalizeMongoFilter (branch coverage)', () => {
+    it('should return null/falsy input as-is', () => {
+        expect(normalizeMongoFilter(null as any)).toBeNull();
+        expect(normalizeMongoFilter(undefined as any)).toBeUndefined();
+    });
+
+    it('should handle flat keys without nesting', () => {
+        const filter = { name: 'test', age: 25 };
+        expect(normalizeMongoFilter(filter)).toEqual({ name: 'test', age: 25 });
+    });
+
+    it('should handle array values without flattening', () => {
+        const filter = { tags: ['a', 'b'] };
+        expect(normalizeMongoFilter(filter)).toEqual({ tags: ['a', 'b'] });
+    });
+
+    it('should handle deeply nested objects', () => {
+        const filter = { a: { b: { c: 1 } } };
+        expect(normalizeMongoFilter(filter)).toEqual({ 'a.b.c': 1 });
     });
 });

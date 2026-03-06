@@ -154,6 +154,8 @@ function buildCommand({ type, packages, command }: { type: E_CommandType; packag
     };
 }
 
+const RE_MIGRATE_NAME = /^[\w-]+$/;
+
 export const command = {
     simpleGitHooks: buildCommand({
         type: E_CommandType.CLI,
@@ -243,7 +245,7 @@ export const command = {
         command: `${VITEST_CLI} --config ${PATH.VITEST_E2E_CONFIG}`,
     }),
     mongoMigrateCreate: (migrateName: string) => {
-        if (!/^[\w-]+$/.test(migrateName)) {
+        if (!RE_MIGRATE_NAME.test(migrateName)) {
             throw new Error('Migration name must only contain alphanumeric characters, underscores, and hyphens.');
         }
 

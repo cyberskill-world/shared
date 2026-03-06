@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -11,9 +11,9 @@ describe('ApolloErrorComponent', () => {
         const mockError = { message: 'Test Error' };
 
         render(
-            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         // Verify content
@@ -38,9 +38,9 @@ describe('ApolloErrorComponent', () => {
         const mockError = { message: 'Test Error' };
 
         const { unmount } = render(
-            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         // Unmount the component to trigger cleanup
@@ -56,16 +56,16 @@ describe('ApolloErrorComponent', () => {
         const mockError = { message: 'Test Error' };
 
         const { rerender } = render(
-            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         // Re-render with error cleared
         rerender(
-            <ApolloErrorContext.Provider value={{ error: null, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: null, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         // Ensure the dialog is no longer rendered
@@ -78,9 +78,9 @@ describe('ApolloErrorComponent', () => {
 
     it('does not render when no error is present', () => {
         render(
-            <ApolloErrorContext.Provider value={{ error: null, hideError: vi.fn(), showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: null, hideError: vi.fn(), showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         expect(screen.queryByText('Test Error')).not.toBeInTheDocument();
@@ -91,14 +91,14 @@ describe('ApolloErrorComponent', () => {
         const mockError = { message: 'Test Error' };
 
         render(
-            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         const dialog = screen.getByRole('dialog');
         const buttons = screen.getAllByRole('button');
-        const lastButton = buttons[buttons.length - 1]!;
+        const lastButton = buttons.at(-1)!;
 
         // Simulate Tab from last focusable element — focus should wrap to first
         lastButton.focus();
@@ -111,15 +111,15 @@ describe('ApolloErrorComponent', () => {
         const mockError = { message: 'Test Error' };
 
         render(
-            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         const dialog = screen.getByRole('dialog');
         const buttons = screen.getAllByRole('button');
         const firstButton = buttons[0]!;
-        const lastButton = buttons[buttons.length - 1]!;
+        const lastButton = buttons.at(-1)!;
 
         // Simulate Shift+Tab from first focusable element — focus should wrap to last
         firstButton.focus();
@@ -136,16 +136,16 @@ describe('ApolloErrorComponent', () => {
         triggerButton.focus();
 
         const { rerender } = render(
-            <ApolloErrorContext.Provider value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         // Re-render with error cleared to trigger focus return
         rerender(
-            <ApolloErrorContext.Provider value={{ error: null, hideError: mockHideError, showError: vi.fn() }}>
+            <ApolloErrorContext value={{ error: null, hideError: mockHideError, showError: vi.fn() }}>
                 <ApolloErrorComponent />
-            </ApolloErrorContext.Provider>
+            </ApolloErrorContext>,
         );
 
         expect(document.activeElement).toBe(triggerButton);

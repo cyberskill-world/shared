@@ -447,16 +447,17 @@ Releases are **fully automated** via [semantic-release](https://github.com/seman
 1. **Merge your PR** into `main` using conventional commit messages
 2. A maintainer triggers the **Deploy** workflow (`workflow_dispatch`)
 3. The CI automatically:
-   - Rebases `main` → `release`
-   - Builds and validates the package
-   - Resolves version conflicts (Zombie Tag strategy)
-   - Calculates the next version from commit history
-   - Updates `CHANGELOG.md` and `package.json`
-   - Publishes to npm with provenance
-   - Creates a GitHub Release
-   - Opens a PR back to `main`
+    - Rebases `main` → `release`
+    - Builds and validates the package
+    - Resolves version conflicts (Zombie Tag strategy)
+    - Calculates the next version from commit history
+    - Updates `CHANGELOG.md` and `package.json`
+    - Publishes to npm with provenance
+    - Creates a GitHub Release
+    - Opens a PR back to `main`
 
 > **Conventional Commits** drive versioning:
+>
 > - `fix:` → PATCH bump
 > - `feat:` → MINOR bump
 > - `feat!:` or `BREAKING CHANGE:` → MAJOR bump

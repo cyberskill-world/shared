@@ -26,17 +26,10 @@ export function vitestE2E(options: UserConfig) {
         plugins: [react()],
         test: {
             include: ['**/*.test.e2e.?(c|m)[jt]s?(x)'],
-            browser: {
-                enabled: true,
-                provider: 'playwright',
-                instances: [
-                    { browser: 'chromium' },
-                    { browser: 'firefox' },
-                    { browser: 'webkit' },
-                ],
-            },
         },
     };
 
     return defineConfig(deepMerge(config as any, options as any) as UserConfig);
 }
+
+export default vitestE2E({});

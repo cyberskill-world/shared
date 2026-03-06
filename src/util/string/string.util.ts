@@ -4,6 +4,12 @@ import type { I_SlugifyOptions } from './string.type.js';
 
 import { removeAccent } from '../common/common.util.js';
 
+const RE_NON_ALNUM = /[^a-z0-9\s-]/gi;
+const RE_MULTI_SPACE_DASH = /[\s-]+/g;
+const RE_LEADING_TRAILING_DASH = /^-+|-+$/g;
+const RE_HYPHEN = /-/g;
+const RE_QUERY_FRAGMENT = /[?#]/;
+
 /**
  * Generates a slug from a string.
  * The slug is a URL-friendly version of the string, removing special characters
@@ -25,13 +31,13 @@ function slugify(input: string, options?: I_SlugifyOptions): string {
     }
 
     // 3. Replace invalid characters with space (keeping alphanumeric, hyphens, and spaces)
-    slug = slug.replace(/[^a-z0-9\s-]/gi, ' ');
+    slug = slug.replace(RE_NON_ALNUM, ' ');
 
     // 4. Replace multiple spaces or hyphens with a single hyphen
-    slug = slug.replace(/[\s-]+/g, '-');
+    slug = slug.replace(RE_MULTI_SPACE_DASH, '-');
 
     // 5. Remove leading/trailing hyphens
-    slug = slug.replace(/^-+|-+$/g, '');
+    slug = slug.replace(RE_LEADING_TRAILING_DASH, '');
 
     return slug;
 }
@@ -90,7 +96,7 @@ export function generateShortId(uuid: string, length = 4): string {
     // or use a different strategy. For short IDs (usually < 8), the hash is fine.
     // If length > 8, we fallback to just slicing the clean UUID.
     if (length > 8) {
-        return uuid.replace(/-/g, '').slice(0, length);
+        return uuid.replace(RE_HYPHEN, '').slice(0, length);
     }
 
     return hex.slice(0, length);
@@ -183,7 +189,7 @@ export function generateRandomString(
  * @returns The file name extracted from the URL, with or without the extension.
  */
 export function getFileName(url = '', getExtension = false): string {
-    const withoutQuery = url.split(/[?#]/)[0] || '';
+    const withoutQuery = url.split(RE_QUERY_FRAGMENT)[0] || '';
     const fileName = withoutQuery.substring(withoutQuery.lastIndexOf('/') + 1);
 
     if (getExtension) {

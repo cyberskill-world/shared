@@ -33,12 +33,12 @@ const typeHandlers: {
     },
     Map: {
         is: (v): v is Map<unknown, unknown> => v instanceof Map,
-        serialize: v => ({ __type: 'Map', value: Array.from(v.entries()) }),
+        serialize: v => ({ __type: 'Map', value: [...v.entries()] }),
         deserialize: v => new Map(v as [unknown, unknown][]),
     },
     Set: {
         is: (v): v is Set<unknown> => v instanceof Set,
-        serialize: v => ({ __type: 'Set', value: Array.from(v) }),
+        serialize: v => ({ __type: 'Set', value: [...v] }),
         deserialize: v => new Set(v as unknown[]),
     },
     RegExp: {

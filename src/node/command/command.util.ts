@@ -14,7 +14,13 @@ import { storage } from '../storage/index.js';
 
 const execPromise = util.promisify(exec);
 const execFilePromise = util.promisify(execFile);
-const SHELL_METACHARACTERS = /[|&;<>`$(){}\[\]!#~*?]/;
+const SHELL_METACHARACTERS = /[|&;<>`$(){}[\]!#~*?]/;
+// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/no-misleading-capturing-group
+const RE_ESLINT_ERROR = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+)\s+(\S+)$/;
+const RE_TS_ERROR = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
+// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/no-misleading-capturing-group
+const RE_COMMITLINT_ERROR = /^✖\s+(.+)\s+\[([^\]]*)\]$/;
+const RE_WHITESPACE = /\s+/;
 
 /**
  * Retrieves the package name for the current project.
@@ -115,9 +121,9 @@ async function parseTextErrors(output: string): Promise<void> {
     const errorList: I_IssueEntry[] = [];
     const unmatchedLines: string[] = [];
     let lastFilePath = '';
-    const eslintErrorDetailsRegex = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+)\s+(\S+)$/;
-    const tsRegex = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
-    const commitlintRegex = /^✖\s+(.+)\s+\[([^\]]*)\]$/;
+    const eslintErrorDetailsRegex = RE_ESLINT_ERROR;
+    const tsRegex = RE_TS_ERROR;
+    const commitlintRegex = RE_COMMITLINT_ERROR;
 
     output.split('\n').forEach((line) => {
         if (line.startsWith('/')) {
@@ -163,7 +169,7 @@ async function parseTextErrors(output: string): Promise<void> {
         await saveErrorListToStorage(errorList);
     }
 
-    if (getEnv().DEBUG && unmatchedLines.length) {
+    if (unmatchedLines.length) {
         log.warn(`Unmatched lines:`);
         unmatchedLines.forEach(line => log.info(`  ${line}`));
     }
@@ -235,7 +241,7 @@ async function executeCommand(command: string | void, parser = parseCommandOutpu
                 result = await execPromise(command, execOptions);
             }
             else {
-                const parts = command.split(/\s+/).filter(Boolean);
+                const parts = command.split(RE_WHITESPACE).filter(Boolean);
                 result = await execFilePromise(parts[0]!, parts.slice(1), execOptions);
             }
 
@@ -254,6 +260,8 @@ async function executeCommand(command: string | void, parser = parseCommandOutpu
         if (!stderr && !stdout) {
             log.error(`Command failed: ${message}`);
         }
+
+        throw error;
     }
 }
 

@@ -50,6 +50,9 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
     return current;
 }
 
+/**
+ *
+ */
 function setNestedValueHelper<T>(obj: T, path: (string | number)[], value: unknown, index: number): T {
     if (index >= path.length)
         return obj;
@@ -133,7 +136,7 @@ export function deepClone<T>(obj: T): T {
 
     const result = {} as Record<string, unknown>;
     for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        if (Object.hasOwn(obj, key)) {
             result[key] = deepClone((obj as Record<string, unknown>)[key]);
         }
     }
@@ -187,7 +190,7 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
 
     // Check if all arguments are arrays
     if (validArgs.every(Array.isArray)) {
-        return ([] as unknown[]).concat(...validArgs) as T;
+        return (validArgs as unknown[][]).flat() as T;
     }
 
     // Check if all arguments are objects (but not arrays)
@@ -197,16 +200,16 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
         for (const arg of validArgs) {
             const obj = arg as Record<string, unknown>;
             for (const key in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                if (Object.hasOwn(obj, key)) {
                     const value = obj[key];
-                    if (Object.prototype.hasOwnProperty.call(result, key)) {
+                    if (Object.hasOwn(result, key)) {
                         const existingValue = result[key];
                         if (
                             typeof value === 'object' && value !== null
                             && typeof existingValue === 'object' && existingValue !== null
                         ) {
                             if (Array.isArray(value) && Array.isArray(existingValue)) {
-                                result[key] = existingValue.concat(value);
+                                result[key] = [...existingValue, ...value];
                             }
                             else if (!Array.isArray(value) && !Array.isArray(existingValue)) {
                                 result[key] = deepMerge(
@@ -291,7 +294,7 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
      */
     function flatten(current: Record<string, unknown>, prefix: string) {
         for (const key in current) {
-            if (!Object.prototype.hasOwnProperty.call(current, key))
+            if (!Object.hasOwn(current, key))
                 continue;
 
             const value = current[key];
@@ -301,7 +304,7 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
                 // Check for Mongo operator
                 let hasMongoOperator = false;
                 for (const subKey in value as Record<string, unknown>) {
-                    if (Object.prototype.hasOwnProperty.call(value, subKey) && subKey.startsWith('$')) {
+                    if (Object.hasOwn(value, subKey) && subKey.startsWith('$')) {
                         hasMongoOperator = true;
                         break;
                     }

@@ -22,7 +22,7 @@ const roundTripLink = new ApolloLink((operation, forward) => {
 
     return forward(operation).pipe(
         tap(() => {
-            const time = new Date().getTime() - operation.getContext()['start'];
+            const time = Date.now() - operation.getContext()['start'];
 
             log.info(`Operation ${operation.operationName} took ${time}ms to complete`);
         }),

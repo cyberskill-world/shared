@@ -1,7 +1,10 @@
 import type { Preview } from '@storybook/react';
 
+const RE_COLOR_MATCHER = /(background|color)$/i;
+const RE_DATE_MATCHER = /Date$/i;
+
 /**
- * Creates a Storybook preview configuration for React projects.
+ * Creates a Storybook preview configuration with preconfigured controls and background settings.
  * This function generates a preview configuration that provides default parameters
  * and decorators for Storybook stories. It sets up common controls, backgrounds,
  * and viewport settings for consistent story rendering.
@@ -21,8 +24,8 @@ export function storybookPreview(options?: Partial<Preview>): Preview {
         parameters: {
             controls: {
                 matchers: {
-                    color: /(background|color)$/i,
-                    date: /Date$/i,
+                    color: RE_COLOR_MATCHER,
+                    date: RE_DATE_MATCHER,
                 },
             },
             backgrounds: {

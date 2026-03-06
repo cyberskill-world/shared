@@ -39,9 +39,12 @@ Object.entries(combinedMap).forEach(([baseChar, variations]) => {
 });
 
 // Construct a single regex that matches any character in our map
-const patternString = Array.from(charsToMatch).join('');
+const patternString = [...charsToMatch].join('');
 // We use a character class regex: [abc...]
+// eslint-disable-next-line regexp/no-empty-character-class -- regex is built dynamically from precomputed charMap
 const searchRegex = new RegExp(`[${patternString}]`, 'g');
+
+const RE_ESCAPE_REGEXP = /[.*+?^${}()|[\]\\]/g;
 
 /**
  * Escapes special characters in a string for use in a regular expression.
@@ -52,7 +55,7 @@ const searchRegex = new RegExp(`[${patternString}]`, 'g');
  * @returns The escaped string safe for use in a RegExp.
  */
 export function escapeRegExp(str: string): string {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return str.replace(RE_ESCAPE_REGEXP, '\\$&');
 }
 
 /**
@@ -73,6 +76,8 @@ export function regexSearchMapper(str: string) {
     return str.replace(searchRegex, match => replacementMap.get(match) || match);
 }
 
+const RE_DIACRITIC = /\p{Diacritic}/gu;
+
 /**
  * Remove accents from a string.
  * This function normalizes the string using NFD normalization and removes all diacritical marks.
@@ -81,7 +86,7 @@ export function regexSearchMapper(str: string) {
  * @returns The string without any accents or diacritical marks.
  */
 export function removeAccent(str: string) {
-    return str.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+    return str.normalize('NFD').replace(RE_DIACRITIC, '');
 }
 
 /**
@@ -98,7 +103,7 @@ export function uniqueArray<T>(
     keyFn?: (item: T) => string | number,
 ): T[] {
     if (!keyFn) {
-        return Array.from(new Set(arr));
+        return [...new Set(arr)];
     }
 
     const seen = new Set<string | number>();

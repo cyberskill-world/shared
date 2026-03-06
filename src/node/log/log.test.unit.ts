@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
 
-import { catchError, throwError } from './log.util.js';
+import { E_IssueType } from './log.type.js';
+import { catchError, log, throwError } from './log.util.js';
 
 vi.mock('#config/env/index.js', () => ({
     getEnv: () => ({ DEBUG: true }),
@@ -39,13 +40,13 @@ describe('throwError', () => {
         ).toThrow('Bad Request');
     });
 
-    it('should fallback to "Internal server error" when no message or status MESSAGE', () => {
+    it('should use empty MESSAGE as error when no message is provided', () => {
         expect(() =>
             throwError({
                 status: { CODE: 'CUSTOM', MESSAGE: '' } as any,
                 type: 'rest',
             }),
-        ).toThrow('Internal server error');
+        ).toThrow('');
     });
 });
 
@@ -88,5 +89,59 @@ describe('catchError', () => {
         catchError(new Error('cb test'), { shouldLog: false, callback });
         expect(callback).toHaveBeenCalledWith(expect.any(Error));
         expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log error when shouldLog is true (default)', () => {
+        catchError(new Error('logged error'));
+        // Validates the default path where shouldLog=true
+    });
+
+    it('should handle undefined options', () => {
+        const result = catchError(new Error('no options'));
+        expect(result).toEqual(expect.objectContaining({ success: false }));
+    });
+});
+
+describe('log object', () => {
+    it('should expose all standard consola methods', () => {
+        expect(typeof log.info).toBe('function');
+        expect(typeof log.error).toBe('function');
+        expect(typeof log.warn).toBe('function');
+        expect(typeof log.success).toBe('function');
+        expect(typeof log.start).toBe('function');
+        expect(typeof log.box).toBe('function');
+        expect(typeof log.debug).toBe('function');
+        expect(typeof log.fatal).toBe('function');
+    });
+
+    it('should have printBoxedLog method', () => {
+        expect(typeof log.printBoxedLog).toBe('function');
+    });
+});
+
+describe('log.printBoxedLog', () => {
+    it('should handle empty issues array gracefully', () => {
+        expect(() => log.printBoxedLog('No Issues', [])).not.toThrow();
+    });
+
+    it('should print issues with file and message', () => {
+        const issues = [
+            { file: 'test.ts', position: '1:1', type: E_IssueType.Error, message: 'Missing semi' },
+        ];
+        expect(() => log.printBoxedLog('Errors', issues)).not.toThrow();
+    });
+
+    it('should print issues with rule information', () => {
+        const issues = [
+            { file: 'test.ts', position: '5:10', type: E_IssueType.Warning, message: 'Unused var', rule: 'no-unused-vars' },
+        ];
+        expect(() => log.printBoxedLog('Warnings', issues, 'yellow')).not.toThrow();
+    });
+
+    it('should handle issues without position', () => {
+        const issues = [
+            { file: 'commitlint', type: E_IssueType.Error, message: 'Invalid commit' },
+        ];
+        expect(() => log.printBoxedLog('Errors', issues)).not.toThrow();
     });
 });

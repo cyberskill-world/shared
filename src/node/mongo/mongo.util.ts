@@ -1,6 +1,6 @@
+import type migrate from 'migrate-mongo';
 import type mongooseRaw from 'mongoose';
 
-import type migrate from 'migrate-mongo';
 import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { randomUUID } from 'node:crypto';
@@ -34,25 +34,25 @@ export function convertEnumToModelName(enumValue: string): string {
  * Required to avoid TS7056 (inferred type exceeds maximum serialization length).
  */
 interface I_MongoUtils {
-    createGenericFields(): I_GenericDocument;
-    applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>): void;
-    applyMiddlewares<T extends Partial<C_Document>>(schema: T_MongooseShema<T>, middlewares: I_MongooseModelMiddleware<T>[]): void;
-    createGenericSchema(mongoose: typeof mongooseRaw): T_MongooseShema<I_GenericDocument>;
-    createSchema<T, R extends string>(options: I_CreateSchemaOptions<T, R>): T_MongooseShema<T>;
-    createModel<T extends Partial<C_Document>, R extends string>(options: I_CreateModelOptions<T, R>): I_ExtendedModel<T>;
+    createGenericFields: () => I_GenericDocument;
+    applyPlugins: <T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) => void;
+    applyMiddlewares: <T extends Partial<C_Document>>(schema: T_MongooseShema<T>, middlewares: I_MongooseModelMiddleware<T>[]) => void;
+    createGenericSchema: (mongoose: typeof mongooseRaw) => T_MongooseShema<I_GenericDocument>;
+    createSchema: <T, R extends string>(options: I_CreateSchemaOptions<T, R>) => T_MongooseShema<T>;
+    createModel: <T extends Partial<C_Document>, R extends string>(options: I_CreateModelOptions<T, R>) => I_ExtendedModel<T>;
     validator: {
-        isRequired<T>(): (this: T, value: unknown) => Promise<boolean>;
-        isUnique<T extends { constructor: { exists: (query: { [key: string]: unknown }) => Promise<unknown> } }>(fields: string[]): (this: T, value: unknown) => Promise<boolean>;
-        matchesRegex(regexArray: RegExp[]): (value: string) => Promise<boolean>;
+        isRequired: <T>() => (this: T, value: unknown) => Promise<boolean>;
+        isUnique: <T extends { constructor: { exists: (query: { [key: string]: unknown }) => Promise<unknown> } }>(fields: string[]) => (this: T, value: unknown) => Promise<boolean>;
+        matchesRegex: (regexArray: RegExp[]) => (value: string) => Promise<boolean>;
     };
     migrate: {
-        getModule(): Promise<typeof migrate>;
+        getModule: () => Promise<typeof migrate>;
         setConfig: (options: Partial<migrate.config.Config> & { moduleSystem?: 'commonjs' | 'esm' }) => void;
     };
-    regexify<T>(filter?: T_QueryFilter<T>, fields?: (keyof T | string)[]): T_QueryFilter<T>;
-    isDynamicVirtual<T, R extends string>(options?: T_VirtualOptions<T, R>): options is I_DynamicVirtualOptions<T, R>;
-    getNewRecords<T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean): Promise<T[]>;
-    getExistingRecords<T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean): Promise<T_WithId<T>[]>;
+    regexify: <T>(filter?: T_QueryFilter<T>, fields?: (keyof T | string)[]) => T_QueryFilter<T>;
+    isDynamicVirtual: <T, R extends string>(options?: T_VirtualOptions<T, R>) => options is I_DynamicVirtualOptions<T, R>;
+    getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean) => Promise<T[]>;
+    getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean) => Promise<T_WithId<T>[]>;
 }
 
 /**
@@ -429,4 +429,3 @@ export const mongo: I_MongoUtils = {
 };
 
 export { applyNestedPopulate } from './mongo.populate.js';
-

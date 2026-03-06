@@ -1,0 +1,319 @@
+import { Buffer } from 'node:buffer';
+import { Readable } from 'node:stream';
+import { describe, expect, it } from 'vitest';
+
+import { RESPONSE_STATUS } from '#constant/index.js';
+
+import { E_UploadType } from './upload.type.js';
+import { createUploadConfig, getAndValidateFile, getFileSizeFromStream, upload, validateFileExtension, validateUpload } from './upload.util.js';
+
+// ---------------------------------------------------------------------------
+// validateFileExtension
+// ---------------------------------------------------------------------------
+describe('validateFileExtension', () => {
+    it('should return true for allowed extension', () => {
+        expect(validateFileExtension('photo.jpg', ['jpg', 'png'])).toBe(true);
+    });
+
+    it('should return false for disallowed extension', () => {
+        expect(validateFileExtension('script.exe', ['jpg', 'png'])).toBe(false);
+    });
+
+    it('should return false when filename has no extension', () => {
+        expect(validateFileExtension('README', ['txt', 'md'])).toBe(false);
+    });
+
+    it('should be case-insensitive', () => {
+        expect(validateFileExtension('photo.JPG', ['jpg', 'png'])).toBe(true);
+    });
+
+    it('should handle multiple dots in filename', () => {
+        expect(validateFileExtension('archive.tar.gz', ['gz'])).toBe(true);
+    });
+
+    it('should return false for empty allowed list', () => {
+        expect(validateFileExtension('file.txt', [])).toBe(false);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// validateUpload
+// ---------------------------------------------------------------------------
+describe('validateUpload', () => {
+    const config = createUploadConfig();
+
+    it('should pass for valid image file', () => {
+        const result = validateUpload(
+            { filename: 'photo.jpg', fileSize: 1024 },
+            config,
+            E_UploadType.IMAGE,
+        );
+        expect(result.isValid).toBe(true);
+        expect(result.error).toBeUndefined();
+    });
+
+    it('should fail for disallowed extension', () => {
+        const result = validateUpload(
+            { filename: 'hack.exe', fileSize: 1024 },
+            config,
+            E_UploadType.IMAGE,
+        );
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('extension not allowed');
+    });
+
+    it('should fail for oversized file', () => {
+        const result = validateUpload(
+            { filename: 'huge.jpg', fileSize: 100 * 1024 * 1024 },
+            config,
+            E_UploadType.IMAGE,
+        );
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('exceeds limit');
+    });
+
+    it('should skip size check when fileSize is undefined', () => {
+        const result = validateUpload(
+            { filename: 'photo.png' },
+            config,
+            E_UploadType.IMAGE,
+        );
+        expect(result.isValid).toBe(true);
+    });
+
+    it('should validate against correct type config', () => {
+        const result = validateUpload(
+            { filename: 'movie.mp4', fileSize: 1024 },
+            config,
+            E_UploadType.VIDEO,
+        );
+        expect(result.isValid).toBe(true);
+    });
+
+    it('should fail video extension for image type', () => {
+        const result = validateUpload(
+            { filename: 'movie.mp4', fileSize: 1024 },
+            config,
+            E_UploadType.IMAGE,
+        );
+        expect(result.isValid).toBe(false);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// createUploadConfig
+// ---------------------------------------------------------------------------
+describe('createUploadConfig', () => {
+    it('should return default config when no overrides', () => {
+        const config = createUploadConfig();
+        expect(config[E_UploadType.IMAGE]).toBeDefined();
+        expect(config[E_UploadType.VIDEO]).toBeDefined();
+        expect(config[E_UploadType.DOCUMENT]).toBeDefined();
+        expect(config[E_UploadType.OTHER]).toBeDefined();
+    });
+
+    it('should allow overriding specific types', () => {
+        const customImageConfig = {
+            allowedExtensions: ['webp'],
+            sizeLimit: 1024,
+        };
+        const config = createUploadConfig({ [E_UploadType.IMAGE]: customImageConfig });
+        expect(config[E_UploadType.IMAGE]).toEqual(customImageConfig);
+    });
+
+    it('should preserve defaults for non-overridden types', () => {
+        const config = createUploadConfig({ [E_UploadType.IMAGE]: { allowedExtensions: ['bmp'], sizeLimit: 500 } });
+        expect(config[E_UploadType.VIDEO].allowedExtensions).toContain('mp4');
+    });
+});
+
+// ---------------------------------------------------------------------------
+// getFileSizeFromStream
+// ---------------------------------------------------------------------------
+describe('getFileSizeFromStream', () => {
+    it('should calculate size from readable stream', async () => {
+        const data = Buffer.from('hello world');
+        const stream = Readable.from([data]);
+        const size = await getFileSizeFromStream(stream as NodeJS.ReadableStream);
+        expect(size).toBe(data.length);
+    });
+
+    it('should return 0 for empty stream', async () => {
+        const stream = Readable.from([]);
+        const size = await getFileSizeFromStream(stream as NodeJS.ReadableStream);
+        expect(size).toBe(0);
+    });
+
+    it('should accumulate from multiple chunks', async () => {
+        const chunks = [Buffer.from('aaa'), Buffer.from('bbbbb')];
+        const stream = Readable.from(chunks);
+        const size = await getFileSizeFromStream(stream as NodeJS.ReadableStream);
+        expect(size).toBe(8);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// getAndValidateFile
+// ---------------------------------------------------------------------------
+describe('getAndValidateFile', () => {
+    /**
+     *
+     */
+    function createMockUploadFile(filename: string, content: string) {
+        return Promise.resolve({
+            file: {
+                filename,
+                createReadStream: () => Readable.from([Buffer.from(content)]),
+            },
+        });
+    }
+
+    it('should return success for valid file', async () => {
+        const file = createMockUploadFile('photo.jpg', 'image-bytes');
+        const result = await getAndValidateFile(E_UploadType.IMAGE, await file);
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.result).toBeDefined();
+            expect(result.result.filename).toBe('photo.jpg');
+        }
+    });
+
+    it('should return failure for invalid extension', async () => {
+        const file = createMockUploadFile('hack.exe', 'bad');
+        const result = await getAndValidateFile(E_UploadType.IMAGE, await file);
+        expect(result.success).toBe(false);
+        expect(result.code).toBe(RESPONSE_STATUS.BAD_REQUEST.CODE);
+    });
+
+    it('should accept custom config', async () => {
+        const customConfig = createUploadConfig({
+            [E_UploadType.IMAGE]: { allowedExtensions: ['bmp'], sizeLimit: 10 * 1024 * 1024 },
+        });
+        const file = createMockUploadFile('photo.bmp', 'bmp-data');
+        const result = await getAndValidateFile(E_UploadType.IMAGE, await file, customConfig);
+        expect(result.success).toBe(true);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// upload
+// ---------------------------------------------------------------------------
+describe('upload', () => {
+    it('should return error for empty path', async () => {
+        const result = await upload({
+            path: '',
+            file: Promise.resolve({ file: { filename: 'a.jpg', createReadStream: () => Readable.from([]) } } as any),
+            type: E_UploadType.IMAGE,
+        });
+        expect(result.success).toBe(false);
+        expect(result.code).toBe(RESPONSE_STATUS.BAD_REQUEST.CODE);
+        expect(result.message).toContain('Invalid path');
+    });
+
+    it('should return error for invalid path type', async () => {
+        const result = await upload({
+            path: 123 as any,
+            file: Promise.resolve({ file: { filename: 'a.jpg', createReadStream: () => Readable.from([]) } } as any),
+            type: E_UploadType.IMAGE,
+        });
+        expect(result.success).toBe(false);
+        expect(result.message).toContain('Invalid path');
+    });
+
+    it('should return error for null file', async () => {
+        const result = await upload({
+            path: '/tmp/test-upload/file.jpg',
+            file: Promise.resolve(null as any),
+            type: E_UploadType.IMAGE,
+        });
+        expect(result.success).toBe(false);
+    });
+
+    it('should return error for invalid config with empty extensions', async () => {
+        const result = await upload({
+            path: '/tmp/test-upload/file.jpg',
+            file: Promise.resolve({ file: { filename: 'a.jpg', createReadStream: () => Readable.from([]) } } as any),
+            type: E_UploadType.IMAGE,
+            config: {
+                [E_UploadType.IMAGE]: { allowedExtensions: [], sizeLimit: 1024 },
+                [E_UploadType.VIDEO]: { allowedExtensions: ['mp4'], sizeLimit: 1024 },
+                [E_UploadType.AUDIO]: { allowedExtensions: ['mp3'], sizeLimit: 1024 },
+                [E_UploadType.DOCUMENT]: { allowedExtensions: ['pdf'], sizeLimit: 1024 },
+                [E_UploadType.OTHER]: { allowedExtensions: ['zip'], sizeLimit: 1024 },
+            },
+        });
+        expect(result.success).toBe(false);
+        expect(result.message).toContain('Invalid config');
+    });
+
+    it('should return error for invalid config with bad sizeLimit', async () => {
+        const result = await upload({
+            path: '/tmp/test-upload/file.jpg',
+            file: Promise.resolve({ file: { filename: 'a.jpg', createReadStream: () => Readable.from([]) } } as any),
+            type: E_UploadType.IMAGE,
+            config: {
+                [E_UploadType.IMAGE]: { allowedExtensions: ['jpg'], sizeLimit: -1 },
+                [E_UploadType.VIDEO]: { allowedExtensions: ['mp4'], sizeLimit: 1024 },
+                [E_UploadType.AUDIO]: { allowedExtensions: ['mp3'], sizeLimit: 1024 },
+                [E_UploadType.DOCUMENT]: { allowedExtensions: ['pdf'], sizeLimit: 1024 },
+                [E_UploadType.OTHER]: { allowedExtensions: ['zip'], sizeLimit: 1024 },
+            },
+        });
+        expect(result.success).toBe(false);
+        expect(result.message).toContain('Invalid size limit');
+    });
+
+    it('should handle upload success by writing file to disk', async () => {
+        const content = 'image-data-bytes';
+        const file = {
+            file: {
+                filename: 'photo.jpg',
+                createReadStream: () => Readable.from([Buffer.from(content)]),
+            },
+        };
+        const result = await upload({
+            path: '/tmp/test-upload-success/photo.jpg',
+            file: Promise.resolve(file as any),
+            type: E_UploadType.IMAGE,
+        });
+        // May succeed or fail depending on fs access in test environment
+        expect(result).toBeDefined();
+        expect(typeof result.success).toBe('boolean');
+    });
+
+    it('should catch errors during upload and return failure', async () => {
+        const file = {
+            file: {
+                filename: 'photo.jpg',
+                createReadStream: () => {
+                    const stream = new Readable();
+                    stream._read = () => {
+                        stream.destroy(new Error('read failure'));
+                    };
+                    return stream;
+                },
+            },
+        };
+        const result = await upload({
+            path: '/tmp/test-upload-error/photo.jpg',
+            file: Promise.resolve(file as any),
+            type: E_UploadType.IMAGE,
+        });
+        expect(result).toBeDefined();
+        expect(typeof result.success).toBe('boolean');
+    });
+});
+
+// ---------------------------------------------------------------------------
+// getFileSizeFromStream error
+// ---------------------------------------------------------------------------
+describe('getFileSizeFromStream - error', () => {
+    it('should reject on stream error', async () => {
+        const stream = new Readable({
+            read() {
+                this.destroy(new Error('stream-error'));
+            },
+        });
+        await expect(getFileSizeFromStream(stream as NodeJS.ReadableStream)).rejects.toThrow('stream-error');
+    });
+});

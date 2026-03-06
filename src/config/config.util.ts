@@ -41,6 +41,7 @@ const handleESLint: T_ConfigHandler = (...config) => {
             },
             formatters: true,
             yaml: false,
+            markdown: false,
             react: true,
         },
         restConfig,

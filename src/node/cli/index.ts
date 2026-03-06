@@ -235,7 +235,7 @@ async function aiSetup() {
     }
 
     if (pathExistsSync(PATH.DOT_AGENT)) {
-        await runCommand('Updating AI agent', 'ag-kit update -y');
+        await runCommand('Updating AI agent', 'echo y | ag-kit update');
     }
     else {
         await runCommand('Initializing AI agent', 'ag-kit init');
@@ -292,7 +292,17 @@ async function inspect() {
  * @returns A promise that resolves when unit tests are complete.
  */
 async function testUnit() {
-    await runCommand('Running unit tests', await command.testUnit());
+    try {
+        const packageData = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
+        const cmd = packageData.success && packageData.result.isCurrentProject
+            ? `pnpm exec vitest run`
+            : await command.testUnit();
+
+        await runCommand('Running unit tests', cmd, { throwOnError: true });
+    }
+    catch {
+        process.exit(1);
+    }
 }
 
 /**
@@ -303,7 +313,17 @@ async function testUnit() {
  * @returns A promise that resolves when end-to-end tests are complete.
  */
 async function testE2E() {
-    await runCommand('Running end-to-end tests', await command.testE2e());
+    try {
+        const packageData = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
+        const cmd = packageData.success && packageData.result.isCurrentProject
+            ? `pnpm exec vitest run --passWithNoTests --config src/config/vitest/vitest.e2e.ts`
+            : await command.testE2e();
+
+        await runCommand('Running end-to-end tests', cmd, { throwOnError: true });
+    }
+    catch {
+        process.exit(1);
+    }
 }
 
 /**
@@ -383,14 +403,14 @@ async function storybookBuild() {
                     describe: 'Migration name',
                     type: 'string',
                 }), async (argv) => {
-                    if (!argv.name) {
-                        log.error('Migration name is required.');
+                if (!argv.name) {
+                    log.error('Migration name is required.');
 
-                        return;
-                    }
+                    return;
+                }
 
-                    await mongoMigrateCreate(argv.name);
-                })
+                await mongoMigrateCreate(argv.name);
+            })
             .command('mongo:migrate:up', 'Apply all MongoDB migrations', mongoMigrateUp)
             .command('mongo:migrate:down', 'Rollback last MongoDB migration', mongoMigrateDown)
             .command('storybook:dev', 'Start Storybook development server', storybookDev)
