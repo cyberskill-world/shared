@@ -106,12 +106,13 @@ export function ApolloErrorComponent() {
                     type="button"
                     className={style['btn-close']}
                     onClick={hideError}
-                    aria-label="Close error details"
-                    title="Close error details"
+                    aria-label="Close error details (Esc)"
+                    aria-keyshortcuts="Escape"
+                    title="Close error details (Esc)"
                 >
                     ✕
                 </button>
-                <div id="apollo-error-title" className={style['error-title']}>
+                <div className={style['error-title']}>
                     <button
                         type="button"
                         className={style['btn-retry']}
@@ -121,7 +122,9 @@ export function ApolloErrorComponent() {
                         Reload
                     </button>
                     {' '}
-                    {!validate.isEmpty(error) && errorMessage}
+                    <span id="apollo-error-title">
+                        {!validate.isEmpty(error) && errorMessage}
+                    </span>
                 </div>
                 <div className={style['error-details']}>
                     {isGraphQLError && 'locations' in error && error.locations && (
