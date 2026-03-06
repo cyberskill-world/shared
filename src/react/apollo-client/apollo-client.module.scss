@@ -35,10 +35,8 @@
             0 1px 2px 0 rgba(0, 0, 0, 0.06);
     }
 
-    &:focus {
-        outline: none;
-        ring: 2px;
-        ring-color: #fca5a5;
-        ring-offset: 2px;
+    &:focus-visible {
+        outline: 2px solid #fca5a5;
+        outline-offset: 2px;
     }
 }

@@ -25,7 +25,7 @@ describe('ApolloErrorComponent', () => {
         expect(dialog).toHaveAttribute('aria-modal', 'true');
         expect(dialog).toHaveAttribute('aria-labelledby', 'apollo-error-title');
 
-        expect(screen.getByLabelText('Close error details')).toBeInTheDocument();
+        expect(screen.getByLabelText('Close error details (Esc)')).toBeInTheDocument();
         expect(screen.getByLabelText('Reload page')).toBeInTheDocument();
 
         // Verify Escape key closes the modal
