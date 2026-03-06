@@ -1,3 +1,11 @@
+# [3.2.0](https://github.com/cyberskill-world/shared/compare/v3.1.0...v3.2.0) (2026-03-06)
+
+
+### Features
+
+* add more test cases ([6cf237e](https://github.com/cyberskill-world/shared/commit/6cf237ee579742b65f3036b528d6e2d091afc997))
+* update libs ([4102ec9](https://github.com/cyberskill-world/shared/commit/4102ec979d5678d23d5651132af16b58ec6e90d2))
+
 # [3.1.0](https://github.com/cyberskill-world/shared/compare/v3.0.0...v3.1.0) (2026-03-03)
 
 
