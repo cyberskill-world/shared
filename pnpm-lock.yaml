@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  minimatch: '>=10.2.3'
+  minimatch: '>=10.2.4'
   minimatch@__comment: Pinned to fix transitive vulnerability CVE in older minimatch versions used by some deps
 
 importers:
