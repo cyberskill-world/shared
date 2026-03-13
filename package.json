@@ -292,7 +292,9 @@
     "pnpm": {
         "overrides": {
             "minimatch": ">=10.2.4",
-            "minimatch@__comment": "Pinned to fix transitive vulnerability CVE in older minimatch versions used by some deps"
+            "minimatch@__comment": "Pinned to fix transitive vulnerability CVE in older minimatch versions used by some deps",
+            "flatted": ">=3.4.0",
+            "flatted@__comment": "Pinned to fix unbounded recursion DoS vulnerability in parse() revive phase"
         }
     }
 }
