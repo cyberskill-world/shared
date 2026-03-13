@@ -87,12 +87,21 @@ export const serializer: I_Serializer<unknown> = {
                 return typeHandlers.Date.serialize(originalValue);
             }
 
-            for (const type of Object.keys(typeHandlers) as T_SerializerKnownTypes[]) {
-                const handler = typeHandlers[type];
-
-                if (handler.is(val)) {
-                    return (handler as I_Handler<typeof type>).serialize(val);
+            // Optimize by avoiding Object.keys() loop which allocates a new array each time.
+            // Explicitly checking types is significantly faster for JSON stringification.
+            if (val && typeof val === 'object') {
+                if (val instanceof Map) {
+                    return typeHandlers.Map.serialize(val);
                 }
+                if (val instanceof Set) {
+                    return typeHandlers.Set.serialize(val);
+                }
+                if (val instanceof RegExp) {
+                    return typeHandlers.RegExp.serialize(val);
+                }
+            }
+            else if (typeof val === 'bigint') {
+                return typeHandlers.BigInt.serialize(val);
             }
 
             return val;
