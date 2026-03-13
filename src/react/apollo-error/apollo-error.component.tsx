@@ -99,6 +99,7 @@ export function ApolloErrorComponent() {
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="apollo-error-title"
+                aria-describedby="apollo-error-details"
                 tabIndex={-1}
                 onKeyDown={handleFocusTrap}
             >
@@ -123,7 +124,7 @@ export function ApolloErrorComponent() {
                     {' '}
                     {!validate.isEmpty(error) && errorMessage}
                 </div>
-                <div className={style['error-details']}>
+                <div id="apollo-error-details" className={style['error-details']}>
                     {isGraphQLError && 'locations' in error && error.locations && (
                         <pre className="locations">
                             <strong>Locations:</strong>
