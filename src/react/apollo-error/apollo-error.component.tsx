@@ -123,7 +123,7 @@ export function ApolloErrorComponent() {
                     </button>
                     {' '}
                     <span id="apollo-error-title">
-                        {!validate.isEmpty(error) && errorMessage}
+                        {errorMessage || 'Error details'}
                     </span>
                 </div>
                 <div className={style['error-details']}>
