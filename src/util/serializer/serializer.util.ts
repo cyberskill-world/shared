@@ -67,6 +67,12 @@ const typeHandlers: {
  * 1. During serialization: Wrapping special types with type information before JSON stringification
  * 2. During deserialization: Detecting wrapped types and reconstructing them to their original form
  */
+const typeHandlerList: I_Handler<T_SerializerKnownTypes>[] = Object.values(
+    // `typeHandlers` is assumed to be a map from `T_SerializerKnownTypes` to `I_Handler<...>`.
+    // Precompute this list once to avoid per-call allocations in the replacer.
+    typeHandlers,
+) as I_Handler<T_SerializerKnownTypes>[];
+
 export const serializer: I_Serializer<unknown> = {
     /**
      * Serializes a value to a JSON string.
@@ -83,25 +89,14 @@ export const serializer: I_Serializer<unknown> = {
             const context = this;
             const originalValue = context[_key];
 
-            if (originalValue instanceof Date) {
-                return typeHandlers.Date.serialize(originalValue);
-            }
-
-            // Optimize by avoiding Object.keys() loop which allocates a new array each time.
-            // Explicitly checking types is significantly faster for JSON stringification.
-            if (val && typeof val === 'object') {
-                if (val instanceof Map) {
-                    return typeHandlers.Map.serialize(val);
+            // Delegate to all registered type handlers using their `is` predicates.
+            for (const handler of typeHandlerList) {
+                if (handler.is(originalValue)) {
+                    // At runtime this is safe because `handler.is` guards the call to `serialize`.
+                    return (handler as I_Handler<T_SerializerKnownTypes>).serialize(
+                        originalValue as I_SerializerValueMap[T_SerializerKnownTypes],
+                    );
                 }
-                if (val instanceof Set) {
-                    return typeHandlers.Set.serialize(val);
-                }
-                if (val instanceof RegExp) {
-                    return typeHandlers.RegExp.serialize(val);
-                }
-            }
-            else if (typeof val === 'bigint') {
-                return typeHandlers.BigInt.serialize(val);
             }
 
             return val;
