@@ -97,45 +97,36 @@ export const serializer: I_Serializer<unknown> = {
                         originalValue as I_SerializerValueMap[T_SerializerKnownTypes],
                     );
                 }
-                if (val instanceof Set) {
-                    return typeHandlers.Set.serialize(val);
-                }
-                if (val instanceof RegExp) {
-                    return typeHandlers.RegExp.serialize(val);
-                }
-            }
-            else if(typeof val === 'bigint') {
-        return typeHandlers.BigInt.serialize(val);
             }
 
-return val;
+            return val;
         });
     },
-/**
- * Deserializes a JSON string to its original value.
- * If the value is of a known type (Date, Map, Set, RegExp, BigInt),
- * it will be deserialized using the corresponding handler.
- * Otherwise, it will be deserialized as is.
- *
- * @param json - The JSON string to deserialize back to its original form.
- * @returns The deserialized value with all special types reconstructed.
- */
-deserialize(json) {
-    return JSON.parse(json, (_key, val) => {
-        if (
-            val
-            && typeof val === 'object'
-            && '__type' in val
-            && typeof val.__type === 'string'
-        ) {
-            const type = val.__type as T_SerializerKnownTypes;
-            const handler = typeHandlers[type];
+    /**
+     * Deserializes a JSON string to its original value.
+     * If the value is of a known type (Date, Map, Set, RegExp, BigInt),
+     * it will be deserialized using the corresponding handler.
+     * Otherwise, it will be deserialized as is.
+     *
+     * @param json - The JSON string to deserialize back to its original form.
+     * @returns The deserialized value with all special types reconstructed.
+     */
+    deserialize(json) {
+        return JSON.parse(json, (_key, val) => {
+            if (
+                val
+                && typeof val === 'object'
+                && '__type' in val
+                && typeof val.__type === 'string'
+            ) {
+                const type = val.__type as T_SerializerKnownTypes;
+                const handler = typeHandlers[type];
 
-            if (handler) {
-                return handler.deserialize(val.value);
+                if (handler) {
+                    return handler.deserialize(val.value);
+                }
             }
-        }
-        return val;
-    });
-},
+            return val;
+        });
+    },
 };
