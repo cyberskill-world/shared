@@ -9029,6 +9029,7 @@ snapshots:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   '@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.0.3(jiti@2.6.1))':
 =======
 =======
@@ -9038,6 +9039,16 @@ snapshots:
 =======
   '@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.0.3(jiti@2.6.1))':
 >>>>>>> d2309e8 (fix(deps): update all non-major dependencies)
+=======
+  '@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.0.3(jiti@2.6.1))':
+=======
+<<<<<<< HEAD
+  '@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.0.3(jiti@2.6.1))':
+=======
+  '@eslint-community/eslint-plugin-eslint-comments@4.7.1(eslint@10.0.2(jiti@2.6.1))':
+>>>>>>> d4915f0 (refactor(serializer): optimize serialize performance and fix audit)
+>>>>>>> aeae3d5 (refactor(serializer): optimize serialize performance and fix audit)
+>>>>>>> 532f216 (refactor(serializer): optimize serialize performance and fix audit)
     dependencies:
       escape-string-regexp: 4.0.0
       eslint: 10.0.3(jiti@2.6.1)
@@ -14875,6 +14886,7 @@ snapshots:
       '@swc/helpers': 0.5.15
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       baseline-browser-mapping: 2.10.8
       caniuse-lite: 1.0.30001779
 =======
@@ -14885,6 +14897,19 @@ snapshots:
       baseline-browser-mapping: 2.10.8
       caniuse-lite: 1.0.30001779
 >>>>>>> 560367b (build: update packages to fix high severity security vulnerabilities)
+=======
+      baseline-browser-mapping: 2.10.8
+      caniuse-lite: 1.0.30001779
+=======
+<<<<<<< HEAD
+      baseline-browser-mapping: 2.10.8
+      caniuse-lite: 1.0.30001779
+=======
+      baseline-browser-mapping: 2.10.7
+      caniuse-lite: 1.0.30001778
+>>>>>>> d4915f0 (refactor(serializer): optimize serialize performance and fix audit)
+>>>>>>> aeae3d5 (refactor(serializer): optimize serialize performance and fix audit)
+>>>>>>> 532f216 (refactor(serializer): optimize serialize performance and fix audit)
       postcss: 8.4.31
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
