@@ -191,7 +191,7 @@
         "@as-integrations/express5": "1.1.2",
         "@dotenvx/dotenvx": "1.55.1",
         "@eddeee888/gcg-typescript-resolver-files": "0.15.0",
-        "@eslint-react/eslint-plugin": "3.0.0",
+        "@eslint-react/eslint-plugin": "2.13.0",
         "@graphql-codegen/cli": "6.2.1",
         "@graphql-codegen/client-preset": "5.2.4",
         "@nestjs/common": "11.1.17",
@@ -292,10 +292,10 @@
     },
     "pnpm": {
         "overrides": {
-            "minimatch": ">=10.2.4",
-            "minimatch@__comment": "Pinned to fix transitive vulnerability CVE in older minimatch versions used by some deps",
             "flatted": ">=3.4.0",
-            "flatted@__comment": "Pinned to fix unbounded recursion DoS vulnerability in parse() revive phase"
+            "flatted@__comment": "Pinned to fix unbounded recursion DoS vulnerability in parse() revive phase",
+            "minimatch": ">=10.2.4",
+            "minimatch@__comment": "Pinned to fix transitive vulnerability CVE in older minimatch versions used by some deps"
         }
     }
 }

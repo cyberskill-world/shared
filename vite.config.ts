@@ -89,7 +89,6 @@ export default defineConfig({
         rollupOptions: {
             external: isExternal,
             output: {
-                compact: true,
                 preserveModules: true,
                 preserveModulesRoot: 'src',
                 exports: 'named',
@@ -98,8 +97,6 @@ export default defineConfig({
                 moduleSideEffects: false,
                 propertyReadSideEffects: false,
                 unknownGlobalSideEffects: false,
-                tryCatchDeoptimization: false,
-                correctVarValueBeforeDeclaration: true,
             },
         },
         sourcemap: true,

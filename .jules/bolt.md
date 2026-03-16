@@ -15,5 +15,5 @@
 
 ## 2025-02-20 - [Avoid Object.keys() inside JSON.stringify replacers]
 
-**Learning:** Using `Object.keys()` or dynamically iterating over object properties inside a `JSON.stringify` replacer function causes significant performance degradation because it allocates a new array and loops for *every single key-value pair* being stringified.
+**Learning:** Using `Object.keys()` or dynamically iterating over object properties inside a `JSON.stringify` replacer function causes significant performance degradation because it allocates a new array and loops for _every single key-value pair_ being stringified.
 **Action:** Always prefer explicit `typeof` and `instanceof` checks (or simple pre-computed arrays/maps) inside frequently called loop bodies or replacer functions over dynamic object introspection.
