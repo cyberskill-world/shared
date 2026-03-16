@@ -234,7 +234,7 @@
         "react-hot-toast": "2.6.0",
         "react-i18next": "16.5.8",
         "rxjs": "7.8.2",
-        "vite": "7.3.1",
+        "vite": "8.0.0",
         "ws": "8.19.0",
         "yargs": "18.0.0"
     },
@@ -280,7 +280,7 @@
         "simple-git-hooks": "2.13.1",
         "tsx": "4.21.0",
         "typescript": "5.9.3",
-        "vite": "7.3.1",
+        "vite": "8.0.0",
         "vite-plugin-dts": "4.5.4",
         "vitest": "4.1.0"
     },
