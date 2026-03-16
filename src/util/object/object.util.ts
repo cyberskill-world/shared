@@ -120,10 +120,7 @@ export function deepClone<T>(obj: T): T {
         // eslint-disable-next-line unicorn/no-new-array -- Pre-allocating array size for performance
         const arr = new Array(len);
         for (let i = 0; i < len; i++) {
-            // Preserve sparse array holes by only cloning/assigning existing indices.
-            if (i in obj) {
-                arr[i] = deepClone(obj[i]);
-            }
+            arr[i] = deepClone(obj[i]);
         }
         return arr as unknown as T;
     }
