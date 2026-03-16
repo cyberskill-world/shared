@@ -1,10 +1,18 @@
 import type { ExceptionFilter, Type, ValidationPipe } from '@nestjs/common';
 import type { CorsOptions as CorsOptionsNestJS } from '@nestjs/common/interfaces/external/cors-options.interface.js';
 import type { CorsOptions, CorsOptionsDelegate, CorsRequest } from 'cors';
+import type { Store } from 'express-rate-limit';
 
 export type { NextFunction, Request, Response } from 'express';
 
 export { Router } from 'express';
+
+export interface I_RateLimitOptions {
+    windowMs?: number;
+    limit?: number;
+    store?: Store;
+    skip?: (req: import('express').Request) => boolean | Promise<boolean>;
+}
 
 export interface I_ExpressOptions {
     isDev?: boolean;
@@ -12,6 +20,8 @@ export interface I_ExpressOptions {
     maxFileSize?: number;
     maxFiles?: number;
     jsonLimit?: string;
+    trustProxy?: boolean | number | string | string[];
+    rateLimit?: false | I_RateLimitOptions;
 }
 
 export interface I_NestOptions {
@@ -21,6 +31,8 @@ export interface I_NestOptions {
     filters?: ExceptionFilter[];
     pipes?: ValidationPipe[];
     jsonLimit?: string;
+    trustProxy?: boolean | number | string | string[];
+    rateLimit?: false | I_RateLimitOptions;
 }
 
 export type T_CorsType = 'node' | 'nest';
