@@ -90,23 +90,39 @@ export function createSession(options: SessionOptions): RequestHandler {
  * - User agent parsing for device/browser detection
  *
  * @param app - The Express application instance to configure with middleware.
+ * @param isDev - Whether the application is running in development mode.
+ * @param jsonLimit - Maximum request body size for JSON payloads.
+ * @param trustProxy - Trust proxy setting; pass a truthy value to enable.
+ * @param rateLimitOptions - Rate limit configuration, or `false` to disable.
  */
-function setupMiddleware(app: Application, isDev = false, jsonLimit = '1mb') {
-    app.set('trust proxy', 1);
+function setupMiddleware(
+    app: Application,
+    isDev = false,
+    jsonLimit = '1mb',
+    trustProxy: boolean | number | string | string[] = false,
+    rateLimitOptions: false | import('./express.type.js').I_RateLimitOptions = {},
+) {
+    if (trustProxy !== false) {
+        app.set('trust proxy', trustProxy);
+    }
     app.use(
         helmet({
             crossOriginEmbedderPolicy: isDev ? false : undefined,
             contentSecurityPolicy: isDev ? false : undefined,
         }),
     );
-    app.use(
-        rateLimit({
-            windowMs: 15 * 60 * 1000, // 15 minutes
-            limit: 1000, // Limit each IP to 1000 requests per `window` (here, per 15 minutes)
-            standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-            legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-        }),
-    );
+    if (rateLimitOptions !== false) {
+        app.use(
+            rateLimit({
+                windowMs: rateLimitOptions.windowMs ?? 15 * 60 * 1000,
+                limit: rateLimitOptions.limit ?? 1000,
+                standardHeaders: true,
+                legacyHeaders: false,
+                ...(rateLimitOptions.store !== undefined && { store: rateLimitOptions.store }),
+                ...(rateLimitOptions.skip !== undefined && { skip: rateLimitOptions.skip }),
+            }),
+        );
+    }
     app.use(cookieParser());
     app.use(express.json({ limit: jsonLimit }));
     app.use(express.urlencoded({ extended: true, limit: jsonLimit }));
@@ -144,7 +160,7 @@ function setupStaticFolders(app: Application, staticFolders?: string | string[])
 export function createExpress(options?: I_ExpressOptions): Application {
     const app = express();
 
-    setupMiddleware(app, options?.isDev, options?.jsonLimit);
+    setupMiddleware(app, options?.isDev, options?.jsonLimit, options?.trustProxy, options?.rateLimit);
     setupStaticFolders(app, options?.static);
     app.use(graphqlUploadExpress({
         maxFileSize: options?.maxFileSize ?? 10_000_000,
@@ -168,7 +184,7 @@ export function createExpress(options?: I_ExpressOptions): Application {
 export async function createNest(options: I_NestOptions): Promise<INestApplication> {
     const app = await NestFactory.create(options.module);
 
-    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev, options.jsonLimit);
+    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev, options.jsonLimit, options.trustProxy, options.rateLimit);
     setupStaticFolders(app.getHttpAdapter().getInstance(), options.static);
 
     if (options.filters) {
