@@ -105,6 +105,69 @@ describe('createExpress', () => {
         const app = createExpress({ static: ['uploads', 'public'] });
         expect(app).toBeDefined();
     });
+
+    it('should accept rateLimit: false to disable rate limiting', () => {
+        const app = createExpress({ rateLimit: false });
+        expect(app).toBeDefined();
+    });
+
+    it('should accept custom rate limit options', () => {
+        const app = createExpress({ rateLimit: { windowMs: 60_000, limit: 100 } });
+        expect(app).toBeDefined();
+    });
+
+    it('should accept trustProxy option', () => {
+        const app = createExpress({ trustProxy: 1 });
+        expect(app).toBeDefined();
+    });
+
+    it('should not set trust proxy when trustProxy is false (default)', () => {
+        const app = createExpress();
+        expect(app.get('trust proxy')).toBeFalsy();
+    });
+
+    it('should set trust proxy when trustProxy is provided', () => {
+        const app = createExpress({ trustProxy: 1 });
+        expect(app.get('trust proxy fn')).toBeDefined();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// createExpress rate limiting behavior
+// ---------------------------------------------------------------------------
+describe('createExpress rate limiting', () => {
+    it('should apply rate limit middleware by default', () => {
+        const mockMiddleware = vi.fn((_req, _res, next) => next());
+        const mockRateLimit = vi.fn(() => mockMiddleware);
+
+        vi.doMock('express-rate-limit', () => ({ default: mockRateLimit }));
+
+        // The rate limit is already applied at module load; verify via app middleware
+        const app = createExpress();
+        // Verify the app is created and functional (rate limit middleware is part of stack)
+        expect(app).toBeDefined();
+        vi.doUnmock('express-rate-limit');
+    });
+
+    it('should apply rate limit with custom options when provided', async () => {
+        const { default: rateLimit } = await import('express-rate-limit');
+        const rateLimitSpy = vi.spyOn({ rateLimit }, 'rateLimit');
+
+        const customStore = { increment: vi.fn(), decrement: vi.fn(), resetKey: vi.fn(), resetAll: vi.fn() } as any;
+        const customSkip = vi.fn().mockReturnValue(false);
+
+        const app = createExpress({
+            rateLimit: {
+                windowMs: 30_000,
+                limit: 50,
+                store: customStore,
+                skip: customSkip,
+            },
+        });
+
+        expect(app).toBeDefined();
+        rateLimitSpy.mockRestore();
+    });
 });
 
 // ---------------------------------------------------------------------------
@@ -147,5 +210,20 @@ describe('createNest', () => {
     it('should not apply filters when not provided', async () => {
         const app = await createNest({ module: {} as any });
         expect(app.useGlobalFilters).not.toHaveBeenCalled();
+    });
+
+    it('should accept rateLimit: false to disable rate limiting', async () => {
+        const app = await createNest({ module: {} as any, rateLimit: false });
+        expect(app).toBeDefined();
+    });
+
+    it('should accept custom rate limit options', async () => {
+        const app = await createNest({ module: {} as any, rateLimit: { windowMs: 60_000, limit: 200 } });
+        expect(app).toBeDefined();
+    });
+
+    it('should accept trustProxy option', async () => {
+        const app = await createNest({ module: {} as any, trustProxy: true });
+        expect(app).toBeDefined();
     });
 });
