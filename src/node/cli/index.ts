@@ -270,7 +270,7 @@ async function reset() {
     await runCommand('Clearing pnpm cache', await command.pnpmCleanCache());
     await installDependencies();
     await gitHookSetup();
-    await aiSetup();
+    // await aiSetup();
 }
 
 /**
