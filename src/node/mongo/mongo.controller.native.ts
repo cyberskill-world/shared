@@ -182,7 +182,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
             return {
@@ -216,7 +216,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
 
@@ -247,7 +247,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
             return {
@@ -277,7 +277,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 return {
                     success: false,
                     message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
+                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
                 };
             }
 

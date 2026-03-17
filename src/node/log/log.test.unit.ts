@@ -68,6 +68,21 @@ describe('catchError', () => {
         expect(result).toBe('custom-value');
     });
 
+    it('should return 0 when returnValue is 0', () => {
+        const result = catchError(new Error('test'), { shouldLog: false, returnValue: 0 });
+        expect(result).toBe(0);
+    });
+
+    it('should return empty string when returnValue is ""', () => {
+        const result = catchError(new Error('test'), { shouldLog: false, returnValue: '' });
+        expect(result).toBe('');
+    });
+
+    it('should return false when returnValue is false', () => {
+        const result = catchError(new Error('test'), { shouldLog: false, returnValue: false });
+        expect(result).toBe(false);
+    });
+
     it('should handle string error input', () => {
         const result = catchError('string error', { shouldLog: false });
         expect(result).toEqual(expect.objectContaining({

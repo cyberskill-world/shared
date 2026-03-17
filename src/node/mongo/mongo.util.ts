@@ -384,8 +384,9 @@ export const mongo: I_MongoUtils = {
         controller: MongoController<T>,
         recordsToCheck: T[],
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
+        filter: Record<string, unknown> = {},
     ): Promise<T[]> {
-        const existingRecords = await controller.findAll({});
+        const existingRecords = await controller.findAll(filter as any);
 
         if (!existingRecords.success) {
             return recordsToCheck;
@@ -411,8 +412,9 @@ export const mongo: I_MongoUtils = {
         controller: MongoController<T>,
         recordsToCheck: T[],
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
+        filter: Record<string, unknown> = {},
     ): Promise<T_WithId<T>[]> {
-        const existingRecords = await controller.findAll({});
+        const existingRecords = await controller.findAll(filter as any);
 
         if (!existingRecords.success) {
             return [];

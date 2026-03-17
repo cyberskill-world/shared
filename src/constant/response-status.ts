@@ -250,4 +250,4 @@ export const RESPONSE_STATUS = {
         CODE: 511,
         MESSAGE: 'Network Authentication Required',
     },
-};
+} as const satisfies Record<string, { readonly CODE: number | string; readonly MESSAGE: string }>;

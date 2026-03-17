@@ -63,6 +63,10 @@ export function createCors<T extends T_CorsType>(options: T_CorsOptions<T>) {
  * @returns A session middleware function ready to be used in Express applications.
  */
 export function createSession(options: SessionOptions): RequestHandler {
+    if (!options.secret) {
+        throw new Error('Session secret is required. Provide a strong secret string.');
+    }
+
     const secureDefaults: Partial<SessionOptions> = {
         resave: false,
         saveUninitialized: false,

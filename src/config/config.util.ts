@@ -83,12 +83,12 @@ const configHandlers: Record<E_ConfigType, T_ConfigHandler> = {
 export function mergeConfigs(type: T_ConfigType, ...config: T_Object[]) {
     const handler = configHandlers[type];
 
-    if (!config || config.length === 0) {
-        return handler({});
-    }
-
     if (!handler) {
         throw new Error(`Unknown config type: ${type}`);
+    }
+
+    if (!config || config.length === 0) {
+        return handler({});
     }
 
     return handler(...config);

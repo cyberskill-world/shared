@@ -196,6 +196,7 @@ describe('MongoController (Native)', () => {
 
             expect(result.success).toBe(false);
             expect(result.message).toContain('No documents matched');
+            expect(result.code).toBe(404);
         });
     });
 
@@ -218,6 +219,7 @@ describe('MongoController (Native)', () => {
             const result = await controller.updateMany({ _id: 'none' } as any, { active: true } as any);
 
             expect(result.success).toBe(false);
+            expect(result.code).toBe(404);
         });
     });
 
@@ -240,6 +242,7 @@ describe('MongoController (Native)', () => {
             const result = await controller.deleteOne({ _id: 'nonexistent' } as any);
 
             expect(result.success).toBe(false);
+            expect(result.code).toBe(404);
         });
     });
 
@@ -262,6 +265,7 @@ describe('MongoController (Native)', () => {
             const result = await controller.deleteMany({ isDel: true });
 
             expect(result.success).toBe(false);
+            expect(result.code).toBe(404);
         });
     });
 });

@@ -16,12 +16,18 @@ import { filterDynamicVirtualsFromPopulate, isObject, populateDynamicVirtuals } 
  * pagination, aggregation, slug generation, and short ID creation.
  */
 export class MongooseController<T extends Partial<C_Document>> {
+    private defaultLimit: number;
+
     /**
      * Creates a new Mongoose controller instance.
      *
      * @param model - The Mongoose model to operate on.
+     * @param options - Optional configuration for the controller.
+     * @param options.defaultLimit - Maximum documents returned by findAll when no limit is specified (default: 10,000).
      */
-    constructor(private model: I_ExtendedModel<T>) { }
+    constructor(private model: I_ExtendedModel<T>, options?: { defaultLimit?: number }) {
+        this.defaultLimit = options?.defaultLimit ?? 10_000;
+    }
 
     /**
      * Gets the model name for logging and error messages.
@@ -157,7 +163,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const query = this.model.find(normalizedFilter, projection, options).maxTimeMS(30_000).lean();
 
             if (!options.limit) {
-                query.limit(10_000);
+                query.limit(this.defaultLimit);
             }
             const dynamicVirtuals = this.getDynamicVirtuals();
 
@@ -528,16 +534,30 @@ export class MongooseController<T extends Partial<C_Document>> {
             return baseSlug;
         }
 
-        for (let index = 1; index <= MONGO_SLUG_MAX_ATTEMPTS; index++) {
-            const slugVariation = `${baseSlug}-${index}`;
+        // Batch query: check all slug variations in a single database call instead of N+1 sequential queries
+        const variants = Array.from(
+            { length: MONGO_SLUG_MAX_ATTEMPTS },
+            (_, i) => `${baseSlug}-${i + 1}`,
+        );
 
-            const exists = await this.model.exists(
-                this.createSlugQuery({ slug: slugVariation, field, isObject, haveHistory, filter }),
-            );
+        const slugQueries = variants.map(s =>
+            this.createSlugQuery({ slug: s, field, isObject, haveHistory, filter }),
+        );
 
-            if (!exists) {
-                return slugVariation;
-            }
+        const slugField = isObject ? `slug.${field as string}` : 'slug';
+        const existingDocs = await this.model
+            .find({ $or: slugQueries.map(q => q.$or).flat() })
+            .select(slugField)
+            .lean();
+
+        const existingSlugs = new Set(
+            existingDocs.map((d: any) => isObject ? d?.slug?.[field as string] : d?.slug),
+        );
+
+        const available = variants.find(s => !existingSlugs.has(s));
+
+        if (available) {
+            return available;
         }
 
         const timestamp = Date.now();

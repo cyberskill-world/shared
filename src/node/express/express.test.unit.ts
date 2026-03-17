@@ -72,6 +72,10 @@ describe('createSession', () => {
         });
         expect(typeof middleware).toBe('function');
     });
+
+    it('should throw when no secret is provided', () => {
+        expect(() => createSession({} as any)).toThrow('Session secret is required');
+    });
 });
 
 // ---------------------------------------------------------------------------

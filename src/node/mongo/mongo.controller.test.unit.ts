@@ -27,7 +27,9 @@ function createMockQuery(result: unknown) {
         lean: vi.fn().mockReturnThis(),
         populate: vi.fn().mockReturnThis(),
         limit: vi.fn().mockReturnThis(),
+        select: vi.fn().mockReturnThis(),
         exec: vi.fn().mockResolvedValue(result),
+        then: vi.fn((resolve: (value: unknown) => void) => resolve(result)),
     };
     return query;
 }
@@ -357,12 +359,14 @@ describe('MongooseController', () => {
         });
 
         it('should append incremental number when slug exists', async () => {
-            const mockExists = vi.fn()
-                .mockResolvedValueOnce({ _id: '1' })
-                .mockResolvedValueOnce({ _id: '2' })
-                .mockResolvedValue(null);
-
-            const mockModel = createMockModel({ exists: mockExists });
+            const mockExists = vi.fn().mockResolvedValue({ _id: '1' });
+            const findQuery = createMockQuery([
+                { slug: 'hello-world-1' },
+            ]);
+            const mockModel = createMockModel({
+                exists: mockExists,
+                find: vi.fn(() => findQuery),
+            });
             const controller = new MongooseController(mockModel);
 
             const result = await controller.createUniqueSlug({
@@ -372,7 +376,7 @@ describe('MongooseController', () => {
             });
 
             expect(result).toBe('hello-world-2');
-            expect(mockExists).toHaveBeenCalledTimes(3);
+            expect(mockExists).toHaveBeenCalledTimes(1);
         });
 
         it('should throw for empty slug', async () => {

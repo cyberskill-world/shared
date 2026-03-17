@@ -51,7 +51,13 @@ export function getNestedValue<T>(obj: T, path: (string | number)[]): unknown {
 }
 
 /**
+ * Recursively sets a value at a nested path within an object, creating intermediate objects as needed.
  *
+ * @param obj - The source object.
+ * @param path - Array of keys forming the path.
+ * @param value - The value to set.
+ * @param index - Current recursion depth.
+ * @returns A new object with the value set at the specified path.
  */
 function setNestedValueHelper<T>(obj: T, path: (string | number)[], value: unknown, index: number): T {
     if (index >= path.length)
@@ -113,6 +119,14 @@ export function deepClone<T>(obj: T): T {
         return obj;
     }
 
+    if (obj instanceof Date) {
+        return new Date(obj.getTime()) as unknown as T;
+    }
+
+    if (obj instanceof RegExp) {
+        return new RegExp(obj.source, obj.flags) as unknown as T;
+    }
+
     if (Array.isArray(obj)) {
         // Optimization: `new Array(len)` + `for` loop is ~10-15% faster than `Array.map` or `Array.from`
         // for large arrays since it avoids callback overhead and pre-allocates memory.
@@ -125,18 +139,9 @@ export function deepClone<T>(obj: T): T {
         return arr as unknown as T;
     }
 
-    if (obj instanceof Date) {
-        return new Date(obj.getTime()) as unknown as T;
-    }
-
-    if (obj instanceof RegExp) {
-        return new RegExp(obj.source, obj.flags) as unknown as T;
-    }
-
-    // Handle Mongoose ObjectId and other custom classes by returning reference
-    // structuredClone would fail here. We assume if it's not a plain object, we keep the reference
-    // unless we want to implement specific cloning logic for every type.
-    // However, we want to clone POJOs (Plain Old JavaScript Objects).
+    // Handle Mongoose ObjectId and other custom classes by returning reference.
+    // structuredClone is not used here because it silently corrupts nested non-POJO
+    // types (e.g., ObjectId → plain object) and Date instances in jsdom environments.
     const proto = Object.getPrototypeOf(obj);
     if (proto !== Object.prototype && proto !== null) {
         return obj;
@@ -298,7 +303,7 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
     const normalized: Record<string, unknown> = {};
 
     /**
-     *
+     * Recursively flattens nested objects into dot-notation keys, preserving MongoDB operators.
      */
     function flatten(current: Record<string, unknown>, prefix: string) {
         for (const key in current) {
@@ -309,6 +314,13 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
             const newKey = prefix ? `${prefix}.${key}` : key;
 
             if (value && typeof value === 'object' && !Array.isArray(value)) {
+                // Skip flattening for Mongoose ObjectId, Date, RegExp, and other non-POJO types
+                const valueProto = Object.getPrototypeOf(value);
+                if (valueProto !== Object.prototype && valueProto !== null) {
+                    normalized[newKey] = value;
+                    continue;
+                }
+
                 // Check for Mongo operator
                 let hasMongoOperator = false;
                 for (const subKey in value as Record<string, unknown>) {

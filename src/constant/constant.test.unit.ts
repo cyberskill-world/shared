@@ -42,7 +42,7 @@ describe('RESPONSE_STATUS', () => {
     it('should have unique CODEs across HTTP numeric entries', () => {
         const numericCodes = Object.values(RESPONSE_STATUS)
             .map(v => v.CODE)
-            .filter((c): c is number => typeof c === 'number');
+            .filter(c => typeof c === 'number') as number[];
         const unique = new Set(numericCodes);
         expect(unique.size).toBe(numericCodes.length);
     });

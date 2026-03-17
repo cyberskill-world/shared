@@ -21,7 +21,7 @@ import { AG_KIT_PACKAGE_NAME, command, createGitHooksConfig, CYBERSKILL_CLI, CYB
 function getVersion(): string {
     try {
         const pkg = JSON.parse(
-            readFileSync(resolve(__dirname, '../../../package.json'), 'utf-8'),
+            readFileSync(resolve(import.meta.dirname, '../../../package.json'), 'utf-8'),
         );
         return pkg.version;
     }
@@ -100,23 +100,24 @@ function printIssues(type: 'Errors' | 'Warnings', list: I_IssueEntry[]) {
  * @returns A promise that resolves when the results are displayed.
  */
 async function showCheckResult() {
-    setTimeout(async () => {
-        const allResults = (await getStoredErrorLists()) || [];
-        const errors = allResults.filter(e => e.type === E_IssueType.Error);
-        const warnings = allResults.filter(e => e.type === E_IssueType.Warning);
+    // Allow pending I/O (runCommand writes) to flush before reading results
+    await new Promise(resolve => setImmediate(resolve));
 
-        if (!errors.length && !warnings.length) {
-            log.printBoxedLog('✔ NO ISSUES FOUND', [], 'green');
-        }
-        else {
-            printIssues('Warnings', warnings);
-            printIssues('Errors', errors);
+    const allResults = (await getStoredErrorLists()) || [];
+    const errors = allResults.filter(e => e.type === E_IssueType.Error);
+    const warnings = allResults.filter(e => e.type === E_IssueType.Warning);
 
-            if (errors.length > 0) {
-                process.exit(1);
-            }
+    if (!errors.length && !warnings.length) {
+        log.printBoxedLog('✔ NO ISSUES FOUND', [], 'green');
+    }
+    else {
+        printIssues('Warnings', warnings);
+        printIssues('Errors', errors);
+
+        if (errors.length > 0) {
+            process.exit(1);
         }
-    }, 0);
+    }
 }
 
 /**

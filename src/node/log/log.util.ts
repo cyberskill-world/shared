@@ -11,7 +11,22 @@ import { RESPONSE_STATUS } from '#constant/index.js';
 
 import type { I_CatchErrorOptions, I_IssueEntry, I_Log, I_ThrowError } from './log.type.js';
 
-const env = getEnv();
+let _logLevelConfigured = false;
+
+/**
+ * Lazily configures the consola log level based on the DEBUG environment variable.
+ * Only runs once on first invocation to avoid repeated env loading.
+ */
+function ensureLogLevel() {
+    if (!_logLevelConfigured) {
+        _logLevelConfigured = true;
+        const env = getEnv();
+
+        if (!env.DEBUG) {
+            consola.level = 4;
+        }
+    }
+}
 
 /**
  * Throws a standardized error with optional status information and type specification.
@@ -42,10 +57,6 @@ export function throwError({
     else {
         throw new Error(responseMessage);
     }
-}
-
-if (!env.DEBUG) {
-    consola.level = 4;
 }
 
 /**
@@ -139,6 +150,7 @@ export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchEr
         : new Error(typeof errorInput === 'string' ? errorInput : 'Unknown error');
 
     if (shouldLog) {
+        ensureLogLevel();
         log.error(error.message);
     }
 
@@ -146,7 +158,7 @@ export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchEr
         callback(error);
     }
 
-    if (returnValue) {
+    if (returnValue !== undefined) {
         return returnValue as T;
     }
 
