@@ -24,6 +24,8 @@ describe('ApolloErrorComponent', () => {
         expect(dialog).toBeInTheDocument();
         expect(dialog).toHaveAttribute('aria-modal', 'true');
         expect(dialog).toHaveAttribute('aria-labelledby', 'apollo-error-title');
+        expect(dialog).toHaveAttribute('aria-describedby', 'apollo-error-details');
+        expect(document.getElementById('apollo-error-details')).toBeInTheDocument();
 
         expect(screen.getByLabelText('Close error details (Esc)')).toBeInTheDocument();
         expect(screen.getByLabelText('Reload page')).toBeInTheDocument();
