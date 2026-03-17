@@ -38,8 +38,8 @@ interface I_MongoUtils {
     applyPlugins: <T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) => void;
     applyMiddlewares: <T extends Partial<C_Document>>(schema: T_MongooseShema<T>, middlewares: I_MongooseModelMiddleware<T>[]) => void;
     createGenericSchema: (mongoose: typeof mongooseRaw) => T_MongooseShema<I_GenericDocument>;
-    createSchema: <T, R extends string>(options: I_CreateSchemaOptions<T, R>) => T_MongooseShema<T>;
-    createModel: <T extends Partial<C_Document>, R extends string>(options: I_CreateModelOptions<T, R>) => I_ExtendedModel<T>;
+    createSchema: <T, R extends string = string>(options: I_CreateSchemaOptions<T, R>) => T_MongooseShema<T>;
+    createModel: <T extends Partial<C_Document>, R extends string = string>(options: I_CreateModelOptions<T, R>) => I_ExtendedModel<T>;
     validator: {
         isRequired: <T>() => (this: T, value: unknown) => Promise<boolean>;
         isUnique: <T extends { constructor: { exists: (query: { [key: string]: unknown }) => Promise<unknown> } }>(fields: string[]) => (this: T, value: unknown) => Promise<boolean>;
