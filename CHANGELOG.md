@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/cyberskill-world/shared/compare/v3.3.0...v3.4.0) (2026-03-17)
+
+
+### Features
+
+* make second param of createModel as optional ([fd77033](https://github.com/cyberskill-world/shared/commit/fd77033ebeb770527d04726d05a3c4a6ad5b76a6))
+
 # [3.3.0](https://github.com/cyberskill-world/shared/compare/v3.2.1...v3.3.0) (2026-03-17)
 
 
