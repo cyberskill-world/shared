@@ -8,21 +8,6 @@ import extractFiles from 'extract-files/extractFiles.mjs';
 import isExtractableFile from 'extract-files/isExtractableFile.mjs';
 
 /**
- * Creates a signal if supported.
- * @returns {boolean} Signal if supported.
- */
-function createSignalIfSupported() {
-    if (typeof AbortController === 'undefined') {
-        return { controller: false, signal: false };
-    }
-
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    return { controller, signal };
-}
-
-/**
  * Appends a file to the form data.
  * @param {FormData} formData Form data to append the file to.
  * @param {string} fieldName Field name to append the file to.
@@ -218,30 +203,28 @@ export function createUploadLink({
             }
         }
 
-        const { controller } = createSignalIfSupported();
+        const controller = new AbortController();
 
-        if (typeof controller !== 'boolean') {
-            if (options['signal']) {
-                // Respect the user configured abort controller signal.
-                options['signal'].aborted
-                    // Signal already aborted, so immediately abort.
-                    ? controller.abort()
-                    // Signal not already aborted, so setup a listener to abort when it does.
-                    : options['signal'].addEventListener(
-                            'abort',
-                            () => {
-                                controller.abort();
-                            },
-                            {
-                            // Prevent a memory leak if the user configured abort controller
-                            // is long lasting, or controls multiple things.
-                                once: true,
-                            },
-                        );
-            }
-
-            options['signal'] = controller.signal;
+        if (options['signal']) {
+            // Respect the user configured abort controller signal.
+            options['signal'].aborted
+                // Signal already aborted, so immediately abort.
+                ? controller.abort()
+                // Signal not already aborted, so setup a listener to abort when it does.
+                : options['signal'].addEventListener(
+                        'abort',
+                        () => {
+                            controller.abort();
+                        },
+                        {
+                        // Prevent a memory leak if the user configured abort controller
+                        // is long lasting, or controls multiple things.
+                            once: true,
+                        },
+                    );
         }
+
+        options['signal'] = controller.signal;
 
         const runtimeFetch = customFetch || fetch;
 
@@ -282,7 +265,7 @@ export function createUploadLink({
                 cleaningUp = true;
 
                 // Abort fetch. It’s ok to signal an abort even when not fetching.
-                if (typeof controller !== 'boolean')
+                if (typeof controller !== 'undefined')
                     controller.abort();
             };
         });

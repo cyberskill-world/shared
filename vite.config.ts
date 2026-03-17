@@ -5,7 +5,8 @@ import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-const pkg = JSON.parse(fs.readFileSync(resolve(__dirname, 'package.json'), 'utf-8'));
+// Sync read is intentional — Vite config runs once at build/dev time, not in hot-path
+const pkg = JSON.parse(fs.readFileSync(resolve(import.meta.dirname, 'package.json'), 'utf-8'));
 
 const allDeps = [
     ...Object.keys(pkg.dependencies || {}),
@@ -69,14 +70,14 @@ const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts', 'src/
 export default defineConfig({
     resolve: {
         alias: {
-            '#public': resolve(__dirname, 'public'),
-            '#config': resolve(__dirname, 'src/config'),
-            '#constant': resolve(__dirname, 'src/constant'),
-            '#node': resolve(__dirname, 'src/node'),
-            '#react': resolve(__dirname, 'src/react'),
-            '#style': resolve(__dirname, 'src/style'),
-            '#typescript': resolve(__dirname, 'src/typescript'),
-            '#util': resolve(__dirname, 'src/util'),
+            '#public': resolve(import.meta.dirname, 'public'),
+            '#config': resolve(import.meta.dirname, 'src/config'),
+            '#constant': resolve(import.meta.dirname, 'src/constant'),
+            '#node': resolve(import.meta.dirname, 'src/node'),
+            '#react': resolve(import.meta.dirname, 'src/react'),
+            '#style': resolve(import.meta.dirname, 'src/style'),
+            '#typescript': resolve(import.meta.dirname, 'src/typescript'),
+            '#util': resolve(import.meta.dirname, 'src/util'),
         },
     },
     build: {

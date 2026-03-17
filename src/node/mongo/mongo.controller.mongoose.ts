@@ -10,6 +10,12 @@ import { catchError } from '../log/index.js';
 import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
 import { filterDynamicVirtualsFromPopulate, isObject, populateDynamicVirtuals } from './mongo.dynamic-populate.js';
 
+/** Internal shape of a single virtual config stored on the model. */
+interface I_VirtualConfig {
+    name: string;
+    options?: { ref?: unknown };
+}
+
 /**
  * Mongoose controller for database operations with advanced features.
  * This class provides a comprehensive interface for Mongoose operations including
@@ -44,9 +50,12 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns Array of dynamic virtual configurations or undefined if none exist.
      */
     private getDynamicVirtuals(): I_DynamicVirtualConfig<T>[] | undefined {
-        if ((this.model as any)._virtualConfigs) {
-            const allVirtuals = (this.model as any)._virtualConfigs as Array<{ name: string; options?: { ref?: unknown } }>;
-            const dynamicOnly = allVirtuals.filter(v => typeof (v.options as { ref?: unknown } | undefined)?.ref === 'function') as unknown as I_DynamicVirtualConfig<T>[];
+        const model = this.model as I_ExtendedModel<T> & { _virtualConfigs?: I_VirtualConfig[] };
+
+        if (model._virtualConfigs) {
+            const dynamicOnly = model._virtualConfigs.filter(
+                v => typeof v.options?.ref === 'function',
+            ) as unknown as I_DynamicVirtualConfig<T>[];
 
             if (dynamicOnly.length > 0) {
                 return dynamicOnly;

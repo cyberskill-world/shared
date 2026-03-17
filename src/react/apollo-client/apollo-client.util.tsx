@@ -18,11 +18,11 @@ import styles from './apollo-client.module.scss';
 import { createUploadLink } from './links/index.js';
 
 const roundTripLink = new ApolloLink((operation, forward) => {
-    operation.setContext({ start: new Date() });
+    operation.setContext({ start: performance.now() });
 
     return forward(operation).pipe(
         tap(() => {
-            const time = Date.now() - operation.getContext()['start'];
+            const time = Math.round(performance.now() - operation.getContext()['start']);
 
             log.info(`Operation ${operation.operationName} took ${time}ms to complete`);
         }),
@@ -138,10 +138,6 @@ export function createApolloLinks(options: I_ApolloOptions): ApolloLink[] {
                 uploadLink as unknown as ApolloLink,
             )
         : uploadLink;
-
-    if (wsUrl && splitLink === uploadLink) {
-        log.warn('[Apollo] WS URL is set, but subscriptions fallback to HTTP. Check your wsLink config.');
-    }
 
     return [
         roundTripLink,

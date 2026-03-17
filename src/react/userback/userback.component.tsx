@@ -59,7 +59,8 @@ export function Userback({ token, options }: I_UserBackProps) {
         return () => {
             observer?.disconnect();
         };
-    }, [token, options]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- options is intentionally excluded to prevent infinite re-renders (object ref changes each render)
+    }, [token]);
 
     return null;
 }

@@ -49,6 +49,8 @@ export async function getFileSizeFromStream(stream: NodeJS.ReadableStream): Prom
 export async function getAndValidateFile(type: E_UploadType, file: I_UploadFile, config?: I_UploadConfig): Promise<I_Return<I_UploadFileData>> {
     const fileData = await (await file).file;
     const stream = fileData.createReadStream();
+    // Stream is consumed here for validation; callers use createReadStream() again for the actual write.
+    // This is intentional — createReadStream() is a factory that yields a new stream per call.
     const fileSize = await getFileSizeFromStream(stream);
     const uploadConfig = config ?? createUploadConfig();
 

@@ -9,10 +9,8 @@ import type { LocalForageDriver, NodeFsDriverState, NodeLocalForageOptions } fro
 import { catchError, log } from '../log/index.js';
 import { NODE_FS_DRIVER_NAME, STORAGE_INSTANCE_NAME, STORAGE_KEY_EXTENSION, STORAGE_STORE_NAME } from './storage.constant.js';
 
-const env = getEnv();
-
 const nodeFsDriverState: NodeFsDriverState = {
-    baseDir: env.CYBERSKILL_STORAGE_DIRECTORY,
+    baseDir: '',
 };
 
 /**
@@ -53,7 +51,7 @@ const nodeFsDriver: LocalForageDriver = {
                 nodeFsDriverState.baseDir = baseDirFromOptions;
             }
             else {
-                nodeFsDriverState.baseDir = env.CYBERSKILL_STORAGE_DIRECTORY;
+                nodeFsDriverState.baseDir = getEnv().CYBERSKILL_STORAGE_DIRECTORY;
             }
 
             await fs.mkdir(nodeFsDriverState.baseDir, { recursive: true });
@@ -63,9 +61,13 @@ const nodeFsDriver: LocalForageDriver = {
             throw error;
         }
     },
-    /** Deletes all stored entries by recreating the directory. */
+    /** Deletes all stored entries by recreating the directory. Callers must ensure no concurrent operations. */
     async clear() {
         const { baseDir } = nodeFsDriverState;
+
+        if (!baseDir) {
+            return;
+        }
 
         await fs.rm(baseDir, { recursive: true, force: true });
         await fs.mkdir(baseDir, { recursive: true });
@@ -170,7 +172,7 @@ async function ensureLocalForageReady(): Promise<LocalForageDriver> {
 
     initPromise = (async () => {
         await localForage.defineDriver(nodeFsDriver);
-        nodeFsDriverState.baseDir = env.CYBERSKILL_STORAGE_DIRECTORY;
+        nodeFsDriverState.baseDir = getEnv().CYBERSKILL_STORAGE_DIRECTORY;
         const driver = await localForage.getDriver(NODE_FS_DRIVER_NAME);
 
         const initOptions = {
@@ -285,7 +287,7 @@ export const storage = {
      */
     async getLogLink(key: string): Promise<string | null> {
         try {
-            const storagePath = path.join(env.CYBERSKILL_STORAGE_DIRECTORY, encodeKey(key));
+            const storagePath = path.join(getEnv().CYBERSKILL_STORAGE_DIRECTORY, encodeKey(key));
 
             return `${storagePath} (key: ${key})`;
         }

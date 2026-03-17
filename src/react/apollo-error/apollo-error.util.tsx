@@ -5,6 +5,11 @@ import type { GraphQLError } from 'graphql';
  * This variable holds the callback function that will be called when a global
  * Apollo error needs to be displayed. It is set by the ApolloErrorProvider
  * and used throughout the application for consistent error handling.
+ *
+ * @remarks
+ * **SSR Warning:** These module-level singletons are shared across all requests
+ * in SSR environments. In server contexts, ensure the provider is properly
+ * scoped per-request to avoid state leaking between concurrent renders.
  */
 let showErrorCallback: ((err: GraphQLError | Error) => void) | null = null;
 let hasCustomHandler = false;

@@ -6,7 +6,7 @@ import type { Duplex } from 'node:stream';
 import { useServer as createGraphQLWSServer } from 'graphql-ws/use/ws';
 import { WebSocketServer } from 'ws';
 
-import type { I_GraphqlWSOptions, I_WSOptions } from './ws.type.js';
+import type { I_AuthenticatedRequest, I_GraphqlWSOptions, I_WSOptions } from './ws.type.js';
 
 /**
  * Creates a WebSocket server with the specified configuration.
@@ -60,14 +60,14 @@ export function initGraphQLWS(options: I_GraphqlWSOptions) {
         {
             schema,
             context: async (ctx) => {
-                const req = ctx.extra.request as IncomingMessage & { session?: any; user?: any };
+                const req = ctx.extra.request as I_AuthenticatedRequest;
 
                 const extra = makeExtraContext ? await makeExtraContext(req) : {};
                 return { req, ...extra };
             },
             onConnect: async (ctx) => {
                 if (onConnect) {
-                    const req = ctx.extra.request as IncomingMessage & { session?: any; user?: any };
+                    const req = ctx.extra.request as I_AuthenticatedRequest;
                     await onConnect(req);
                 }
             },

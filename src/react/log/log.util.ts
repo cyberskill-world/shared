@@ -57,7 +57,7 @@ export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchEr
         callback(error);
     }
 
-    if (returnValue) {
+    if (returnValue !== undefined) {
         return returnValue as I_Return<T>;
     }
 
@@ -66,4 +66,17 @@ export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchEr
         message: error.message,
         code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
     };
+}
+
+/**
+ * Throws a standardized error with a message and optional HTTP status code.
+ * Provides a consistent way to throw errors across React and Node environments.
+ *
+ * @param message - The error message.
+ * @param code - Optional HTTP status code (defaults to 500).
+ */
+export function throwError(message: string, code?: number): never {
+    const error = new Error(message);
+    (error as Error & { code?: number }).code = code ?? RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE;
+    throw error;
 }
