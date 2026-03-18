@@ -66,6 +66,19 @@ const typeHandlers: {
  * The serializer works by:
  * 1. During serialization: Wrapping special types with type information before JSON stringification
  * 2. During deserialization: Detecting wrapped types and reconstructing them to their original form
+ *
+ * @remarks
+ * **Wire format protocol:** Non-JSON-native types are serialized as wrapper objects with the shape
+ * `{ __type: string, value: unknown }`. For example:
+ * - Date → `{ __type: 'Date', value: '2024-01-01T00:00:00.000Z' }`
+ * - Map → `{ __type: 'Map', value: [['key', 'val']] }`
+ * - Set → `{ __type: 'Set', value: [1, 2, 3] }`
+ * - RegExp → `{ __type: 'RegExp', value: { source: '...', flags: '...' } }`
+ * - BigInt → `{ __type: 'BigInt', value: '12345' }`
+ *
+ * **Cross-service compatibility:** Any service that deserializes data produced by this serializer
+ * must use the same `__type` protocol. Plain `JSON.parse` will return the wrapper objects as-is
+ * without reconstructing the original types.
  */
 export const serializer: I_Serializer<unknown> = {
     /**

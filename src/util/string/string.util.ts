@@ -9,6 +9,10 @@ const RE_MULTI_SPACE_DASH = /[\s-]+/g;
 const RE_LEADING_TRAILING_DASH = /^-+|-+$/g;
 const RE_HYPHEN = /-/g;
 const RE_QUERY_FRAGMENT = /[?#]/;
+const RE_HAS_LOWER = /[a-z]/;
+const RE_HAS_UPPER = /[A-Z]/;
+const RE_HAS_DIGIT = /\d/;
+const RE_HAS_SPECIAL = /[!@#$%^&*()_+[\]{}|;:,.<>?]/;
 
 /**
  * Generates a slug from a string.
@@ -149,9 +153,55 @@ export function generateRandomPassword(length = 8): string {
         throw new RangeError('length must be a non-negative safe integer');
     }
 
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const digits = '0123456789';
+    const special = '!@#$%^&*()_+[]{}|;:,.<>?';
+    const charset = lower + upper + digits + special;
 
-    return generateRandomFromCharset(length, charset);
+    const password = generateRandomFromCharset(length, charset);
+
+    // Ensure at least one char from each class when length >= 4
+    if (length >= 4) {
+        const hasLower = RE_HAS_LOWER.test(password);
+        const hasUpper = RE_HAS_UPPER.test(password);
+        const hasDigit = RE_HAS_DIGIT.test(password);
+        const hasSpecial = RE_HAS_SPECIAL.test(password);
+
+        if (hasLower && hasUpper && hasDigit && hasSpecial) {
+            return password;
+        }
+
+        // Replace random positions with missing classes to avoid predictable placement
+        const chars = [...password];
+        const missing: { test: boolean; pool: string }[] = [
+            { test: hasLower, pool: lower },
+            { test: hasUpper, pool: upper },
+            { test: hasDigit, pool: digits },
+            { test: hasSpecial, pool: special },
+        ];
+
+        // Collect random, unique indices via Fisher-Yates partial shuffle
+        const indices = Array.from({ length }, (_, i) => i);
+        for (let i = indices.length - 1; i > 0; i--) {
+            const buf = new Uint32Array(1);
+            crypto.getRandomValues(buf);
+            const j = buf[0]! % (i + 1);
+            [indices[i], indices[j]] = [indices[j]!, indices[i]!];
+        }
+
+        let pos = 0;
+        for (const { test, pool } of missing) {
+            if (!test) {
+                chars[indices[pos]!] = generateRandomFromCharset(1, pool);
+                pos++;
+            }
+        }
+
+        return chars.join('');
+    }
+
+    return password;
 }
 
 /**

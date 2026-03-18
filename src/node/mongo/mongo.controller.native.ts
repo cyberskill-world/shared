@@ -25,12 +25,12 @@ export class MongoController<D extends Partial<C_Document>> {
      * @param db - The MongoDB database instance.
      * @param collectionName - The name of the collection to operate on.
      * @param options - Optional configuration for the controller.
-     * @param options.defaultLimit - Maximum documents returned by findAll when no limit is specified (default: 10,000).
+     * @param options.defaultLimit - Maximum documents returned by findAll when no limit is specified (default: 1,000).
      */
     constructor(db: C_Db, collectionName: string, options?: { defaultLimit?: number }) {
         this.collection = db.collection<D>(collectionName);
         this.collectionName = collectionName;
-        this.defaultLimit = options?.defaultLimit ?? 10_000;
+        this.defaultLimit = options?.defaultLimit ?? 1_000;
     }
 
     /**
@@ -136,7 +136,9 @@ export class MongoController<D extends Partial<C_Document>> {
         try {
             const result = await this.collection.find(filter).limit(this.defaultLimit).maxTimeMS(30_000).toArray();
 
-            if (result.length === this.defaultLimit) {
+            const truncated = result.length === this.defaultLimit;
+
+            if (truncated) {
                 log.warn(`[${this.collectionName}] findAll returned exactly ${this.defaultLimit} documents (the default limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
             }
 
@@ -144,6 +146,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 success: true,
                 message: 'Documents retrieved successfully',
                 result,
+                truncated,
             };
         }
         catch (error) {

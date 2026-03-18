@@ -237,6 +237,19 @@ describe('deepClone (branch coverage)', () => {
         expect(cloned).toEqual(arr);
         expect(cloned).not.toBe(arr);
     });
+
+    it('should throw on circular reference', () => {
+        const obj: Record<string, unknown> = { a: 1 };
+        obj['self'] = obj;
+        expect(() => deepClone(obj)).toThrow('Circular reference detected');
+    });
+
+    it('should throw on nested circular reference', () => {
+        const a: Record<string, unknown> = {};
+        const b: Record<string, unknown> = { a };
+        a['b'] = b;
+        expect(() => deepClone(a)).toThrow('Circular reference detected');
+    });
 });
 
 describe('normalizeMongoFilter (branch coverage)', () => {

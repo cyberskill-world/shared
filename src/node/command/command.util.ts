@@ -24,17 +24,25 @@ const RE_WHITESPACE = /\s+/;
  * Retrieves the package name for the current project.
  * This function attempts to get the package name from the current project's package.json.
  * If the package information cannot be retrieved, it returns a timestamp as a fallback.
+ * Results are cached after first successful read to avoid redundant I/O.
  *
  * @returns A promise that resolves to the package name or a timestamp string.
  */
+let _cachedPackageName: string | null = null;
+/** Returns the cached package name, falling back to a timestamp if unavailable. */
 async function getPackageName() {
+    if (_cachedPackageName) {
+        return _cachedPackageName;
+    }
+
     const pkg = await getPackage();
 
     if (!pkg.success) {
         return Date.now().toString();
     }
 
-    return pkg.result.name;
+    _cachedPackageName = pkg.result.name;
+    return _cachedPackageName;
 }
 
 /**
@@ -58,13 +66,10 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
 
         await storage.set(packageName, mergedErrors);
 
-        setTimeout(async () => {
-            const logPath = await storage.getLogLink(packageName);
-
-            if (logPath) {
-                log.info(`📂 Open the error list manually: ${logPath}`);
-            }
-        }, 0);
+        const logPath = await storage.getLogLink(packageName);
+        if (logPath) {
+            log.info(`📂 Open the error list manually: ${logPath}`);
+        }
     }
     catch (error) {
         catchError(error);

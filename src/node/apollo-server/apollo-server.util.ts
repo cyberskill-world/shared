@@ -5,6 +5,7 @@ import {
     ApolloServerPluginLandingPageProductionDefault,
 } from '@apollo/server/plugin/landingPage/default';
 import { expressMiddleware } from '@as-integrations/express5';
+import process from 'node:process';
 
 import type { I_ApolloServerOptions } from './apollo-server.type.js';
 
@@ -25,10 +26,13 @@ import { log } from '../log/index.js';
  * @returns A configured Apollo Server instance ready to be started.
  */
 export function createApolloServer(options: I_ApolloServerOptions): ApolloServer {
+    // Defense-in-depth: never enable dev features when NODE_ENV is 'production'
+    const safeIsDev = options.isDev && process.env['NODE_ENV'] !== 'production';
+
     return new ApolloServer({
         schema: options.schema,
         plugins: [
-            options.isDev
+            safeIsDev
                 ? ApolloServerPluginLandingPageLocalDefault()
                 : ApolloServerPluginLandingPageProductionDefault(),
             ApolloServerPluginDrainHttpServer({ httpServer: options.server }),
@@ -45,7 +49,7 @@ export function createApolloServer(options: I_ApolloServerOptions): ApolloServer
                     }]
                 : []),
         ],
-        ...(options.isDev && {
+        ...(safeIsDev && {
             introspection: true,
             includeStacktraceInErrorResponses: true,
         }),

@@ -8,6 +8,8 @@ import { createClient } from 'graphql-ws';
 import * as React from 'react';
 import { tap } from 'rxjs';
 
+import { IS_BROWSER } from '#constant/index.js';
+
 import type { I_ApolloOptions } from './apollo-client.type.js';
 
 import { hasCustomApolloErrorHandler, showGlobalApolloError } from '../apollo-error/index.js';
@@ -66,7 +68,7 @@ const errorLink = new ErrorLink(({ error, operation }) => {
         log.error(`[Network error]: ${error.message}`);
     }
 
-    if (error && errorMessage && typeof window !== 'undefined') {
+    if (error && errorMessage && IS_BROWSER) {
         if (hasCustomApolloErrorHandler()) {
             showGlobalApolloError(error);
         }

@@ -123,7 +123,7 @@ describe('MongooseController', () => {
             expect(result.result).toEqual([]);
         });
 
-        it('should apply default limit of 10000 when no limit specified', async () => {
+        it('should apply default limit of 1000 when no limit specified', async () => {
             const query = createMockQuery([]);
             const mockModel = createMockModel({
                 find: vi.fn(() => query),
@@ -132,7 +132,7 @@ describe('MongooseController', () => {
             const controller = new MongooseController(mockModel);
             await controller.findAll();
 
-            expect(query.limit).toHaveBeenCalledWith(10_000);
+            expect(query.limit).toHaveBeenCalledWith(1_000);
         });
     });
 
@@ -486,7 +486,7 @@ describe('MongooseController', () => {
             const mockModel = createMockModel({ find: vi.fn(() => query) });
             const controller = new MongooseController(mockModel);
             await controller.findAll();
-            expect(query.limit).toHaveBeenCalledWith(10_000);
+            expect(query.limit).toHaveBeenCalledWith(1_000);
         });
 
         it('should not apply default limit when options.limit is set', async () => {
@@ -494,7 +494,7 @@ describe('MongooseController', () => {
             const mockModel = createMockModel({ find: vi.fn(() => query) });
             const controller = new MongooseController(mockModel);
             await controller.findAll({}, {}, { limit: 5 } as any);
-            expect(query.limit).not.toHaveBeenCalledWith(10_000);
+            expect(query.limit).not.toHaveBeenCalledWith(1_000);
         });
 
         it('should call populate when populate is provided', async () => {

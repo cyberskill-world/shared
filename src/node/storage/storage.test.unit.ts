@@ -116,9 +116,7 @@ describe('storage - edge cases', () => {
     });
 
     it('should handle setting undefined value', async () => {
-        await storage.set('undef-key', undefined);
-        const result = await storage.get('undef-key');
-        expect(result).toBeNull();
+        await expect(storage.set('undef-key', undefined)).rejects.toThrow();
     });
 
     it('should handle multiple sequential sets on same key', async () => {

@@ -7,6 +7,21 @@ import type { T_DeleteResult, T_UpdateResult, T_WithId } from './mongo.type.js';
  * Both `MongooseController` and `MongoController` implement this interface,
  * enabling polymorphic usage and dependency injection.
  *
+ * ## Choosing a Controller
+ * - **`MongooseController`** — Use when you need Mongoose features: schema validation,
+ *   middleware hooks, virtual fields, population, pagination plugins, or slug generation.
+ * - **`MongoController`** — Use for simple CRUD without Mongoose overhead. Ideal for
+ *   lightweight services, migrations, or seed scripts using the native MongoDB driver.
+ *
+ * @example
+ * ```typescript
+ * // Dependency injection using the shared interface
+ * class UserService {
+ *   constructor(private db: I_MongoController<User>) {}
+ *   async getUser(id: string) { return this.db.findOne({ id }); }
+ * }
+ * ```
+ *
  * @template T - The document type for the collection.
  */
 export interface I_MongoController<T> {

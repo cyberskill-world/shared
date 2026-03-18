@@ -40,10 +40,10 @@ export class MongooseController<T extends Partial<C_Document>> {
      *
      * @param model - The Mongoose model to operate on.
      * @param options - Optional configuration for the controller.
-     * @param options.defaultLimit - Maximum documents returned by findAll when no limit is specified (default: 10,000).
+     * @param options.defaultLimit - Maximum documents returned by findAll when no limit is specified (default: 1,000).
      */
     constructor(private model: I_ExtendedModel<T>, options?: { defaultLimit?: number }) {
-        this.defaultLimit = options?.defaultLimit ?? 10_000;
+        this.defaultLimit = options?.defaultLimit ?? 1_000;
     }
 
     /**
@@ -86,15 +86,8 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns The document with dynamic virtuals populated.
      */
     private async populateDynamicVirtualsForDocument(result: T, populate?: T_Input_Populate): Promise<T> {
-        const dynamicVirtuals = this.getDynamicVirtuals();
-
-        if (dynamicVirtuals && dynamicVirtuals.length > 0) {
-            const populatedArr = await populateDynamicVirtuals(this.model.base, [result], dynamicVirtuals, populate, undefined, this.model);
-
-            return (populatedArr && populatedArr[0]) ? populatedArr[0] as T : result;
-        }
-
-        return result;
+        const populated = await this.populateDynamic([result], populate);
+        return populated[0] ?? result;
     }
 
     /**
@@ -105,12 +98,18 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @returns The documents with dynamic virtuals populated.
      */
     private async populateDynamicVirtualsForDocuments(results: T[], populate?: T_Input_Populate): Promise<T[]> {
+        return this.populateDynamic(results, populate);
+    }
+
+    /**
+     * Internal helper that populates dynamic virtuals for an array of documents.
+     * Shared implementation used by both single-document and multi-document methods.
+     */
+    private async populateDynamic(results: T[], populate?: T_Input_Populate): Promise<T[]> {
         const dynamicVirtuals = this.getDynamicVirtuals();
 
         if (dynamicVirtuals && dynamicVirtuals.length > 0 && results.length > 0) {
-            const populatedResults = await populateDynamicVirtuals(this.model.base, results, dynamicVirtuals, populate, undefined, this.model) as T[];
-
-            return populatedResults;
+            return await populateDynamicVirtuals(this.model.base, results, dynamicVirtuals, populate, undefined, this.model) as T[];
         }
 
         return results;
@@ -197,11 +196,13 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const finalResult = await this.populateDynamicVirtualsForDocuments(result, populate);
 
-            if (finalResult.length === this.defaultLimit && !options.limit) {
+            const truncated = finalResult.length === this.defaultLimit && !options.limit;
+
+            if (truncated) {
                 log.warn(`[${this.getModelName()}] findAll returned exactly ${this.defaultLimit} documents (the default limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
             }
 
-            return { success: true, result: finalResult.map(item => toPlainObject(item)) };
+            return { success: true, result: finalResult.map(item => toPlainObject(item)), truncated };
         }
         catch (error) {
             return catchError<T[]>(error);
@@ -272,7 +273,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const finalDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
 
-            return { success: true, result: { ...result, docs: finalDocs.map(item => item?.toObject?.() ?? item) } };
+            return { success: true, result: { ...result, docs: finalDocs.map(item => toPlainObject(item)) } };
         }
         catch (error) {
             return catchError<T_AggregatePaginateResult<T>>(error);

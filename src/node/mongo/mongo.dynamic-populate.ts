@@ -208,10 +208,10 @@ export async function populateDynamicVirtuals<T extends object, R extends string
         return documents;
     }
 
-    // Only deepClone documents that need it. toObject() already creates a plain copy,
-    // so we avoid redundant deep cloning for Mongoose documents.
+    // toObject() already creates plain copies for Mongoose docs; deepClone the
+    // plain array to avoid mutating the caller's objects.
     const plainDocuments = documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc);
-    const clonedDocuments = plainDocuments.some(doc => isMongooseDoc(doc)) ? plainDocuments as T[] : deepClone(plainDocuments) as T[];
+    const clonedDocuments = deepClone(plainDocuments) as T[];
 
     clonedDocuments.forEach((doc) => {
         requestedVirtuals.forEach(({ name, options }) => {

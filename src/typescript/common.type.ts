@@ -42,6 +42,8 @@ export interface I_ReturnBase {
 export interface I_ReturnSuccess<T, E = unknown> extends I_ReturnBase {
     success: true;
     result: T & E;
+    /** True when results were limited by a default cap and may not include all matching documents. */
+    truncated?: boolean;
 }
 
 /**
@@ -73,6 +75,32 @@ export interface I_ReturnFailure extends I_ReturnBase {
  * ```
  */
 export type I_Return<T = void, E = unknown> = I_ReturnSuccess<T, E> | I_ReturnFailure;
+
+/**
+ * Type guard that narrows an `I_Return` to `I_ReturnSuccess`.
+ *
+ * @param result - The result to check.
+ * @returns True if the result is a success.
+ */
+export function isSuccess<T, E = unknown>(result: I_Return<T, E>): result is I_ReturnSuccess<T, E> {
+    return result.success;
+}
+
+/**
+ * Unwraps a successful `I_Return`, throwing an error for failure cases.
+ * Useful when a failure is unexpected and should abort execution.
+ *
+ * @param result - The result to unwrap.
+ * @returns The success result value.
+ * @throws {Error} When the result is a failure.
+ */
+export function unwrapResult<T, E = unknown>(result: I_Return<T, E>): T & E {
+    if (!result.success) {
+        throw new Error(result.message);
+    }
+
+    return result.result;
+}
 
 export enum E_Environment {
     PRODUCTION = 'production',

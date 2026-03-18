@@ -9,7 +9,7 @@ import { getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.j
 import { validate } from '#util/validate/index.js';
 
 import type { MongoController } from './mongo.controller.js';
-import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, T_MongoosePlugin, T_MongooseSchema, T_QueryFilter, T_VirtualOptions, T_WithId } from './mongo.type.js';
+import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, T_Filter, T_MongoosePlugin, T_MongooseSchema, T_QueryFilter, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
 import { addGitIgnoreEntry, writeFileSync } from '../fs/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
@@ -51,8 +51,8 @@ interface I_MongoUtils {
     };
     regexify: <T>(filter?: T_QueryFilter<T>, fields?: (keyof T | string)[]) => T_QueryFilter<T>;
     isDynamicVirtual: <T, R extends string>(options?: T_VirtualOptions<T, R>) => options is I_DynamicVirtualOptions<T, R>;
-    getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: Record<string, unknown>) => Promise<T[]>;
-    getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: Record<string, unknown>) => Promise<T_WithId<T>[]>;
+    getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T[]>;
+    getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T_WithId<T>[]>;
 }
 
 /**
@@ -236,6 +236,7 @@ export const mongo: I_MongoUtils = {
         const model = currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
 
         if (virtuals.length > 0) {
+            // Mongoose Model has no typed _virtualConfigs; used by MongooseController.getDynamicVirtuals()
             (model as any)._virtualConfigs = virtuals;
         }
 
@@ -332,6 +333,12 @@ export const mongo: I_MongoUtils = {
      * This function recursively processes a filter object and converts string values in specified fields
      * to MongoDB regex patterns that support accented character matching.
      *
+     * @remarks
+     * **Performance guard:** Input strings are capped at 200 characters to mitigate ReDoS risk.
+     * The generated regex patterns include accented character alternation groups (e.g., `(a|à|á|...)`)
+     * which can be polynomially complex for very long inputs. For production search on large collections,
+     * consider using MongoDB `$text` search indexes instead of `$regex` for better performance.
+     *
      * @param filter - The filter object to process.
      * @param fields - An array of field names to convert to regex patterns.
      * @returns A new filter object with string values converted to regex patterns.
@@ -386,9 +393,9 @@ export const mongo: I_MongoUtils = {
         controller: MongoController<T>,
         recordsToCheck: T[],
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
-        filter: Record<string, unknown> = {},
+        filter: T_Filter<T> = {} as T_Filter<T>,
     ): Promise<T[]> {
-        const existingRecords = await controller.findAll(filter as any);
+        const existingRecords = await controller.findAll(filter);
 
         if (!existingRecords.success) {
             throw new Error(`Failed to query existing records: ${existingRecords.message}`);
@@ -415,9 +422,9 @@ export const mongo: I_MongoUtils = {
         controller: MongoController<T>,
         recordsToCheck: T[],
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
-        filter: Record<string, unknown> = {},
+        filter: T_Filter<T> = {} as T_Filter<T>,
     ): Promise<T_WithId<T>[]> {
-        const existingRecords = await controller.findAll(filter as any);
+        const existingRecords = await controller.findAll(filter);
 
         if (!existingRecords.success) {
             throw new Error(`Failed to query existing records: ${existingRecords.message}`);

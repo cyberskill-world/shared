@@ -1,8 +1,26 @@
+const types = [
+    { type: 'feat', section: '✨ Features' },
+    { type: 'fix', section: '🐛 Bug Fixes' },
+    { type: 'perf', section: '⚡ Performance' },
+    { type: 'refactor', section: '♻️ Refactoring' },
+    { type: 'docs', section: '📝 Documentation' },
+    { type: 'test', section: '✅ Tests' },
+    { type: 'build', section: '📦 Build' },
+    { type: 'ci', section: '🔧 CI' },
+    { type: 'chore', section: '🧹 Chores' },
+    { type: 'revert', section: '⏪ Reverts' },
+];
+
 export default {
     branches: ['release'],
     plugins: [
-        '@semantic-release/commit-analyzer',
-        '@semantic-release/release-notes-generator',
+        ['@semantic-release/commit-analyzer', {
+            preset: 'conventionalcommits',
+        }],
+        ['@semantic-release/release-notes-generator', {
+            preset: 'conventionalcommits',
+            presetConfig: { types },
+        }],
         '@semantic-release/changelog',
         '@semantic-release/npm',
         '@semantic-release/github',

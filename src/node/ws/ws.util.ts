@@ -19,6 +19,14 @@ import type { I_AuthenticatedRequest, I_GraphqlWSOptions, I_WSOptions } from './
 export function createWSServer(options: I_WSOptions): WebSocketServer {
     const { server, path, sessionParser } = options;
 
+    if (!server) {
+        throw new Error('[WS] HTTP server instance is required to create a WebSocket server.');
+    }
+
+    if (!path || !path.startsWith('/')) {
+        throw new Error('[WS] WebSocket path must be a non-empty string starting with "/".');
+    }
+
     if (sessionParser) {
         const wss = new WebSocketServer({ noServer: true });
 

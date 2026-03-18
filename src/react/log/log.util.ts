@@ -11,6 +11,11 @@ import type { I_CatchErrorOptions } from './log.type.js';
  * Browser-compatible logging interface using consola.
  * This object provides all standard consola logging methods for use in browser environments,
  * including error, warning, info, success, and debug logging capabilities.
+ *
+ * @remarks
+ * This module imports from `consola/browser` (not `consola`) to ensure no Node.js-specific
+ * code is included in client bundles. The `I_Log` type from `#typescript` is a type-only
+ * import and is erased at build time.
  */
 export const log: I_Log = {
     silent: consola.silent,

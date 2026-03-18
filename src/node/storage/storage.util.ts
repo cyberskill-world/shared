@@ -228,14 +228,9 @@ export const storage = {
      * @returns A promise that resolves when the storage operation is complete.
      */
     async set<T = unknown>(key: string, value: T): Promise<void> {
-        try {
-            const driver = await ensureLocalForageReady();
+        const driver = await ensureLocalForageReady();
 
-            await driver.setItem(key, value);
-        }
-        catch (error) {
-            catchError(error);
-        }
+        await driver.setItem(key, value);
     },
     /**
      * Removes a value from persistent storage by key.

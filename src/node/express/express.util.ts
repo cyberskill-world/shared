@@ -28,6 +28,11 @@ import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from 
  * @returns CORS options object configured for the specified environment.
  */
 export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>) {
+    // Safety net: warn loudly if isDev is mistakenly true in production
+    if (isDev && process.env['NODE_ENV'] === 'production') {
+        console.warn('[CORS] WARNING: isDev is true but NODE_ENV is "production". CORS restrictions are relaxed. This is likely a misconfiguration.');
+    }
+
     return {
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
             // Allow requests without Origin header only in development mode.
@@ -72,6 +77,10 @@ export function createCors<T extends T_CorsType>(options: T_CorsOptions<T>) {
 export function createSession(options: SessionOptions): RequestHandler {
     if (!options.secret) {
         throw new Error('Session secret is required. Provide a strong secret string.');
+    }
+
+    if (!options.store && process.env['NODE_ENV'] === 'production') {
+        console.warn('[Session] WARNING: No session store configured in production. The default MemoryStore leaks memory and loses sessions on restart. Use connect-redis, connect-mongo, or another production store.');
     }
 
     const secureDefaults: Partial<SessionOptions> = {
@@ -165,6 +174,10 @@ function setupStaticFolders(app: Application, staticFolders?: string | string[])
  * - Essential middleware (cookies, body parsing, compression, user agent)
  * - Static file serving for specified folders
  * - GraphQL upload support for file uploads
+ *
+ * @remarks
+ * **Requires Express 5.x** — This module uses Express 5 APIs and is not compatible with Express 4.
+ * The peer dependency requires `express >= 5.0.0`.
  *
  * @param options - Optional configuration for the Express application including static folder paths.
  * @returns A configured Express application instance ready for use.

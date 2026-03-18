@@ -115,9 +115,25 @@ export function setNestedValue<T>(obj: T, path: (string | number)[], value: unkn
  * @returns A deep copy of the object.
  */
 export function deepClone<T>(obj: T): T {
+    return deepCloneInternal(obj, new WeakSet<object>());
+}
+
+/**
+ * Internal recursive implementation of deepClone with circular reference detection.
+ *
+ * @param obj - The value to clone.
+ * @param seen - A WeakSet tracking already-visited objects to prevent infinite recursion.
+ * @returns A deep copy of the value.
+ */
+function deepCloneInternal<T>(obj: T, seen: WeakSet<object>): T {
     if (obj === null || typeof obj !== 'object') {
         return obj;
     }
+
+    if (seen.has(obj as object)) {
+        throw new Error('deepClone: Circular reference detected.');
+    }
+    seen.add(obj as object);
 
     if (obj instanceof Date) {
         return new Date(obj.getTime()) as unknown as T;
@@ -134,7 +150,7 @@ export function deepClone<T>(obj: T): T {
         // eslint-disable-next-line unicorn/no-new-array -- Pre-allocating array size for performance
         const arr = new Array(len);
         for (let i = 0; i < len; i++) {
-            arr[i] = deepClone(obj[i]);
+            arr[i] = deepCloneInternal(obj[i], seen);
         }
         return arr as unknown as T;
     }
@@ -150,7 +166,7 @@ export function deepClone<T>(obj: T): T {
     const result = {} as Record<string, unknown>;
     for (const key in obj) {
         if (Object.hasOwn(obj, key)) {
-            result[key] = deepClone((obj as Record<string, unknown>)[key]);
+            result[key] = deepCloneInternal((obj as Record<string, unknown>)[key], seen);
         }
     }
 
@@ -183,56 +199,71 @@ export function deepMerge<T = unknown[]>(
 export function deepMerge<T = Record<string, unknown> | unknown[]>(
     ...args: (object | unknown[] | null | undefined)[]
 ): T {
-    // Handle empty arguments
-    if (args.length === 0) {
-        return {} as T;
-    }
+    const MAX_DEPTH = 20;
 
-    // Filter out null/undefined and convert to empty objects/arrays
-    const validArgs = args.filter((arg): arg is object => arg !== null && arg !== undefined);
+    /** Recursively merges an array of objects with depth and circular-reference tracking. */
+    function mergeRecursive(
+        validArgs: object[],
+        depth: number,
+        seen: WeakSet<object>,
+    ): unknown {
+        // Depth guard
+        if (depth > MAX_DEPTH) {
+            throw new Error(`deepMerge: Maximum depth of ${MAX_DEPTH} exceeded. Possible circular reference or excessively nested objects.`);
+        }
 
-    // If no valid arguments after filtering, return empty object/array
-    if (validArgs.length === 0) {
-        return {} as T;
-    }
+        // Handle empty arguments
+        if (validArgs.length === 0) {
+            return {};
+        }
 
-    // If only one argument, return it directly
-    if (validArgs.length === 1) {
-        return validArgs[0] as T;
-    }
+        // If only one argument, return it directly
+        if (validArgs.length === 1) {
+            return validArgs[0];
+        }
 
-    // Check if all arguments are arrays
-    if (validArgs.every(Array.isArray)) {
-        return (validArgs as unknown[][]).flat() as T;
-    }
+        // Check if all arguments are arrays
+        if (validArgs.every(Array.isArray)) {
+            return (validArgs as unknown[][]).flat();
+        }
 
-    // Check if all arguments are objects (but not arrays)
-    if (validArgs.every(arg => typeof arg === 'object' && arg !== null && !Array.isArray(arg))) {
-        const result = {} as Record<string, unknown>;
+        // Check if all arguments are objects (but not arrays)
+        if (validArgs.every(arg => typeof arg === 'object' && arg !== null && !Array.isArray(arg))) {
+            const result = {} as Record<string, unknown>;
 
-        for (const arg of validArgs) {
-            const obj = arg as Record<string, unknown>;
-            for (const key in obj) {
-                if (Object.hasOwn(obj, key)) {
-                    const value = obj[key];
-                    if (Object.hasOwn(result, key)) {
-                        const existingValue = result[key];
-                        if (
-                            typeof value === 'object' && value !== null
-                            && typeof existingValue === 'object' && existingValue !== null
-                        ) {
-                            if (Array.isArray(value) && Array.isArray(existingValue)) {
-                                result[key] = [...existingValue, ...value];
-                            }
-                            else if (!Array.isArray(value) && !Array.isArray(existingValue)) {
-                                result[key] = deepMerge(
-                                    existingValue as Record<string, unknown>,
-                                    value as Record<string, unknown>,
-                                );
+            for (const arg of validArgs) {
+                // Circular reference protection (per-arg scope prevents false
+                // positives when the same object appears in multiple branches)
+                if (seen.has(arg)) {
+                    throw new Error('deepMerge: Circular reference detected.');
+                }
+
+                const obj = arg as Record<string, unknown>;
+                for (const key in obj) {
+                    if (Object.hasOwn(obj, key)) {
+                        const value = obj[key];
+                        if (Object.hasOwn(result, key)) {
+                            const existingValue = result[key];
+                            if (
+                                typeof value === 'object' && value !== null
+                                && typeof existingValue === 'object' && existingValue !== null
+                            ) {
+                                if (Array.isArray(value) && Array.isArray(existingValue)) {
+                                    result[key] = [...existingValue, ...value];
+                                }
+                                else if (!Array.isArray(value) && !Array.isArray(existingValue)) {
+                                    result[key] = mergeRecursive(
+                                        [existingValue as Record<string, unknown>, value as Record<string, unknown>],
+                                        depth + 1,
+                                        new WeakSet<object>(),
+                                    );
+                                }
+                                else {
+                                    // One is array, other is object — overwrite
+                                    result[key] = value;
+                                }
                             }
                             else {
-                                // One is array, other is object (shouldn't happen with strict types but possible)
-                                // Overwrite
                                 result[key] = value;
                             }
                         }
@@ -240,38 +271,40 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                             result[key] = value;
                         }
                     }
-                    else {
-                        result[key] = value;
-                    }
                 }
             }
+            return result;
         }
-        return result as T;
-    }
 
-    // Check if all arguments are primitive values
-    if (validArgs.every(arg => typeof arg !== 'object' || arg === null)) {
+        // Check if all arguments are primitive values
+        if (validArgs.every(arg => typeof arg !== 'object' || arg === null)) {
+            throw new Error(
+                'deepMerge: Cannot merge primitive values. All arguments must be objects or arrays.',
+            );
+        }
+
+        // Mixed types error
+        const hasArrays = validArgs.some(Array.isArray);
+        const hasObjects = validArgs.some(arg =>
+            typeof arg === 'object' && arg !== null && !Array.isArray(arg),
+        );
+
+        if (hasArrays && hasObjects) {
+            throw new Error(
+                'deepMerge: Cannot mix arrays and objects. All arguments must be either arrays or objects.',
+            );
+        }
+
+        // Fallback for unexpected cases
         throw new Error(
-            'deepMerge: Cannot merge primitive values. All arguments must be objects or arrays.',
+            'deepMerge: Invalid arguments provided. All arguments must be objects or arrays of the same type.',
         );
     }
 
-    // Mixed types error
-    const hasArrays = validArgs.some(Array.isArray);
-    const hasObjects = validArgs.some(arg =>
-        typeof arg === 'object' && arg !== null && !Array.isArray(arg),
-    );
+    // Filter out null/undefined
+    const validArgs = args.filter((arg): arg is object => arg !== null && arg !== undefined);
 
-    if (hasArrays && hasObjects) {
-        throw new Error(
-            'deepMerge: Cannot mix arrays and objects. All arguments must be either arrays or objects.',
-        );
-    }
-
-    // Fallback for unexpected cases
-    throw new Error(
-        'deepMerge: Invalid arguments provided. All arguments must be objects or arrays of the same type.',
-    );
+    return mergeRecursive(validArgs, 0, new WeakSet<object>()) as T;
 }
 
 /**
@@ -314,9 +347,13 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
             const newKey = prefix ? `${prefix}.${key}` : key;
 
             if (value && typeof value === 'object' && !Array.isArray(value)) {
-                // Skip flattening for Mongoose ObjectId, Date, RegExp, and other non-POJO types
-                const valueProto = Object.getPrototypeOf(value);
-                if (valueProto !== Object.prototype && valueProto !== null) {
+                // Fast-path POJO check: `.constructor` is safe even on null-prototype objects
+                // (returns undefined, so the === Object check simply fails and falls through
+                // to the getPrototypeOf check which correctly identifies it as a POJO).
+                const isPojo = (value as object).constructor === Object
+                    || Object.getPrototypeOf(value) === null;
+
+                if (!isPojo) {
                     normalized[newKey] = value;
                     continue;
                 }

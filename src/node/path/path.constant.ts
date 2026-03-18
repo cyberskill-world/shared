@@ -8,9 +8,7 @@ import { E_CommandType, formatCommand, rawCommand } from '../command/index.js';
 import { E_PackageType, setupPackages } from '../package/index.js';
 import { join, resolveWorkingPath } from './path.util.js';
 
-const env = getEnv();
-
-export const WORKING_DIRECTORY = env.CWD;
+export const WORKING_DIRECTORY = getEnv().CWD;
 export const CYBERSKILL_PACKAGE_NAME = '@cyberskill/shared';
 export const NODE_MODULES = 'node_modules';
 export const BUILD_DIRECTORY = 'dist';
@@ -25,20 +23,34 @@ export const GIT_HOOK = '.git/hooks/';
 export const GIT_COMMIT_EDITMSG = '.git/COMMIT_EDITMSG';
 export const GIT_EXCLUDE = '.git/info/exclude';
 export const MIGRATE_MONGO_CONFIG = '.migrate-mongo.config.js';
-export const CYBERSKILL_DIRECTORY = (() => {
+let _cyberskillDir: string | null = null;
+
+/**
+ * Lazily computes the CyberSkill directory path.
+ * Reads package.json on first access to determine whether this is the shared package itself
+ * or a consumer project, avoiding filesystem reads at module load time.
+ */
+export function getCyberskillDirectory(): string {
+    if (_cyberskillDir !== null) {
+        return _cyberskillDir;
+    }
+
     try {
         const packageJson = fsExtra.readJsonSync(resolveWorkingPath(PACKAGE_JSON)) as I_PackageJson;
 
-        const baseDirectory = packageJson.name === CYBERSKILL_PACKAGE_NAME
+        _cyberskillDir = packageJson.name === CYBERSKILL_PACKAGE_NAME
             ? join(WORKING_DIRECTORY, BUILD_DIRECTORY)
             : join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
-
-        return baseDirectory;
     }
     catch {
-        return join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
+        _cyberskillDir = join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
     }
-})();
+
+    return _cyberskillDir;
+}
+
+/** @deprecated Use `getCyberskillDirectory()` instead. Kept for backward compatibility. */
+export const CYBERSKILL_DIRECTORY = getCyberskillDirectory();
 export const CYBERSKILL_CLI = 'cyberskill';
 export const CYBERSKILL_CLI_PATH = 'src/node/cli/index.ts';
 export const ESLINT_PACKAGE_NAME = 'eslint';
@@ -70,7 +82,8 @@ export const AG_KIT_PACKAGE_NAME = '@vudovn/ag-kit';
 export const DOT_AGENT = '.agent';
 
 export const PATH = {
-    CYBERSKILL_DIRECTORY,
+    /** Lazily resolved — defers `getCyberskillDirectory()` until first property access. */
+    get CYBERSKILL_DIRECTORY() { return getCyberskillDirectory(); },
     WORKING_DIRECTORY,
     PUBLIC_DIRECTORY: resolveWorkingPath(PUBLIC_DIRECTORY),
     TS_CONFIG: resolveWorkingPath(TSCONFIG_JSON),
@@ -84,12 +97,18 @@ export const PATH = {
     PNPM_LOCK_YAML: resolveWorkingPath(PNPM_LOCK_YAML),
     NODE_MODULES: resolveWorkingPath(NODE_MODULES),
     MIGRATE_MONGO_CONFIG: resolveWorkingPath(MIGRATE_MONGO_CONFIG),
-    LINT_STAGED_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/lint-staged/index.js`),
-    COMMITLINT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/commitlint/index.js`),
-    VITEST_UNIT_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.unit.js`),
-    VITEST_E2E_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/vitest/vitest.e2e.js`),
-    STORYBOOK_MAIN_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/storybook/storybook.main.js`),
-    STORYBOOK_PREVIEW_CONFIG: resolveWorkingPath(`${CYBERSKILL_DIRECTORY}/config/storybook/storybook.preview.js`),
+    /** Lazily resolved — defers `getCyberskillDirectory()` until first property access. */
+    get LINT_STAGED_CONFIG() { return resolveWorkingPath(`${getCyberskillDirectory()}/config/lint-staged/index.js`); },
+    /** Lazily resolved — defers `getCyberskillDirectory()` until first property access. */
+    get COMMITLINT_CONFIG() { return resolveWorkingPath(`${getCyberskillDirectory()}/config/commitlint/index.js`); },
+    /** Lazily resolved — defers `getCyberskillDirectory()` until first property access. */
+    get VITEST_UNIT_CONFIG() { return resolveWorkingPath(`${getCyberskillDirectory()}/config/vitest/vitest.unit.js`); },
+    /** Lazily resolved — defers `getCyberskillDirectory()` until first property access. */
+    get VITEST_E2E_CONFIG() { return resolveWorkingPath(`${getCyberskillDirectory()}/config/vitest/vitest.e2e.js`); },
+    /** Lazily resolved — defers `getCyberskillDirectory()` until first property access. */
+    get STORYBOOK_MAIN_CONFIG() { return resolveWorkingPath(`${getCyberskillDirectory()}/config/storybook/storybook.main.js`); },
+    /** Lazily resolved — defers `getCyberskillDirectory()` until first property access. */
+    get STORYBOOK_PREVIEW_CONFIG() { return resolveWorkingPath(`${getCyberskillDirectory()}/config/storybook/storybook.preview.js`); },
     DOT_AGENT: resolveWorkingPath(DOT_AGENT),
 };
 
