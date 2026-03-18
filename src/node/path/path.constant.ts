@@ -104,7 +104,7 @@ export function createGitHooksConfig() {
     return {
         'pre-commit': LINT_STAGED_CLI,
         'commit-msg': COMMIT_LINT_CLI,
-        'pre-push': rawCommand(`${GIT_CLI} pull && ${PNPM_CLI} test`),
+        'pre-push': rawCommand(`${GIT_CLI} pull && ${PNPM_CLI} run --if-present test`),
     };
 }
 
