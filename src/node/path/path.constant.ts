@@ -2,7 +2,6 @@ import fsExtra from 'fs-extra';
 
 import { getEnv } from '#config/env/index.js';
 
-import type { I_CommandContext } from '../command/index.js';
 import type { I_PackageInput, I_PackageJson } from '../package/index.js';
 
 import { E_CommandType, formatCommand, rawCommand } from '../command/index.js';
@@ -99,15 +98,13 @@ export const PATH = {
  * This function generates a configuration object for Git hooks that includes
  * pre-commit and commit-msg hooks, with an optional pre-push hook for the current project.
  *
- * @param context - Context object containing project information.
- * @param context.isCurrentProject - Whether this is the current project being worked on.
  * @returns A Git hooks configuration object with appropriate commands for each hook.
  */
-export function createGitHooksConfig({ isCurrentProject }: Partial<I_CommandContext>) {
+export function createGitHooksConfig() {
     return {
         'pre-commit': LINT_STAGED_CLI,
         'commit-msg': COMMIT_LINT_CLI,
-        ...(isCurrentProject ? { 'pre-push': rawCommand(`${GIT_CLI} pull`) } : { 'pre-push': rawCommand(`TAG_ONLY=true; while read local_ref local_oid remote_ref remote_oid; do case \"$local_ref\" in refs/tags/*) ;; *) TAG_ONLY=false; break ;; esac; done; if [ \"$TAG_ONLY\" = true ]; then echo '[pre-push] Tag-only push, skipping build.'; exit 0; fi; ${PNPM_CLI} build`) }),
+        'pre-push': rawCommand(`${GIT_CLI} pull && ${PNPM_CLI} test`),
     };
 }
 

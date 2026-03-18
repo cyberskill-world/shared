@@ -24,20 +24,21 @@ describe('path', () => {
 
 describe('createGitHooksConfig', () => {
     it('should include pre-push with git pull for current project', () => {
-        const config = createGitHooksConfig({ isCurrentProject: true });
+        const config = createGitHooksConfig();
         expect(config['pre-commit']).toBeDefined();
         expect(config['commit-msg']).toBeDefined();
-        expect((config['pre-push'] as any).cmd).toContain('git pull');
+        expect(config['pre-push']).toHaveProperty('cmd');
+        expect((config['pre-push'] as { cmd: string }).cmd).toContain('git pull');
     });
 
-    it('should include pre-push with build for non-current project', () => {
-        const config = createGitHooksConfig({ isCurrentProject: false });
-        expect((config['pre-push'] as any).cmd).toContain('build');
+    it('should include pre-push with pnpm test', () => {
+        const config = createGitHooksConfig();
+        expect((config['pre-push'] as { cmd: string }).cmd).toContain('pnpm test');
     });
 
-    it('should include pre-push with build when isCurrentProject is undefined', () => {
-        const config = createGitHooksConfig({});
-        expect((config['pre-push'] as any).cmd).toContain('build');
+    it('should chain git pull and pnpm test with &&', () => {
+        const config = createGitHooksConfig();
+        expect((config['pre-push'] as { cmd: string }).cmd).toContain('git pull && pnpm test');
     });
 });
 

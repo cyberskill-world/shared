@@ -448,8 +448,28 @@ describe('MongooseController', () => {
         });
 
         it('should fail when all short IDs taken', async () => {
+            // Generate the same shortIds that createShortId would generate
+            const mockFind = vi.fn(() => createMockQuery(
+                Array.from({ length: 10 }, (_, i) => ({ shortId: `shortid_${i}` })),
+            ));
             const mockModel = createMockModel({
-                exists: vi.fn().mockResolvedValue({ _id: '1' }),
+                find: mockFind,
+            });
+
+            // Override the find mock to return docs matching ALL generated shortIds
+            (mockModel as any).find = vi.fn(() => {
+                const query = createMockQuery([]);
+                // When find is called with { shortId: { $in: [...] } },
+                // return all shortIds as existing
+                query.exec = vi.fn(async () => {
+                    const callArgs = (mockModel as any).find.mock.calls[0]?.[0];
+                    const shortIds = callArgs?.shortId?.$in ?? [];
+                    return shortIds.map((s: string) => ({ shortId: s }));
+                });
+                query.then = vi.fn((resolve: (v: unknown) => void) => {
+                    return query.exec().then(resolve);
+                });
+                return query;
             });
 
             const controller = new MongooseController(mockModel);

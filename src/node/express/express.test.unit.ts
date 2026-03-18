@@ -6,18 +6,18 @@ import { createCors, createCorsOptions, createExpress, createNest, createSession
 // createCorsOptions
 // ---------------------------------------------------------------------------
 describe('createCorsOptions', () => {
-    it('should allow all origins in dev mode', () => {
+    it('should allow undefined origin in dev mode', () => {
         const options = createCorsOptions({ isDev: true, whiteList: [] });
-        const callback = vi.fn();
-        options.origin('http://evil.com', callback);
-        expect(callback).toHaveBeenCalledWith(null, true);
-    });
-
-    it('should allow requests with no origin (same-origin or curl)', () => {
-        const options = createCorsOptions({ isDev: false, whiteList: ['http://allowed.com'] });
         const callback = vi.fn();
         options.origin(undefined, callback);
         expect(callback).toHaveBeenCalledWith(null, true);
+    });
+
+    it('should reject requests with no origin in production', () => {
+        const options = createCorsOptions({ isDev: false, whiteList: ['http://allowed.com'] });
+        const callback = vi.fn();
+        options.origin(undefined, callback);
+        expect(callback).toHaveBeenCalledWith(expect.any(Error), false);
     });
 
     it('should allow whitelisted origins', () => {

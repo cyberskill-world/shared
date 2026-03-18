@@ -16,6 +16,16 @@
     "sideEffects": [
         "./dist/style.css"
     ],
+    "imports": {
+        "#public/*": "./public/*",
+        "#config/*": "./src/config/*",
+        "#constant/*": "./src/constant/*",
+        "#node/*": "./src/node/*",
+        "#react/*": "./src/react/*",
+        "#style/*": "./src/style/*",
+        "#typescript/*": "./src/typescript/*",
+        "#util/*": "./src/util/*"
+    },
     "exports": {
         "./config": {
             "types": "./dist/config/index.d.ts",
