@@ -1,3 +1,12 @@
+# [3.6.0](https://github.com/cyberskill-world/shared/compare/v3.5.0...v3.6.0) (2026-03-18)
+
+
+### Features
+
+* add --if-present to pre-push script ([e48cfe0](https://github.com/cyberskill-world/shared/commit/e48cfe0bbbc5f2f99ab363d9206f6c8ce001ba7f))
+* add --if-present to pre-push script ([eb4e8b1](https://github.com/cyberskill-world/shared/commit/eb4e8b15823cd1986030d85f17e12e220c80bd03))
+* remove .simple-git-hooks.json when reset ([e4c8c3b](https://github.com/cyberskill-world/shared/commit/e4c8c3ba02bbd593e6f10ed7503fbabe07e332e1))
+
 # [3.5.0](https://github.com/cyberskill-world/shared/compare/v3.4.0...v3.5.0) (2026-03-18)
 
 
