@@ -1,3 +1,10 @@
+## [3.7.0](https://github.com/cyberskill-world/shared/compare/v3.6.0...v3.7.0) (2026-03-18)
+
+### ✨ Features
+
+* improvement ([7f66f79](https://github.com/cyberskill-world/shared/commit/7f66f795666afa5d9781d437a8d765b277bfc91f))
+* replace @vitejs/plugin-react-swc with @vitejs/plugin-react ([3ec25fb](https://github.com/cyberskill-world/shared/commit/3ec25fbb93957e4a3545f51c37a02c561b4b6186))
+
 # [3.6.0](https://github.com/cyberskill-world/shared/compare/v3.5.0...v3.6.0) (2026-03-18)
 
 
