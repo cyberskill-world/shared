@@ -15,7 +15,7 @@ vi.mock('@antfu/eslint-config', () => ({
     default: vi.fn((...args: unknown[]) => args),
 }));
 
-vi.mock('@vitejs/plugin-react-swc', () => ({
+vi.mock('@vitejs/plugin-react', () => ({
     default: vi.fn(() => ({})),
 }));
 
