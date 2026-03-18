@@ -1,3 +1,12 @@
+# [3.5.0](https://github.com/cyberskill-world/shared/compare/v3.4.0...v3.5.0) (2026-03-18)
+
+
+### Features
+
+* add default exports ([9daba4f](https://github.com/cyberskill-world/shared/commit/9daba4f0a9c2ca1eb5e1aafa49e00afb0fb38491))
+* add pnpm test to pre-push hook ([8a2861d](https://github.com/cyberskill-world/shared/commit/8a2861d278e4c1d3e252613f94ebea8251bcb9e0))
+* improvements ([f2de0e8](https://github.com/cyberskill-world/shared/commit/f2de0e81bc515f46ff484158dc7616c67df99d1f))
+
 # [3.4.0](https://github.com/cyberskill-world/shared/compare/v3.3.0...v3.4.0) (2026-03-17)
 
 
