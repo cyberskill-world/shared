@@ -33,12 +33,12 @@ describe('createGitHooksConfig', () => {
 
     it('should include pre-push with pnpm test', () => {
         const config = createGitHooksConfig();
-        expect((config['pre-push'] as { cmd: string }).cmd).toContain('pnpm test');
+        expect((config['pre-push'] as { cmd: string }).cmd).toContain('pnpm run --if-present test');
     });
 
     it('should chain git pull and pnpm test with &&', () => {
         const config = createGitHooksConfig();
-        expect((config['pre-push'] as { cmd: string }).cmd).toContain('git pull && pnpm test');
+        expect((config['pre-push'] as { cmd: string }).cmd).toContain('git pull && pnpm run --if-present test');
     });
 });
 
