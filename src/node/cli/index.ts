@@ -267,7 +267,7 @@ async function ready() {
  * @returns A promise that resolves when project reset is complete.
  */
 async function reset() {
-    removeSync(PATH.NODE_MODULES, PATH.PNPM_LOCK_YAML);
+    removeSync(PATH.NODE_MODULES, PATH.PNPM_LOCK_YAML, PATH.SIMPLE_GIT_HOOKS_JSON);
     await runCommand('Pruning pnpm store', await command.pnpmPruneStore());
     await runCommand('Clearing pnpm cache', await command.pnpmCleanCache());
     await installDependencies();
