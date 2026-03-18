@@ -22,6 +22,8 @@ export interface I_ExpressOptions {
     jsonLimit?: string;
     trustProxy?: boolean | number | string | string[];
     rateLimit?: false | I_RateLimitOptions;
+    /** Route path to scope graphqlUploadExpress middleware (defaults to '/graphql'). */
+    uploadPath?: string;
 }
 
 export interface I_NestOptions {

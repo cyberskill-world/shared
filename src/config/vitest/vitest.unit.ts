@@ -3,7 +3,7 @@ import type { UserConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vitest/config';
 
-import { deepMerge } from '../../util/object/index.js';
+import { deepMerge } from '#util/object/index.js';
 
 /**
  * Creates a Vitest configuration for unit testing with React support.

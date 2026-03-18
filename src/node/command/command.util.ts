@@ -15,11 +15,9 @@ import { storage } from '../storage/index.js';
 const execPromise = util.promisify(exec);
 const execFilePromise = util.promisify(execFile);
 const SHELL_METACHARACTERS = /[|&;<>`$(){}[\]!#~*?]/;
-// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/no-misleading-capturing-group
-const RE_ESLINT_ERROR = /^\s*(\d+):(\d+)\s+(error|warning)\s+(.+)\s+(\S+)$/;
+const RE_ESLINT_ERROR = /^\s*(\d+):(\d+)\s+(error|warning)\s+(\S+(?:\s+\S+)*)\s+(\S+)$/;
 const RE_TS_ERROR = /^(.+?)\((\d+),(\d+)\):\s+(error|warning)\s+TS\d+:\s+(\S.+)$/;
-// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/no-misleading-capturing-group
-const RE_COMMITLINT_ERROR = /^✖\s+(.+)\s+\[([^\]]*)\]$/;
+const RE_COMMITLINT_ERROR = /^✖\s+(\S+(?:\s+\S+)*)\s+\[([^\]]*)\]$/;
 const RE_WHITESPACE = /\s+/;
 
 /**
@@ -130,11 +128,9 @@ async function parseTextErrors(output: string): Promise<void> {
             lastFilePath = line.trim();
         }
         else {
-            const eslintMatch = eslintErrorDetailsRegex.exec(line) || [];
-            const tsMatch = tsRegex.exec(line) || [];
-            const commitlintMatch = commitlintRegex.exec(line) || [];
+            const eslintMatch = eslintErrorDetailsRegex.exec(line);
 
-            if (eslintMatch.length && lastFilePath) {
+            if (eslintMatch && lastFilePath) {
                 errorList.push({
                     file: lastFilePath,
                     position: `${eslintMatch[1]}:${eslintMatch[2]}`,
@@ -143,24 +139,32 @@ async function parseTextErrors(output: string): Promise<void> {
                     rule: eslintMatch?.[5]?.trim() ?? '',
                 });
             }
-            else if (tsMatch.length) {
-                errorList.push({
-                    file: tsMatch?.[1] ?? '',
-                    position: `${tsMatch[2]}:${tsMatch[3]}`,
-                    type: tsMatch[4] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
-                    message: tsMatch?.[5]?.trim() ?? '',
-                });
-            }
-            else if (commitlintMatch.length) {
-                errorList.push({
-                    file: 'commitlint',
-                    type: E_IssueType.Error,
-                    message: commitlintMatch?.[1]?.trim() ?? '',
-                    rule: commitlintMatch?.[2]?.trim() ?? '',
-                });
-            }
             else {
-                unmatchedLines.push(line.trim());
+                const tsMatch = tsRegex.exec(line);
+
+                if (tsMatch) {
+                    errorList.push({
+                        file: tsMatch?.[1] ?? '',
+                        position: `${tsMatch[2]}:${tsMatch[3]}`,
+                        type: tsMatch[4] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
+                        message: tsMatch?.[5]?.trim() ?? '',
+                    });
+                }
+                else {
+                    const commitlintMatch = commitlintRegex.exec(line);
+
+                    if (commitlintMatch) {
+                        errorList.push({
+                            file: 'commitlint',
+                            type: E_IssueType.Error,
+                            message: commitlintMatch?.[1]?.trim() ?? '',
+                            rule: commitlintMatch?.[2]?.trim() ?? '',
+                        });
+                    }
+                    else {
+                        unmatchedLines.push(line.trim());
+                    }
+                }
             }
         }
     });
@@ -221,11 +225,13 @@ async function parseCommandOutput(output: string): Promise<void> {
 async function executeCommand(command: string | void, parser = parseCommandOutput, options: { timeout?: number } = {}): Promise<void> {
     const controller = new AbortController();
 
-    process.on('SIGINT', () => {
+    const onSigint = () => {
         log.warn('Process interrupted. Terminating...');
         controller.abort();
-        process.exit();
-    });
+        process.exit(130);
+    };
+
+    process.once('SIGINT', onSigint);
 
     try {
         if (typeof command === 'string') {
@@ -262,6 +268,9 @@ async function executeCommand(command: string | void, parser = parseCommandOutpu
         }
 
         throw error;
+    }
+    finally {
+        process.removeListener('SIGINT', onSigint);
     }
 }
 
@@ -370,27 +379,23 @@ export async function runCommand(label: string, command: string | void, options:
                 if (elapsed > 0) {
                     process.stdout.write(`\r⏳ ${label}... ${elapsed}s`);
                 }
-            }, 100);
+            }, 1000);
         }
 
         await executeCommand(command, parseCommandOutput, options);
 
-        if (timer) {
-            clearInterval(timer);
-            process.stdout.write(`\r\x1B[K`);
-        }
-
         log.success(`${label} done.`);
     }
     catch (error) {
-        if (timer) {
-            clearInterval(timer);
-            process.stdout.write(`\r\x1B[K`);
-        }
-
         if (options.throwOnError) {
             throw error;
         }
         catchError(error);
+    }
+    finally {
+        if (timer) {
+            clearInterval(timer);
+            process.stdout.write(`\r\x1B[K`);
+        }
     }
 }

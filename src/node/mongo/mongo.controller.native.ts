@@ -4,25 +4,33 @@ import { RESPONSE_STATUS } from '#constant/index.js';
 
 import type { C_Collection, C_Db, C_Document, T_DeleteResult, T_Filter, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from './mongo.type.js';
 
-import { catchError } from '../log/index.js';
+import { catchError, log } from '../log/index.js';
 import { mongo } from './mongo.util.js';
 
 /**
  * MongoDB native driver controller for direct database operations.
  * This class provides a simplified interface for MongoDB operations using the native driver,
  * with automatic generic field generation and standardized response formatting.
+ *
+ * @see I_MongoController for the shared polymorphic interface (use via type assertion when needed).
  */
 export class MongoController<D extends Partial<C_Document>> {
     private collection: C_Collection<D>;
+    private defaultLimit: number;
+    private collectionName: string;
 
     /**
      * Creates a new MongoDB controller instance.
      *
      * @param db - The MongoDB database instance.
      * @param collectionName - The name of the collection to operate on.
+     * @param options - Optional configuration for the controller.
+     * @param options.defaultLimit - Maximum documents returned by findAll when no limit is specified (default: 10,000).
      */
-    constructor(db: C_Db, collectionName: string) {
+    constructor(db: C_Db, collectionName: string, options?: { defaultLimit?: number }) {
         this.collection = db.collection<D>(collectionName);
+        this.collectionName = collectionName;
+        this.defaultLimit = options?.defaultLimit ?? 10_000;
     }
 
     /**
@@ -126,7 +134,11 @@ export class MongoController<D extends Partial<C_Document>> {
         filter: T_Filter<D> = {},
     ): Promise<I_Return<T_WithId<D>[]>> {
         try {
-            const result = await this.collection.find(filter).limit(10_000).maxTimeMS(30_000).toArray();
+            const result = await this.collection.find(filter).limit(this.defaultLimit).maxTimeMS(30_000).toArray();
+
+            if (result.length === this.defaultLimit) {
+                log.warn(`[${this.collectionName}] findAll returned exactly ${this.defaultLimit} documents (the default limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
+            }
 
             return {
                 success: true,

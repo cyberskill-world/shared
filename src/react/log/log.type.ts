@@ -1,5 +1,1 @@
-export interface I_CatchErrorOptions {
-    shouldLog?: boolean;
-    returnValue?: unknown;
-    callback?: (error: Error) => void;
-}
+export type { I_CatchErrorOptions } from '#util/log/index.js';

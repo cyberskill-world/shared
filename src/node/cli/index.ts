@@ -62,8 +62,9 @@ async function checkEslint(fix = false) {
     try {
         await runCommand(label, commandToRun, { timeout: 60000, throwOnError: true });
     }
-    catch (error: any) {
-        if (error.code === 'ETIMEDOUT' || error.killed || error.signal === 'SIGTERM') {
+    catch (error: unknown) {
+        const errObj = error as { code?: string; killed?: boolean; signal?: string };
+        if (errObj.code === 'ETIMEDOUT' || errObj.killed || errObj.signal === 'SIGTERM') {
             log.warn('Lint check timed out. Retrying with debug mode enabled...');
             process.env['DEBUG'] = 'true';
             await runCommand(`${label} (Debug Mode)`, commandToRun);
@@ -142,7 +143,7 @@ async function lintStaged() {
     }
 
     await runCommand('Executing lint-staged', await command.lintStaged());
-    showCheckResult();
+    await showCheckResult();
 }
 
 /**
@@ -167,7 +168,7 @@ async function lintCheck() {
     await clearAllErrorLists();
     await checkTypescript();
     await checkEslint();
-    showCheckResult();
+    await showCheckResult();
 }
 
 /**
@@ -181,7 +182,7 @@ async function lintFix() {
     await clearAllErrorLists();
     await checkTypescript();
     await checkEslint(true);
-    showCheckResult();
+    await showCheckResult();
 }
 
 /**
@@ -194,7 +195,7 @@ async function lintFix() {
 async function commitLint() {
     await clearAllErrorLists();
     await runCommand('Validating commit message', await command.commitLint());
-    showCheckResult();
+    await showCheckResult();
 }
 
 /**
@@ -301,7 +302,8 @@ async function testUnit() {
 
         await runCommand('Running unit tests', cmd, { throwOnError: true });
     }
-    catch {
+    catch (error) {
+        log.error(error);
         process.exit(1);
     }
 }
@@ -322,7 +324,8 @@ async function testE2E() {
 
         await runCommand('Running end-to-end tests', cmd, { throwOnError: true });
     }
-    catch {
+    catch (error) {
+        log.error(error);
         process.exit(1);
     }
 }

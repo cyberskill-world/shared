@@ -88,7 +88,7 @@ describe('createGraphqlCodegenConfig', () => {
                 uri: baseOptions.uri,
                 from: baseOptions.from,
                 to: baseOptions.to,
-            } as any);
+            });
 
             expect(config.documents).toContain(baseOptions.from);
         });

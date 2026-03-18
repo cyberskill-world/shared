@@ -297,3 +297,14 @@ export const storage = {
     },
 
 };
+
+/**
+ * Resets all module-level singleton state used by the storage module.
+ * Intended for use in tests to ensure isolation between test cases.
+ * Do NOT call this in production code.
+ */
+export function resetStorageForTesting(): void {
+    initPromise = null;
+    driverInstance = null;
+    nodeFsDriverState.baseDir = '';
+}

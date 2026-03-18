@@ -30,7 +30,14 @@ import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from 
 export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>) {
     return {
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-            if (isDev || !origin || whiteList?.includes(origin ?? '')) {
+            // Allow requests without Origin header only in development mode.
+            // In production, undefined origin (e.g., curl, server-to-server) is rejected.
+            if (isDev && !origin) {
+                callback(null, true);
+                return;
+            }
+
+            if (origin && whiteList?.includes(origin)) {
                 callback(null, true);
             }
             else {
@@ -74,6 +81,7 @@ export function createSession(options: SessionOptions): RequestHandler {
             httpOnly: true,
             sameSite: 'lax',
             secure: process.env['NODE_ENV'] === 'production',
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours
         },
     };
 
@@ -166,10 +174,11 @@ export function createExpress(options?: I_ExpressOptions): Application {
 
     setupMiddleware(app, options?.isDev, options?.jsonLimit, options?.trustProxy, options?.rateLimit);
     setupStaticFolders(app, options?.static);
-    app.use(graphqlUploadExpress({
+    const uploadMiddleware = graphqlUploadExpress({
         maxFileSize: options?.maxFileSize ?? 10_000_000,
         maxFiles: options?.maxFiles ?? 10,
-    }));
+    });
+    app.use(options?.uploadPath ?? '/graphql', uploadMiddleware);
 
     return app;
 }

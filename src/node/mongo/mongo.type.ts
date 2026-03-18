@@ -102,7 +102,7 @@ export type T_ErrorHandlingMiddlewareFunction<T> = ErrorHandlingMiddlewareFuncti
 
 export type T_ErrorHandlingMiddlewareWithOption<T> = ErrorHandlingMiddlewareWithOption<T>;
 
-export type T_MongooseShema<T> = mongoose.Schema<T>;
+export type T_MongooseSchema<T> = mongoose.Schema<T>;
 
 export type T_Input_MongooseSchema<T> = SchemaDefinition<T>;
 

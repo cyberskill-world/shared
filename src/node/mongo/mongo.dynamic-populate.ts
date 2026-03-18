@@ -2,6 +2,7 @@ import type mongooseRaw from 'mongoose';
 
 import { deepClone } from '#util/index.js';
 
+import type { I_ModelWithSchema } from './mongo.internal-types.js';
 import type { I_DynamicVirtualConfig, I_DynamicVirtualOptions, T_Input_Populate } from './mongo.type.js';
 
 import { catchError } from '../log/index.js';
@@ -162,7 +163,7 @@ export async function populateDynamicVirtuals<T extends object, R extends string
     virtualConfigs: I_DynamicVirtualConfig<T, R>[],
     populate?: T_Input_Populate,
     projection?: Record<string, 0 | 1>,
-    startModel?: any,
+    startModel?: I_ModelWithSchema,
 ): Promise<T[]> {
     if (!documents.length || !virtualConfigs.length) {
         return documents;
@@ -207,7 +208,10 @@ export async function populateDynamicVirtuals<T extends object, R extends string
         return documents;
     }
 
-    const clonedDocuments = deepClone(documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc)) as T[];
+    // Only deepClone documents that need it. toObject() already creates a plain copy,
+    // so we avoid redundant deep cloning for Mongoose documents.
+    const plainDocuments = documents.map(doc => isMongooseDoc(doc) ? doc.toObject() : doc);
+    const clonedDocuments = plainDocuments.some(doc => isMongooseDoc(doc)) ? plainDocuments as T[] : deepClone(plainDocuments) as T[];
 
     clonedDocuments.forEach((doc) => {
         requestedVirtuals.forEach(({ name, options }) => {
@@ -373,8 +377,8 @@ export async function populateDynamicVirtuals<T extends object, R extends string
     if (populate) {
         const normalizePopulate = (pop: T_Input_Populate): T_Input_Populate => {
             const asArray = Array.isArray(pop) ? pop : [pop];
-            const grouped = new Map<string, any[]>();
-            const passthrough: any[] = [];
+            const grouped = new Map<string, unknown[]>();
+            const passthrough: unknown[] = [];
 
             for (const entry of asArray) {
                 if (typeof entry === 'string') {
@@ -412,19 +416,19 @@ export async function populateDynamicVirtuals<T extends object, R extends string
                                 grouped.get(first)!.push(rest);
                             }
                             if (obj.populate) {
-                                grouped.get(first)!.push(obj.populate as unknown as any);
+                                grouped.get(first)!.push(obj.populate);
                             }
                         }
                     }
                     else {
-                        passthrough.push(entry as any);
+                        passthrough.push(entry);
                     }
                 }
             }
 
-            const normalized: any[] = [...passthrough];
+            const normalized: unknown[] = [...passthrough];
             grouped.forEach((nested, root) => {
-                const flat: any[] = [];
+                const flat: unknown[] = [];
 
                 for (const n of nested) {
                     if (typeof n === 'string') {
@@ -435,7 +439,7 @@ export async function populateDynamicVirtuals<T extends object, R extends string
                     }
                 }
                 if (flat.length > 0) {
-                    normalized.push({ path: root as string, populate: flat as unknown as T_Input_Populate });
+                    normalized.push({ path: root, populate: flat as unknown as T_Input_Populate });
                 }
                 else {
                     normalized.push(root);

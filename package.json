@@ -19,142 +19,177 @@
     "exports": {
         "./config": {
             "types": "./dist/config/index.d.ts",
-            "import": "./dist/config/index.js"
+            "import": "./dist/config/index.js",
+            "default": "./dist/config/index.js"
         },
         "./config/commitlint": {
             "types": "./dist/config/commitlint/index.d.ts",
-            "import": "./dist/config/commitlint/index.js"
+            "import": "./dist/config/commitlint/index.js",
+            "default": "./dist/config/commitlint/index.js"
         },
         "./config/env": {
             "types": "./dist/config/env/index.d.ts",
-            "import": "./dist/config/env/index.js"
+            "import": "./dist/config/env/index.js",
+            "default": "./dist/config/env/index.js"
         },
         "./config/eslint": {
             "types": "./dist/config/eslint/index.d.ts",
-            "import": "./dist/config/eslint/index.js"
+            "import": "./dist/config/eslint/index.js",
+            "default": "./dist/config/eslint/index.js"
         },
         "./config/graphql-codegen": {
             "types": "./dist/config/graphql-codegen/index.d.ts",
-            "import": "./dist/config/graphql-codegen/index.js"
+            "import": "./dist/config/graphql-codegen/index.js",
+            "default": "./dist/config/graphql-codegen/index.js"
         },
         "./config/lint-staged": {
             "types": "./dist/config/lint-staged/index.d.ts",
-            "import": "./dist/config/lint-staged/index.js"
+            "import": "./dist/config/lint-staged/index.js",
+            "default": "./dist/config/lint-staged/index.js"
         },
         "./config/vitest": {
             "types": "./dist/config/vitest/index.d.ts",
-            "import": "./dist/config/vitest/index.js"
+            "import": "./dist/config/vitest/index.js",
+            "default": "./dist/config/vitest/index.js"
         },
         "./config/storybook": {
             "types": "./dist/config/storybook/index.d.ts",
-            "import": "./dist/config/storybook/index.js"
+            "import": "./dist/config/storybook/index.js",
+            "default": "./dist/config/storybook/index.js"
         },
         "./constant": {
             "types": "./dist/constant/index.d.ts",
-            "import": "./dist/constant/index.js"
+            "import": "./dist/constant/index.js",
+            "default": "./dist/constant/index.js"
         },
         "./node/apollo-server": {
             "types": "./dist/node/apollo-server/index.d.ts",
-            "import": "./dist/node/apollo-server/index.js"
+            "import": "./dist/node/apollo-server/index.js",
+            "default": "./dist/node/apollo-server/index.js"
         },
         "./node/cli": {
             "types": "./dist/node/cli/index.d.ts",
-            "import": "./dist/node/cli/index.js"
+            "import": "./dist/node/cli/index.js",
+            "default": "./dist/node/cli/index.js"
         },
         "./node/command": {
             "types": "./dist/node/command/index.d.ts",
-            "import": "./dist/node/command/index.js"
+            "import": "./dist/node/command/index.js",
+            "default": "./dist/node/command/index.js"
         },
         "./node/express": {
             "types": "./dist/node/express/index.d.ts",
-            "import": "./dist/node/express/index.js"
+            "import": "./dist/node/express/index.js",
+            "default": "./dist/node/express/index.js"
         },
         "./node/fs": {
             "types": "./dist/node/fs/index.d.ts",
-            "import": "./dist/node/fs/index.js"
+            "import": "./dist/node/fs/index.js",
+            "default": "./dist/node/fs/index.js"
         },
         "./node/log": {
             "types": "./dist/node/log/index.d.ts",
-            "import": "./dist/node/log/index.js"
+            "import": "./dist/node/log/index.js",
+            "default": "./dist/node/log/index.js"
         },
         "./node/mongo": {
             "types": "./dist/node/mongo/index.d.ts",
-            "import": "./dist/node/mongo/index.js"
+            "import": "./dist/node/mongo/index.js",
+            "default": "./dist/node/mongo/index.js"
         },
         "./node/package": {
             "types": "./dist/node/package/index.d.ts",
-            "import": "./dist/node/package/index.js"
+            "import": "./dist/node/package/index.js",
+            "default": "./dist/node/package/index.js"
         },
         "./node/path": {
             "types": "./dist/node/path/index.d.ts",
-            "import": "./dist/node/path/index.js"
+            "import": "./dist/node/path/index.js",
+            "default": "./dist/node/path/index.js"
         },
         "./node/storage": {
             "types": "./dist/node/storage/index.d.ts",
-            "import": "./dist/node/storage/index.js"
+            "import": "./dist/node/storage/index.js",
+            "default": "./dist/node/storage/index.js"
         },
         "./node/upload": {
             "types": "./dist/node/upload/index.d.ts",
-            "import": "./dist/node/upload/index.js"
+            "import": "./dist/node/upload/index.js",
+            "default": "./dist/node/upload/index.js"
         },
         "./node/ws": {
             "types": "./dist/node/ws/index.d.ts",
-            "import": "./dist/node/ws/index.js"
+            "import": "./dist/node/ws/index.js",
+            "default": "./dist/node/ws/index.js"
         },
         "./react/apollo-client": {
             "types": "./dist/react/apollo-client/index.d.ts",
-            "import": "./dist/react/apollo-client/index.js"
+            "import": "./dist/react/apollo-client/index.js",
+            "default": "./dist/react/apollo-client/index.js"
         },
         "./react/apollo-client-nextjs": {
             "types": "./dist/react/apollo-client-nextjs/index.d.ts",
-            "import": "./dist/react/apollo-client-nextjs/index.js"
+            "import": "./dist/react/apollo-client-nextjs/index.js",
+            "default": "./dist/react/apollo-client-nextjs/index.js"
         },
         "./react/apollo-client-nextjs/rsc": {
             "types": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.d.ts",
-            "import": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.js"
+            "import": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.js",
+            "default": "./dist/react/apollo-client-nextjs/apollo-client-nextjs.rsc.js"
         },
         "./react/apollo-error": {
             "types": "./dist/react/apollo-error/index.d.ts",
-            "import": "./dist/react/apollo-error/index.js"
+            "import": "./dist/react/apollo-error/index.js",
+            "default": "./dist/react/apollo-error/index.js"
         },
         "./react/i18next": {
             "types": "./dist/react/i18next/index.d.ts",
-            "import": "./dist/react/i18next/index.js"
+            "import": "./dist/react/i18next/index.js",
+            "default": "./dist/react/i18next/index.js"
         },
         "./react/loading": {
             "types": "./dist/react/loading/index.d.ts",
-            "import": "./dist/react/loading/index.js"
+            "import": "./dist/react/loading/index.js",
+            "default": "./dist/react/loading/index.js"
         },
         "./react/log": {
             "types": "./dist/react/log/index.d.ts",
-            "import": "./dist/react/log/index.js"
+            "import": "./dist/react/log/index.js",
+            "default": "./dist/react/log/index.js"
         },
         "./react/next-intl": {
             "types": "./dist/react/next-intl/index.d.ts",
-            "import": "./dist/react/next-intl/index.js"
+            "import": "./dist/react/next-intl/index.js",
+            "default": "./dist/react/next-intl/index.js"
         },
         "./react/storage": {
             "types": "./dist/react/storage/index.d.ts",
-            "import": "./dist/react/storage/index.js"
+            "import": "./dist/react/storage/index.js",
+            "default": "./dist/react/storage/index.js"
         },
         "./react/toast": {
             "types": "./dist/react/toast/index.d.ts",
-            "import": "./dist/react/toast/index.js"
+            "import": "./dist/react/toast/index.js",
+            "default": "./dist/react/toast/index.js"
         },
         "./react/userback": {
             "types": "./dist/react/userback/index.d.ts",
-            "import": "./dist/react/userback/index.js"
+            "import": "./dist/react/userback/index.js",
+            "default": "./dist/react/userback/index.js"
         },
         "./typescript": {
             "types": "./dist/typescript/index.d.ts",
-            "import": "./dist/typescript/index.js"
+            "import": "./dist/typescript/index.js",
+            "default": "./dist/typescript/index.js"
         },
         "./util": {
             "types": "./dist/util/index.d.ts",
-            "import": "./dist/util/index.js"
+            "import": "./dist/util/index.js",
+            "default": "./dist/util/index.js"
         },
         "./style.css": {
-            "import": "./dist/style.css"
+            "import": "./dist/style.css",
+            "default": "./dist/style.css"
         }
     },
     "bin": {
@@ -226,7 +261,7 @@
         "localforage": "1.10.0",
         "migrate-mongo": "14.0.7",
         "mongodb": "7.1.0",
-        "mongoose": "9.3.0",
+        "mongoose": "9.3.1",
         "mongoose-aggregate-paginate-v2": "1.1.4",
         "mongoose-paginate-v2": "1.9.1",
         "next-intl": "4.8.3",
@@ -236,7 +271,6 @@
         "react-hot-toast": "2.6.0",
         "react-i18next": "16.5.8",
         "rxjs": "7.8.2",
-        "vite": "8.0.0",
         "ws": "8.19.0",
         "yargs": "18.0.0"
     },
@@ -293,8 +327,7 @@
     },
     "pnpm": {
         "overrides": {
-            "minimatch": ">=10.2.3",
-            "minimatch@__comment": "Pinned to fix transitive vulnerability CVE in older minimatch versions used by some deps"
+            "minimatch": ">=10.2.3"
         }
     }
 }

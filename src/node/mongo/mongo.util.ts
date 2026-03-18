@@ -5,11 +5,11 @@ import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import { randomUUID } from 'node:crypto';
 
-import { deepClone, getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.js';
+import { getNestedValue, regexSearchMapper, setNestedValue } from '#util/index.js';
 import { validate } from '#util/validate/index.js';
 
 import type { MongoController } from './mongo.controller.js';
-import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, T_MongoosePlugin, T_MongooseShema, T_QueryFilter, T_VirtualOptions, T_WithId } from './mongo.type.js';
+import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_DynamicVirtualConfig, I_DynamicVirtualOptions, I_ExtendedModel, I_GenericDocument, I_MongooseModelMiddleware, T_MongoosePlugin, T_MongooseSchema, T_QueryFilter, T_VirtualOptions, T_WithId } from './mongo.type.js';
 
 import { addGitIgnoreEntry, writeFileSync } from '../fs/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
@@ -35,10 +35,10 @@ export function convertEnumToModelName(enumValue: string): string {
  */
 interface I_MongoUtils {
     createGenericFields: () => I_GenericDocument;
-    applyPlugins: <T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) => void;
-    applyMiddlewares: <T extends Partial<C_Document>>(schema: T_MongooseShema<T>, middlewares: I_MongooseModelMiddleware<T>[]) => void;
-    createGenericSchema: (mongoose: typeof mongooseRaw) => T_MongooseShema<I_GenericDocument>;
-    createSchema: <T, R extends string = string>(options: I_CreateSchemaOptions<T, R>) => T_MongooseShema<T>;
+    applyPlugins: <T>(schema: T_MongooseSchema<T>, plugins: Array<T_MongoosePlugin | false>) => void;
+    applyMiddlewares: <T extends Partial<C_Document>>(schema: T_MongooseSchema<T>, middlewares: I_MongooseModelMiddleware<T>[]) => void;
+    createGenericSchema: (mongoose: typeof mongooseRaw) => T_MongooseSchema<I_GenericDocument>;
+    createSchema: <T, R extends string = string>(options: I_CreateSchemaOptions<T, R>) => T_MongooseSchema<T>;
     createModel: <T extends Partial<C_Document>, R extends string = string>(options: I_CreateModelOptions<T, R>) => I_ExtendedModel<T>;
     validator: {
         isRequired: <T>() => (this: T, value: unknown) => Promise<boolean>;
@@ -51,8 +51,8 @@ interface I_MongoUtils {
     };
     regexify: <T>(filter?: T_QueryFilter<T>, fields?: (keyof T | string)[]) => T_QueryFilter<T>;
     isDynamicVirtual: <T, R extends string>(options?: T_VirtualOptions<T, R>) => options is I_DynamicVirtualOptions<T, R>;
-    getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean) => Promise<T[]>;
-    getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean) => Promise<T_WithId<T>[]>;
+    getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: Record<string, unknown>) => Promise<T[]>;
+    getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: Record<string, unknown>) => Promise<T_WithId<T>[]>;
 }
 
 /**
@@ -84,7 +84,7 @@ export const mongo: I_MongoUtils = {
      * @param schema - The Mongoose schema to apply plugins to.
      * @param plugins - An array of plugin functions or false values to filter and apply.
      */
-    applyPlugins<T>(schema: T_MongooseShema<T>, plugins: Array<T_MongoosePlugin | false>) {
+    applyPlugins<T>(schema: T_MongooseSchema<T>, plugins: Array<T_MongoosePlugin | false>) {
         plugins
             .filter((plugin): plugin is T_MongoosePlugin => typeof plugin === 'function')
             .forEach(plugin => schema.plugin(plugin));
@@ -97,7 +97,7 @@ export const mongo: I_MongoUtils = {
      * @param middlewares - An array of middleware configurations with method, pre, and post functions.
      */
     applyMiddlewares<T extends Partial<C_Document>>(
-        schema: T_MongooseShema<T>,
+        schema: T_MongooseSchema<T>,
         middlewares: I_MongooseModelMiddleware<T>[],
     ) {
         middlewares.forEach(({ method, pre, post }) => {
@@ -144,7 +144,7 @@ export const mongo: I_MongoUtils = {
         schema,
         virtuals = [],
         standalone = false,
-    }: I_CreateSchemaOptions<T, R>): T_MongooseShema<T> {
+    }: I_CreateSchemaOptions<T, R>): T_MongooseSchema<T> {
         const createdSchema = new mongoose.Schema<T>(schema, {
             toJSON: { virtuals: true }, // So `res.json()` and other `JSON.stringify()` functions include virtuals
             toObject: { virtuals: true }, // So `console.log()` and other functions that use `toObject()` include virtuals
@@ -341,17 +341,19 @@ export const mongo: I_MongoUtils = {
             return {} as T_QueryFilter<T>;
         }
 
-        let newFilter = deepClone(filter);
+        let newFilter = { ...filter };
 
         if (!fields || fields.length === 0) {
             return newFilter;
         }
 
+        const MAX_REGEX_INPUT_LENGTH = 200;
+
         for (const field of fields) {
             const path = field.toString().split('.');
             const value = getNestedValue(newFilter, path);
 
-            if (typeof value === 'string' && value.length > 0) {
+            if (typeof value === 'string' && value.length > 0 && value.length <= MAX_REGEX_INPUT_LENGTH) {
                 const regexValue = {
                     $regex: `.*${regexSearchMapper(value)}.*`,
                     $options: 'i',
@@ -389,7 +391,7 @@ export const mongo: I_MongoUtils = {
         const existingRecords = await controller.findAll(filter as any);
 
         if (!existingRecords.success) {
-            return recordsToCheck;
+            throw new Error(`Failed to query existing records: ${existingRecords.message}`);
         }
 
         const filteredRecords = recordsToCheck.filter(newRecord =>
@@ -407,6 +409,7 @@ export const mongo: I_MongoUtils = {
      * @param recordsToCheck - Array of records to check
      * @param filterFn - Function to determine if a record exists
      * @returns Array of existing records that match the filter criteria
+     * @throws {Error} When the database query fails — prevents silent data inconsistency.
      */
     async getExistingRecords<T extends I_GenericDocument>(
         controller: MongoController<T>,
@@ -417,7 +420,7 @@ export const mongo: I_MongoUtils = {
         const existingRecords = await controller.findAll(filter as any);
 
         if (!existingRecords.success) {
-            return [];
+            throw new Error(`Failed to query existing records: ${existingRecords.message}`);
         }
 
         const foundRecords = existingRecords.result.filter((existingRecord: T_WithId<T>) =>

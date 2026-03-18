@@ -1,7 +1,9 @@
 import type mongooseRaw from 'mongoose';
 
+import type { I_ModelWithSchema } from './mongo.internal-types.js';
 import type { I_DynamicVirtualConfig, T_Input_Populate } from './mongo.type.js';
 
+import { getDynamicVirtualConfigs, resolveRef, searchVirtualsInSchema } from './mongo.internal-types.js';
 import { convertEnumToModelName } from './mongo.util.js';
 
 /**
@@ -21,7 +23,7 @@ export async function applyNestedPopulate<T extends object>(
     documents: T[],
     populateOptions: T_Input_Populate,
     virtualConfigs?: I_DynamicVirtualConfig<unknown, string>[],
-    currentModel?: any,
+    currentModel?: I_ModelWithSchema,
 ): Promise<T[]> {
     if (!documents.length || !populateOptions) {
         return documents;
@@ -44,6 +46,57 @@ export async function applyNestedPopulate<T extends object>(
 }
 
 /**
+ * Resolves the next child model from virtual/dynamic configurations on the current model.
+ * Consolidates the repeated _virtualConfigs / schema.virtuals / _dynamicVirtuals lookup.
+ *
+ * @param mongoose - The Mongoose instance
+ * @param currentModel - The model whose schema to search
+ * @param fieldName - The field name to look up
+ * @param document - The document context for function refs
+ * @returns The resolved child model, or the original currentModel if not resolved
+ */
+function resolveChildModel(
+    mongoose: typeof mongooseRaw,
+    currentModel: I_ModelWithSchema | undefined,
+    fieldName: string,
+    document: Record<string, unknown>,
+): I_ModelWithSchema | undefined {
+    if (!currentModel) {
+        return undefined;
+    }
+
+    // 1. Try schema virtuals
+    if (currentModel.schema?.virtuals) {
+        const virtual = currentModel.schema.virtuals[fieldName];
+        if (virtual?.options?.ref) {
+            const refResult = resolveRef(virtual.options.ref, document);
+            if (refResult) {
+                const modelName = convertEnumToModelName(refResult);
+                if (mongoose.models[modelName]) {
+                    return mongoose.models[modelName] as unknown as I_ModelWithSchema;
+                }
+            }
+        }
+    }
+
+    // 2. Try dynamic virtual configs (_virtualConfigs / _dynamicVirtuals)
+    const dynamicVirtuals = getDynamicVirtualConfigs(currentModel);
+    const dyn = dynamicVirtuals.find(v => v.name === fieldName);
+
+    if (dyn?.options?.ref) {
+        const refResult = resolveRef(dyn.options.ref, document);
+        if (refResult) {
+            const modelName = convertEnumToModelName(refResult);
+            if (mongoose.models[modelName]) {
+                return mongoose.models[modelName] as unknown as I_ModelWithSchema;
+            }
+        }
+    }
+
+    return currentModel;
+}
+
+/**
  * Applies string-based populate options (e.g., "field.subfield") to documents.
  *
  * @template T - The document type
@@ -58,7 +111,7 @@ async function applyStringPopulate<T extends object>(
     documents: T[],
     populatePath: string,
     virtualConfigs?: I_DynamicVirtualConfig<unknown, string>[],
-    currentModel?: any,
+    currentModel?: I_ModelWithSchema,
 ): Promise<void> {
     const pathParts = populatePath.split('.');
 
@@ -85,82 +138,7 @@ async function applyStringPopulate<T extends object>(
         const mainValue = docObj[mainField];
 
         if (mainValue && typeof mainValue === 'object') {
-            let nextModelForChildren = currentModel;
-            const originalModelForChildren = nextModelForChildren;
-
-            if (currentModel && currentModel.schema && currentModel.schema.virtuals) {
-                const virtual = currentModel.schema.virtuals[mainField];
-
-                if (virtual && virtual.options && virtual.options.ref) {
-                    let refResult: string | undefined;
-
-                    if (typeof virtual.options.ref === 'function') {
-                        refResult = virtual.options.ref(docObj);
-                    }
-                    else if (typeof virtual.options.ref === 'string') {
-                        refResult = virtual.options.ref;
-                    }
-                    if (refResult) {
-                        const modelName = convertEnumToModelName(refResult);
-
-                        if (mongoose.models[modelName]) {
-                            nextModelForChildren = mongoose.models[modelName];
-                        }
-                    }
-                }
-            }
-
-            if (!nextModelForChildren) {
-                const schemaStatics = (currentModel?.schema?.statics ?? {}) as Record<string, unknown>;
-                const dynamicVirtuals = ((currentModel as any)?._virtualConfigs as Array<{ name: string; options?: { ref?: unknown } }>)
-                    || (schemaStatics['_dynamicVirtuals'] as Array<{ name: string; options?: { ref?: unknown } }> | undefined)
-                    || [];
-                const dyn = (dynamicVirtuals as Array<{ name: string; options?: { ref?: unknown } }>).find(v => v.name === mainField);
-
-                if (dyn && dyn.options && dyn.options.ref) {
-                    let refResult: string | undefined;
-
-                    if (typeof dyn.options.ref === 'function') {
-                        refResult = (dyn.options.ref as (d: unknown) => string | undefined)(docObj);
-                    }
-                    else if (typeof dyn.options.ref === 'string') {
-                        refResult = dyn.options.ref as string;
-                    }
-                    if (refResult) {
-                        const modelName = convertEnumToModelName(refResult);
-
-                        if (mongoose.models[modelName]) {
-                            nextModelForChildren = mongoose.models[modelName];
-                        }
-                    }
-                }
-            }
-
-            if (nextModelForChildren === originalModelForChildren) {
-                const schemaStatics = (currentModel?.schema?.statics ?? {}) as Record<string, unknown>;
-                const dynamicVirtuals = ((currentModel as any)?._virtualConfigs as Array<{ name: string; options?: { ref?: unknown } }>)
-                    || (schemaStatics['_dynamicVirtuals'] as Array<{ name: string; options?: { ref?: unknown } }> | undefined)
-                    || [];
-                const dyn = (dynamicVirtuals as Array<{ name: string; options?: { ref?: unknown } }>).find(v => v.name === mainField);
-
-                if (dyn && dyn.options && dyn.options.ref) {
-                    let refResult: string | undefined;
-
-                    if (typeof dyn.options.ref === 'function') {
-                        refResult = (dyn.options.ref as (d: unknown) => string | undefined)(docObj);
-                    }
-                    else if (typeof dyn.options.ref === 'string') {
-                        refResult = dyn.options.ref as string;
-                    }
-                    if (refResult) {
-                        const modelName = convertEnumToModelName(refResult);
-
-                        if (mongoose.models[modelName]) {
-                            nextModelForChildren = mongoose.models[modelName];
-                        }
-                    }
-                }
-            }
+            const nextModelForChildren = resolveChildModel(mongoose, currentModel, mainField, docObj);
 
             if (Array.isArray(mainValue)) {
                 for (const item of mainValue) {
@@ -193,7 +171,7 @@ async function applyObjectPopulate<T extends object>(
     documents: T[],
     populateOption: { path?: string; populate?: T_Input_Populate; [key: string]: unknown },
     virtualConfigs?: I_DynamicVirtualConfig<unknown, string>[],
-    currentModel?: any,
+    currentModel?: I_ModelWithSchema,
 ): Promise<void> {
     const { path, populate: nestedPopulate } = populateOption;
 
@@ -213,24 +191,18 @@ async function applyObjectPopulate<T extends object>(
         const docObj = doc as { [key: string]: unknown };
         const fieldValue = docObj[pathString];
 
-        let nextModelForChildren = currentModel;
+        let nextModelForChildren: I_ModelWithSchema | undefined = currentModel;
 
-        if (currentModel && currentModel.schema && currentModel.schema.virtuals) {
+        // Try resolving from schema virtuals
+        if (currentModel?.schema?.virtuals) {
             const virtual = currentModel.schema.virtuals[pathString];
 
-            if (virtual && virtual.options && virtual.options.ref) {
-                let refResult: string | undefined;
-
-                if (typeof virtual.options.ref === 'function') {
-                    refResult = virtual.options.ref(docObj);
-                }
-                else if (typeof virtual.options.ref === 'string') {
-                    refResult = virtual.options.ref;
-                }
+            if (virtual?.options?.ref) {
+                const refResult = resolveRef(virtual.options.ref, docObj);
                 if (refResult) {
                     const modelName = convertEnumToModelName(refResult);
                     if (mongoose.models[modelName]) {
-                        nextModelForChildren = mongoose.models[modelName];
+                        nextModelForChildren = mongoose.models[modelName] as unknown as I_ModelWithSchema;
                     }
                 }
             }
@@ -239,7 +211,7 @@ async function applyObjectPopulate<T extends object>(
             const maybeModel = convertEnumToModelName(String((fieldValue as { [k: string]: unknown })['entityType']));
 
             if (mongoose.models[maybeModel]) {
-                nextModelForChildren = mongoose.models[maybeModel];
+                nextModelForChildren = mongoose.models[maybeModel] as unknown as I_ModelWithSchema;
             }
         }
 
@@ -270,7 +242,7 @@ async function applyObjectPopulate<T extends object>(
  */
 function resolveModelFromPath(
     mongoose: typeof mongooseRaw,
-    startModel: any,
+    startModel: I_ModelWithSchema,
     path: string,
     document: { [key: string]: unknown },
 ): string | undefined {
@@ -284,17 +256,11 @@ function resolveModelFromPath(
     for (let i = 0; i < pathParts.length; i++) {
         const pathPart = pathParts[i];
 
-        if (currentSchema && currentSchema.virtuals && pathPart) {
+        if (currentSchema?.virtuals && pathPart) {
             const virtual = currentSchema.virtuals[pathPart];
-            if (virtual && virtual.options && virtual.options.ref) {
-                let refResult: string | undefined;
+            if (virtual?.options?.ref) {
+                const refResult = resolveRef(virtual.options.ref, document);
 
-                if (typeof virtual.options.ref === 'function') {
-                    refResult = virtual.options.ref(document);
-                }
-                else if (typeof virtual.options.ref === 'string') {
-                    refResult = virtual.options.ref;
-                }
                 if (refResult && typeof refResult === 'string') {
                     if (i === pathParts.length - 1) {
                         return refResult;
@@ -302,18 +268,18 @@ function resolveModelFromPath(
 
                     const nextModel = mongoose.models[refResult];
 
-                    if (nextModel && nextModel.schema) {
-                        currentSchema = nextModel.schema;
+                    if (nextModel && (nextModel as unknown as I_ModelWithSchema).schema) {
+                        currentSchema = (nextModel as unknown as I_ModelWithSchema).schema!;
                         continue;
                     }
                 }
             }
         }
 
-        if (currentSchema && currentSchema.paths && pathPart) {
+        if (currentSchema?.paths && pathPart) {
             const pathSchema = currentSchema.paths[pathPart];
 
-            if (pathSchema && pathSchema.schema) {
+            if (pathSchema?.schema) {
                 currentSchema = pathSchema.schema;
                 continue;
             }
@@ -333,13 +299,13 @@ function resolveModelFromPath(
 function findModelBySchemaField(
     mongoose: typeof mongooseRaw,
     fieldName: string,
-): any | undefined {
+): I_ModelWithSchema | undefined {
     if (!fieldName) {
         return undefined;
     }
     for (const modelName of Object.keys(mongoose.models)) {
-        const Model = mongoose.models[modelName];
-        const schema = Model?.schema as any;
+        const Model = mongoose.models[modelName] as unknown as I_ModelWithSchema;
+        const schema = Model?.schema;
 
         if (!schema) {
             continue;
@@ -360,15 +326,15 @@ function findModelBySchemaField(
 function findStartModelByFirstSegment(
     mongoose: typeof mongooseRaw,
     fullPath: string,
-): any | undefined {
+): I_ModelWithSchema | undefined {
     const first = (fullPath || '').split('.')[0] || '';
 
     if (!first) {
         return undefined;
     }
     for (const modelName of Object.keys(mongoose.models)) {
-        const Model = mongoose.models[modelName];
-        const schema = Model?.schema as any;
+        const Model = mongoose.models[modelName] as unknown as I_ModelWithSchema;
+        const schema = Model?.schema;
 
         if (!schema) {
             continue;
@@ -397,7 +363,7 @@ async function populateNestedFieldOnParent(
     nestedPath: string,
     virtualConfigs?: I_DynamicVirtualConfig<unknown, string>[],
     pathPrefix?: string,
-    currentModel?: any,
+    currentModel?: I_ModelWithSchema,
 ): Promise<void> {
     let modelName = document['__t'];
 
@@ -406,7 +372,7 @@ async function populateNestedFieldOnParent(
             const fullPath = pathPrefix ? `${pathPrefix}.${nestedPath}` : nestedPath;
 
             const firstSegment = (fullPath || '').split('.')[0] || '';
-            let startModel = currentModel;
+            let startModel: I_ModelWithSchema = currentModel;
             const hasFirstOnCurrent = Boolean(
                 (startModel?.schema?.paths && startModel.schema.paths[firstSegment])
                 || (startModel?.schema?.virtuals && startModel.schema.virtuals[firstSegment]),
@@ -446,15 +412,8 @@ async function populateNestedFieldOnParent(
             const fieldName = nestedPath.split('.').pop() || '';
             const matchingVirtual = virtualConfigs.find(v => v.name === fieldName);
 
-            if (matchingVirtual && matchingVirtual.options.ref) {
-                let refResult: string | undefined;
-
-                if (typeof matchingVirtual.options.ref === 'function') {
-                    refResult = matchingVirtual.options.ref(document);
-                }
-                else if (typeof matchingVirtual.options.ref === 'string') {
-                    refResult = matchingVirtual.options.ref;
-                }
+            if (matchingVirtual?.options.ref) {
+                const refResult = resolveRef(matchingVirtual.options.ref as string | ((doc: unknown) => string | undefined), document);
 
                 if (refResult && typeof refResult === 'string') {
                     modelName = refResult;
@@ -471,56 +430,11 @@ async function populateNestedFieldOnParent(
             }
 
             if (modelName && mongoose.models[modelName as string]) {
-                const Model = mongoose.models[modelName as string];
+                const Model = mongoose.models[modelName as string] as unknown as I_ModelWithSchema;
 
-                if (Model && Model.schema) {
-                    const schema = Model.schema;
+                if (Model?.schema) {
                     const fieldName = nestedPath.split('.').pop() || '';
-
-                    const searchVirtualsInSchema = (schemaToSearch: any, schemaPath = 'root'): string | undefined => {
-                        if (!schemaToSearch || !schemaToSearch.virtuals) {
-                            return undefined;
-                        }
-
-                        const virtuals = schemaToSearch.virtuals;
-
-                        for (const virtualName of Object.keys(virtuals)) {
-                            if (virtualName === fieldName) {
-                                const virtual = virtuals[virtualName];
-                                if (virtual && virtual.options && virtual.options.ref) {
-                                    let refResult: string | undefined;
-
-                                    if (typeof virtual.options.ref === 'function') {
-                                        refResult = virtual.options.ref(document);
-                                    }
-                                    else if (typeof virtual.options.ref === 'string') {
-                                        refResult = virtual.options.ref;
-                                    }
-                                    if (refResult && typeof refResult === 'string') {
-                                        return refResult;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (schemaToSearch.paths) {
-                            for (const pathName of Object.keys(schemaToSearch.paths)) {
-                                const pathSchema = schemaToSearch.paths[pathName];
-
-                                if (pathSchema && pathSchema.schema) {
-                                    const nestedResult = searchVirtualsInSchema(pathSchema.schema, `${schemaPath}.${pathName}`);
-
-                                    if (nestedResult) {
-                                        return nestedResult;
-                                    }
-                                }
-                            }
-                        }
-
-                        return undefined;
-                    };
-
-                    const foundModelName = searchVirtualsInSchema(schema);
+                    const foundModelName = searchVirtualsInSchema(Model.schema, fieldName, document);
                     if (foundModelName) {
                         modelName = foundModelName;
                     }
@@ -531,54 +445,8 @@ async function populateNestedFieldOnParent(
         if (!modelName) {
             const fieldName = nestedPath.split('.').pop() || '';
 
-            if (currentModel && currentModel.schema) {
-                const schema = currentModel.schema;
-
-                const searchVirtualsInSchema = (schemaToSearch: any, schemaPath = 'root'): string | undefined => {
-                    if (!schemaToSearch || !schemaToSearch.virtuals) {
-                        return undefined;
-                    }
-
-                    const virtuals = schemaToSearch.virtuals;
-
-                    for (const virtualName of Object.keys(virtuals)) {
-                        if (virtualName === fieldName) {
-                            const virtual = virtuals[virtualName];
-                            if (virtual && virtual.options && virtual.options.ref) {
-                                let refResult: string | undefined;
-
-                                if (typeof virtual.options.ref === 'function') {
-                                    refResult = virtual.options.ref(document);
-                                }
-                                else if (typeof virtual.options.ref === 'string') {
-                                    refResult = virtual.options.ref;
-                                }
-
-                                if (refResult && typeof refResult === 'string') {
-                                    return refResult;
-                                }
-                            }
-                        }
-                    }
-
-                    if (schemaToSearch.paths) {
-                        for (const pathName of Object.keys(schemaToSearch.paths)) {
-                            const pathSchema = schemaToSearch.paths[pathName];
-
-                            if (pathSchema && pathSchema.schema) {
-                                const nestedResult = searchVirtualsInSchema(pathSchema.schema, `${schemaPath}.${pathName}`);
-
-                                if (nestedResult) {
-                                    return nestedResult;
-                                }
-                            }
-                        }
-                    }
-
-                    return undefined;
-                };
-
-                const foundModelName = searchVirtualsInSchema(schema);
+            if (currentModel?.schema) {
+                const foundModelName = searchVirtualsInSchema(currentModel.schema, fieldName, document);
                 if (foundModelName) {
                     modelName = foundModelName;
                 }
@@ -597,15 +465,9 @@ async function populateNestedFieldOnParent(
             if (!modelName && virtualConfigs && virtualConfigs.length > 0) {
                 const matchingVirtual = virtualConfigs.find(v => v.name === fieldName);
 
-                if (matchingVirtual && matchingVirtual.options.ref) {
-                    let refResult: string | undefined;
+                if (matchingVirtual?.options.ref) {
+                    const refResult = resolveRef(matchingVirtual.options.ref as string | ((doc: unknown) => string | undefined), document);
 
-                    if (typeof matchingVirtual.options.ref === 'function') {
-                        refResult = matchingVirtual.options.ref(document);
-                    }
-                    else if (typeof matchingVirtual.options.ref === 'string') {
-                        refResult = matchingVirtual.options.ref;
-                    }
                     if (refResult && typeof refResult === 'string') {
                         modelName = refResult;
                     }

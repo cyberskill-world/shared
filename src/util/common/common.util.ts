@@ -142,3 +142,14 @@ export function mapEnvironment(env: I_NodeEnvInput): I_EnvFlags {
 
     return { IS_DEV, IS_STAG, IS_PROD };
 }
+
+/**
+ * Checks if value is object-like (e.g., objects, arrays, etc.), not null.
+ * Re-exported from util for general use across the codebase.
+ *
+ * @param value - The value to check.
+ * @returns True if the value is an object and not null.
+ */
+export function isObject(value: unknown): value is object {
+    return value != null && typeof value === 'object';
+}

@@ -3,6 +3,7 @@ import { consola } from 'consola/browser';
 import type { I_Log, I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
+import { baseCatchError } from '#util/log/index.js';
 
 import type { I_CatchErrorOptions } from './log.type.js';
 
@@ -30,11 +31,8 @@ export const log: I_Log = {
 
 /**
  * Catches and handles errors with configurable behavior for React applications.
- * This function provides a standardized way to handle errors in React components
- * with options for logging control, return value specification, and custom callback execution.
- *
- * The function handles different error input types and provides consistent error
- * response formatting for React applications.
+ * Delegates to the shared `baseCatchError` implementation, using the browser
+ * consola instance for logging.
  *
  * @param errorInput - The error to catch and handle, can be Error object, string, or unknown type.
  * @param options - Configuration options for error handling behavior.
@@ -43,29 +41,7 @@ export const log: I_Log = {
 export function catchError<T = unknown>(errorInput: unknown, options: I_CatchErrorOptions & { returnValue: T }): T;
 export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions): I_Return<T>;
 export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions): I_Return<T> | T {
-    const { shouldLog = true, returnValue, callback } = options ?? {};
-
-    const error = errorInput instanceof Error
-        ? errorInput
-        : new Error(typeof errorInput === 'string' ? errorInput : 'Unknown error');
-
-    if (shouldLog) {
-        log.error(error.message);
-    }
-
-    if (callback && typeof callback === 'function') {
-        callback(error);
-    }
-
-    if (returnValue !== undefined) {
-        return returnValue as I_Return<T>;
-    }
-
-    return {
-        success: false,
-        message: error.message,
-        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-    };
+    return baseCatchError<T>(errorInput, options, message => log.error(message));
 }
 
 /**

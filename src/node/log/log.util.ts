@@ -8,6 +8,7 @@ import type { I_Return } from '#typescript/index.js';
 
 import { getEnv } from '#config/env/index.js';
 import { RESPONSE_STATUS } from '#constant/index.js';
+import { baseCatchError } from '#util/log/index.js';
 
 import type { I_CatchErrorOptions, I_IssueEntry, I_Log, I_ThrowError } from './log.type.js';
 
@@ -54,9 +55,7 @@ export function throwError({
         });
     }
 
-    else {
-        throw new Error(responseMessage);
-    }
+    throw new Error(responseMessage);
 }
 
 /**
@@ -131,10 +130,8 @@ export const log: I_Log = {
 
 /**
  * Catches and handles errors with configurable behavior.
- * This function provides a standardized way to handle errors with options for:
- * - Logging control (whether to log the error)
- * - Return value specification (what to return on error)
- * - Custom callback execution (additional error handling)
+ * Delegates to the shared `baseCatchError` implementation, adding Node-specific
+ * log-level configuration via `ensureLogLevel()` before logging.
  *
  * @param errorInput - The error to catch and handle.
  * @param options - Configuration options for error handling behavior.
@@ -143,28 +140,8 @@ export const log: I_Log = {
 export function catchError<T = unknown>(errorInput: unknown, options: I_CatchErrorOptions & { returnValue: T }): T;
 export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions): I_Return<T>;
 export function catchError<T = unknown>(errorInput: unknown, options?: I_CatchErrorOptions): I_Return<T> | T {
-    const { shouldLog = true, returnValue, callback } = options ?? {};
-
-    const error = errorInput instanceof Error
-        ? errorInput
-        : new Error(typeof errorInput === 'string' ? errorInput : 'Unknown error');
-
-    if (shouldLog) {
+    return baseCatchError<T>(errorInput, options, (message) => {
         ensureLogLevel();
-        log.error(error.message);
-    }
-
-    if (callback && typeof callback === 'function') {
-        callback(error);
-    }
-
-    if (returnValue !== undefined) {
-        return returnValue as T;
-    }
-
-    return {
-        success: false,
-        message: error.message,
-        code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-    };
+        log.error(message);
+    });
 }

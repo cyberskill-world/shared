@@ -1,5 +1,7 @@
 import type { Preview } from '@storybook/react';
 
+import { deepMerge } from '#util/object/index.js';
+
 const RE_COLOR_MATCHER = /(background|color)$/i;
 const RE_DATE_MATCHER = /Date$/i;
 
@@ -44,12 +46,5 @@ export function storybookPreview(options?: Partial<Preview>): Preview {
         },
     };
 
-    return {
-        ...preview,
-        ...options,
-        parameters: {
-            ...preview.parameters,
-            ...options?.parameters,
-        },
-    };
+    return deepMerge(preview, options ?? {}) as Preview;
 }

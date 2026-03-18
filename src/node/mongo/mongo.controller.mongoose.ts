@@ -6,9 +6,20 @@ import { generateRandomString, generateShortId, generateSlug } from '#util/strin
 
 import type { C_Document, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_ExtendedModel, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Input_Populate, T_InsertManyOptions, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryFilter, T_QueryOptions, T_UpdateQuery, T_UpdateResult } from './mongo.type.js';
 
-import { catchError } from '../log/index.js';
+import { catchError, log } from '../log/index.js';
 import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
 import { filterDynamicVirtualsFromPopulate, isObject, populateDynamicVirtuals } from './mongo.dynamic-populate.js';
+
+/**
+ * Converts a Mongoose document to a plain object, handling the case where
+ * the document may already be a plain object (e.g., from `.lean()`).
+ *
+ * @param doc - The document or plain object.
+ * @returns The plain object representation.
+ */
+function toPlainObject<T>(doc: T): T {
+    return (doc as T & { toObject?: () => T })?.toObject?.() ?? doc;
+}
 
 /** Internal shape of a single virtual config stored on the model. */
 interface I_VirtualConfig {
@@ -144,7 +155,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const finalResult = await this.populateDynamicVirtualsForDocument(result, populate);
 
-            return { success: true, result: finalResult?.toObject?.() ?? finalResult };
+            return { success: true, result: toPlainObject(finalResult) };
         }
         catch (error) {
             return catchError<T>(error);
@@ -186,7 +197,11 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             const finalResult = await this.populateDynamicVirtualsForDocuments(result, populate);
 
-            return { success: true, result: finalResult.map(item => item?.toObject?.() ?? item) };
+            if (finalResult.length === this.defaultLimit && !options.limit) {
+                log.warn(`[${this.getModelName()}] findAll returned exactly ${this.defaultLimit} documents (the default limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
+            }
+
+            return { success: true, result: finalResult.map(item => toPlainObject(item)) };
         }
         catch (error) {
             return catchError<T[]>(error);
@@ -220,10 +235,10 @@ export class MongooseController<T extends Partial<C_Document>> {
             if (dynamicVirtuals && dynamicVirtuals.length > 0) {
                 const populatedDocs = await this.populateDynamicVirtualsForDocuments(result.docs, options.populate);
 
-                return { success: true, result: { ...result, docs: populatedDocs.map(item => item?.toObject?.() ?? item) } };
+                return { success: true, result: { ...result, docs: populatedDocs.map(item => toPlainObject(item)) } };
             }
 
-            return { success: true, result: { ...result, docs: result.docs.map(item => item?.toObject?.() ?? item) } };
+            return { success: true, result: { ...result, docs: result.docs.map(item => toPlainObject(item)) } };
         }
         catch (error) {
             return catchError<T_PaginateResult<T>>(error);
@@ -459,18 +474,20 @@ export class MongooseController<T extends Partial<C_Document>> {
             const shortIds = Array.from({ length: maxRetries }, (_, index) =>
                 generateShortId(id, index + length));
 
-            const existenceChecks = await Promise.all(
-                shortIds.map(shortId => this.model.exists({ shortId })),
+            // Use a single $in query instead of 10 parallel exists() calls
+            const existingDocs = await this.model
+                .find({ shortId: { $in: shortIds } })
+                .select('shortId')
+                .lean();
+
+            const existingShortIds = new Set(
+                existingDocs.map((d: Record<string, unknown>) => d['shortId'] as string),
             );
 
-            const availableIndex = existenceChecks.findIndex(exists => !exists);
+            const availableShortId = shortIds.find(s => !existingShortIds.has(s));
 
-            if (availableIndex !== -1) {
-                const availableShortId = shortIds[availableIndex];
-
-                if (availableShortId) {
-                    return { success: true, result: availableShortId };
-                }
+            if (availableShortId) {
+                return { success: true, result: availableShortId };
             }
 
             return {
@@ -560,7 +577,13 @@ export class MongooseController<T extends Partial<C_Document>> {
             .lean();
 
         const existingSlugs = new Set(
-            existingDocs.map((d: any) => isObject ? d?.slug?.[field as string] : d?.slug),
+            existingDocs.map((d: Record<string, unknown>) => {
+                if (isObject) {
+                    const slug = d['slug'] as Record<string, unknown> | undefined;
+                    return slug?.[field as string];
+                }
+                return d['slug'];
+            }),
         );
 
         const available = variants.find(s => !existingSlugs.has(s));
