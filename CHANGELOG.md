@@ -1,3 +1,9 @@
+## [3.8.0](https://github.com/cyberskill-world/shared/compare/v3.7.0...v3.8.0) (2026-03-18)
+
+### ✨ Features
+
+* revert eslint plugins ([08a7462](https://github.com/cyberskill-world/shared/commit/08a7462798e61684463ae62dfc08399c88ef5f76))
+
 ## [3.7.0](https://github.com/cyberskill-world/shared/compare/v3.6.0...v3.7.0) (2026-03-18)
 
 ### ✨ Features
