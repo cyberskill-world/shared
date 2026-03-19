@@ -32,19 +32,18 @@ function getVersion(): string {
 
 /**
  * Performs TypeScript validation if a TypeScript configuration file exists.
- * This function checks for the presence of a TypeScript configuration file
- * and runs TypeScript validation if found. If no configuration is found,
- * it logs a warning and skips the type check.
+ * Uses `--incremental` mode to cache results — the first run may be slow
+ * (especially with large generated files), but subsequent runs are near-instant.
  *
  * @returns A promise that resolves when the TypeScript validation is complete.
  */
 async function checkTypescript() {
-    if (pathExistsSync(PATH.TS_CONFIG)) {
-        await runCommand('Performing TypeScript validation', await command.typescriptCheck());
-    }
-    else {
+    if (!pathExistsSync(PATH.TS_CONFIG)) {
         log.warn('No TypeScript configuration found. Skipping type check.');
+        return;
     }
+
+    await runCommand('Performing TypeScript validation', await command.typescriptCheck());
 }
 
 /**

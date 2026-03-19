@@ -126,12 +126,14 @@ function setupMiddleware(
     if (trustProxy !== false) {
         app.set('trust proxy', trustProxy);
     }
+
     app.use(
         helmet({
             crossOriginEmbedderPolicy: isDev ? false : undefined,
             contentSecurityPolicy: isDev ? false : undefined,
         }),
     );
+
     if (rateLimitOptions !== false) {
         app.use(
             rateLimit({
@@ -141,6 +143,10 @@ function setupMiddleware(
                 legacyHeaders: false,
                 ...(rateLimitOptions.store !== undefined && { store: rateLimitOptions.store }),
                 ...(rateLimitOptions.skip !== undefined && { skip: rateLimitOptions.skip }),
+                // When trustProxy is not explicitly set, suppress the
+                // ERR_ERL_UNEXPECTED_X_FORWARDED_FOR validation that crashes on
+                // X-Forwarded-For headers behind a reverse proxy.
+                ...(!trustProxy && { validate: { xForwardedForHeader: false } }),
             }),
         );
     }

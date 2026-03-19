@@ -243,7 +243,7 @@ export const command = {
             },
 
         ],
-        command: `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit`,
+        command: `${TSC_CLI} -p ${PATH.TS_CONFIG} --noEmit --incremental`,
     }),
     testUnit: buildCommand({
         type: E_CommandType.CLI,
