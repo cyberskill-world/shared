@@ -1,3 +1,9 @@
+## [3.10.0](https://github.com/cyberskill-world/shared/compare/v3.9.0...v3.10.0) (2026-03-19)
+
+### ✨ Features
+
+* correct trustProxy ([3e0a766](https://github.com/cyberskill-world/shared/commit/3e0a7664a17b15adad6c0b2dc94befa8909782d3))
+
 ## [3.9.0](https://github.com/cyberskill-world/shared/compare/v3.8.0...v3.9.0) (2026-03-19)
 
 ### ✨ Features
