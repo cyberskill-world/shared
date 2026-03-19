@@ -120,10 +120,10 @@ function setupMiddleware(
     app: Application,
     isDev = false,
     jsonLimit = '1mb',
-    trustProxy: boolean | number | string | string[] = false,
+    trustProxy: boolean | number | string | string[] = 1,
     rateLimitOptions: false | import('./express.type.js').I_RateLimitOptions = {},
 ) {
-    if (trustProxy !== false) {
+    if (trustProxy) {
         app.set('trust proxy', trustProxy);
     }
 
@@ -143,10 +143,6 @@ function setupMiddleware(
                 legacyHeaders: false,
                 ...(rateLimitOptions.store !== undefined && { store: rateLimitOptions.store }),
                 ...(rateLimitOptions.skip !== undefined && { skip: rateLimitOptions.skip }),
-                // When trustProxy is not explicitly set, suppress the
-                // ERR_ERL_UNEXPECTED_X_FORWARDED_FOR validation that crashes on
-                // X-Forwarded-For headers behind a reverse proxy.
-                ...(!trustProxy && { validate: { xForwardedForHeader: false } }),
             }),
         );
     }

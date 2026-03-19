@@ -10,13 +10,6 @@ import { applyNestedPopulate } from './mongo.populate.js';
 import { convertEnumToModelName } from './mongo.util.js';
 
 /**
- * Checks if value is object-like (e.g., objects, arrays, etc.), not null.
- */
-export function isObject(value: unknown): value is object {
-    return value != null && typeof value === 'object';
-}
-
-/**
  * Filters out dynamic virtuals from populate options to prevent Mongoose from trying to populate them.
  * This function creates a new populate configuration that only includes regular virtuals.
  *

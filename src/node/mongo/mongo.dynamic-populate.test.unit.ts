@@ -4,11 +4,12 @@
 
 import { describe, expect, it, vi } from 'vitest';
 
+import { isObject } from '#util/common/index.js';
+
 import { catchError } from '../log/index.js';
 import {
     filterDynamicVirtualsFromPopulate,
     isMongooseDoc,
-    isObject,
     populateDynamicVirtuals,
     remapDynamicPopulate,
 } from './mongo.dynamic-populate.js';

@@ -125,13 +125,13 @@ describe('createExpress', () => {
         expect(app).toBeDefined();
     });
 
-    it('should not set trust proxy when trustProxy is false (default)', () => {
+    it('should set trust proxy to 1 by default', () => {
         const app = createExpress();
-        expect(app.get('trust proxy')).toBeFalsy();
+        expect(app.get('trust proxy')).toBeTruthy();
     });
 
     it('should set trust proxy when trustProxy is provided', () => {
-        const app = createExpress({ trustProxy: 1 });
+        const app = createExpress({ trustProxy: 2 });
         expect(app.get('trust proxy fn')).toBeDefined();
     });
 });

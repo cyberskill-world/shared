@@ -6,7 +6,7 @@ describe('lint-staged config', () => {
     it('should run tsc --noEmit for TypeScript files', () => {
         const handler = config['*.ts'];
         expect(typeof handler).toBe('function');
-        expect(handler()).toBe('tsc --noEmit');
+        expect(handler()).toBe('tsc --noEmit --incremental');
     });
 
     it('should run eslint --fix --no-cache for all files', () => {

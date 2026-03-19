@@ -1,6 +1,7 @@
 import type { I_Return } from '#typescript/index.js';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
+import { isObject } from '#util/common/index.js';
 import { normalizeMongoFilter } from '#util/index.js';
 import { generateRandomString, generateShortId, generateSlug } from '#util/string/index.js';
 
@@ -8,8 +9,7 @@ import type { C_Document, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_Ext
 
 import { catchError, log } from '../log/index.js';
 import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
-import { filterDynamicVirtualsFromPopulate, isObject, populateDynamicVirtuals } from './mongo.dynamic-populate.js';
-
+import { filterDynamicVirtualsFromPopulate, populateDynamicVirtuals } from './mongo.dynamic-populate.js';
 /**
  * Converts a Mongoose document to a plain object, handling the case where
  * the document may already be a plain object (e.g., from `.lean()`).

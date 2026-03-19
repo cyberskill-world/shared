@@ -9,6 +9,8 @@ import type { LocalForageDriver, NodeFsDriverState, NodeLocalForageOptions } fro
 import { catchError, log } from '../log/index.js';
 import { NODE_FS_DRIVER_NAME, STORAGE_INSTANCE_NAME, STORAGE_KEY_EXTENSION, STORAGE_STORE_NAME } from './storage.constant.js';
 
+const MAX_KEY_LENGTH = 200;
+
 const nodeFsDriverState: NodeFsDriverState = {
     baseDir: '',
 };
@@ -208,6 +210,11 @@ export const storage = {
      * @returns A promise that resolves to the stored value or null if not found.
      */
     async get<T = unknown>(key: string): Promise<T | null> {
+        if (key.length > MAX_KEY_LENGTH) {
+            log.warn(`[Storage:get] Key exceeds maximum length of ${MAX_KEY_LENGTH} characters`);
+            return null;
+        }
+
         try {
             const driver = await ensureLocalForageReady();
             const result = await driver.getItem<T>(key);
@@ -228,9 +235,19 @@ export const storage = {
      * @returns A promise that resolves when the storage operation is complete.
      */
     async set<T = unknown>(key: string, value: T): Promise<void> {
-        const driver = await ensureLocalForageReady();
+        if (key.length > MAX_KEY_LENGTH) {
+            throw new RangeError(`Storage key exceeds maximum length of ${MAX_KEY_LENGTH} characters`);
+        }
 
-        await driver.setItem(key, value);
+        try {
+            const driver = await ensureLocalForageReady();
+
+            await driver.setItem(key, value);
+        }
+        catch (error) {
+            catchError(error);
+            throw error;
+        }
     },
     /**
      * Removes a value from persistent storage by key.

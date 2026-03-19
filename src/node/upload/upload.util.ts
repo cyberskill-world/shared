@@ -1,4 +1,5 @@
 import { Buffer } from 'node:buffer';
+import nodePath from 'node:path';
 import { Transform } from 'node:stream';
 import { ReadableStream } from 'node:stream/web';
 
@@ -226,6 +227,17 @@ export async function upload(options: I_UploadOptions): Promise<I_Return<string>
         return {
             success: false,
             message: 'Invalid path provided',
+            code: RESPONSE_STATUS.BAD_REQUEST.CODE,
+        };
+    }
+
+    // Security: Prevent directory traversal attacks by checking the resolved path
+    const resolvedPath = nodePath.resolve(path);
+
+    if (resolvedPath !== nodePath.normalize(path) && path.includes('..')) {
+        return {
+            success: false,
+            message: 'Path traversal detected: ".." segments are not allowed',
             code: RESPONSE_STATUS.BAD_REQUEST.CODE,
         };
     }

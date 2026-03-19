@@ -401,6 +401,10 @@ export const mongo: I_MongoUtils = {
             throw new Error(`Failed to query existing records: ${existingRecords.message}`);
         }
 
+        if ('truncated' in existingRecords && existingRecords.truncated) {
+            throw new Error('getNewRecords: Results were truncated by the default limit. Use pagination or set an explicit limit to ensure complete data.');
+        }
+
         const filteredRecords = recordsToCheck.filter(newRecord =>
             !existingRecords.result.some((existingRecord: T_WithId<T>) =>
                 filterFn(existingRecord, newRecord),
@@ -428,6 +432,10 @@ export const mongo: I_MongoUtils = {
 
         if (!existingRecords.success) {
             throw new Error(`Failed to query existing records: ${existingRecords.message}`);
+        }
+
+        if ('truncated' in existingRecords && existingRecords.truncated) {
+            throw new Error('getExistingRecords: Results were truncated by the default limit. Use pagination or set an explicit limit to ensure complete data.');
         }
 
         const foundRecords = existingRecords.result.filter((existingRecord: T_WithId<T>) =>
