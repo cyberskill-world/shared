@@ -1,3 +1,9 @@
+## [3.9.0](https://github.com/cyberskill-world/shared/compare/v3.8.0...v3.9.0) (2026-03-19)
+
+### ✨ Features
+
+* when trustProxy is not explicitly set, suppress the ERR_ERL_UNEXPECTED_X_FORWARDED_FOR ([9749772](https://github.com/cyberskill-world/shared/commit/9749772a017ec23f5d07db86fcdcef22126b57ad))
+
 ## [3.8.0](https://github.com/cyberskill-world/shared/compare/v3.7.0...v3.8.0) (2026-03-18)
 
 ### ✨ Features
