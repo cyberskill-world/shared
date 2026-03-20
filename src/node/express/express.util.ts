@@ -127,6 +127,10 @@ function setupMiddleware(
         app.set('trust proxy', trustProxy);
     }
 
+    if (app.disable) {
+        app.disable('x-powered-by');
+    }
+
     app.use(
         helmet({
             crossOriginEmbedderPolicy: isDev ? false : undefined,

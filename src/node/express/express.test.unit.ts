@@ -88,6 +88,7 @@ describe('createExpress', () => {
         expect(typeof app.use).toBe('function');
         expect(typeof app.get).toBe('function');
         expect(typeof app.listen).toBe('function');
+        expect(app.get('x-powered-by')).toBe(false);
     });
 
     it('should accept options for static folders', () => {
