@@ -1,3 +1,9 @@
+## [3.11.0](https://github.com/cyberskill-world/shared/compare/v3.10.0...v3.11.0) (2026-03-20)
+
+### ✨ Features
+
+* remove localforage ([e2ef422](https://github.com/cyberskill-world/shared/commit/e2ef422248fd5538c4486219d5289b9e72b5587c))
+
 ## [3.10.0](https://github.com/cyberskill-world/shared/compare/v3.9.0...v3.10.0) (2026-03-19)
 
 ### ✨ Features
