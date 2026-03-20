@@ -1,10 +1,9 @@
 import type { I_Return } from '#typescript/index.js';
 
-import { RESPONSE_STATUS } from '#constant/index.js';
-
 import type { C_Collection, C_Db, C_Document, T_DeleteResult, T_Filter, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { catchError, log } from '../log/index.js';
+import { wrapError, wrapNotFound } from './mongo.controller.helpers.js';
 import { mongo } from './mongo.util.js';
 
 /**
@@ -50,11 +49,7 @@ export class MongoController<D extends Partial<C_Document>> {
             const result = await this.collection.insertOne(finalDocument as unknown as T_OptionalUnlessRequiredId<D>);
 
             if (!result.acknowledged) {
-                return {
-                    success: false,
-                    message: 'Document creation failed',
-                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-                };
+                return wrapError('Document creation failed');
             }
 
             return {
@@ -85,11 +80,7 @@ export class MongoController<D extends Partial<C_Document>> {
             const result = await this.collection.insertMany(finalDocuments as unknown as T_OptionalUnlessRequiredId<D>[]);
 
             if (result.insertedCount === 0) {
-                return {
-                    success: false,
-                    message: 'No documents were inserted',
-                    code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
-                };
+                return wrapError('No documents were inserted');
             }
 
             return {
@@ -114,7 +105,7 @@ export class MongoController<D extends Partial<C_Document>> {
             const result = await this.collection.findOne(filter, { maxTimeMS: 30_000 });
 
             if (!result) {
-                return { success: false, message: 'Document not found', code: RESPONSE_STATUS.NOT_FOUND.CODE };
+                return wrapNotFound('Document');
             }
 
             return { success: true, message: 'Document found', result };
@@ -194,11 +185,7 @@ export class MongoController<D extends Partial<C_Document>> {
             });
 
             if (result.matchedCount === 0) {
-                return {
-                    success: false,
-                    message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound('No documents matched the filter');
             }
             return {
                 success: true,
@@ -228,11 +215,7 @@ export class MongoController<D extends Partial<C_Document>> {
             });
 
             if (result.matchedCount === 0) {
-                return {
-                    success: false,
-                    message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound('No documents matched the filter');
             }
 
             return {
@@ -259,11 +242,7 @@ export class MongoController<D extends Partial<C_Document>> {
             const result = await this.collection.deleteOne(filter);
 
             if (result.deletedCount === 0) {
-                return {
-                    success: false,
-                    message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound('No documents matched the filter');
             }
             return {
                 success: true,
@@ -289,11 +268,7 @@ export class MongoController<D extends Partial<C_Document>> {
             const result = await this.collection.deleteMany(filter);
 
             if (result.deletedCount === 0) {
-                return {
-                    success: false,
-                    message: 'No documents matched the filter',
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound('No documents matched the filter');
             }
 
             return {

@@ -1,19 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mockGetItem = vi.fn();
-const mockSetItem = vi.fn();
-const mockRemoveItem = vi.fn();
-const mockKeys = vi.fn();
-
-vi.mock('localforage', () => ({
-    default: {
-        getItem: (...args: unknown[]) => mockGetItem(...args),
-        setItem: (...args: unknown[]) => mockSetItem(...args),
-        removeItem: (...args: unknown[]) => mockRemoveItem(...args),
-        keys: (...args: unknown[]) => mockKeys(...args),
-    },
-}));
-
 vi.mock('../log/index.js', () => ({
     catchError: vi.fn((_error: unknown, opts?: { returnValue?: unknown }) => opts?.returnValue !== undefined ? opts.returnValue : undefined),
 }));
@@ -21,26 +7,49 @@ vi.mock('../log/index.js', () => ({
 describe('storage', () => {
     let storage: typeof import('./storage.util.js')['storage'];
 
+    const mockStore: Record<string, string> = {};
+
     beforeEach(async () => {
         vi.clearAllMocks();
+        // Clear mock store
+        Object.keys(mockStore).forEach(k => delete mockStore[k]);
+
+        // Mock localStorage
+        vi.stubGlobal('localStorage', {
+            getItem: vi.fn((key: string) => mockStore[key] ?? null),
+            setItem: vi.fn((key: string, value: string) => { mockStore[key] = value; }),
+            removeItem: vi.fn((key: string) => { delete mockStore[key]; }),
+            key: vi.fn((index: number) => Object.keys(mockStore)[index] ?? null),
+            get length() { return Object.keys(mockStore).length; },
+            clear: vi.fn(() => { Object.keys(mockStore).forEach(k => delete mockStore[k]); }),
+        });
+
         const mod = await import('./storage.util.js');
         storage = mod.storage;
     });
 
     afterEach(() => {
         vi.restoreAllMocks();
+        vi.unstubAllGlobals();
     });
 
     describe('get', () => {
         it('should return stored value by key', async () => {
-            mockGetItem.mockResolvedValue('hello');
+            mockStore['key'] = JSON.stringify('hello');
             const result = await storage.get('key');
             expect(result).toBe('hello');
-            expect(mockGetItem).toHaveBeenCalledWith('key');
+            expect(localStorage.getItem).toHaveBeenCalledWith('key');
+        });
+
+        it('should return null when key does not exist', async () => {
+            const result = await storage.get('missing');
+            expect(result).toBeNull();
         });
 
         it('should return null on error', async () => {
-            mockGetItem.mockRejectedValue(new Error('fail'));
+            vi.mocked(localStorage.getItem).mockImplementation(() => {
+                throw new Error('fail');
+            });
             const result = await storage.get('key');
             expect(result).toBeNull();
         });
@@ -48,45 +57,50 @@ describe('storage', () => {
 
     describe('set', () => {
         it('should store value with key', async () => {
-            mockSetItem.mockResolvedValue(undefined);
             await storage.set('key', { data: 42 });
-            expect(mockSetItem).toHaveBeenCalledWith('key', { data: 42 });
+            expect(localStorage.setItem).toHaveBeenCalledWith('key', JSON.stringify({ data: 42 }));
         });
 
         it('should catch errors silently', async () => {
-            mockSetItem.mockRejectedValue(new Error('fail'));
+            vi.mocked(localStorage.setItem).mockImplementation(() => {
+                throw new Error('fail');
+            });
             await expect(storage.set('key', 'value')).resolves.toBeUndefined();
         });
     });
 
     describe('remove', () => {
         it('should remove value by key', async () => {
-            mockRemoveItem.mockResolvedValue(undefined);
             await storage.remove('key');
-            expect(mockRemoveItem).toHaveBeenCalledWith('key');
+            expect(localStorage.removeItem).toHaveBeenCalledWith('key');
         });
 
         it('should catch errors silently', async () => {
-            mockRemoveItem.mockRejectedValue(new Error('fail'));
+            vi.mocked(localStorage.removeItem).mockImplementation(() => {
+                throw new Error('fail');
+            });
             await expect(storage.remove('key')).resolves.toBeUndefined();
         });
     });
 
     describe('keys', () => {
         it('should return all storage keys', async () => {
-            mockKeys.mockResolvedValue(['a', 'b', 'c']);
+            mockStore['a'] = '1';
+            mockStore['b'] = '2';
+            mockStore['c'] = '3';
             const result = await storage.keys();
             expect(result).toEqual(['a', 'b', 'c']);
         });
 
         it('should return empty array on error', async () => {
-            mockKeys.mockRejectedValue(new Error('fail'));
+            vi.mocked(localStorage.key).mockImplementation(() => {
+                throw new Error('fail');
+            });
             const result = await storage.keys();
             expect(result).toEqual([]);
         });
 
-        it('should return empty array when keys returns null', async () => {
-            mockKeys.mockResolvedValue(null);
+        it('should return empty array when no keys exist', async () => {
             const result = await storage.keys();
             expect(result).toEqual([]);
         });
