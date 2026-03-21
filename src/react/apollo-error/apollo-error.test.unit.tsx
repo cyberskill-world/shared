@@ -153,4 +153,36 @@ describe('ApolloErrorComponent', () => {
         expect(document.activeElement).toBe(triggerButton);
         document.body.removeChild(triggerButton);
     });
+
+    it('closes the modal when clicking the backdrop', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        const { container } = render(
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext>,
+        );
+
+        const backdrop = container.firstChild as HTMLElement;
+        fireEvent.click(backdrop);
+
+        expect(mockHideError).toHaveBeenCalled();
+    });
+
+    it('does not close the modal when clicking inside the modal content', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        render(
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext>,
+        );
+
+        const dialog = screen.getByRole('dialog');
+        fireEvent.click(dialog);
+
+        expect(mockHideError).not.toHaveBeenCalled();
+    });
 });
