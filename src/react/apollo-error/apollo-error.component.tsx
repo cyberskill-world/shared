@@ -92,7 +92,7 @@ export function ApolloErrorComponent() {
     const errorMessage = 'message' in error ? error.message : 'Unknown error occurred';
 
     return (
-        <div className={style['modal-backdrop']}>
+        <div className={style['modal-backdrop']} onClick={hideError}>
             <div
                 ref={dialogRef}
                 className={style['modal-content']}
@@ -102,6 +102,7 @@ export function ApolloErrorComponent() {
                 aria-describedby="apollo-error-details"
                 tabIndex={-1}
                 onKeyDown={handleFocusTrap}
+                onClick={e => e.stopPropagation()}
             >
                 <button
                     type="button"
