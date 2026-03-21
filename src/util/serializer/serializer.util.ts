@@ -59,7 +59,12 @@ const typeHandlers: {
     },
 };
 
-const typeHandlersValues = Object.values(typeHandlers) as I_Handler<T_SerializerKnownTypes>[];
+const typeHandlersValues = (Object.entries(typeHandlers) as [
+    T_SerializerKnownTypes,
+    I_Handler<T_SerializerKnownTypes>,
+][])
+    .filter(([key]) => key !== 'Date')
+    .map(([, handler]) => handler);
 
 /**
  * A serializer that can handle complex JavaScript types that cannot be directly JSON stringified.
@@ -103,10 +108,10 @@ export const serializer: I_Serializer<unknown> = {
             }
 
             for (let i = 0; i < typeHandlersValues.length; i++) {
-                const handler = typeHandlersValues[i];
+                const handler = typeHandlersValues[i]!;
 
-                if (handler!.is(val)) {
-                    return handler!.serialize(val as never);
+                if (handler.is(val)) {
+                    return handler.serialize(val as I_SerializerValueMap[T_SerializerKnownTypes]);
                 }
             }
 
