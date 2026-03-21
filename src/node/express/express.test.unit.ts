@@ -240,7 +240,7 @@ describe('createNest', () => {
 
     it('should disable x-powered-by header', async () => {
         const mockDisable = vi.fn();
-        vi.mocked(NestFactory.create).mockImplementationOnce(async () => createNestAppMock(mockDisable));
+        vi.mocked(NestFactory.create).mockImplementationOnce(async () => createNestAppMock(mockDisable) as any);
 
         await createNest({ module: {} as any });
         expect(mockDisable).toHaveBeenCalledWith('x-powered-by');
