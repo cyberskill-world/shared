@@ -38,6 +38,4 @@ export interface I_UploadOptions {
     path: string;
     type: E_UploadType;
     config?: I_UploadConfig;
-    /** Base directory for path containment validation. When set, the resolved `path` must reside within this directory. */
-    baseDir?: string;
 }

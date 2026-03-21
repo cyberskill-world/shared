@@ -59,45 +59,21 @@ export function escapeRegExp(str: string): string {
 }
 
 /**
- * Simple LRU cache for regex search patterns.
- * Avoids redundant accent alternation and regex compilation for repeated search terms.
- */
-const regexPatternCache = new Map<string, string>();
-const REGEX_CACHE_MAX_SIZE = 128;
-
-/**
  * Convert a string to a regex pattern that matches the string and its accented variations.
  * This function normalizes the input string and creates a regex pattern that can match
  * both the original characters and their accented equivalents.
  *
  * Optimization: Uses pre-computed regex and map to perform replacement in a single pass (O(N)),
  * instead of iterating through all character groups (O(K*N)).
- * Results are cached in an LRU cache (max 128 entries) to avoid redundant computation
- * for repeated search terms.
+ * Removed unnecessary NFD normalization which improves performance and fixes
+ * matching against NFC target strings.
  *
  * @param str - The string to convert to a regex pattern.
  * @returns The regex pattern as a string that matches the original string and its accented variations.
  */
 export function regexSearchMapper(str: string) {
-    const cached = regexPatternCache.get(str);
-
-    if (cached !== undefined) {
-        return cached;
-    }
-
-    const escaped = escapeRegExp(str);
-    const result = escaped.replace(searchRegex, match => replacementMap.get(match) || match);
-
-    // Evict oldest entry if cache is full
-    if (regexPatternCache.size >= REGEX_CACHE_MAX_SIZE) {
-        const oldestKey = regexPatternCache.keys().next().value;
-        if (oldestKey !== undefined) {
-            regexPatternCache.delete(oldestKey);
-        }
-    }
-
-    regexPatternCache.set(str, result);
-    return result;
+    str = escapeRegExp(str);
+    return str.replace(searchRegex, match => replacementMap.get(match) || match);
 }
 
 const RE_DIACRITIC = /\p{Diacritic}/gu;
@@ -171,30 +147,9 @@ export function mapEnvironment(env: I_NodeEnvInput): I_EnvFlags {
  * Checks if value is object-like (e.g., objects, arrays, etc.), not null.
  * Re-exported from util for general use across the codebase.
  *
- * @remarks
- * Returns `true` for arrays, Dates, Maps, Sets, and class instances.
- * Use {@link isPlainObject} when you specifically need to check for plain objects only.
- *
  * @param value - The value to check.
  * @returns True if the value is an object and not null.
  */
 export function isObject(value: unknown): value is object {
     return value != null && typeof value === 'object';
-}
-
-/**
- * Checks if a value is a plain object (created by `{}`, `Object.create(null)`, or `new Object()`).
- * Unlike {@link isObject}, this returns `false` for arrays, Dates, Maps, Sets, RegExps,
- * and other class instances.
- *
- * @param value - The value to check.
- * @returns True if the value is a plain object, false otherwise.
- */
-export function isPlainObject(value: unknown): value is Record<string, unknown> {
-    if (value == null || typeof value !== 'object') {
-        return false;
-    }
-    const proto = Object.getPrototypeOf(value);
-
-    return proto === Object.prototype || proto === null;
 }

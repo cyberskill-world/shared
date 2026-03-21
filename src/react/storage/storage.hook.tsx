@@ -9,7 +9,7 @@ import { storage } from './storage.util.js';
 
 /**
  * React hook that provides persistent storage functionality with automatic serialization.
- * This hook manages state that persists across browser sessions using localStorage,
+ * This hook manages state that persists across browser sessions using localForage,
  * with automatic serialization/deserialization of complex data types. It provides
  * a React-friendly interface for storage operations with proper error handling.
  *

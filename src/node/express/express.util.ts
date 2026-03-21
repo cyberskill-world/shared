@@ -71,12 +71,6 @@ export function createCors<T extends T_CorsType>(options: T_CorsOptions<T>) {
  * This function creates an Express session middleware that can be used to handle user sessions
  * with the provided session options including secret, cookie settings, and storage configuration.
  *
- * @remarks
- * **CSRF Warning:** This middleware sets `SameSite=Lax` by default, which mitigates but does NOT
- * fully prevent CSRF attacks for non-GET state-changing requests via top-level navigations.
- * Applications should integrate a dedicated CSRF token middleware (e.g., `csrf-csrf` or
- * `csrf-sync`) in addition to this session middleware for complete protection.
- *
  * @param options - Session configuration options including secret, cookie settings, and storage.
  * @returns A session middleware function ready to be used in Express applications.
  */
@@ -133,7 +127,9 @@ function setupMiddleware(
         app.set('trust proxy', trustProxy);
     }
 
-    app.disable('x-powered-by');
+    if (app.disable) {
+        app.disable('x-powered-by');
+    }
 
     app.use(
         helmet({

@@ -137,7 +137,6 @@ pnpm install && pnpm run build
 
 | Document                                 | Description                               |
 | ---------------------------------------- | ----------------------------------------- |
-| [API.md](API.md)                         | API reference and usage examples          |
 | [CODEBASE.md](CODEBASE.md)               | Architecture, modules, and conventions    |
 | [CONTRIBUTING.md](CONTRIBUTING.md)       | Development guidelines and code standards |
 | [RELEASING.md](RELEASING.md)             | Release process and versioning            |

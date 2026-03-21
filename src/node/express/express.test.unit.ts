@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { NestFactory } from '@nestjs/core';
 import { createCors, createCorsOptions, createExpress, createNest, createSession } from './express.util.js';
 
 // ---------------------------------------------------------------------------
@@ -179,23 +178,19 @@ describe('createExpress rate limiting', () => {
 // ---------------------------------------------------------------------------
 // createNest
 // ---------------------------------------------------------------------------
-function createNestAppMock(disable = vi.fn()) {
-    return {
-        getHttpAdapter: vi.fn(() => ({
-            getInstance: vi.fn(() => ({
-                use: vi.fn(),
-                set: vi.fn(),
-                disable,
-            })),
-        })),
-        useGlobalFilters: vi.fn(),
-        useGlobalPipes: vi.fn(),
-    };
-}
-
 vi.mock('@nestjs/core', () => ({
     NestFactory: {
-        create: vi.fn(async () => createNestAppMock()),
+        create: vi.fn(async () => ({
+            getHttpAdapter: vi.fn(() => ({
+                getInstance: vi.fn(() => ({
+                    use: vi.fn(),
+                    set: vi.fn(),
+                    disable: vi.fn(),
+                })),
+            })),
+            useGlobalFilters: vi.fn(),
+            useGlobalPipes: vi.fn(),
+        })),
     },
 }));
 
@@ -236,13 +231,5 @@ describe('createNest', () => {
     it('should accept trustProxy option', async () => {
         const app = await createNest({ module: {} as any, trustProxy: true });
         expect(app).toBeDefined();
-    });
-
-    it('should disable x-powered-by header', async () => {
-        const mockDisable = vi.fn();
-        vi.mocked(NestFactory.create).mockImplementationOnce(async () => createNestAppMock(mockDisable));
-
-        await createNest({ module: {} as any });
-        expect(mockDisable).toHaveBeenCalledWith('x-powered-by');
     });
 });

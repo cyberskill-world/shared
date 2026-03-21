@@ -69,7 +69,7 @@ graph TD
 | `i18next/`              | i18n setup for React            | i18next, react-i18next            |
 | `next-intl/`            | Next.js internationalization    | next-intl                         |
 | `toast/`                | Toast notification system       | react-hot-toast                   |
-| `storage/`              | Browser storage hooks           | localStorage (native)             |
+| `storage/`              | Browser storage hooks           | localforage                       |
 | `userback/`             | User feedback widget            | @userback/widget                  |
 | `log/`                  | Client-side logging             | —                                 |
 

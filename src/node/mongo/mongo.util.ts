@@ -387,7 +387,6 @@ export const mongo: I_MongoUtils = {
      * @param controller - MongoController instance
      * @param recordsToCheck - Array of records to check
      * @param filterFn - Function to determine if a record already exists
-     * @param filter - Optional filter to narrow the query
      * @returns Array of records that don't exist in the database
      */
     async getNewRecords<T extends I_GenericDocument>(
@@ -420,7 +419,6 @@ export const mongo: I_MongoUtils = {
      * @param controller - MongoController instance
      * @param recordsToCheck - Array of records to check
      * @param filterFn - Function to determine if a record exists
-     * @param filter - Optional filter to narrow the query
      * @returns Array of existing records that match the filter criteria
      * @throws {Error} When the database query fails — prevents silent data inconsistency.
      */

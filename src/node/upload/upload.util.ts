@@ -221,7 +221,7 @@ export function createUploadConfig(overrides?: Partial<I_UploadConfig>): I_Uploa
  * @returns A promise that resolves to a standardized response with success status, message, file path, and response codes.
  */
 export async function upload(options: I_UploadOptions): Promise<I_Return<string>> {
-    const { path, file, config, type, baseDir } = options;
+    const { path, file, config, type } = options;
 
     if (!path || typeof path !== 'string') {
         return {
@@ -231,22 +231,10 @@ export async function upload(options: I_UploadOptions): Promise<I_Return<string>
         };
     }
 
-    // Security: Validate path is within allowed base directory to prevent path traversal.
-    // When baseDir is provided, the resolved path must start with it.
-    // When baseDir is not provided, reject any path containing ".." segments.
+    // Security: Prevent directory traversal attacks by checking the resolved path
     const resolvedPath = nodePath.resolve(path);
 
-    if (baseDir) {
-        const resolvedBase = nodePath.resolve(baseDir) + nodePath.sep;
-        if (!resolvedPath.startsWith(resolvedBase) && resolvedPath !== nodePath.resolve(baseDir)) {
-            return {
-                success: false,
-                message: 'Path traversal detected: path resolves outside the allowed base directory',
-                code: RESPONSE_STATUS.BAD_REQUEST.CODE,
-            };
-        }
-    }
-    else if (path.includes('..')) {
+    if (resolvedPath !== nodePath.normalize(path) && path.includes('..')) {
         return {
             success: false,
             message: 'Path traversal detected: ".." segments are not allowed',

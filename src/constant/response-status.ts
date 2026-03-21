@@ -1,7 +1,3 @@
-/**
- * @deprecated Prefer `GRAPHQL_RESPONSE_STATUS` (string codes) or `HTTP_RESPONSE_STATUS` (numeric codes)
- * for better type safety. Direct use of `RESPONSE_STATUS` yields a union type `number | string` for `CODE`.
- */
 export const RESPONSE_STATUS = {
     GRAPHQL_PARSE_FAILED: {
         CODE: 'GRAPHQL_PARSE_FAILED',
