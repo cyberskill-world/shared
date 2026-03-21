@@ -108,11 +108,15 @@ export function setNestedValue<T>(obj: T, path: (string | number)[], value: unkn
  * Deep clones an object or array.
  * This function creates a deep copy of the input, recursively cloning objects and arrays.
  * Primitive values, dates, and other non-plain objects are returned as is (or cloned if supported).
- * Note: This implementation focuses on plain objects and arrays. For complex types like Map/Set/Buffer/ObjectId,
- * it returns the reference or handles them according to specific logic.
+ *
+ * @remarks
+ * **Non-POJO objects are NOT cloned.** Objects with custom prototypes (e.g., Mongoose ObjectId,
+ * class instances, Map, Set, Buffer) are returned **by reference** to preserve driver
+ * compatibility. Mutations to these nested references will affect the original.
+ * If you need full deep cloning of complex types, use `structuredClone()` or a dedicated library.
  *
  * @param obj - The object to clone.
- * @returns A deep copy of the object.
+ * @returns A deep copy of the object (with non-POJO objects returned by reference).
  */
 export function deepClone<T>(obj: T): T {
     return deepCloneInternal(obj, new WeakSet<object>());

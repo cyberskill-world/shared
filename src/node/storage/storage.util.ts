@@ -1,15 +1,16 @@
-import localForage from 'localforage';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { getEnv } from '#config/env/index.js';
 
-import type { LocalForageDriver, NodeFsDriverState, NodeLocalForageOptions } from './storage.type.js';
-
 import { catchError, log } from '../log/index.js';
-import { NODE_FS_DRIVER_NAME, STORAGE_INSTANCE_NAME, STORAGE_KEY_EXTENSION, STORAGE_STORE_NAME } from './storage.constant.js';
+import { STORAGE_KEY_EXTENSION } from './storage.constant.js';
 
 const MAX_KEY_LENGTH = 200;
+
+interface NodeFsDriverState {
+    baseDir: string;
+}
 
 const nodeFsDriverState: NodeFsDriverState = {
     baseDir: '',
@@ -17,8 +18,14 @@ const nodeFsDriverState: NodeFsDriverState = {
 
 /**
  * Encodes a storage key into a filename-safe string.
+ * Validates key length before encoding to prevent OS filename limits.
+ *
+ * @throws {RangeError} When key exceeds maximum length.
  */
 function encodeKey(key: string): string {
+    if (key.length > MAX_KEY_LENGTH) {
+        throw new RangeError(`Storage key exceeds maximum length of ${MAX_KEY_LENGTH} characters`);
+    }
     return `${encodeURIComponent(key)}${STORAGE_KEY_EXTENSION}`;
 }
 
@@ -37,20 +44,16 @@ function getFilePath(key: string, baseDir: string): string {
 }
 
 /**
- * Custom localForage driver that stores JSON-encoded values on the filesystem.
+ * Filesystem-backed storage driver that stores JSON-encoded values on disk.
+ * Directly implements all storage operations without any external dependencies.
+ * storage operations without the unnecessary browser-oriented dependency.
  */
-const nodeFsDriver: LocalForageDriver = {
-    _driver: NODE_FS_DRIVER_NAME,
-    _support: true,
-    /** Ensures the storage directory exists and respects custom baseDir overrides. */
-    async _initStorage(options: unknown) {
+const fsDriver = {
+    /** Ensures the storage directory exists. */
+    async init(baseDir?: string) {
         try {
-            const baseDirFromOptions = typeof options === 'object' && options !== null && 'baseDir' in options
-                ? (options as { baseDir?: unknown }).baseDir
-                : undefined;
-
-            if (typeof baseDirFromOptions === 'string' && baseDirFromOptions.length > 0) {
-                nodeFsDriverState.baseDir = baseDirFromOptions;
+            if (typeof baseDir === 'string' && baseDir.length > 0) {
+                nodeFsDriverState.baseDir = baseDir;
             }
             else {
                 nodeFsDriverState.baseDir = getEnv().CYBERSKILL_STORAGE_DIRECTORY;
@@ -63,7 +66,7 @@ const nodeFsDriver: LocalForageDriver = {
             throw error;
         }
     },
-    /** Deletes all stored entries by recreating the directory. Callers must ensure no concurrent operations. */
+    /** Deletes all stored entries atomically by swapping to a fresh directory. */
     async clear() {
         const { baseDir } = nodeFsDriverState;
 
@@ -71,8 +74,31 @@ const nodeFsDriver: LocalForageDriver = {
             return;
         }
 
-        await fs.rm(baseDir, { recursive: true, force: true });
-        await fs.mkdir(baseDir, { recursive: true });
+        // Atomic swap: create a fresh temp dir, rename old→trash, rename fresh→baseDir, remove trash
+        const trashDir = `${baseDir}.trash.${Date.now()}`;
+        const freshDir = `${baseDir}.fresh.${Date.now()}`;
+
+        try {
+            await fs.mkdir(freshDir, { recursive: true });
+            // Try atomic rename swap
+            try {
+                await fs.rename(baseDir, trashDir);
+            }
+            catch {
+                // baseDir might not exist yet; no-op
+            }
+            await fs.rename(freshDir, baseDir);
+            // Clean up trash in the background (non-blocking)
+            fs.rm(trashDir, { recursive: true, force: true }).catch(() => {});
+        }
+        catch {
+            // Fallback: non-atomic clear (e.g., cross-device rename)
+            await fs.rm(baseDir, { recursive: true, force: true });
+            await fs.mkdir(baseDir, { recursive: true });
+            // Clean up any leftover temp dirs
+            fs.rm(freshDir, { recursive: true, force: true }).catch(() => {});
+            fs.rm(trashDir, { recursive: true, force: true }).catch(() => {});
+        }
     },
     /** Reads and parses a stored value; returns null when the file is missing. */
     async getItem<T>(key: string): Promise<T | null> {
@@ -91,30 +117,6 @@ const nodeFsDriver: LocalForageDriver = {
             throw error;
         }
     },
-    /** Iterates through all keys, invoking the iterator until it returns a value. */
-    async iterate<T, U>(iterator: (value: T, key: string, iterationNumber: number) => U): Promise<U> {
-        const keys = await nodeFsDriver.keys();
-        let iterationNumber = 1;
-
-        for (const key of keys) {
-            const value = await nodeFsDriver.getItem<T>(key);
-
-            const result = iterator(value as T, key, iterationNumber);
-
-            if (result !== undefined) {
-                return result;
-            }
-            iterationNumber += 1;
-        }
-
-        return undefined as unknown as U;
-    },
-    /** Returns the key name at the given index or null when out of bounds. */
-    async key(keyIndex: number): Promise<string> {
-        const keys = await nodeFsDriver.keys();
-
-        return keys[keyIndex] ?? null as unknown as string;
-    },
     /** Lists all stored keys. */
     async keys(): Promise<string[]> {
         const { baseDir } = nodeFsDriverState;
@@ -132,12 +134,6 @@ const nodeFsDriver: LocalForageDriver = {
             }
             throw error;
         }
-    },
-    /** Returns the count of stored keys. */
-    async length(): Promise<number> {
-        const keys = await nodeFsDriver.keys();
-
-        return keys.length;
     },
     /** Removes a stored value for the given key. */
     async removeItem(key: string): Promise<void> {
@@ -159,45 +155,30 @@ const nodeFsDriver: LocalForageDriver = {
 };
 
 let initPromise: Promise<void> | null = null;
-let driverInstance: LocalForageDriver | null = null;
 
 /**
- * Prepares and returns the filesystem-backed localForage driver.
- * We bypass localForage's default driver selection and explicitly initialize
- * our custom driver to ensure Node compatibility.
+ * Initializes the filesystem storage driver (singleton, idempotent).
+ * Ensures the storage directory exists before any read/write operations.
  */
-async function ensureLocalForageReady(): Promise<LocalForageDriver> {
+async function ensureDriverReady(): Promise<typeof fsDriver> {
     if (initPromise) {
         await initPromise;
-        return driverInstance as LocalForageDriver;
+        return fsDriver;
     }
 
-    initPromise = (async () => {
-        await localForage.defineDriver(nodeFsDriver);
-        nodeFsDriverState.baseDir = getEnv().CYBERSKILL_STORAGE_DIRECTORY;
-        const driver = await localForage.getDriver(NODE_FS_DRIVER_NAME);
-
-        const initOptions = {
-            baseDir: nodeFsDriverState.baseDir,
-            name: STORAGE_INSTANCE_NAME,
-            storeName: STORAGE_STORE_NAME,
-        } satisfies NodeLocalForageOptions;
-
-        await driver._initStorage(initOptions as unknown as Parameters<typeof driver._initStorage>[0]);
-        driverInstance = driver;
-    })().catch((error) => {
+    initPromise = fsDriver.init().catch((error) => {
         initPromise = null;
         throw error;
     });
 
     await initPromise;
 
-    return driverInstance as LocalForageDriver;
+    return fsDriver;
 }
 
 /**
  * Persistent storage utility object for data persistence across application sessions.
- * This object provides methods for storing, retrieving, and managing data using localForage,
+ * Uses a filesystem-backed driver that stores JSON-encoded values on disk,
  * with automatic initialization and error handling.
  */
 export const storage = {
@@ -210,13 +191,8 @@ export const storage = {
      * @returns A promise that resolves to the stored value or null if not found.
      */
     async get<T = unknown>(key: string): Promise<T | null> {
-        if (key.length > MAX_KEY_LENGTH) {
-            log.warn(`[Storage:get] Key exceeds maximum length of ${MAX_KEY_LENGTH} characters`);
-            return null;
-        }
-
         try {
-            const driver = await ensureLocalForageReady();
+            const driver = await ensureDriverReady();
             const result = await driver.getItem<T>(key);
 
             return result ?? null;
@@ -235,12 +211,8 @@ export const storage = {
      * @returns A promise that resolves when the storage operation is complete.
      */
     async set<T = unknown>(key: string, value: T): Promise<void> {
-        if (key.length > MAX_KEY_LENGTH) {
-            throw new RangeError(`Storage key exceeds maximum length of ${MAX_KEY_LENGTH} characters`);
-        }
-
         try {
-            const driver = await ensureLocalForageReady();
+            const driver = await ensureDriverReady();
 
             await driver.setItem(key, value);
         }
@@ -258,7 +230,7 @@ export const storage = {
      */
     async remove(key: string): Promise<void> {
         try {
-            const driver = await ensureLocalForageReady();
+            const driver = await ensureDriverReady();
 
             await driver.removeItem(key);
         }
@@ -275,7 +247,7 @@ export const storage = {
      */
     async keys(): Promise<string[]> {
         try {
-            const driver = await ensureLocalForageReady();
+            const driver = await ensureDriverReady();
             const keys = await driver.keys();
 
             if (!Array.isArray(keys)) {
@@ -317,6 +289,5 @@ export const storage = {
  */
 export function resetStorageForTesting(): void {
     initPromise = null;
-    driverInstance = null;
     nodeFsDriverState.baseDir = '';
 }

@@ -1,12 +1,10 @@
-import localForage from 'localforage';
-
 import { catchError } from '../log/index.js';
 
 /**
- * Browser storage utility object using localForage for cross-browser compatibility.
- * This object provides a unified interface for browser storage operations using localForage,
- * which automatically chooses the best available storage method (IndexedDB, WebSQL, or localStorage)
- * based on browser capabilities. It includes comprehensive error handling and type safety.
+ * Browser storage utility object using native localStorage.
+ * This object provides a unified interface for browser storage operations
+ * with comprehensive error handling and type safety.
+ * Values are stored as JSON strings for consistent serialization.
  */
 export const storage = {
     /**
@@ -19,7 +17,13 @@ export const storage = {
      */
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
-            return await localForage.getItem<T>(key);
+            const raw = localStorage.getItem(key);
+
+            if (raw === null) {
+                return null;
+            }
+
+            return JSON.parse(raw) as T;
         }
         catch (error) {
             return catchError(error, { returnValue: null });
@@ -28,16 +32,15 @@ export const storage = {
     /**
      * Stores a value in browser storage with a unique key.
      * This method saves data that can be retrieved later using the get method.
-     * The data is automatically handled by localForage which chooses the optimal
-     * storage method for the browser environment.
+     * The data is automatically serialized to JSON.
      *
      * @param key - The unique identifier for the value to store.
-     * @param value - The data to store (will be automatically handled by localForage).
+     * @param value - The data to store (will be automatically serialized to JSON).
      * @returns A promise that resolves when the storage operation is complete.
      */
     async set<T = unknown>(key: string, value: T): Promise<void> {
         try {
-            await localForage.setItem(key, value);
+            localStorage.setItem(key, JSON.stringify(value));
         }
         catch (error) {
             catchError(error);
@@ -53,7 +56,7 @@ export const storage = {
      */
     async remove(key: string): Promise<void> {
         try {
-            await localForage.removeItem(key);
+            localStorage.removeItem(key);
         }
         catch (error) {
             catchError(error);
@@ -68,9 +71,17 @@ export const storage = {
      */
     async keys(): Promise<string[]> {
         try {
-            const keys = await localForage.keys();
+            const keys: string[] = [];
 
-            return keys ?? [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+
+                if (key !== null) {
+                    keys.push(key);
+                }
+            }
+
+            return keys;
         }
         catch (error) {
             return catchError(error, { returnValue: [] });
