@@ -252,7 +252,7 @@
         "cors": "2.8.6",
         "date-fns": "4.1.0",
         "envalid": "8.1.1",
-        "eslint-config-next": "16.2.0",
+        "eslint-config-next": "16.2.1",
         "eslint-plugin-format": "2.0.1",
         "eslint-plugin-react-hooks": "7.0.1",
         "eslint-plugin-react-refresh": "0.5.2",
@@ -267,7 +267,7 @@
         "graphql-upload": "17.0.0",
         "graphql-ws": "6.0.7",
         "helmet": "8.1.0",
-        "i18next": "25.8.20",
+        "i18next": "25.9.0",
         "migrate-mongo": "14.0.7",
         "mongodb": "7.1.0",
         "mongoose": "9.3.1",
@@ -287,7 +287,7 @@
         "@commitlint/cli": "20.5.0",
         "@commitlint/config-conventional": "20.5.0",
         "@eslint/config-inspector": "1.5.0",
-        "@next/eslint-plugin-next": "16.2.0",
+        "@next/eslint-plugin-next": "16.2.1",
         "@semantic-release/changelog": "6.0.3",
         "@semantic-release/git": "10.0.1",
         "@semantic-release/github": "12.0.6",
@@ -337,7 +337,7 @@
     },
     "pnpm": {
         "overrides": {
-            "minimatch": ">=10.2.3"
+            "minimatch": ">=10.2.4"
         }
     }
 }
