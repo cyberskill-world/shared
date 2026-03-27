@@ -1,3 +1,9 @@
+## [3.13.0](https://github.com/cyberskill-world/shared/compare/v3.12.0...v3.13.0) (2026-03-27)
+
+### ✨ Features
+
+* correct vite.config.ts ([702e2bf](https://github.com/cyberskill-world/shared/commit/702e2bfa05a69dc51708346d7b0972dfc30b5c2b))
+
 ## [3.12.0](https://github.com/cyberskill-world/shared/compare/v3.11.0...v3.12.0) (2026-03-27)
 
 ### ✨ Features
