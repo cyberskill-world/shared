@@ -108,9 +108,10 @@ export default defineConfig({
     plugins: [
         dts({
             logLevel: 'error',
-            insertTypesEntry: true,
+            entryRoot: 'src',
             exclude: ['src/**/*.test.*.ts', 'src/**/*.test.*.tsx'],
             compilerOptions: {
+                rootDir: resolve(import.meta.dirname, 'src'),
                 declaration: true,
                 declarationMap: false,
                 emitDeclarationOnly: true,
