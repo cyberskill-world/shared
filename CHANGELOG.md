@@ -1,3 +1,22 @@
+## [3.12.0](https://github.com/cyberskill-world/shared/compare/v3.11.0...v3.12.0) (2026-03-27)
+
+### ✨ Features
+
+* register before recursing to handle circular references within arrays ([87a6426](https://github.com/cyberskill-world/shared/commit/87a642600269020a031f094988d2d888d5f6a5fb))
+* update libs ([d8f841f](https://github.com/cyberskill-world/shared/commit/d8f841f714ffe34dba4a7e889957d3334ea47716))
+
+### 🐛 Bug Fixes
+
+* **deps:** update all non-major dependencies ([#301](https://github.com/cyberskill-world/shared/issues/301)) ([f2677be](https://github.com/cyberskill-world/shared/commit/f2677be14635cf1723c1467eed1c123634d95d80))
+
+### ⚡ Performance
+
+* optimize serializer to prevent array allocation on each node ([5148579](https://github.com/cyberskill-world/shared/commit/5148579f8a728599afff14bf69b0ae935b085b2e))
+
+### ♻️ Refactoring
+
+* **serializer:** improve type safety and exclude Date handler from precomputed array ([3af23f6](https://github.com/cyberskill-world/shared/commit/3af23f64808b20e7aa04282e2da9d00efec3e8db))
+
 ## [3.11.0](https://github.com/cyberskill-world/shared/compare/v3.10.0...v3.11.0) (2026-03-20)
 
 ### ✨ Features
