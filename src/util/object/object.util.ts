@@ -119,25 +119,33 @@ export function setNestedValue<T>(obj: T, path: (string | number)[], value: unkn
  * @returns A deep copy of the object (with non-POJO objects returned by reference).
  */
 export function deepClone<T>(obj: T): T {
-    return deepCloneInternal(obj, new WeakSet<object>());
+    return deepCloneInternal(obj, new WeakMap<object, unknown>());
 }
 
 /**
- * Internal recursive implementation of deepClone with circular reference detection.
+ * Internal recursive implementation of deepClone with shared-reference and circular-reference handling.
+ *
+ * Uses a WeakMap to track already-cloned objects. This correctly handles:
+ * - **Shared references**: The same object appearing in multiple places returns
+ *   the same clone (preserving the shared-reference topology).
+ * - **Circular references**: Detected because the object is added to the map
+ *   before* its children are recursed into; a back-edge will find itself in
+ *   the map and return the (partially constructed) clone rather than recursing
+ *   infinitely.
  *
  * @param obj - The value to clone.
- * @param seen - A WeakSet tracking already-visited objects to prevent infinite recursion.
+ * @param seen - A WeakMap mapping original objects to their clones.
  * @returns A deep copy of the value.
  */
-function deepCloneInternal<T>(obj: T, seen: WeakSet<object>): T {
+function deepCloneInternal<T>(obj: T, seen: WeakMap<object, unknown>): T {
     if (obj === null || typeof obj !== 'object') {
         return obj;
     }
 
+    // Return the already-cloned copy for shared (or circular) references
     if (seen.has(obj as object)) {
-        throw new Error('deepClone: Circular reference detected.');
+        return seen.get(obj as object) as T;
     }
-    seen.add(obj as object);
 
     if (obj instanceof Date) {
         return new Date(obj.getTime()) as unknown as T;
@@ -153,9 +161,13 @@ function deepCloneInternal<T>(obj: T, seen: WeakSet<object>): T {
         const len = obj.length;
         // eslint-disable-next-line unicorn/no-new-array -- Pre-allocating array size for performance
         const arr = new Array(len);
+        // Register before recursing to handle circular references within arrays
+        seen.set(obj as object, arr);
+
         for (let i = 0; i < len; i++) {
             arr[i] = deepCloneInternal(obj[i], seen);
         }
+
         return arr as unknown as T;
     }
 
@@ -163,11 +175,15 @@ function deepCloneInternal<T>(obj: T, seen: WeakSet<object>): T {
     // structuredClone is not used here because it silently corrupts nested non-POJO
     // types (e.g., ObjectId → plain object) and Date instances in jsdom environments.
     const proto = Object.getPrototypeOf(obj);
+
     if (proto !== Object.prototype && proto !== null) {
         return obj;
     }
 
     const result = {} as Record<string, unknown>;
+    // Register before recursing to handle circular references within objects
+    seen.set(obj as object, result);
+
     for (const key in obj) {
         if (Object.hasOwn(obj, key)) {
             result[key] = deepCloneInternal((obj as Record<string, unknown>)[key], seen);

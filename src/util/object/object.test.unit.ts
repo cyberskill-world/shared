@@ -238,17 +238,37 @@ describe('deepClone (branch coverage)', () => {
         expect(cloned).not.toBe(arr);
     });
 
-    it('should throw on circular reference', () => {
+    it('should handle circular reference gracefully', () => {
         const obj: Record<string, unknown> = { a: 1 };
         obj['self'] = obj;
-        expect(() => deepClone(obj)).toThrow('Circular reference detected');
+        const cloned = deepClone(obj);
+        expect(cloned).not.toBe(obj);
+        expect(cloned['a']).toBe(1);
+        // The circular reference should point back to the cloned object itself
+        expect(cloned['self']).toBe(cloned);
     });
 
-    it('should throw on nested circular reference', () => {
+    it('should handle nested circular reference gracefully', () => {
         const a: Record<string, unknown> = {};
         const b: Record<string, unknown> = { a };
         a['b'] = b;
-        expect(() => deepClone(a)).toThrow('Circular reference detected');
+        const clonedA = deepClone(a);
+        expect(clonedA).not.toBe(a);
+        // Mutual references should be preserved in the clone
+        expect((clonedA['b'] as Record<string, unknown>)['a']).toBe(clonedA);
+    });
+
+    it('should handle shared references without error', () => {
+        const shared = { x: 1 };
+        const obj = { a: shared, b: shared };
+        const cloned = deepClone(obj);
+        expect(cloned).not.toBe(obj);
+        expect(cloned.a).toEqual({ x: 1 });
+        expect(cloned.b).toEqual({ x: 1 });
+        // Both should reference the same cloned object
+        expect(cloned.a).toBe(cloned.b);
+        // But not the original
+        expect(cloned.a).not.toBe(shared);
     });
 });
 
