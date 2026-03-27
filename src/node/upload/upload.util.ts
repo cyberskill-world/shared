@@ -298,14 +298,23 @@ export async function upload(options: I_UploadOptions): Promise<I_Return<string>
             mkdirSync(dir, { recursive: true });
         }
 
-        const writeStream = createReadStream();
+        const readStream = createReadStream();
         const out = createWriteStream(path);
-        writeStream.pipe(out);
+        readStream.pipe(out);
 
         await new Promise<void>((resolve, reject) => {
             out.on('finish', () => resolve());
-            out.on('error', reject);
-            writeStream.on('error', reject);
+            out.on('error', (err) => {
+                // Destroy the read stream to release resources if write fails
+                if ('destroy' in readStream && typeof readStream.destroy === 'function') {
+                    readStream.destroy();
+                }
+                reject(err);
+            });
+            readStream.on('error', (err) => {
+                out.destroy();
+                reject(err);
+            });
         });
 
         return {

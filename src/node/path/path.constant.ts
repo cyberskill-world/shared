@@ -43,6 +43,7 @@ export function getCyberskillDirectory(): string {
             : join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
     }
     catch {
+        /* Intentionally empty — fallback to node_modules path when package.json is unreadable */
         _cyberskillDir = join(WORKING_DIRECTORY, NODE_MODULES, CYBERSKILL_PACKAGE_NAME, BUILD_DIRECTORY);
     }
 

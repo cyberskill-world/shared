@@ -26,6 +26,7 @@ function getVersion(): string {
         return pkg.version;
     }
     catch {
+        /* Intentionally empty — fallback to default version when package.json is unreadable */
         return '1.0.0';
     }
 }
@@ -232,6 +233,7 @@ async function aiSetup() {
         await runCommand(`Checking for ${AG_KIT_PACKAGE_NAME}`, `pnpm list -g ${AG_KIT_PACKAGE_NAME}`);
     }
     catch {
+        /* Package not found globally — install it */
         await runCommand(`Installing ${AG_KIT_PACKAGE_NAME} globally`, `pnpm i -g ${AG_KIT_PACKAGE_NAME}`);
     }
 

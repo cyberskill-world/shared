@@ -15,7 +15,11 @@ import graphqlUploadExpress from 'graphql-upload/graphqlUploadExpress.mjs';
 import helmet from 'helmet';
 import process from 'node:process';
 
+import { E_Environment } from '#typescript/index.js';
+
 import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from './express.type.js';
+
+import { log } from '../log/index.js';
 
 /**
  * Creates CORS options with environment-specific configuration.
@@ -29,8 +33,8 @@ import type { I_ExpressOptions, I_NestOptions, T_CorsOptions, T_CorsType } from 
  */
 export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...rest }: T_CorsOptions<T>) {
     // Safety net: warn loudly if isDev is mistakenly true in production
-    if (isDev && process.env['NODE_ENV'] === 'production') {
-        console.warn('[CORS] WARNING: isDev is true but NODE_ENV is "production". CORS restrictions are relaxed. This is likely a misconfiguration.');
+    if (isDev && process.env['NODE_ENV'] === E_Environment.PRODUCTION) {
+        log.warn('[CORS] WARNING: isDev is true but NODE_ENV is "production". CORS restrictions are relaxed. This is likely a misconfiguration.');
     }
 
     return {
@@ -72,10 +76,25 @@ export function createCors<T extends T_CorsType>(options: T_CorsOptions<T>) {
  * with the provided session options including secret, cookie settings, and storage configuration.
  *
  * @remarks
- * **CSRF Warning:** This middleware sets `SameSite=Lax` by default, which mitigates but does NOT
- * fully prevent CSRF attacks for non-GET state-changing requests via top-level navigations.
- * Applications should integrate a dedicated CSRF token middleware (e.g., `csrf-csrf` or
- * `csrf-sync`) in addition to this session middleware for complete protection.
+ * **CSRF Protection Required:** This middleware sets `SameSite=Lax` by default, which mitigates
+ * but does **NOT** fully prevent CSRF attacks. Specifically, `Lax` allows cookies on top-level
+ * GET navigations, which can be exploited for state-changing GET endpoints.
+ *
+ * **Consumer apps MUST add CSRF token validation** for all state-changing routes (POST, PUT,
+ * DELETE, PATCH). Recommended libraries:
+ * - `csrf-csrf` (double-submit cookie pattern — stateless, recommended)
+ * - `csrf-sync` (synchronizer token pattern — requires session store)
+ *
+ * Example:
+ * ```typescript
+ * import { doubleCsrf } from 'csrf-csrf';
+ * const { doubleCsrfProtection } = doubleCsrf({ getSecret: () => req.session.csrfSecret });
+ * app.use(doubleCsrfProtection);
+ * ```
+ *
+ * **Session Store Warning:** The default `MemoryStore` is not designed for production use:
+ * it leaks memory under load and loses all sessions on restart. Configure a persistent
+ * store (e.g., `connect-redis`, `connect-mongo`) for production deployments.
  *
  * @param options - Session configuration options including secret, cookie settings, and storage.
  * @returns A session middleware function ready to be used in Express applications.
@@ -85,8 +104,8 @@ export function createSession(options: SessionOptions): RequestHandler {
         throw new Error('Session secret is required. Provide a strong secret string.');
     }
 
-    if (!options.store && process.env['NODE_ENV'] === 'production') {
-        console.warn('[Session] WARNING: No session store configured in production. The default MemoryStore leaks memory and loses sessions on restart. Use connect-redis, connect-mongo, or another production store.');
+    if (!options.store && process.env['NODE_ENV'] === E_Environment.PRODUCTION) {
+        log.warn('[Session] WARNING: No session store configured in production. The default MemoryStore leaks memory and loses sessions on restart. Use connect-redis, connect-mongo, or another production store.');
     }
 
     const secureDefaults: Partial<SessionOptions> = {
@@ -95,7 +114,7 @@ export function createSession(options: SessionOptions): RequestHandler {
         cookie: {
             httpOnly: true,
             sameSite: 'lax',
-            secure: process.env['NODE_ENV'] === 'production',
+            secure: process.env['NODE_ENV'] === E_Environment.PRODUCTION,
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
         },
     };
@@ -115,6 +134,12 @@ export function createSession(options: SessionOptions): RequestHandler {
  * - URL-encoded body parsing for form data
  * - Compression for response optimization
  * - User agent parsing for device/browser detection
+ * - Rate limiting (configurable, default 1000 req/15min)
+ *
+ * @remarks
+ * **Rate limit store:** The default `MemoryStore` is only suitable for single-process
+ * deployments. For multi-process or clustered environments, configure a shared store
+ * (e.g., `rate-limit-redis`, `rate-limit-mongo`) via `rateLimitOptions.store`.
  *
  * @param app - The Express application instance to configure with middleware.
  * @param isDev - Whether the application is running in development mode.

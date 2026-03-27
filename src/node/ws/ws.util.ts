@@ -8,10 +8,19 @@ import { WebSocketServer } from 'ws';
 
 import type { I_AuthenticatedRequest, I_GraphqlWSOptions, I_WSOptions } from './ws.type.js';
 
+import { log } from '../log/index.js';
+
 /**
  * Creates a WebSocket server with the specified configuration.
  * This function creates a WebSocket server instance that can be attached to an HTTP server
  * and configured with a specific path for WebSocket connections.
+ *
+ * @remarks
+ * **Authentication Warning:** When `sessionParser` is not provided, the WebSocket server
+ * has **no session-based authentication**. Any client that can reach the endpoint can
+ * establish a connection. Only omit `sessionParser` for truly public WebSocket endpoints
+ * (e.g., health-check or anonymous broadcast channels). For authenticated subscriptions,
+ * always provide a `sessionParser` to validate sessions on upgrade.
  *
  * @param options - Configuration options including the HTTP server instance and WebSocket path.
  * @returns A configured WebSocket server instance ready to handle connections.
@@ -43,12 +52,15 @@ export function createWSServer(options: I_WSOptions): WebSocketServer {
                 });
             }
             catch {
+                /* Intentionally empty — destroy socket on any URL parsing or session error */
                 socket.destroy();
             }
         });
 
         return wss;
     }
+
+    log.warn(`[WS] Creating unauthenticated WebSocket at "${path}". No sessionParser provided — any client can connect. Provide a sessionParser for authenticated endpoints.`);
 
     return new WebSocketServer({ server, path });
 }

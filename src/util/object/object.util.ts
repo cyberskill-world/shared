@@ -12,6 +12,7 @@ export function isJSON(str: string): boolean {
         return true;
     }
     catch {
+        /* Intentionally empty — invalid JSON returns false */
         return false;
     }
 }
