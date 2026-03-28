@@ -11,3 +11,9 @@ export const MONGO_MIGRATE_OPTIONS = 'MONGO_MIGRATE_OPTIONS';
  * before giving up and returning a fallback slug.
  */
 export const MONGO_SLUG_MAX_ATTEMPTS = 100;
+
+/**
+ * Default maxTimeMS for MongoDB queries.
+ * This constant defines the default maximum execution time for MongoDB queries.
+ */
+export const MONGO_MAX_TIME_MS = 30_000;
