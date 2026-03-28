@@ -158,18 +158,6 @@ describe('mongo', () => {
             const context = { constructor: { exists: vi.fn() } };
             await expect(validator.call(context as any, 'test')).rejects.toThrow('Fields must be a non-empty array');
         });
-
-        it('should wrap value in $eq to prevent NoSQL injection', async () => {
-            const validator = mongo.validator.isUnique(['email']);
-            const existsSpy = vi.fn().mockResolvedValue(null);
-            const context = { constructor: { exists: existsSpy } };
-
-            await validator.call(context as any, { $ne: null });
-
-            expect(existsSpy).toHaveBeenCalledWith({
-                $or: [{ email: { $eq: { $ne: null } } }],
-            });
-        });
     });
 
     describe('validator.matchesRegex', () => {

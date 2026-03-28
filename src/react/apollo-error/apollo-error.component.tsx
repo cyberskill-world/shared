@@ -73,7 +73,7 @@ export function ApolloErrorComponent() {
             return;
 
         if (event.shiftKey) {
-            if (document.activeElement === firstElement || document.activeElement === dialogRef.current) {
+            if (document.activeElement === firstElement) {
                 event.preventDefault();
                 lastElement.focus();
             }

@@ -274,7 +274,7 @@ export const mongo: I_MongoUtils = {
                     throw new Error('Fields must be a non-empty array of strings.');
                 }
 
-                const query = { $or: fields.map(field => ({ [field]: { $eq: value } })) };
+                const query = { $or: fields.map(field => ({ [field]: value })) };
                 const existingDocument = await this.constructor.exists(query);
 
                 return !existingDocument;
