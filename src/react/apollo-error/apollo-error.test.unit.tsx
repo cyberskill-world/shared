@@ -129,6 +129,26 @@ describe('ApolloErrorComponent', () => {
         expect(document.activeElement).toBe(lastButton);
     });
 
+    it('traps focus within the dialog on Shift+Tab key from dialog itself', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        render(
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext>,
+        );
+
+        const dialog = screen.getByRole('dialog');
+        const buttons = screen.getAllByRole('button');
+        const lastButton = buttons.at(-1)!;
+
+        // Focus the dialog itself (initial state)
+        dialog.focus();
+        fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
+        expect(document.activeElement).toBe(lastButton);
+    });
+
     it('returns focus to the previously focused element when dialog closes', () => {
         const mockHideError = vi.fn();
         const mockError = { message: 'Test Error' };
