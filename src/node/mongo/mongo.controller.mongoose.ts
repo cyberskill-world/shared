@@ -8,7 +8,7 @@ import { generateRandomString, generateShortId, generateSlug } from '#util/strin
 import type { C_Document, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_ExtendedModel, I_Input_CheckSlug, I_Input_CreateSlug, I_Input_GenerateSlug, I_PaginateOptionsWithPopulate, I_UpdateOptionsExtended, T_AggregatePaginateResult, T_DeleteResult, T_Input_Populate, T_InsertManyOptions, T_PaginateResult, T_PipelineStage, T_PopulateOptions, T_ProjectionType, T_QueryFilter, T_QueryOptions, T_UpdateQuery, T_UpdateResult } from './mongo.type.js';
 
 import { catchError, log } from '../log/index.js';
-import { MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
+import { MONGO_MAX_TIME_MS, MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
 import { filterDynamicVirtualsFromPopulate, populateDynamicVirtuals } from './mongo.dynamic-populate.js';
 /**
  * Converts a Mongoose document to a plain object, handling the case where
@@ -133,7 +133,7 @@ export class MongooseController<T extends Partial<C_Document>> {
     ): Promise<I_Return<T>> {
         try {
             const normalizedFilter = normalizeMongoFilter(filter);
-            const query = this.model.findOne(normalizedFilter, projection, options).maxTimeMS(30_000).lean();
+            const query = this.model.findOne(normalizedFilter, projection, options).maxTimeMS(MONGO_MAX_TIME_MS).lean();
             const dynamicVirtuals = this.getDynamicVirtuals();
 
             const regularPopulate = filterDynamicVirtualsFromPopulate(populate, dynamicVirtuals);
@@ -179,7 +179,7 @@ export class MongooseController<T extends Partial<C_Document>> {
     ): Promise<I_Return<T[]>> {
         try {
             const normalizedFilter = normalizeMongoFilter(filter);
-            const query = this.model.find(normalizedFilter, projection, options).maxTimeMS(30_000).lean();
+            const query = this.model.find(normalizedFilter, projection, options).maxTimeMS(MONGO_MAX_TIME_MS).lean();
 
             if (!options.limit) {
                 query.limit(this.defaultLimit);
