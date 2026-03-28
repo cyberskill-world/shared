@@ -129,7 +129,7 @@ describe('ApolloErrorComponent', () => {
         expect(document.activeElement).toBe(lastButton);
     });
 
-    it('traps focus within the dialog on Shift+Tab key from dialog itself', () => {
+    it('wraps focus to last focusable element when Shift+Tab is pressed on the dialog container', () => {
         const mockHideError = vi.fn();
         const mockError = { message: 'Test Error' };
 
@@ -143,8 +143,11 @@ describe('ApolloErrorComponent', () => {
         const buttons = screen.getAllByRole('button');
         const lastButton = buttons.at(-1)!;
 
-        // Focus the dialog itself (initial state)
+        // Ensure the dialog container has focus (it is focused programmatically on open)
         dialog.focus();
+        expect(document.activeElement).toBe(dialog);
+
+        // Simulate Shift+Tab from the dialog container — focus should wrap to last focusable element
         fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
         expect(document.activeElement).toBe(lastButton);
     });

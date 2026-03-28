@@ -45,4 +45,40 @@ describe('serializer', () => {
         expect(typeof result).toBe('bigint');
         expect(result).toBe(bigint);
     });
+
+    it('should serialize and deserialize a nested structure with mixed special types', () => {
+        const date = new Date('2023-06-15T12:00:00.000Z');
+        const nested = {
+            name: 'test',
+            timestamp: date,
+            lookup: new Map<string, number>([['x', 10], ['y', 20]]),
+            tags: new Set(['a', 'b']),
+            pattern: /hello/gi,
+            bigNum: BigInt(9007199254740993),
+            items: [
+                { key: new Map([['nested', true]]) },
+                new Set([BigInt(1), BigInt(2)]),
+            ],
+        };
+        const json = serializer.serialize(nested);
+        const result = serializer.deserialize(json) as typeof nested;
+        expect(result.name).toBe('test');
+        expect(result.timestamp).toBeInstanceOf(Date);
+        expect((result.timestamp as unknown as Date).toISOString()).toBe(date.toISOString());
+        expect(result.lookup).toBeInstanceOf(Map);
+        expect((result.lookup as unknown as Map<string, number>).get('x')).toBe(10);
+        expect(result.tags).toBeInstanceOf(Set);
+        expect((result.tags as unknown as Set<string>).has('b')).toBe(true);
+        expect(result.pattern).toBeInstanceOf(RegExp);
+        expect((result.pattern as unknown as RegExp).source).toBe('hello');
+        expect((result.pattern as unknown as RegExp).flags).toBe('gi');
+        expect(typeof result.bigNum).toBe('bigint');
+        expect(result.bigNum).toBe(BigInt(9007199254740993));
+        const firstItem = (result.items as unknown[])[0] as { key: Map<string, boolean> };
+        expect(firstItem.key).toBeInstanceOf(Map);
+        expect(firstItem.key.get('nested')).toBe(true);
+        const secondItem = (result.items as unknown[])[1] as Set<bigint>;
+        expect(secondItem).toBeInstanceOf(Set);
+        expect(secondItem.has(BigInt(1))).toBe(true);
+    });
 });
