@@ -35,26 +35,28 @@ export const serializer: I_Serializer<unknown> = {
      */
     serialize(value) {
         return JSON.stringify(value, function (this: any, _key, val) {
+            // Date#toJSON fires before the replacer, converting a Date to an ISO string.
+            // We must read this[_key] to detect the original Date object.
             const originalValue = this[_key];
+            if (originalValue instanceof Date) {
+                return { __type: 'Date', value: originalValue.toISOString() };
+            }
 
-            // Direct inline type checking and formatting is significantly faster than
-            // dynamic lookups or generic wrapper abstraction objects.
-            if (originalValue !== null && typeof originalValue === 'object') {
-                if (originalValue instanceof Date) {
-                    return { __type: 'Date', value: originalValue.toISOString() };
+            // For all other special types, val is already the original value
+            // (they have no toJSON), so use val directly to avoid the extra property access.
+            if (val !== null && typeof val === 'object') {
+                if (val instanceof Map) {
+                    return { __type: 'Map', value: Array.from(val.entries()) };
                 }
-                if (originalValue instanceof Map) {
-                    return { __type: 'Map', value: Array.from(originalValue.entries()) };
+                if (val instanceof Set) {
+                    return { __type: 'Set', value: Array.from(val) };
                 }
-                if (originalValue instanceof Set) {
-                    return { __type: 'Set', value: Array.from(originalValue) };
-                }
-                if (originalValue instanceof RegExp) {
-                    return { __type: 'RegExp', value: { source: originalValue.source, flags: originalValue.flags } };
+                if (val instanceof RegExp) {
+                    return { __type: 'RegExp', value: { source: val.source, flags: val.flags } };
                 }
             }
-            else if (typeof originalValue === 'bigint') {
-                return { __type: 'BigInt', value: originalValue.toString() };
+            else if (typeof val === 'bigint') {
+                return { __type: 'BigInt', value: val.toString() };
             }
 
             return val;
