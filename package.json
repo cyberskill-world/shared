@@ -337,7 +337,8 @@
     },
     "pnpm": {
         "overrides": {
-            "minimatch": ">=10.2.4"
+            "minimatch": ">=10.2.4",
+            "path-to-regexp": ">=8.4.0"
         }
     }
 }
