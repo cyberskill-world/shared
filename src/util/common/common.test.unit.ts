@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { E_Environment } from '#typescript/index.js';
 
-import { escapeRegExp, mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
+import { escapeRegExp, isObject, isPlainObject, mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
+
+const RE_TEST = /regex/;
 
 describe('regexSearchMapper', () => {
     it('should create regex pattern for accented characters', () => {
@@ -85,5 +87,76 @@ describe('mapEnvironment', () => {
     it('should throw error for invalid production config', () => {
         const env = { NODE_ENV: E_Environment.PRODUCTION, NODE_ENV_MODE: E_Environment.DEVELOPMENT };
         expect(() => mapEnvironment(env)).toThrow();
+    });
+
+    it('should default to development when no env vars provided', () => {
+        expect(mapEnvironment({})).toEqual({ IS_DEV: true, IS_STAG: false, IS_PROD: false });
+    });
+});
+
+describe('isObject', () => {
+    it('should return true for plain objects', () => {
+        expect(isObject({})).toBe(true);
+    });
+
+    it('should return true for arrays', () => {
+        expect(isObject([])).toBe(true);
+    });
+
+    it('should return true for Date instances', () => {
+        expect(isObject(new Date())).toBe(true);
+    });
+
+    it('should return true for Map instances', () => {
+        expect(isObject(new Map())).toBe(true);
+    });
+
+    it('should return false for null', () => {
+        expect(isObject(null)).toBe(false);
+    });
+
+    it('should return false for undefined', () => {
+        expect(isObject(undefined)).toBe(false);
+    });
+
+    it('should return false for primitives', () => {
+        expect(isObject(42)).toBe(false);
+        expect(isObject('string')).toBe(false);
+        expect(isObject(true)).toBe(false);
+    });
+});
+
+describe('isPlainObject', () => {
+    it('should return true for literal objects', () => {
+        expect(isPlainObject({})).toBe(true);
+        expect(isPlainObject({ a: 1 })).toBe(true);
+    });
+
+    it('should return true for Object.create(null)', () => {
+        expect(isPlainObject(Object.create(null))).toBe(true);
+    });
+
+    it('should return false for arrays', () => {
+        expect(isPlainObject([])).toBe(false);
+    });
+
+    it('should return false for class instances', () => {
+        expect(isPlainObject(new Date())).toBe(false);
+        expect(isPlainObject(new Map())).toBe(false);
+        expect(isPlainObject(new Set())).toBe(false);
+        expect(isPlainObject(RE_TEST)).toBe(false);
+    });
+
+    it('should return false for null', () => {
+        expect(isPlainObject(null)).toBe(false);
+    });
+
+    it('should return false for undefined', () => {
+        expect(isPlainObject(undefined)).toBe(false);
+    });
+
+    it('should return false for primitives', () => {
+        expect(isPlainObject(42)).toBe(false);
+        expect(isPlainObject('string')).toBe(false);
     });
 });

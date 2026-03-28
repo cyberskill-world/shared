@@ -12,6 +12,12 @@ interface NodeFsDriverState {
     baseDir: string;
 }
 
+interface I_StorageEnvelope<T> {
+    __isTtlEnvelope: true;
+    expiresAt?: number;
+    value: T;
+}
+
 const nodeFsDriverState: NodeFsDriverState = {
     baseDir: '',
 };
@@ -89,15 +95,15 @@ const fsDriver = {
             }
             await fs.rename(freshDir, baseDir);
             // Clean up trash in the background (non-blocking)
-            fs.rm(trashDir, { recursive: true, force: true }).catch(() => {});
+            fs.rm(trashDir, { recursive: true, force: true }).catch(() => { });
         }
         catch {
             // Fallback: non-atomic clear (e.g., cross-device rename)
             await fs.rm(baseDir, { recursive: true, force: true });
             await fs.mkdir(baseDir, { recursive: true });
             // Clean up any leftover temp dirs
-            fs.rm(freshDir, { recursive: true, force: true }).catch(() => {});
-            fs.rm(trashDir, { recursive: true, force: true }).catch(() => {});
+            fs.rm(freshDir, { recursive: true, force: true }).catch(() => { });
+            fs.rm(trashDir, { recursive: true, force: true }).catch(() => { });
         }
     },
     /** Reads and parses a stored value; returns null when the file is missing. */
@@ -193,9 +199,25 @@ export const storage = {
     async get<T = unknown>(key: string): Promise<T | null> {
         try {
             const driver = await ensureDriverReady();
-            const result = await driver.getItem<T>(key);
+            const result = await driver.getItem<unknown>(key);
 
-            return result ?? null;
+            if (result === null) {
+                return null;
+            }
+
+            if (typeof result === 'object' && result !== null && '__isTtlEnvelope' in result) {
+                const envelope = result as I_StorageEnvelope<T>;
+
+                if (envelope.expiresAt && Date.now() > envelope.expiresAt) {
+                    driver.removeItem(key).catch(() => { });
+
+                    return null;
+                }
+
+                return envelope.value;
+            }
+
+            return result as T;
         }
         catch (error) {
             return catchError(error, { returnValue: null });
@@ -208,13 +230,25 @@ export const storage = {
      *
      * @param key - The unique identifier for the value to store.
      * @param value - The data to store (will be automatically serialized).
+     * @param options - Optional settings, such as `ttlMs` for setting an expiration on the key.
+     * @param options.ttlMs - The time-to-live in milliseconds.
      * @returns A promise that resolves when the storage operation is complete.
      */
-    async set<T = unknown>(key: string, value: T): Promise<void> {
+    async set<T = unknown>(key: string, value: T, options?: { ttlMs?: number }): Promise<void> {
         try {
             const driver = await ensureDriverReady();
 
-            await driver.setItem(key, value);
+            let payloadToStore: unknown = value;
+
+            if (options?.ttlMs) {
+                payloadToStore = {
+                    __isTtlEnvelope: true,
+                    expiresAt: Date.now() + options.ttlMs,
+                    value,
+                } as I_StorageEnvelope<T>;
+            }
+
+            await driver.setItem(key, payloadToStore);
         }
         catch (error) {
             catchError(error);
@@ -279,13 +313,33 @@ export const storage = {
             return catchError(error, { returnValue: null });
         }
     },
+    /**
+     * Retrieves a value from persistent storage, or creates and stores it if it doesn't exist.
+     * This method combines check, creation, and storage into a single convenient operation.
+     *
+     * @param key - The unique identifier for the value.
+     * @param factory - A function (sync or async) that generates the value if it's missing or expired.
+     * @param options - Optional storage options.
+     * @param options.ttlMs - The time-to-live in milliseconds.
+     * @returns A promise that resolves to the retrieved or newly created value.
+     */
+    async getOrSet<T = unknown>(key: string, factory: () => T | Promise<T>, options?: { ttlMs?: number }): Promise<T> {
+        let value = await this.get<T>(key);
 
+        if (value === null) {
+            value = await factory();
+            await this.set(key, value, options);
+        }
+
+        return value;
+    },
 };
 
 /**
  * Resets all module-level singleton state used by the storage module.
  * Intended for use in tests to ensure isolation between test cases.
  * Do NOT call this in production code.
+ * @since 3.13.0
  */
 export function resetStorageForTesting(): void {
     initPromise = null;

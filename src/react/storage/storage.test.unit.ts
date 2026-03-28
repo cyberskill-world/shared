@@ -105,4 +105,49 @@ describe('storage', () => {
             expect(result).toEqual([]);
         });
     });
+
+    describe('ttlMs and getOrSet', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should store wrapped value and return it if not expired', async () => {
+            await storage.set('ttl-key', 'ttl-value', { ttlMs: 100 });
+            let result = await storage.get<string>('ttl-key');
+            expect(result).toBe('ttl-value');
+
+            vi.advanceTimersByTime(150);
+
+            result = await storage.get<string>('ttl-key');
+            expect(result).toBeNull();
+            expect(localStorage.removeItem).toHaveBeenCalledWith('ttl-key');
+        });
+
+        it('should return existing value directly in getOrSet', async () => {
+            await storage.set('gor-exist', 'existing');
+            const factory = vi.fn(async () => 'new-value');
+
+            const result = await storage.getOrSet('gor-exist', factory);
+            expect(result).toBe('existing');
+            expect(factory).not.toHaveBeenCalled();
+        });
+
+        it('should invoke factory when value is missing', async () => {
+            const factory = vi.fn(async () => 'computed-value');
+
+            const result = await storage.getOrSet('gor-missing', factory, { ttlMs: 100 });
+            expect(result).toBe('computed-value');
+            expect(factory).toHaveBeenCalledOnce();
+
+            const raw = mockStore['gor-missing'];
+            expect(raw).toBeDefined();
+            const stored = JSON.parse(raw as string);
+            expect(stored.__isTtlEnvelope).toBe(true);
+            expect(stored.value).toBe('computed-value');
+        });
+    });
 });

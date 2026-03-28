@@ -35,4 +35,21 @@ export interface I_Log extends I_LogCommon {
         issues: I_IssueEntry[],
         color?: string,
     ) => void;
+    /**
+     * Creates a context-aware logger that prefixes all messages with a correlation ID.
+     * Useful for distributed tracing across CyberSkill services.
+     *
+     * @param correlationId - A UUID correlation ID. If not provided, a new UUID is generated.
+     * @returns A logger with standard methods that prefix output with the correlation ID.
+     */
+    withContext: (correlationId?: string) => {
+        correlationId: string;
+        fatal: (...args: unknown[]) => void;
+        error: (...args: unknown[]) => void;
+        warn: (...args: unknown[]) => void;
+        log: (...args: unknown[]) => void;
+        info: (...args: unknown[]) => void;
+        success: (...args: unknown[]) => void;
+        debug: (...args: unknown[]) => void;
+    };
 }

@@ -3,6 +3,7 @@ import type { ChalkInstance } from 'chalk';
 import chalk from 'chalk';
 import consola from 'consola';
 import { GraphQLError } from 'graphql';
+import { randomUUID } from 'node:crypto';
 
 import type { I_Return } from '#typescript/index.js';
 
@@ -125,6 +126,32 @@ export const log: I_Log = {
         consola.box(chalkKeyword(color)(`${title} : ${issues.length}`));
 
         consola.log(chalk.gray('─'.repeat(40)));
+    },
+    /**
+     * Creates a context-aware logger that prefixes all messages with a correlation ID.
+     * Useful for distributed tracing across CyberSkill services.
+     *
+     * @param correlationId - A UUID correlation ID. If not provided, a new UUID is generated.
+     * @returns A logger object with all standard methods that prefix output with the correlation ID.
+     */
+    withContext(correlationId?: string) {
+        const id = correlationId ?? randomUUID();
+        const prefix = chalk.gray(`[${id}]`);
+
+        const withPrefix = (fn: (...args: unknown[]) => void) => {
+            return (...args: unknown[]) => fn(prefix, ...args);
+        };
+
+        return {
+            correlationId: id,
+            fatal: withPrefix(consola.fatal),
+            error: withPrefix(consola.error),
+            warn: withPrefix(consola.warn),
+            log: withPrefix(consola.log),
+            info: withPrefix(consola.info),
+            success: withPrefix(consola.success),
+            debug: withPrefix(consola.debug),
+        };
     },
 };
 

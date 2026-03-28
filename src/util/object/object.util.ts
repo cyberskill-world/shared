@@ -260,11 +260,14 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                 }
 
                 const obj = arg as Record<string, unknown>;
+
                 for (const key in obj) {
                     if (Object.hasOwn(obj, key)) {
                         const value = obj[key];
+
                         if (Object.hasOwn(result, key)) {
                             const existingValue = result[key];
+
                             if (
                                 typeof value === 'object' && value !== null
                                 && typeof existingValue === 'object' && existingValue !== null
@@ -276,7 +279,7 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                                     result[key] = mergeRecursive(
                                         [existingValue as Record<string, unknown>, value as Record<string, unknown>],
                                         depth + 1,
-                                        new WeakSet<object>(),
+                                        seen,
                                     );
                                 }
                                 else {
@@ -294,6 +297,7 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                     }
                 }
             }
+
             return result;
         }
 
@@ -354,16 +358,39 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
         return filter;
     }
 
+    let isFlat = true;
+
+    for (const key in filter) {
+        if (!Object.hasOwn(filter, key)) {
+            continue;
+        }
+        const value = filter[key];
+
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+            isFlat = false;
+            break;
+        }
+    }
+
+    if (isFlat) {
+        return filter;
+    }
+
     const normalized: Record<string, unknown> = {};
+    const MAX_DEPTH = 10;
 
     /**
      * Recursively flattens nested objects into dot-notation keys, preserving MongoDB operators.
      */
-    function flatten(current: Record<string, unknown>, prefix: string) {
-        for (const key in current) {
-            if (!Object.hasOwn(current, key))
-                continue;
+    function flatten(current: Record<string, unknown>, prefix: string, depth: number) {
+        if (depth > MAX_DEPTH) {
+            throw new Error(`normalizeMongoFilter: Maximum depth of ${MAX_DEPTH} exceeded. Possible circular reference or excessively nested filter.`);
+        }
 
+        for (const key in current) {
+            if (!Object.hasOwn(current, key)) {
+                continue;
+            }
             const value = current[key];
             const newKey = prefix ? `${prefix}.${key}` : key;
 
@@ -381,6 +408,7 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
 
                 // Check for Mongo operator
                 let hasMongoOperator = false;
+
                 for (const subKey in value as Record<string, unknown>) {
                     if (Object.hasOwn(value, subKey) && subKey.startsWith('$')) {
                         hasMongoOperator = true;
@@ -392,7 +420,7 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
                     normalized[newKey] = value;
                 }
                 else {
-                    flatten(value as Record<string, unknown>, newKey);
+                    flatten(value as Record<string, unknown>, newKey, depth + 1);
                 }
             }
             else {
@@ -401,7 +429,7 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
         }
     }
 
-    flatten(filter, '');
+    flatten(filter, '', 0);
 
     return normalized as T;
 }

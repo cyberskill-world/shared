@@ -2,7 +2,7 @@ import fsExtra from 'fs-extra';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import process from 'node:process';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
 
 // Set env BEFORE importing storage module (module-level getEnv call)
 const testDir = fsExtra.mkdtempSync(join(tmpdir(), 'storage-test-'));
@@ -42,6 +42,63 @@ describe('storage.set & storage.get', () => {
         await storage.set('overwrite-key', 'second');
         const result = await storage.get<string>('overwrite-key');
         expect(result).toBe('second');
+    });
+
+    it('should respect ttlMs parameter and expire keys', async () => {
+        vi.useFakeTimers();
+        try {
+            await storage.set('ttl-key', 'ttl-value', { ttlMs: 100 });
+            let result = await storage.get<string>('ttl-key');
+            expect(result).toBe('ttl-value');
+
+            // Advance time past TTL
+            vi.advanceTimersByTime(150);
+
+            result = await storage.get<string>('ttl-key');
+            expect(result).toBeNull();
+        }
+        finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+describe('storage.getOrSet', () => {
+    it('should return existing value if present', async () => {
+        await storage.set('gor-exist', 'initial');
+        const factory = vi.fn(async () => 'factory-value');
+        const result = await storage.getOrSet('gor-exist', factory);
+
+        expect(result).toBe('initial');
+        expect(factory).not.toHaveBeenCalled();
+    });
+
+    it('should call factory and store if missing', async () => {
+        await storage.remove('gor-missing');
+        const factory = vi.fn(async () => 'computed-value');
+        const result = await storage.getOrSet('gor-missing', factory);
+
+        expect(result).toBe('computed-value');
+        expect(factory).toHaveBeenCalledOnce();
+
+        const stored = await storage.get<string>('gor-missing');
+        expect(stored).toBe('computed-value');
+    });
+
+    it('should apply ttlMs to newly created values', async () => {
+        vi.useFakeTimers();
+        try {
+            const factory = async () => 'temporal-value';
+            const result = await storage.getOrSet('gor-ttl', factory, { ttlMs: 100 });
+            expect(result).toBe('temporal-value');
+
+            vi.advanceTimersByTime(150);
+            const expired = await storage.get('gor-ttl');
+            expect(expired).toBeNull();
+        }
+        finally {
+            vi.useRealTimers();
+        }
     });
 });
 

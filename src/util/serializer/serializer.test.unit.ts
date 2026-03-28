@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { serializer } from './serializer.util.js';
 
 const RE_ABC_I = /abc/i;
+const RE_HELLO_GI = /hello/gi;
+const BIGINT_OVER_MAX_SAFE = BigInt('9007199254740993');
 
 describe('serializer', () => {
     it('should serialize and deserialize Map', () => {
@@ -53,8 +55,8 @@ describe('serializer', () => {
             timestamp: date,
             lookup: new Map<string, number>([['x', 10], ['y', 20]]),
             tags: new Set(['a', 'b']),
-            pattern: /hello/gi,
-            bigNum: BigInt(9007199254740993),
+            pattern: RE_HELLO_GI,
+            bigNum: BIGINT_OVER_MAX_SAFE,
             items: [
                 { key: new Map([['nested', true]]) },
                 new Set([BigInt(1), BigInt(2)]),
@@ -73,7 +75,7 @@ describe('serializer', () => {
         expect((result.pattern as unknown as RegExp).source).toBe('hello');
         expect((result.pattern as unknown as RegExp).flags).toBe('gi');
         expect(typeof result.bigNum).toBe('bigint');
-        expect(result.bigNum).toBe(BigInt(9007199254740993));
+        expect(result.bigNum).toBe(BIGINT_OVER_MAX_SAFE);
         const firstItem = (result.items as unknown[])[0] as { key: Map<string, boolean> };
         expect(firstItem.key).toBeInstanceOf(Map);
         expect(firstItem.key.get('nested')).toBe(true);

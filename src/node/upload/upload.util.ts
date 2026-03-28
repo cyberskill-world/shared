@@ -10,6 +10,7 @@ import { RESPONSE_STATUS } from '#constant/index.js';
 import type { I_UploadConfig, I_UploadFile, I_UploadFileData, I_UploadOptions, I_UploadTypeConfig, I_UploadValidationConfig } from './upload.type.js';
 
 import { createWriteStream, mkdirSync, pathExistsSync } from '../fs/index.js';
+import { log } from '../log/index.js';
 import { dirname } from '../path/index.js';
 import { BYTES_PER_MB, DEFAULT_UPLOAD_CONFIG } from './upload.constant.js';
 import { E_UploadType } from './upload.type.js';
@@ -56,7 +57,7 @@ export async function getAndValidateFile(type: E_UploadType, file: I_UploadFile,
     const uploadConfig = config ?? createUploadConfig();
 
     const validationResult = validateUpload(
-        { filename: fileData.filename, fileSize },
+        { filename: fileData.filename, fileSize, mimetype: fileData.mimetype },
         uploadConfig,
         type,
     );
@@ -171,7 +172,7 @@ export function validateUpload(
     uploadConfig: I_UploadConfig,
     uploadType: E_UploadType,
 ): { isValid: boolean; error?: string } {
-    const { filename, fileSize } = config;
+    const { filename, fileSize, mimetype } = config;
     const typeConfig: I_UploadTypeConfig = uploadConfig[uploadType];
 
     const { allowedExtensions, sizeLimit } = typeConfig;
@@ -192,6 +193,25 @@ export function validateUpload(
         };
     }
 
+    if (mimetype) {
+        let expectedPrefix = '';
+
+        if (uploadType === E_UploadType.IMAGE) {
+            expectedPrefix = 'image/';
+        }
+        else if (uploadType === E_UploadType.VIDEO) {
+            expectedPrefix = 'video/';
+        }
+        else if (uploadType === E_UploadType.AUDIO) {
+            expectedPrefix = 'audio/';
+        }
+
+        if (expectedPrefix && !mimetype.startsWith(expectedPrefix)) {
+            // Advisory MIME validation - log warning but DO NOT reject
+            log.warn(`Advisory Mimetype Warning: File '${filename}' (type: ${uploadType}) has unexpected mimetype '${mimetype}'. Expected prefix: '${expectedPrefix}'`);
+        }
+    }
+
     return { isValid: true };
 }
 
@@ -202,6 +222,7 @@ export function validateUpload(
  *
  * @param overrides - Optional configuration overrides to merge with the default configuration.
  * @returns A complete upload configuration object with defaults and any provided overrides.
+ * @since 3.13.0
  */
 export function createUploadConfig(overrides?: Partial<I_UploadConfig>): I_UploadConfig {
     return { ...DEFAULT_UPLOAD_CONFIG, ...overrides };

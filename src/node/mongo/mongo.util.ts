@@ -423,6 +423,7 @@ export const mongo: I_MongoUtils = {
      * @param filter - Optional filter to narrow the query
      * @returns Array of existing records that match the filter criteria
      * @throws {Error} When the database query fails — prevents silent data inconsistency.
+     * @since 3.13.0
      */
     async getExistingRecords<T extends I_GenericDocument>(
         controller: MongoController<T>,

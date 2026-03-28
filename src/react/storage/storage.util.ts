@@ -1,5 +1,11 @@
 import { catchError } from '../log/index.js';
 
+interface I_StorageEnvelope<T> {
+    __isTtlEnvelope: true;
+    expiresAt?: number;
+    value: T;
+}
+
 /**
  * Browser storage utility object using native localStorage.
  * This object provides a unified interface for browser storage operations
@@ -23,7 +29,21 @@ export const storage = {
                 return null;
             }
 
-            return JSON.parse(raw) as T;
+            const obj = JSON.parse(raw);
+
+            if (typeof obj === 'object' && obj !== null && '__isTtlEnvelope' in obj) {
+                const envelope = obj as I_StorageEnvelope<T>;
+
+                if (envelope.expiresAt && Date.now() > envelope.expiresAt) {
+                    localStorage.removeItem(key);
+
+                    return null;
+                }
+
+                return envelope.value;
+            }
+
+            return obj as T;
         }
         catch (error) {
             return catchError(error, { returnValue: null });
@@ -36,11 +56,23 @@ export const storage = {
      *
      * @param key - The unique identifier for the value to store.
      * @param value - The data to store (will be automatically serialized to JSON).
+     * @param options - Optional settings.
+     * @param options.ttlMs - The time-to-live in milliseconds.
      * @returns A promise that resolves when the storage operation is complete.
      */
-    async set<T = unknown>(key: string, value: T): Promise<void> {
+    async set<T = unknown>(key: string, value: T, options?: { ttlMs?: number }): Promise<void> {
         try {
-            localStorage.setItem(key, JSON.stringify(value));
+            let payloadToStore: unknown = value;
+
+            if (options?.ttlMs) {
+                payloadToStore = {
+                    __isTtlEnvelope: true,
+                    expiresAt: Date.now() + options.ttlMs,
+                    value,
+                } as I_StorageEnvelope<T>;
+            }
+
+            localStorage.setItem(key, JSON.stringify(payloadToStore));
         }
         catch (error) {
             catchError(error);
@@ -86,5 +118,25 @@ export const storage = {
         catch (error) {
             return catchError(error, { returnValue: [] });
         }
+    },
+    /**
+     * Retrieves a value from browser storage, or creates and stores it if it doesn't exist.
+     * This method combines check, creation, and storage into a single convenient operation.
+     *
+     * @param key - The unique identifier for the value.
+     * @param factory - A function (sync or async) that generates the value if it's missing or expired.
+     * @param options - Optional storage options.
+     * @param options.ttlMs - The time-to-live in milliseconds.
+     * @returns A promise that resolves to the retrieved or newly created value.
+     */
+    async getOrSet<T = unknown>(key: string, factory: () => T | Promise<T>, options?: { ttlMs?: number }): Promise<T> {
+        let value = await this.get<T>(key);
+
+        if (value === null) {
+            value = await factory();
+            await this.set(key, value, options);
+        }
+
+        return value;
     },
 };

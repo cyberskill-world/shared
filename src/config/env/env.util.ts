@@ -19,6 +19,12 @@ import { CYBERSKILL_STORAGE_DIRECTORY } from './env.constant.js';
 let isEnvFileLoaded = false;
 
 /**
+ * Cached environment object to avoid redundant validation on every getEnv() call.
+ * Reset via resetEnvForTesting() in test environments.
+ */
+let _cachedEnv: I_Environment | null = null;
+
+/**
  * Custom validator for debug environment variable.
  * This validator accepts boolean values directly and converts string values
  * to true, providing flexible debug configuration options. It handles
@@ -72,6 +78,10 @@ export function loadEnvFile() {
  * @returns A validated environment object with all required configuration values.
  */
 export function getEnv(): I_Environment {
+    if (_cachedEnv) {
+        return _cachedEnv;
+    }
+
     loadEnvFile();
 
     const cleanedEnv = cleanEnv(process.env, {
@@ -86,5 +96,16 @@ export function getEnv(): I_Environment {
         CYBERSKILL_STORAGE_DIRECTORY: cleanedEnv.CYBERSKILL_STORAGE_DIRECTORY,
     };
 
+    _cachedEnv = env;
+
     return env;
+}
+
+/**
+ * Resets the cached environment object. For testing only.
+ * Call this to force `getEnv()` to re-read and re-validate `process.env`.
+ */
+export function resetEnvForTesting(): void {
+    _cachedEnv = null;
+    isEnvFileLoaded = false;
 }

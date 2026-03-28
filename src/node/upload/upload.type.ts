@@ -9,6 +9,7 @@ export enum E_UploadType {
 export interface I_UploadValidationConfig {
     filename: string;
     fileSize?: number;
+    mimetype?: string;
 }
 
 export interface I_UploadTypeConfig {
@@ -27,6 +28,7 @@ export interface I_UploadConfig {
 export interface I_UploadFileData {
     createReadStream: () => NodeJS.ReadableStream;
     filename: string;
+    mimetype?: string;
 }
 
 export interface I_UploadFile {

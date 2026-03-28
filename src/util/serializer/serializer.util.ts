@@ -2,6 +2,8 @@ import type {
     I_Serializer,
 } from './serializer.type.js';
 
+const ALLOWED_TYPES = new Set(['Date', 'Map', 'Set', 'RegExp', 'BigInt']);
+
 /**
  * A serializer that can handle complex JavaScript types that cannot be directly JSON stringified.
  * This serializer extends JSON.stringify and JSON.parse to handle types like Date, Map, Set, RegExp, and BigInt.
@@ -18,6 +20,9 @@ import type {
  * - Set → `{ __type: 'Set', value: [1, 2, 3] }`
  * - RegExp → `{ __type: 'RegExp', value: { source: '...', flags: '...' } }`
  * - BigInt → `{ __type: 'BigInt', value: '12345' }`
+ *
+ * **Security:** Only types in the `ALLOWED_TYPES` allowlist are reconstructed during
+ * deserialization. Unknown `__type` values are returned as-is to prevent prototype pollution.
  *
  * **Cross-service compatibility:** Any service that deserializes data produced by this serializer
  * must use the same `__type` protocol. Plain `JSON.parse` will return the wrapper objects as-is
@@ -67,6 +72,7 @@ export const serializer: I_Serializer<unknown> = {
      * If the value is of a known type (Date, Map, Set, RegExp, BigInt),
      * it will be deserialized using the corresponding handler.
      * Otherwise, it will be deserialized as is.
+     * Unknown `__type` values are ignored (returned as-is) for security.
      *
      * @param json - The JSON string to deserialize back to its original form.
      * @returns The deserialized value with all special types reconstructed.
@@ -75,6 +81,12 @@ export const serializer: I_Serializer<unknown> = {
         return JSON.parse(json, (_key, val) => {
             if (val !== null && typeof val === 'object' && typeof val.__type === 'string') {
                 const type = val.__type;
+
+                // Security: Only reconstruct types in the allowlist
+                if (!ALLOWED_TYPES.has(type)) {
+                    return val;
+                }
+
                 const value = val.value;
 
                 if (type === 'Date') {
