@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
       - name: Env & Deps
-        uses: cyberskill-world/.github/actions/env-deps@main
+        uses: cyberskill-world/.github/actions/env-deps@e4fff023238a4ed6e243e848605d5afea30000cb # main
         with:
           NODE_VERSION: ${{ matrix.NODE_VERSION }}
 
@@ -30,7 +30,7 @@ jobs:
         run: pnpm audit --audit-level=high
 
       - name: Lint
-        uses: cyberskill-world/.github/actions/lint@main
+        uses: cyberskill-world/.github/actions/lint@e4fff023238a4ed6e243e848605d5afea30000cb # main
 
       - name: Build
         run: pnpm build

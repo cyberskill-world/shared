@@ -3,6 +3,7 @@ import type { I_Return } from '#typescript/index.js';
 import type { C_Collection, C_Db, C_Document, T_DeleteResult, T_Filter, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { catchError, log } from '../log/index.js';
+import { MONGO_MAX_TIME_MS } from './mongo.constant.js';
 import { wrapError, wrapNotFound } from './mongo.controller.helpers.js';
 import { mongo } from './mongo.util.js';
 
@@ -102,7 +103,7 @@ export class MongoController<D extends Partial<C_Document>> {
      */
     async findOne(filter: T_Filter<D>): Promise<I_Return<T_WithId<D>>> {
         try {
-            const result = await this.collection.findOne(filter, { maxTimeMS: 30_000 });
+            const result = await this.collection.findOne(filter, { maxTimeMS: MONGO_MAX_TIME_MS });
 
             if (!result) {
                 return wrapNotFound('Document');
@@ -125,7 +126,7 @@ export class MongoController<D extends Partial<C_Document>> {
         filter: T_Filter<D> = {},
     ): Promise<I_Return<T_WithId<D>[]>> {
         try {
-            const result = await this.collection.find(filter).limit(this.defaultLimit).maxTimeMS(30_000).toArray();
+            const result = await this.collection.find(filter).limit(this.defaultLimit).maxTimeMS(MONGO_MAX_TIME_MS).toArray();
 
             const truncated = result.length === this.defaultLimit;
 
