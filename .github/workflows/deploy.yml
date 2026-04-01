@@ -20,10 +20,10 @@ jobs:
           persist-credentials: false
 
       - name: Env & Deps
-        uses: cyberskill-world/.github/actions/env-deps@2453dcc # main
+        uses: cyberskill-world/.github/actions/env-deps@2453dcc49e3e194ddfcfc88da94924acee9a8e1f # main
 
       - name: Build
-        uses: cyberskill-world/.github/actions/build@2453dcc # main
+        uses: cyberskill-world/.github/actions/build@2453dcc49e3e194ddfcfc88da94924acee9a8e1f # main
 
       - name: Generate SBOM
         run: pnpm exec cyclonedx-npm --output-format JSON --output-file bom.json
