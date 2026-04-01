@@ -21,17 +21,17 @@ jobs:
           persist-credentials: false
 
       - name: Rebase
-        uses: cyberskill-world/.github/actions/rebase@a1bdbf0b22b13d5e01c61b952ab907a7bf77d16a # main
+        uses: cyberskill-world/.github/actions/rebase@2453dcc # main
         with:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           FROM: main
           TO: release
 
       - name: Env & Deps
-        uses: cyberskill-world/.github/actions/env-deps@a1bdbf0b22b13d5e01c61b952ab907a7bf77d16a # main
+        uses: cyberskill-world/.github/actions/env-deps@2453dcc # main
 
       - name: Build
-        uses: cyberskill-world/.github/actions/build@a1bdbf0b22b13d5e01c61b952ab907a7bf77d16a # main
+        uses: cyberskill-world/.github/actions/build@2453dcc # main
 
       - name: Resolve Zombie Tag Conflict
         env:
@@ -86,7 +86,7 @@ jobs:
         run: pnpm exec semantic-release
 
       - name: Create PR to main
-        uses: cyberskill-world/.github/actions/create-pr@a1bdbf0b22b13d5e01c61b952ab907a7bf77d16a # main
+        uses: cyberskill-world/.github/actions/create-pr@2453dcc # main
         with:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           FROM: release
