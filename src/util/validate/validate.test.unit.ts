@@ -22,6 +22,27 @@ describe('validate', () => {
             expect(validate.isEmpty({})).toBe(true);
         });
 
+        it('should handle Date objects correctly', () => {
+            expect(validate.isEmpty(new Date())).toBe(false);
+        });
+
+        it('should handle Map and Set correctly', () => {
+            expect(validate.isEmpty(new Map())).toBe(true);
+            expect(validate.isEmpty(new Map([['a', 1]]))).toBe(false);
+            expect(validate.isEmpty(new Set())).toBe(true);
+            expect(validate.isEmpty(new Set(['a']))).toBe(false);
+        });
+
+        it('should handle WeakMap and WeakSet correctly', () => {
+            expect(validate.isEmpty(new WeakMap())).toBe(true);
+            expect(validate.isEmpty(new WeakSet())).toBe(true);
+        });
+
+        it('should handle ArrayBuffer views correctly', () => {
+            expect(validate.isEmpty(new Uint8Array())).toBe(true);
+            expect(validate.isEmpty(new Uint8Array([1, 2, 3]))).toBe(false);
+        });
+
         it('should return false for non-empty values', () => {
             expect(validate.isEmpty('a')).toBe(false);
             expect(validate.isEmpty([1])).toBe(false);

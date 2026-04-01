@@ -107,6 +107,9 @@
             "import": "./dist/node/mongo/index.js",
             "default": "./dist/node/mongo/index.js"
         },
+        "./node/mongo/types": {
+            "types": "./dist/node/mongo/index.d.ts"
+        },
         "./node/package": {
             "types": "./dist/node/package/index.d.ts",
             "import": "./dist/node/package/index.js",

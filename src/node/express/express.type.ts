@@ -12,6 +12,7 @@ export interface I_RateLimitOptions {
     limit?: number;
     store?: Store;
     skip?: (req: import('express').Request) => boolean | Promise<boolean>;
+    keyGenerator?: (req: import('express').Request, res: import('express').Response) => string | Promise<string>;
 }
 
 export interface I_ExpressOptions {

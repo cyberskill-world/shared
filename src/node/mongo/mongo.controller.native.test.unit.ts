@@ -13,6 +13,15 @@ vi.mock('@dotenvx/dotenvx', () => ({
     default: { config: vi.fn() },
 }));
 
+vi.mock('../log/index.js', () => ({
+    catchError: vi.fn((err: any) => ({ success: false, message: err?.message || 'error', code: 500 })),
+    log: {
+        error: vi.fn(),
+        warn: vi.fn(),
+        info: vi.fn(),
+    },
+}));
+
 /** Narrows I_Return to I_ReturnSuccess and asserts success. */
 function expectSuccess<T>(result: { success: boolean }): asserts result is I_ReturnSuccess<T> {
     expect(result.success).toBe(true);

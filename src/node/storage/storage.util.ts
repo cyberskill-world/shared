@@ -12,6 +12,15 @@ interface NodeFsDriverState {
     baseDir: string;
 }
 
+export interface I_StorageDriver {
+    init: (options?: unknown) => Promise<void>;
+    clear: () => Promise<void>;
+    getItem: <T>(key: string) => Promise<T | null>;
+    keys: () => Promise<string[]>;
+    removeItem: (key: string) => Promise<void>;
+    setItem: <T>(key: string, value: T) => Promise<T>;
+}
+
 interface I_StorageEnvelope<T> {
     __isTtlEnvelope: true;
     expiresAt?: number;
@@ -52,11 +61,10 @@ function getFilePath(key: string, baseDir: string): string {
 /**
  * Filesystem-backed storage driver that stores JSON-encoded values on disk.
  * Directly implements all storage operations without any external dependencies.
- * storage operations without the unnecessary browser-oriented dependency.
  */
-const fsDriver = {
+const fsDriver: I_StorageDriver = {
     /** Ensures the storage directory exists. */
-    async init(baseDir?: string) {
+    async init(baseDir?: unknown) {
         try {
             if (typeof baseDir === 'string' && baseDir.length > 0) {
                 nodeFsDriverState.baseDir = baseDir;
@@ -161,25 +169,25 @@ const fsDriver = {
 };
 
 let initPromise: Promise<void> | null = null;
+let activeDriver: I_StorageDriver = fsDriver;
 
 /**
- * Initializes the filesystem storage driver (singleton, idempotent).
- * Ensures the storage directory exists before any read/write operations.
+ * Initializes the storage driver (singleton, idempotent).
  */
-async function ensureDriverReady(): Promise<typeof fsDriver> {
+async function ensureDriverReady(): Promise<I_StorageDriver> {
     if (initPromise) {
         await initPromise;
-        return fsDriver;
+        return activeDriver;
     }
 
-    initPromise = fsDriver.init().catch((error) => {
+    initPromise = activeDriver.init().catch((error) => {
         initPromise = null;
         throw error;
     });
 
     await initPromise;
 
-    return fsDriver;
+    return activeDriver;
 }
 
 /**
@@ -188,6 +196,18 @@ async function ensureDriverReady(): Promise<typeof fsDriver> {
  * with automatic initialization and error handling.
  */
 export const storage = {
+    /**
+     * Initializes the utility with a custom storage driver instead of the default filesystem driver.
+     * This allows swapping to Redis, Memory, or cloud-based drivers.
+     * Must optionally be called before the first read/write operation.
+     *
+     * @param driver - The custom storage driver object that adheres to I_StorageDriver.
+     */
+    async initDriver(driver: I_StorageDriver): Promise<void> {
+        activeDriver = driver;
+        initPromise = null;
+        await ensureDriverReady();
+    },
     /**
      * Retrieves a value from persistent storage by key.
      * This method fetches data that was previously stored using the set method.
@@ -273,6 +293,19 @@ export const storage = {
         }
     },
     /**
+     * Clears all entries from storage atomically.
+     * @returns A promise that resolves when the clearing operation is complete.
+     */
+    async clear(): Promise<void> {
+        try {
+            const driver = await ensureDriverReady();
+            await driver.clear();
+        }
+        catch (error) {
+            catchError(error);
+        }
+    },
+    /**
      * Retrieves all storage keys.
      * This method returns an array of all keys that currently have stored values.
      * Returns an empty array if no keys exist or if an error occurs.
@@ -343,5 +376,6 @@ export const storage = {
  */
 export function resetStorageForTesting(): void {
     initPromise = null;
+    activeDriver = fsDriver;
     nodeFsDriverState.baseDir = '';
 }

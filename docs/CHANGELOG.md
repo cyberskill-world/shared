@@ -10,6 +10,10 @@
 * **express:** fix CORS bypass where `...rest` spread could override `origin`/`credentials` callbacks ([M-3])
 * **express:** add `cookieSecret` option to `I_ExpressOptions` and `I_NestOptions` for signed cookie support ([M-6])
 
+### 🐛 Bug Fixes
+
+* **command:** fix regex evaluation ordering for TS vs. ESLint output parser so that absolute paths don't falsely abort matching
+
 ### ♻️ Refactoring
 
 * **mongo:** replace unsafe `(model as any)._virtualConfigs` with typed intersection `I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals }` ([H-1])
@@ -17,6 +21,9 @@
 
 ### ✨ Features
 
+* **mongo:** implement `bulkWrite` with typing in native controller ([SC-2])
+* **cli:** add usage examples to command help documentation ([DX-1])
+* **typescript:** add `unwrapOrThrow` alias for standard result extraction ([DX-2])
 * **apollo-client:** add `debug?: boolean` option to `I_ApolloOptions`; `roundTripLink` excluded from link chain by default ([M-5])
 * **command:** export `resetCommandCacheForTesting()` for test isolation of `_cachedPackageName` ([L-3])
 
@@ -24,6 +31,23 @@
 
 * **apollo-error:** strengthen SSR warning — explicitly document client-side-only design and cross-request leak risk ([M-2])
 * **serializer:** document ReDoS mitigation and untrusted-input warning in JSDoc ([H-2])
+
+### 🧪 Testing
+
+* **apollo-error:** mock JSDOM location reloads to verify exact component recovery parameters
+* **apollo-server:** add coverage for query depth limiting AST visitor logic and plugin initialization
+* **command:** enhance unit tests to evaluate ESLint/TS text output parsing logic and improve failure path coverage
+* **loading:** capture closure reference to validate `hideLoading` unmount resilience
+* **loading:** add preliminary component-level E2E coverage for global loading provider and hooks in a simulated DOM environment
+* **log:** mock `log.warn`/`log.error` in expected failure tests to significantly reduce noisy console output
+* **mongo:** create complete unit test suite validating all 5 response wrapper helpers
+* **package:** add integration-level mocks for error catching and dependency tracking workflow
+* **path:** mock `setupPackages` to bypass excessive simulated package installations, improving test execution times by >1000ms
+* **path:** simulate `fs-extra` throw for unmocked path verification and fallback path validation
+* **storage:** expand unit coverage for error catch blocks, directory initialization fallbacks, and `getLogLink` behavior
+* **tests:** mock `log` module in WebSockets and Mongo tests to silence expected warnings and error stack traces during negative assertions
+* **upload:** simulate partial streams to cover transform limits in WebStream parser payload sizing
+* **validate:** extend `isEmpty` coverage across exotic JS collections (`Date`, `Set`, `Map`, `ArrayBuffer`)
 
 ---
 

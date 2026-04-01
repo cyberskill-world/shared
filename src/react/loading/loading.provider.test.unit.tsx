@@ -54,6 +54,37 @@ describe('LoadingProvider', () => {
         });
         expect(screen.getByTestId('loading').textContent).toBe('local');
     });
+
+    it('should hide loading when hideLoading is called', async () => {
+        let capturedContext: any;
+        /**
+         *
+         */
+        function ContextCapture() {
+            capturedContext = useLoading();
+            return null;
+        }
+
+        render(
+            <LoadingProvider>
+                <ContextCapture />
+            </LoadingProvider>,
+        );
+
+        await act(() => {
+            capturedContext.showLoading();
+        });
+        expect(screen.getByTestId('loading')).toBeInTheDocument();
+
+        // At this point ContextCapture is unmounted because isLoading=true replaces children.
+        // But we have captured `hideLoading` reference!
+        await act(() => {
+            capturedContext.hideLoading();
+        });
+
+        // Now children are mounted again!
+        expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    });
 });
 
 describe('useLoading', () => {

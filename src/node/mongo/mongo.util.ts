@@ -53,6 +53,7 @@ interface I_MongoUtils {
     isDynamicVirtual: <T, R extends string>(options?: T_VirtualOptions<T, R>) => options is I_DynamicVirtualOptions<T, R>;
     getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T[]>;
     getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T_WithId<T>[]>;
+    health: (mongooseInstance: typeof mongooseRaw) => Record<string, unknown>;
 }
 
 /**
@@ -447,6 +448,24 @@ export const mongo: I_MongoUtils = {
         );
 
         return foundRecords;
+    },
+
+    /**
+     * Retrieves health and connection pool statistics for the Mongoose connection.
+     * This utility helps monitor database connection health and observability.
+     *
+     * @param mongooseInstance - The Mongoose instance to check.
+     * @returns An object containing connection health statistics.
+     */
+    health(mongooseInstance: typeof mongooseRaw): Record<string, unknown> {
+        const conn = mongooseInstance.connection;
+
+        return {
+            readyState: conn.readyState,
+            host: conn.host,
+            name: conn.name,
+            models: Object.keys(mongooseInstance.models).length,
+        };
     },
 };
 

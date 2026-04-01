@@ -2,7 +2,9 @@ import fsExtra from 'fs-extra';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import process from 'node:process';
-import { afterAll, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { log } from '../log/index.js';
 
 // Set env BEFORE importing storage module (module-level getEnv call)
 const testDir = fsExtra.mkdtempSync(join(tmpdir(), 'storage-test-'));
@@ -13,6 +15,15 @@ const { storage } = await import('./storage.util.js');
 
 afterAll(() => {
     fsExtra.removeSync(testDir);
+});
+
+beforeEach(() => {
+    vi.spyOn(log, 'error').mockImplementation(() => {});
+    vi.spyOn(log, 'warn').mockImplementation(() => {});
+});
+
+afterEach(() => {
+    vi.restoreAllMocks();
 });
 
 // ---------------------------------------------------------------------------
@@ -142,6 +153,30 @@ describe('storage.getLogLink', () => {
         expect(link).toContain('some-key');
         expect(typeof link).toBe('string');
     });
+
+    it('should return null when generating link fails (e.g. key too long)', async () => {
+        const giantKey = 'a'.repeat(300); // Exceeds MAX_KEY_LENGTH
+        const link = await storage.getLogLink(giantKey);
+        expect(link).toBeNull();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// storage.clear
+// ---------------------------------------------------------------------------
+describe('storage.clear', () => {
+    it('should clear all keys atomically', async () => {
+        await storage.set('clear-a', 'val-a');
+        await storage.set('clear-b', 'val-b');
+
+        let keys = await storage.keys();
+        expect(keys.length).toBeGreaterThanOrEqual(2);
+
+        await storage.clear();
+
+        keys = await storage.keys();
+        expect(keys.length).toBe(0);
+    });
 });
 
 // ---------------------------------------------------------------------------
@@ -189,5 +224,38 @@ describe('storage - edge cases', () => {
         await storage.set('complex-key', complex);
         const result = await storage.get<typeof complex>('complex-key');
         expect(result).toEqual(complex);
+    });
+
+    it('should handle concurrent initialization properly', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        // Simulate 5 parallel storage ops racing to init
+        await Promise.all([
+            storage.set('p1', 'v1'),
+            storage.set('p2', 'v2'),
+            storage.set('p3', 'v3'),
+            storage.keys(),
+            storage.getLogLink('p1'),
+        ]);
+
+        const k = await storage.keys();
+        expect(k).toContain('p1');
+        expect(k).toContain('p2');
+        expect(k).toContain('p3');
+    });
+
+    it('should bubble up driver initialization failures', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        // Mock fs.mkdir to throw to test ensureDriverReady catch block
+        const fs = await import('node:fs/promises');
+        const spy = vi.spyOn(fs.default, 'mkdir').mockRejectedValueOnce(new Error('Permission denied'));
+
+        await expect(storage.set('fail-init', 'val')).rejects.toThrow('Permission denied');
+
+        spy.mockRestore();
+        resetStorageForTesting(); // restore state for future tests
     });
 });

@@ -1,6 +1,6 @@
 import type { I_Return } from '#typescript/index.js';
 
-import type { C_Collection, C_Db, C_Document, T_DeleteResult, T_Filter, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, T_BulkWriteOperation, T_BulkWriteResult, T_DeleteResult, T_Filter, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { catchError, log } from '../log/index.js';
 import { MONGO_MAX_TIME_MS } from './mongo.constant.js';
@@ -280,6 +280,36 @@ export class MongoController<D extends Partial<C_Document>> {
         }
         catch (error) {
             return catchError<T_DeleteResult>(error);
+        }
+    }
+
+    /**
+     * Executes multiple write operations in a single batch.
+     * Use this for high-performance ingestion or batched updates.
+     * Note: This method does NOT automatically add generic fields (id, timestamps)
+     * to the documents. If required, inject these fields before invoking bulkWrite.
+     *
+     * @param operations - The array of bulk write operations.
+     * @returns A promise that resolves to a standardized response with the bulk write result.
+     */
+    async bulkWrite(
+        operations: T_BulkWriteOperation<D>[],
+    ): Promise<I_Return<T_BulkWriteResult>> {
+        try {
+            if (!operations.length) {
+                return wrapError('No bulk write operations provided');
+            }
+
+            const result = await this.collection.bulkWrite(operations);
+
+            return {
+                success: true,
+                message: 'Bulk write executed successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return catchError<T_BulkWriteResult>(error);
         }
     }
 }

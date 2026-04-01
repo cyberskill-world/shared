@@ -10,6 +10,10 @@ vi.mock('graphql-ws/use/ws', () => ({
     useServer: vi.fn((config: any, _server: any) => config),
 }));
 
+vi.mock('../log/index.js', () => ({
+    log: { warn: vi.fn(), error: vi.fn() },
+}));
+
 describe('createWSServer', () => {
     it('should create a WebSocketServer with server and path (no session parser)', () => {
         const server = http.createServer();

@@ -9,6 +9,7 @@ import type { C_Document, I_DeleteOptionsExtended, I_DynamicVirtualConfig, I_Ext
 
 import { catchError, log } from '../log/index.js';
 import { MONGO_MAX_TIME_MS, MONGO_SLUG_MAX_ATTEMPTS } from './mongo.constant.js';
+import { wrapNotFound } from './mongo.controller.helpers.js';
 import { filterDynamicVirtualsFromPopulate, populateDynamicVirtuals } from './mongo.dynamic-populate.js';
 /**
  * Converts a Mongoose document to a plain object, handling the case where
@@ -34,6 +35,7 @@ interface I_VirtualConfig {
  */
 export class MongooseController<T extends Partial<C_Document>> {
     private defaultLimit: number;
+    private defaultProjection: T_ProjectionType<T>;
 
     /**
      * Creates a new Mongoose controller instance.
@@ -41,9 +43,11 @@ export class MongooseController<T extends Partial<C_Document>> {
      * @param model - The Mongoose model to operate on.
      * @param options - Optional configuration for the controller.
      * @param options.defaultLimit - Maximum documents returned by findAll when no limit is specified (default: 1,000).
+     * @param options.defaultProjection - Default projection to apply to findOne and findAll queries.
      */
-    constructor(private model: I_ExtendedModel<T>, options?: { defaultLimit?: number }) {
+    constructor(private model: I_ExtendedModel<T>, options?: { defaultLimit?: number; defaultProjection?: T_ProjectionType<T> }) {
         this.defaultLimit = options?.defaultLimit ?? 1_000;
+        this.defaultProjection = options?.defaultProjection ?? {};
     }
 
     /**
@@ -133,7 +137,8 @@ export class MongooseController<T extends Partial<C_Document>> {
     ): Promise<I_Return<T>> {
         try {
             const normalizedFilter = normalizeMongoFilter(filter);
-            const query = this.model.findOne(normalizedFilter, projection, options).maxTimeMS(MONGO_MAX_TIME_MS).lean();
+            const appliedProjection = Object.keys(projection).length > 0 ? projection : Object.keys(this.defaultProjection).length > 0 ? this.defaultProjection : projection;
+            const query = this.model.findOne(normalizedFilter, appliedProjection, options).maxTimeMS(MONGO_MAX_TIME_MS).lean();
             const dynamicVirtuals = this.getDynamicVirtuals();
 
             const regularPopulate = filterDynamicVirtualsFromPopulate(populate, dynamicVirtuals);
@@ -145,11 +150,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const result = await query.exec();
 
             if (!result) {
-                return {
-                    success: false,
-                    message: `No ${this.getModelName()} found.`,
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound(this.getModelName());
             }
 
             const finalResult = await this.populateDynamicVirtualsForDocument(result, populate);
@@ -179,7 +180,8 @@ export class MongooseController<T extends Partial<C_Document>> {
     ): Promise<I_Return<T[]>> {
         try {
             const normalizedFilter = normalizeMongoFilter(filter);
-            const query = this.model.find(normalizedFilter, projection, options).maxTimeMS(MONGO_MAX_TIME_MS).lean();
+            const appliedProjection = Object.keys(projection).length > 0 ? projection : Object.keys(this.defaultProjection).length > 0 ? this.defaultProjection : projection;
+            const query = this.model.find(normalizedFilter, appliedProjection, options).maxTimeMS(MONGO_MAX_TIME_MS).lean();
 
             if (!options.limit) {
                 query.limit(this.defaultLimit);
@@ -359,11 +361,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 .exec();
 
             if (!result) {
-                return {
-                    success: false,
-                    message: `Failed to update ${this.getModelName()}.`,
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound(this.getModelName());
             }
 
             return { success: true, result: result?.toObject?.() ?? result };
@@ -417,11 +415,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 .exec();
 
             if (!result) {
-                return {
-                    success: false,
-                    message: `No ${this.getModelName()} found to delete.`,
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound(this.getModelName());
             }
 
             return { success: true, result: result?.toObject?.() ?? result };
@@ -447,11 +441,7 @@ export class MongooseController<T extends Partial<C_Document>> {
             const result = await this.model.deleteMany(normalizedFilter, options).exec();
 
             if (result.deletedCount === 0) {
-                return {
-                    success: false,
-                    message: `No documents found to delete.`,
-                    code: RESPONSE_STATUS.NOT_FOUND.CODE,
-                };
+                return wrapNotFound('documents');
             }
 
             return { success: true, result };

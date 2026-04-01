@@ -175,6 +175,7 @@ function setupMiddleware(
                 legacyHeaders: false,
                 ...(rateLimitOptions.store !== undefined && { store: rateLimitOptions.store }),
                 ...(rateLimitOptions.skip !== undefined && { skip: rateLimitOptions.skip }),
+                ...(rateLimitOptions.keyGenerator !== undefined && { keyGenerator: rateLimitOptions.keyGenerator }),
             }),
         );
     }
@@ -259,3 +260,38 @@ export async function createNest(options: I_NestOptions): Promise<INestApplicati
 }
 
 export { bodyParser, express };
+
+/**
+ * Creates a Content Security Policy (CSP) configuration for Helmet.
+ * Provides sensible defaults with presets for common application patterns.
+ *
+ * @param options - Custom CSP directives to override or extend defaults.
+ * @param preset - Pre-configured patterns ('default' or 'graphql').
+ * @returns CSP configuration object for Helmet options.
+ */
+export function createCSP(
+    options?: Record<string, string[] | string | boolean>,
+    preset: 'default' | 'graphql' = 'default',
+) {
+    const defaultDirectives: Record<string, string[]> = {
+        defaultSrc: ['\'self\''],
+        scriptSrc: ['\'self\''],
+        styleSrc: ['\'self\'', '\'unsafe-inline\''],
+        imgSrc: ['\'self\'', 'data:', 'https:'],
+        fontSrc: ['\'self\'', 'https:', 'data:'],
+        connectSrc: ['\'self\''],
+    };
+
+    if (preset === 'graphql') {
+        defaultDirectives['scriptSrc']?.push('\'unsafe-inline\'', '\'unsafe-eval\'', 'https://cdn.jsdelivr.net');
+        defaultDirectives['styleSrc']?.push('https://cdn.jsdelivr.net');
+        defaultDirectives['imgSrc']?.push('https://cdn.jsdelivr.net');
+    }
+
+    return {
+        directives: {
+            ...defaultDirectives,
+            ...options,
+        },
+    };
+}

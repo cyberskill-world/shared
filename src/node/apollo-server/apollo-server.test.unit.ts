@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import http from 'node:http';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { createApolloServer } from './apollo-server.util.js';
 
@@ -113,5 +113,104 @@ describe('createApolloServer', () => {
         const constructorArg = (ApolloServer as any).mock.calls.at(-1)?.[0];
         expect(constructorArg.includeStacktraceInErrorResponses).toBe(true);
         server.close();
+    });
+
+    it('should include depth limit in validationRules by default', () => {
+        const server = http.createServer();
+        createApolloServer({ server, schema: mockSchema, isDev: false });
+        const constructorArg = (ApolloServer as any).mock.calls.at(-1)?.[0];
+        expect(constructorArg.validationRules).toBeDefined();
+        expect(constructorArg.validationRules.length).toBeGreaterThan(0);
+        server.close();
+    });
+
+    it('should handle custom validationRules alongside default depth limit', () => {
+        const server = http.createServer();
+        const customRule = vi.fn();
+        createApolloServer({ server, schema: mockSchema, isDev: false, validationRules: [customRule as any] });
+        const constructorArg = (ApolloServer as any).mock.calls.at(-1)?.[0];
+        expect(constructorArg.validationRules).toContain(customRule);
+        expect(constructorArg.validationRules.length).toBeGreaterThan(1);
+        server.close();
+    });
+
+    it('should allow disabling query depth limit with maxQueryDepth = false', () => {
+        const server = http.createServer();
+        createApolloServer({ server, schema: mockSchema, isDev: false, maxQueryDepth: false });
+        const constructorArg = (ApolloServer as any).mock.calls.at(-1)?.[0];
+        // If there are no rules, it should be undefined or empty
+        expect(constructorArg.validationRules).toBeUndefined();
+        server.close();
+    });
+
+    describe('depth limit rule logic', () => {
+        let depthLimitRule: any;
+
+        beforeAll(() => {
+            const server = http.createServer();
+            createApolloServer({ server, schema: mockSchema, isDev: false, maxQueryDepth: 2 });
+            const constructorArg = (ApolloServer as any).mock.calls.at(-1)?.[0];
+            depthLimitRule = constructorArg.validationRules[0];
+            server.close();
+        });
+
+        it('should correctly validate depth limit AST with measureDepth', () => {
+            const mockContext = { reportError: vi.fn() };
+            const visitor = depthLimitRule(mockContext);
+
+            // depth 1: field
+            // depth 2: field
+            // depth 3: field -> triggers limit (maxDepth is 2)
+            const astDocument = {
+                definitions: [
+                    {
+                        kind: 'OperationDefinition',
+                        selectionSet: {
+                            selections: [
+                                {
+                                    kind: 'Field',
+                                    selectionSet: {
+                                        selections: [
+                                            {
+                                                kind: 'Field',
+                                                selectionSet: {
+                                                    selections: [
+                                                        { kind: 'Field' },
+                                                    ],
+                                                },
+                                            },
+                                            {
+                                                kind: 'InlineFragment',
+                                                selectionSet: {
+                                                    selections: [
+                                                        { kind: 'Field' },
+                                                    ],
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            };
+
+            // Traversal entry
+            visitor.Document.enter(astDocument);
+
+            expect(mockContext.reportError).toHaveBeenCalled();
+            expect(mockContext.reportError.mock.calls[0]?.[0]?.message).toContain('exceeds the maximum allowed depth of 2');
+        });
+
+        it('should ignore empty definitions safely', () => {
+            const mockContext = { reportError: vi.fn() };
+            const visitor = depthLimitRule(mockContext);
+
+            // Should not throw
+            visitor.Document.enter({ definitions: [{ kind: 'OperationDefinition', selectionSet: undefined }] });
+
+            expect(mockContext.reportError).not.toHaveBeenCalled();
+        });
     });
 });

@@ -1,8 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
 
 import { baseCatchError } from './log.util.js';
+
+beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+});
+
+afterEach(() => {
+    vi.restoreAllMocks();
+});
 
 describe('baseCatchError', () => {
     const noop = () => {};
