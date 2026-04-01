@@ -1,3 +1,14 @@
+## [3.15.0](https://github.com/cyberskill-world/shared/compare/v3.14.0...v3.15.0) (2026-04-01)
+
+### ✨ Features
+
+* new deploy flow ([6712d92](https://github.com/cyberskill-world/shared/commit/6712d92ad1be492a120bfdb4cb870d07414214d7))
+
+### 🐛 Bug Fixes
+
+* use full commit SHA for GitHub Action refs ([87952ac](https://github.com/cyberskill-world/shared/commit/87952ac9efa662239594ab7fafd56671d0127d0a))
+* use full commit SHA for GitHub Action refs ([a42cbdb](https://github.com/cyberskill-world/shared/commit/a42cbdb920896755f0e932b83fc4325d63054edf))
+
 ## [Unreleased] — Codebase Health Audit (2026-04-01)
 
 > Agent-driven audit: 11 issues identified, 7 code fixes applied, 2 documentation improvements, 2 accepted as-is.
