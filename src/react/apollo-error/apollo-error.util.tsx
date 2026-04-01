@@ -7,9 +7,12 @@ import type { GraphQLError } from 'graphql';
  * and used throughout the application for consistent error handling.
  *
  * @remarks
- * **SSR Warning:** These module-level singletons are shared across all requests
- * in SSR environments. In server contexts, ensure the provider is properly
- * scoped per-request to avoid state leaking between concurrent renders.
+ * **SSR Warning — Known Limitation:** These module-level singletons are shared
+ * across all requests in SSR environments (e.g., Next.js). In server contexts,
+ * Request A's error handler could be invoked for Request B's error, causing
+ * intermittent wrong-user error display. This module is designed for **client-side
+ * use only**. For SSR, ensure the provider is properly scoped per-request
+ * or use a request-scoped error handling strategy.
  */
 let showErrorCallback: ((err: GraphQLError | Error) => void) | null = null;
 let hasCustomHandler = false;

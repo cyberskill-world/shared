@@ -46,6 +46,14 @@ async function getPackageName() {
 }
 
 /**
+ * Resets the cached package name. For testing only.
+ * Call this to force `getPackageName()` to re-read the package.json on the next invocation.
+ */
+export function resetCommandCacheForTesting(): void {
+    _cachedPackageName = null;
+}
+
+/**
  * Saves a list of error entries to persistent storage.
  * This function stores error information with the package name as the key,
  * and provides a log link for manual inspection of the stored errors.

@@ -1,3 +1,32 @@
+## [Unreleased] — Codebase Health Audit (2026-04-01)
+
+> Agent-driven audit: 11 issues identified, 7 code fixes applied, 2 documentation improvements, 2 accepted as-is.
+> Verified: 734/734 tests pass · Clean build · 0 dependency vulnerabilities.
+
+### 🔒 Security
+
+* **serializer:** guard `RegExp` reconstruction against ReDoS with `MAX_REGEXP_SOURCE_LENGTH` (1000 chars) and flag validation ([H-2])
+* **serializer:** add JSDoc warning that serializer is NOT for untrusted external input ([H-2])
+* **express:** fix CORS bypass where `...rest` spread could override `origin`/`credentials` callbacks ([M-3])
+* **express:** add `cookieSecret` option to `I_ExpressOptions` and `I_NestOptions` for signed cookie support ([M-6])
+
+### ♻️ Refactoring
+
+* **mongo:** replace unsafe `(model as any)._virtualConfigs` with typed intersection `I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals }` ([H-1])
+* **vitest:** remove triple `as any` cast in `vitest.e2e.ts` and `vitest.unit.ts`; use `deepMerge<UserConfig>()` generic ([M-1])
+
+### ✨ Features
+
+* **apollo-client:** add `debug?: boolean` option to `I_ApolloOptions`; `roundTripLink` excluded from link chain by default ([M-5])
+* **command:** export `resetCommandCacheForTesting()` for test isolation of `_cachedPackageName` ([L-3])
+
+### 📝 Documentation
+
+* **apollo-error:** strengthen SSR warning — explicitly document client-side-only design and cross-request leak risk ([M-2])
+* **serializer:** document ReDoS mitigation and untrusted-input warning in JSDoc ([H-2])
+
+---
+
 ## [3.13.0](https://github.com/cyberskill-world/shared/compare/v3.12.0...v3.13.0) (2026-03-27)
 
 ### ✨ Features

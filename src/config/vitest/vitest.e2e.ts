@@ -29,7 +29,7 @@ export function vitestE2E(options: UserConfig) {
         },
     };
 
-    return defineConfig(deepMerge(config as any, options as any) as UserConfig);
+    return defineConfig(deepMerge<UserConfig>(config, options));
 }
 
 export default vitestE2E({});

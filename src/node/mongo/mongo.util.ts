@@ -236,8 +236,7 @@ export const mongo: I_MongoUtils = {
         const model = currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
 
         if (virtuals.length > 0) {
-            // Mongoose Model has no typed _virtualConfigs; used by MongooseController.getDynamicVirtuals()
-            (model as any)._virtualConfigs = virtuals;
+            (model as I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals })._virtualConfigs = virtuals;
         }
 
         return model;

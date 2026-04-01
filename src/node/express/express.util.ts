@@ -38,6 +38,7 @@ export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...r
     }
 
     return {
+        ...rest,
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
             // Allow requests without Origin header only in development mode.
             // In production, undefined origin (e.g., curl, server-to-server) is rejected.
@@ -54,7 +55,6 @@ export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...r
             }
         },
         credentials: true,
-        ...rest,
     };
 }
 
@@ -153,6 +153,7 @@ function setupMiddleware(
     jsonLimit = '1mb',
     trustProxy: boolean | number | string | string[] = 1,
     rateLimitOptions: false | import('./express.type.js').I_RateLimitOptions = {},
+    cookieSecret?: string,
 ) {
     if (trustProxy) {
         app.set('trust proxy', trustProxy);
@@ -177,7 +178,7 @@ function setupMiddleware(
             }),
         );
     }
-    app.use(cookieParser());
+    app.use(cookieParser(cookieSecret));
     app.use(express.json({ limit: jsonLimit }));
     app.use(express.urlencoded({ extended: true, limit: jsonLimit }));
     app.use(compression());
@@ -218,7 +219,7 @@ function setupStaticFolders(app: Application, staticFolders?: string | string[])
 export function createExpress(options?: I_ExpressOptions): Application {
     const app = express();
 
-    setupMiddleware(app, options?.isDev, options?.jsonLimit, options?.trustProxy, options?.rateLimit);
+    setupMiddleware(app, options?.isDev, options?.jsonLimit, options?.trustProxy, options?.rateLimit, options?.cookieSecret);
     setupStaticFolders(app, options?.static);
     const uploadMiddleware = graphqlUploadExpress({
         maxFileSize: options?.maxFileSize ?? 10_000_000,
@@ -243,7 +244,7 @@ export function createExpress(options?: I_ExpressOptions): Application {
 export async function createNest(options: I_NestOptions): Promise<INestApplication> {
     const app = await NestFactory.create(options.module);
 
-    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev, options.jsonLimit, options.trustProxy, options.rateLimit);
+    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev, options.jsonLimit, options.trustProxy, options.rateLimit, options.cookieSecret);
     setupStaticFolders(app.getHttpAdapter().getInstance(), options.static);
 
     if (options.filters) {

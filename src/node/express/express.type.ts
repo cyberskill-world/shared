@@ -24,6 +24,11 @@ export interface I_ExpressOptions {
     rateLimit?: false | I_RateLimitOptions;
     /** Route path to scope graphqlUploadExpress middleware (defaults to '/graphql'). */
     uploadPath?: string;
+    /**
+     * Secret string for cookie-parser. Required for signed cookie verification.
+     * Without a secret, `req.signedCookies` will always be empty.
+     */
+    cookieSecret?: string;
 }
 
 export interface I_NestOptions {
@@ -35,6 +40,11 @@ export interface I_NestOptions {
     jsonLimit?: string;
     trustProxy?: boolean | number | string | string[];
     rateLimit?: false | I_RateLimitOptions;
+    /**
+     * Secret string for cookie-parser. Required for signed cookie verification.
+     * Without a secret, `req.signedCookies` will always be empty.
+     */
+    cookieSecret?: string;
 }
 
 export type T_CorsType = 'node' | 'nest';
