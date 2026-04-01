@@ -296,10 +296,7 @@ async function inspect() {
  */
 async function testUnit() {
     try {
-        const packageData = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
-        const cmd = packageData.success && packageData.result.isCurrentProject
-            ? `pnpm exec vitest run`
-            : await command.testUnit();
+        const cmd = await command.testUnit();
 
         await runCommand('Running unit tests', cmd, { throwOnError: true });
     }
@@ -318,10 +315,7 @@ async function testUnit() {
  */
 async function testE2E() {
     try {
-        const packageData = await getPackage({ name: CYBERSKILL_PACKAGE_NAME });
-        const cmd = packageData.success && packageData.result.isCurrentProject
-            ? `pnpm exec vitest run --passWithNoTests --config src/config/vitest/vitest.e2e.ts`
-            : await command.testE2e();
+        const cmd = await command.testE2e();
 
         await runCommand('Running end-to-end tests', cmd, { throwOnError: true });
     }

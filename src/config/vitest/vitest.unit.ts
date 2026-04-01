@@ -31,7 +31,7 @@ export function vitestUnit(options: UserConfig) {
             environment: 'jsdom',
             pool: 'vmThreads',
             include: ['**/*.test.unit.?(c|m)[jt]s?(x)'],
-            setupFiles: ['./vitest.unit.setup.ts'],
+            setupFiles: [`${import.meta.dirname}/vitest.unit.setup.js`],
             coverage: {
                 provider: 'istanbul',
                 reporter: ['text', 'lcov'],

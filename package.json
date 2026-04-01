@@ -160,6 +160,11 @@
             "import": "./dist/react/i18next/index.js",
             "default": "./dist/react/i18next/index.js"
         },
+        "./react/i18next/server": {
+            "types": "./dist/react/i18next/i18next.server.d.ts",
+            "import": "./dist/react/i18next/i18next.server.js",
+            "default": "./dist/react/i18next/i18next.server.js"
+        },
         "./react/loading": {
             "types": "./dist/react/loading/index.d.ts",
             "import": "./dist/react/loading/index.js",
@@ -174,6 +179,11 @@
             "types": "./dist/react/next-intl/index.d.ts",
             "import": "./dist/react/next-intl/index.js",
             "default": "./dist/react/next-intl/index.js"
+        },
+        "./react/next-intl/server": {
+            "types": "./dist/react/next-intl/next-intl.server.d.ts",
+            "import": "./dist/react/next-intl/next-intl.server.js",
+            "default": "./dist/react/next-intl/next-intl.server.js"
         },
         "./react/storage": {
             "types": "./dist/react/storage/index.d.ts",

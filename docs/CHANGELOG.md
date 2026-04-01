@@ -28,6 +28,8 @@
 * **typescript:** add `unwrapOrThrow` alias for standard result extraction ([DX-2])
 * **apollo-client:** add `debug?: boolean` option to `I_ApolloOptions`; `roundTripLink` excluded from link chain by default ([M-5])
 * **command:** export `resetCommandCacheForTesting()` for test isolation of `_cachedPackageName` ([L-3])
+* **next-intl:** export `getTranslationsNextIntl` Server Component function in dual entry point `./react/next-intl/server`
+* **i18next:** export `getTranslationsI18next` non-hook function with dual instance support in `./react/i18next/server`
 
 ### 📝 Documentation
 

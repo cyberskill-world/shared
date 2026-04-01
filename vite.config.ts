@@ -10,6 +10,7 @@ const pkg = JSON.parse(fs.readFileSync(resolve(import.meta.dirname, 'package.jso
 
 const allDeps = [
     ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.devDependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
 ];
 
@@ -58,7 +59,7 @@ const RE_SRC_PREFIX = /^.*\/src\//;
 const RE_TS_EXT = /\.(ts|tsx)$/;
 
 const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts', 'src/config/vitest/vitest.*.ts'], {
-    ignore: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.*.ts', 'src/**/*.test.*.tsx', 'src/**/*.setup.ts'],
+    ignore: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.*.ts', 'src/**/*.test.*.tsx'],
     absolute: true,
 }).reduce<Record<string, string>>((entries, file) => {
     const entryName = file.replace(RE_SRC_PREFIX, '').replace(RE_TS_EXT, '');
@@ -95,7 +96,7 @@ export default defineConfig({
                 exports: 'named',
             },
             treeshake: {
-                moduleSideEffects: false,
+                moduleSideEffects: id => id.includes('jest-dom') || id.includes('setup'),
                 propertyReadSideEffects: false,
                 unknownGlobalSideEffects: false,
             },
