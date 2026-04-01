@@ -13,68 +13,17 @@ jobs:
     permissions:
       contents: write
       id-token: write
-      pull-requests: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           persist-credentials: false
 
-      - name: Rebase
-        uses: cyberskill-world/.github/actions/rebase@2453dcc # main
-        with:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          FROM: main
-          TO: release
-
       - name: Env & Deps
         uses: cyberskill-world/.github/actions/env-deps@2453dcc # main
 
       - name: Build
         uses: cyberskill-world/.github/actions/build@2453dcc # main
-
-      - name: Resolve Zombie Tag Conflict
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-
-          echo "🔮 Calculating next version..."
-          DRY_RUN_OUTPUT=$(pnpm exec semantic-release --dry-run --branches release 2>&1 || true)
-          NEXT_VERSION=$(echo "$DRY_RUN_OUTPUT" | sed -n 's/.*The next release version is \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' | head -1)
-
-          if [ -z "$NEXT_VERSION" ]; then
-            echo "✅ No release scheduled."
-          else
-            if [[ ! "$NEXT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-              echo "❌ Error: Invalid version format extracted: '$NEXT_VERSION'"
-              exit 1
-            fi
-
-            echo "🎯 Targeted version: v$NEXT_VERSION"
-
-            # Check if tag exists remotely
-            if git ls-remote --exit-code --tags origin "v$NEXT_VERSION" >/dev/null 2>&1; then
-              echo "⚠️ Tag v$NEXT_VERSION exists! Executing 'Steal & Bump' strategy..."
-
-              # Setup User
-              git config user.name "github-actions[bot]"
-              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-              echo "🥷 Stealing tag v$NEXT_VERSION..."
-              git tag -f "v$NEXT_VERSION" HEAD
-              git push origin "v$NEXT_VERSION" --force
-
-              git commit --allow-empty -m "feat: bump version to v$(echo $NEXT_VERSION | awk -F. '{$2++; print $1"."$2".0"}') (forced jump)"
-
-              git push origin HEAD:release
-
-              echo "🚀 Tag stolen and new commit pushed. Next run should trigger the bumped version!"
-            else
-              echo "✅ Tag is free. Proceeding..."
-            fi
-          fi
 
       - name: Generate SBOM
         run: pnpm exec cyclonedx-npm --output-format JSON --output-file bom.json
@@ -84,10 +33,3 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm exec semantic-release
-
-      - name: Create PR to main
-        uses: cyberskill-world/.github/actions/create-pr@2453dcc # main
-        with:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          FROM: release
-          TO: main

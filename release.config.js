@@ -12,7 +12,7 @@ const types = [
 ];
 
 export default {
-    branches: ['release'],
+    branches: ['main'],
     plugins: [
         ['@semantic-release/commit-analyzer', {
             preset: 'conventionalcommits',
@@ -21,11 +21,13 @@ export default {
             preset: 'conventionalcommits',
             presetConfig: { types },
         }],
-        '@semantic-release/changelog',
+        ['@semantic-release/changelog', {
+            changelogFile: 'docs/CHANGELOG.md',
+        }],
         '@semantic-release/npm',
         '@semantic-release/github',
         ['@semantic-release/git', {
-            assets: ['package.json', 'CHANGELOG.md'],
+            assets: ['package.json', 'docs/CHANGELOG.md'],
             // eslint-disable-next-line no-template-curly-in-string
             message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
         }],
