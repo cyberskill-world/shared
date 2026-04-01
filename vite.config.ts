@@ -58,7 +58,7 @@ function isExternal(id: string) {
 const RE_SRC_PREFIX = /^.*\/src\//;
 const RE_TS_EXT = /\.(ts|tsx)$/;
 
-const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts', 'src/config/vitest/vitest.*.ts'], {
+const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts', 'src/**/*.server.ts', 'src/config/vitest/vitest.*.ts'], {
     ignore: ['src/**/*.type.ts', 'src/**/*.d.ts', 'src/**/*.test.*.ts', 'src/**/*.test.*.tsx'],
     absolute: true,
 }).reduce<Record<string, string>>((entries, file) => {
