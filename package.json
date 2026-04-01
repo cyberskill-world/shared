@@ -303,7 +303,6 @@
     "devDependencies": {
         "@commitlint/cli": "20.5.0",
         "@commitlint/config-conventional": "20.5.0",
-        "@cyclonedx/cyclonedx-npm": "4.2.1",
         "@eslint/config-inspector": "1.5.0",
         "@next/eslint-plugin-next": "16.2.2",
         "@semantic-release/changelog": "6.0.3",
