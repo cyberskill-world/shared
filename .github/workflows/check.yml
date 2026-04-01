@@ -26,8 +26,21 @@ jobs:
         with:
           NODE_VERSION: ${{ matrix.NODE_VERSION }}
 
+      - name: Build Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            dist
+            node_modules/.cache
+          key: ${{ runner.os }}-build-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
       - name: Security Audit
         run: pnpm audit --audit-level=high
+
+      - name: License Compliance
+        run: pnpm exec license-checker --summary --failOn "GPL;AGPL;LGPL;SSPL"
 
       - name: Lint
         uses: cyberskill-world/.github/actions/lint@e4fff023238a4ed6e243e848605d5afea30000cb # main

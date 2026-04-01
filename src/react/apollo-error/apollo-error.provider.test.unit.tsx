@@ -105,17 +105,21 @@ describe('useApolloError', () => {
     });
 });
 
+/**
+ *
+ */
+function Reader({ onRead }: { onRead: (v: unknown) => void }) {
+    onRead(React.use(ApolloErrorContext));
+    return null;
+}
+
 describe('ApolloErrorContext', () => {
     it('should default to undefined', () => {
         let contextValue: unknown;
-        /**
-         *
-         */
-        function Reader() {
-            contextValue = React.use(ApolloErrorContext);
-            return null;
-        }
-        render(<Reader />);
+        const handleRead = (v: unknown) => {
+            contextValue = v;
+        };
+        render(<Reader onRead={handleRead} />);
         expect(contextValue).toBeUndefined();
     });
 });

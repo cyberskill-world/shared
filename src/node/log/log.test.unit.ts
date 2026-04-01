@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
 
@@ -8,6 +8,14 @@ import { catchError, log, throwError } from './log.util.js';
 vi.mock('#config/env/index.js', () => ({
     getEnv: () => ({ DEBUG: true }),
 }));
+
+beforeEach(() => {
+    vi.spyOn(log, 'error').mockImplementation(() => {});
+});
+
+afterEach(() => {
+    vi.restoreAllMocks();
+});
 
 describe('throwError', () => {
     it('should throw GraphQLError by default', () => {

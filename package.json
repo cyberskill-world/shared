@@ -107,6 +107,9 @@
             "import": "./dist/node/mongo/index.js",
             "default": "./dist/node/mongo/index.js"
         },
+        "./node/mongo/types": {
+            "types": "./dist/node/mongo/index.d.ts"
+        },
         "./node/package": {
             "types": "./dist/node/package/index.d.ts",
             "import": "./dist/node/package/index.js",
@@ -232,12 +235,12 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@antfu/eslint-config": "7.7.3",
+        "@antfu/eslint-config": "8.0.0",
         "@apollo/client": "4.1.6",
         "@apollo/client-integration-nextjs": "0.14.4",
         "@apollo/server": "5.5.0",
         "@as-integrations/express5": "1.1.2",
-        "@dotenvx/dotenvx": "1.58.0",
+        "@dotenvx/dotenvx": "1.59.1",
         "@eddeee888/gcg-typescript-resolver-files": "0.15.0",
         "@eslint-react/eslint-plugin": "3.0.0",
         "@graphql-codegen/cli": "6.2.1",
@@ -255,12 +258,12 @@
         "cors": "2.8.6",
         "date-fns": "4.1.0",
         "envalid": "8.1.1",
-        "eslint-config-next": "16.2.1",
+        "eslint-config-next": "16.2.2",
         "eslint-plugin-format": "2.0.1",
         "eslint-plugin-react-hooks": "7.0.1",
         "eslint-plugin-react-refresh": "0.5.2",
         "express": "5.2.1",
-        "express-rate-limit": "8.3.1",
+        "express-rate-limit": "8.3.2",
         "express-session": "1.19.0",
         "express-useragent": "2.1.0",
         "extract-files": "13.0.0",
@@ -270,19 +273,19 @@
         "graphql-upload": "17.0.0",
         "graphql-ws": "6.0.8",
         "helmet": "8.1.0",
-        "i18next": "26.0.1",
+        "i18next": "26.0.3",
         "migrate-mongo": "14.0.7",
         "mongodb": "7.1.1",
         "mongoose": "9.3.3",
         "mongoose-aggregate-paginate-v2": "1.1.4",
         "mongoose-paginate-v2": "1.9.4",
-        "next-intl": "4.8.3",
-        "path-to-regexp": "8.4.0",
+        "next-intl": "4.8.4",
+        "path-to-regexp": "8.4.1",
         "qs": "6.15.0",
         "react": "19.2.4",
         "react-dom": "19.2.4",
         "react-hot-toast": "2.6.0",
-        "react-i18next": "17.0.1",
+        "react-i18next": "17.0.2",
         "rxjs": "7.8.2",
         "ws": "8.20.0",
         "yargs": "18.0.0"
@@ -290,8 +293,9 @@
     "devDependencies": {
         "@commitlint/cli": "20.5.0",
         "@commitlint/config-conventional": "20.5.0",
+        "@cyclonedx/cyclonedx-npm": "4.2.1",
         "@eslint/config-inspector": "1.5.0",
-        "@next/eslint-plugin-next": "16.2.1",
+        "@next/eslint-plugin-next": "16.2.2",
         "@semantic-release/changelog": "6.0.3",
         "@semantic-release/git": "10.0.1",
         "@semantic-release/github": "12.0.6",
@@ -318,10 +322,11 @@
         "@types/yargs": "17.0.35",
         "@vitest/browser": "4.1.2",
         "@vitest/coverage-istanbul": "4.1.2",
-        "conventional-changelog-conventionalcommits": "9.3.0",
+        "conventional-changelog-conventionalcommits": "9.3.1",
         "eslint": "10.1.0",
         "glob": "13.0.6",
         "jsdom": "29.0.1",
+        "license-checker": "25.0.1",
         "lint-staged": "16.4.0",
         "node-modules-inspector": "1.4.2",
         "npm-run-all2": "8.0.4",
@@ -341,8 +346,9 @@
     },
     "pnpm": {
         "overrides": {
+            "lodash": ">=4.17.23",
             "minimatch": ">=10.2.4",
-            "path-to-regexp": "8.4.0"
+            "path-to-regexp": "8.4.1"
         }
     }
 }

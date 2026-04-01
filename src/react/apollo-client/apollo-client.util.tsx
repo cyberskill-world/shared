@@ -111,7 +111,7 @@ const errorLink = new ErrorLink(({ error, operation }) => {
  * @returns An array of Apollo Links configured for the specified options.
  */
 export function createApolloLinks(options: I_ApolloOptions): ApolloLink[] {
-    const { uri, wsUrl, customLinks } = options;
+    const { uri, wsUrl, customLinks, debug } = options;
 
     const removeTypenameLink = new RemoveTypenameFromVariablesLink();
 
@@ -142,7 +142,7 @@ export function createApolloLinks(options: I_ApolloOptions): ApolloLink[] {
         : uploadLink;
 
     return [
-        roundTripLink,
+        ...(debug ? [roundTripLink] : []),
         errorLink,
         removeTypenameLink,
         ...(customLinks ?? []),

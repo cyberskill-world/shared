@@ -18,6 +18,15 @@ vi.mock('@dotenvx/dotenvx', () => ({
     default: { config: vi.fn() },
 }));
 
+vi.mock('../log/index.js', () => ({
+    catchError: vi.fn((err: any) => ({ success: false, message: err?.message || 'error', code: 500 })),
+    log: {
+        error: vi.fn(),
+        warn: vi.fn(),
+        info: vi.fn(),
+    },
+}));
+
 /**
  *
  */
@@ -81,7 +90,7 @@ describe('MongooseController', () => {
             const result = await controller.findOne({ name: 'nonexistent' });
 
             expect(result.success).toBe(false);
-            expect(result.message).toContain('No TestModel found');
+            expect(result.message).toContain('TestModel not found');
             expect(result.code).toBe(404);
         });
 
@@ -222,7 +231,7 @@ describe('MongooseController', () => {
             const result = await controller.updateOne({ _id: 'nonexistent' }, { name: 'updated' });
 
             expect(result.success).toBe(false);
-            expect(result.message).toContain('Failed to update TestModel');
+            expect(result.message).toContain('TestModel not found');
         });
     });
 
@@ -261,7 +270,7 @@ describe('MongooseController', () => {
             const result = await controller.deleteOne({ _id: 'nonexistent' });
 
             expect(result.success).toBe(false);
-            expect(result.message).toContain('No TestModel found to delete');
+            expect(result.message).toContain('TestModel not found');
         });
     });
 
@@ -288,7 +297,7 @@ describe('MongooseController', () => {
             const result = await controller.deleteMany({ isDel: true });
 
             expect(result.success).toBe(false);
-            expect(result.message).toContain('No documents found to delete');
+            expect(result.message).toContain('documents not found');
         });
     });
 
@@ -643,7 +652,7 @@ describe('MongooseController', () => {
             const controller = new MongooseController(mockModel);
             const result = await controller.deleteMany({ isDel: true } as any);
             expect(result.success).toBe(false);
-            expect(result.message).toContain('No documents found to delete');
+            expect(result.message).toContain('documents not found');
         });
 
         it('should return success when documents were deleted', async () => {

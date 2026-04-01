@@ -8,6 +8,8 @@ export interface I_ApolloOptions extends Omit<ApolloClient.Options, 'link' | 'ca
     uri?: string;
     wsUrl?: string;
     customLinks?: ApolloLink[];
+    /** Enable round-trip timing logs for every GraphQL operation. Defaults to false. */
+    debug?: boolean;
 }
 
 export interface I_ApolloProviderProps extends I_Children {

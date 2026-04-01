@@ -38,6 +38,7 @@ export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...r
     }
 
     return {
+        ...rest,
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
             // Allow requests without Origin header only in development mode.
             // In production, undefined origin (e.g., curl, server-to-server) is rejected.
@@ -54,7 +55,6 @@ export function createCorsOptions<T extends T_CorsType>({ isDev, whiteList, ...r
             }
         },
         credentials: true,
-        ...rest,
     };
 }
 
@@ -153,6 +153,7 @@ function setupMiddleware(
     jsonLimit = '1mb',
     trustProxy: boolean | number | string | string[] = 1,
     rateLimitOptions: false | import('./express.type.js').I_RateLimitOptions = {},
+    cookieSecret?: string,
 ) {
     if (trustProxy) {
         app.set('trust proxy', trustProxy);
@@ -174,10 +175,11 @@ function setupMiddleware(
                 legacyHeaders: false,
                 ...(rateLimitOptions.store !== undefined && { store: rateLimitOptions.store }),
                 ...(rateLimitOptions.skip !== undefined && { skip: rateLimitOptions.skip }),
+                ...(rateLimitOptions.keyGenerator !== undefined && { keyGenerator: rateLimitOptions.keyGenerator }),
             }),
         );
     }
-    app.use(cookieParser());
+    app.use(cookieParser(cookieSecret));
     app.use(express.json({ limit: jsonLimit }));
     app.use(express.urlencoded({ extended: true, limit: jsonLimit }));
     app.use(compression());
@@ -218,7 +220,7 @@ function setupStaticFolders(app: Application, staticFolders?: string | string[])
 export function createExpress(options?: I_ExpressOptions): Application {
     const app = express();
 
-    setupMiddleware(app, options?.isDev, options?.jsonLimit, options?.trustProxy, options?.rateLimit);
+    setupMiddleware(app, options?.isDev, options?.jsonLimit, options?.trustProxy, options?.rateLimit, options?.cookieSecret);
     setupStaticFolders(app, options?.static);
     const uploadMiddleware = graphqlUploadExpress({
         maxFileSize: options?.maxFileSize ?? 10_000_000,
@@ -243,7 +245,7 @@ export function createExpress(options?: I_ExpressOptions): Application {
 export async function createNest(options: I_NestOptions): Promise<INestApplication> {
     const app = await NestFactory.create(options.module);
 
-    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev, options.jsonLimit, options.trustProxy, options.rateLimit);
+    setupMiddleware(app.getHttpAdapter().getInstance(), options.isDev, options.jsonLimit, options.trustProxy, options.rateLimit, options.cookieSecret);
     setupStaticFolders(app.getHttpAdapter().getInstance(), options.static);
 
     if (options.filters) {
@@ -258,3 +260,38 @@ export async function createNest(options: I_NestOptions): Promise<INestApplicati
 }
 
 export { bodyParser, express };
+
+/**
+ * Creates a Content Security Policy (CSP) configuration for Helmet.
+ * Provides sensible defaults with presets for common application patterns.
+ *
+ * @param options - Custom CSP directives to override or extend defaults.
+ * @param preset - Pre-configured patterns ('default' or 'graphql').
+ * @returns CSP configuration object for Helmet options.
+ */
+export function createCSP(
+    options?: Record<string, string[] | string | boolean>,
+    preset: 'default' | 'graphql' = 'default',
+) {
+    const defaultDirectives: Record<string, string[]> = {
+        defaultSrc: ['\'self\''],
+        scriptSrc: ['\'self\''],
+        styleSrc: ['\'self\'', '\'unsafe-inline\''],
+        imgSrc: ['\'self\'', 'data:', 'https:'],
+        fontSrc: ['\'self\'', 'https:', 'data:'],
+        connectSrc: ['\'self\''],
+    };
+
+    if (preset === 'graphql') {
+        defaultDirectives['scriptSrc']?.push('\'unsafe-inline\'', '\'unsafe-eval\'', 'https://cdn.jsdelivr.net');
+        defaultDirectives['styleSrc']?.push('https://cdn.jsdelivr.net');
+        defaultDirectives['imgSrc']?.push('https://cdn.jsdelivr.net');
+    }
+
+    return {
+        directives: {
+            ...defaultDirectives,
+            ...options,
+        },
+    };
+}

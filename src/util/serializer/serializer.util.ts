@@ -3,6 +3,8 @@ import type {
 } from './serializer.type.js';
 
 const ALLOWED_TYPES = new Set(['Date', 'Map', 'Set', 'RegExp', 'BigInt']);
+const MAX_REGEXP_SOURCE_LENGTH = 1_000;
+const VALID_REGEXP_FLAGS = /^[dgimsuvy]*$/;
 
 /**
  * A serializer that can handle complex JavaScript types that cannot be directly JSON stringified.
@@ -23,6 +25,11 @@ const ALLOWED_TYPES = new Set(['Date', 'Map', 'Set', 'RegExp', 'BigInt']);
  *
  * **Security:** Only types in the `ALLOWED_TYPES` allowlist are reconstructed during
  * deserialization. Unknown `__type` values are returned as-is to prevent prototype pollution.
+ * RegExp sources are length-limited (1000 chars) and flags are validated to mitigate ReDoS.
+ *
+ * **⚠️ NOT for untrusted input:** This serializer is designed for internal service-to-service
+ * communication. Do NOT use it to deserialize user-controlled payloads (e.g., raw WebSocket
+ * messages, API request bodies from external clients) without additional validation.
  *
  * **Cross-service compatibility:** Any service that deserializes data produced by this serializer
  * must use the same `__type` protocol. Plain `JSON.parse` will return the wrapper objects as-is
@@ -39,7 +46,7 @@ export const serializer: I_Serializer<unknown> = {
      * @returns The serialized JSON string that can be safely stored or transmitted.
      */
     serialize(value) {
-        return JSON.stringify(value, function (this: any, _key, val) {
+        return JSON.stringify(value, function (this: Record<string, unknown>, _key, val) {
             // Date#toJSON fires before the replacer, converting a Date to an ISO string.
             // We must read this[_key] to detect the original Date object.
             const originalValue = this[_key];
@@ -100,6 +107,14 @@ export const serializer: I_Serializer<unknown> = {
                 }
                 if (type === 'RegExp') {
                     const { source, flags } = value as { source: string; flags: string };
+                    if (
+                        typeof source !== 'string'
+                        || typeof flags !== 'string'
+                        || source.length > MAX_REGEXP_SOURCE_LENGTH
+                        || !VALID_REGEXP_FLAGS.test(flags)
+                    ) {
+                        return val;
+                    }
                     return new RegExp(source, flags);
                 }
                 if (type === 'BigInt') {

@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { command, createGitHooksConfig } from './path.constant.js';
 import { join, resolve } from './path.util.js';
+
+vi.mock('../package/index.js', () => ({
+    setupPackages: vi.fn().mockResolvedValue(undefined),
+    E_PackageType: { DEPENDENCY: 'dependencies', DEV_DEPENDENCY: 'devDependencies', PEER_DEPENDENCY: 'peerDependencies', BUNDLE_DEPENDENCY: 'bundleDependencies', OPTIONAL_DEPENDENCY: 'optionalDependencies' },
+}));
 
 const RE_PATH_JOIN = /a[/\\]b/;
 

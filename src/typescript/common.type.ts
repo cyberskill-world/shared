@@ -102,6 +102,11 @@ export function unwrapResult<T, E = unknown>(result: I_Return<T, E>): T & E {
     return result.result;
 }
 
+/**
+ * Alias for `unwrapResult` to improve discoverability.
+ */
+export const unwrapOrThrow = unwrapResult;
+
 export enum E_Environment {
     PRODUCTION = 'production',
     STAGING = 'staging',

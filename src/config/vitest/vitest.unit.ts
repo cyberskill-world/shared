@@ -46,7 +46,7 @@ export function vitestUnit(options: UserConfig) {
         },
     };
 
-    return defineConfig(deepMerge(config as any, options as any) as UserConfig);
+    return defineConfig(deepMerge<UserConfig>(config, options));
 }
 
 export default vitestUnit({});

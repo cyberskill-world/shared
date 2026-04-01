@@ -46,6 +46,14 @@ async function getPackageName() {
 }
 
 /**
+ * Resets the cached package name. For testing only.
+ * Call this to force `getPackageName()` to re-read the package.json on the next invocation.
+ */
+export function resetCommandCacheForTesting(): void {
+    _cachedPackageName = null;
+}
+
+/**
  * Saves a list of error entries to persistent storage.
  * This function stores error information with the package name as the key,
  * and provides a log link for manual inspection of the stored errors.
@@ -129,7 +137,17 @@ async function parseTextErrors(output: string): Promise<void> {
     const commitlintRegex = RE_COMMITLINT_ERROR;
 
     output.split('\n').forEach((line) => {
-        if (line.startsWith('/')) {
+        const tsMatch = tsRegex.exec(line);
+
+        if (tsMatch) {
+            errorList.push({
+                file: tsMatch?.[1] ?? '',
+                position: `${tsMatch[2]}:${tsMatch[3]}`,
+                type: tsMatch[4] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
+                message: tsMatch?.[5]?.trim() ?? '',
+            });
+        }
+        else if (line.startsWith('/')) {
             lastFilePath = line.trim();
         }
         else {
@@ -145,30 +163,18 @@ async function parseTextErrors(output: string): Promise<void> {
                 });
             }
             else {
-                const tsMatch = tsRegex.exec(line);
+                const commitlintMatch = commitlintRegex.exec(line);
 
-                if (tsMatch) {
+                if (commitlintMatch) {
                     errorList.push({
-                        file: tsMatch?.[1] ?? '',
-                        position: `${tsMatch[2]}:${tsMatch[3]}`,
-                        type: tsMatch[4] === E_IssueType.Error ? E_IssueType.Error : E_IssueType.Warning,
-                        message: tsMatch?.[5]?.trim() ?? '',
+                        file: 'commitlint',
+                        type: E_IssueType.Error,
+                        message: commitlintMatch?.[1]?.trim() ?? '',
+                        rule: commitlintMatch?.[2]?.trim() ?? '',
                     });
                 }
                 else {
-                    const commitlintMatch = commitlintRegex.exec(line);
-
-                    if (commitlintMatch) {
-                        errorList.push({
-                            file: 'commitlint',
-                            type: E_IssueType.Error,
-                            message: commitlintMatch?.[1]?.trim() ?? '',
-                            rule: commitlintMatch?.[2]?.trim() ?? '',
-                        });
-                    }
-                    else {
-                        unmatchedLines.push(line.trim());
-                    }
+                    unmatchedLines.push(line.trim());
                 }
             }
         }

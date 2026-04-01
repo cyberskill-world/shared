@@ -35,6 +35,19 @@ function TestHarness({ storageKey, initialValue }: { storageKey: string; initial
     );
 }
 
+/**
+ *
+ */
+function FnTestHarness() {
+    const { value, set } = useStorage<number>('fn-key', 10);
+    return (
+        <div>
+            <span data-testid="val">{value ?? 'undefined'}</span>
+            <button data-testid="inc" onClick={() => set(prev => (prev ?? 0) + 1)}>inc</button>
+        </div>
+    );
+}
+
 describe('useStorage', () => {
     beforeEach(() => {
         (storage as any)._store.clear();
@@ -94,18 +107,6 @@ describe('useStorage', () => {
     });
 
     it('should handle function updater in set', async () => {
-        /**
-         *
-         */
-        function FnTestHarness() {
-            const { value, set } = useStorage<number>('fn-key', 10);
-            return (
-                <div>
-                    <span data-testid="val">{value ?? 'undefined'}</span>
-                    <button data-testid="inc" onClick={() => set(prev => (prev ?? 0) + 1)}>inc</button>
-                </div>
-            );
-        }
         await act(async () => {
             render(<FnTestHarness />);
         });

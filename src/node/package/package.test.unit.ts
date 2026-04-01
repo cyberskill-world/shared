@@ -270,4 +270,56 @@ describe('setupPackages', () => {
         await setupPackages([]);
         // Should complete without error
     });
+
+    it('should execute install dependencies and run ESLint if tasks exist', async () => {
+        // mock node_modules pathExistsSync = false to flag isInstalled = false
+        vi.mocked(pathExistsSync).mockImplementation((pathStr: any) => String(pathStr).includes('test-cwd/package.json'));
+        vi.mocked(readJsonSync).mockReturnValue({
+            name: 'test-project',
+            version: '1.0.0',
+            dependencies: { 'my-dep': '1.0.0' },
+        });
+
+        const { runCommand } = await import('../command/index.js');
+
+        await setupPackages([{ name: 'my-dep' }], { install: true });
+
+        expect(runCommand).toHaveBeenCalledWith(
+            'Running ESLint with auto-fix',
+            'eslint --fix',
+        );
+    });
+
+    it('should update packages if requested', async () => {
+        // mock node_modules/package.json version to differ from root package.json -> isUpToDate = false
+        vi.mocked(pathExistsSync).mockReturnValue(true);
+        vi.mocked(readJsonSync).mockImplementation((pathStr: any) => {
+            if (String(pathStr).includes('node_modules')) {
+                return { version: '1.5.0' }; // installed version
+            }
+            return {
+                name: 'test-project',
+                version: '1.0.0',
+                dependencies: { 'my-dep': '2.0.0' }, // requested version
+            };
+        });
+
+        const { writeFileSync: wfs } = await import('../fs/index.js');
+
+        await setupPackages([{ name: 'my-dep' }], { update: true });
+
+        expect(wfs).toHaveBeenCalled();
+    });
+
+    it('should catch errors if internal logic throws', async () => {
+        const { catchError } = await import('../log/index.js');
+        const customError = new Error('simulated exception');
+        vi.mocked(pathExistsSync).mockImplementation(() => {
+            throw customError;
+        });
+
+        await setupPackages([{ name: 'some-dep' }]);
+
+        expect(catchError).toHaveBeenCalledWith(customError);
+    });
 });

@@ -36,6 +36,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          set -euo pipefail
+
           echo "🔮 Calculating next version..."
           DRY_RUN_OUTPUT=$(pnpm exec semantic-release --dry-run --branches release 2>&1 || true)
           NEXT_VERSION=$(echo "$DRY_RUN_OUTPUT" | sed -n 's/.*The next release version is \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' | head -1)
@@ -43,6 +45,11 @@ jobs:
           if [ -z "$NEXT_VERSION" ]; then
             echo "✅ No release scheduled."
           else
+            if [[ ! "$NEXT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "❌ Error: Invalid version format extracted: '$NEXT_VERSION'"
+              exit 1
+            fi
+
             echo "🎯 Targeted version: v$NEXT_VERSION"
 
             # Check if tag exists remotely
@@ -66,6 +73,9 @@ jobs:
               echo "✅ Tag is free. Proceeding..."
             fi
           fi
+
+      - name: Generate SBOM
+        run: pnpm exec cyclonedx-npm --output-format JSON --output-file bom.json
 
       - name: Deploy
         env:

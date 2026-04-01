@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { RESPONSE_STATUS } from '#constant/index.js';
 
 import { E_UploadType } from './upload.type.js';
-import { createUploadConfig, getAndValidateFile, getFileSizeFromStream, upload, validateFileExtension, validateUpload } from './upload.util.js';
+import { createUploadConfig, getAndValidateFile, getFileSizeFromStream, getFileWebStream, upload, validateFileExtension, validateUpload } from './upload.util.js';
 
 // ---------------------------------------------------------------------------
 // validateFileExtension
@@ -192,6 +192,71 @@ describe('getAndValidateFile', () => {
         const file = createMockUploadFile('photo.bmp', 'bmp-data');
         const result = await getAndValidateFile(E_UploadType.IMAGE, await file, customConfig);
         expect(result.success).toBe(true);
+    });
+});
+
+// ---------------------------------------------------------------------------
+// getFileWebStream
+// ---------------------------------------------------------------------------
+describe('getFileWebStream', () => {
+    /**
+     *
+     */
+    function createMockUploadFile(filename: string, content: string) {
+        return Promise.resolve({
+            file: {
+                filename,
+                mimetype: 'text/plain',
+                createReadStream: () => Readable.from([Buffer.from(content)]),
+            },
+        });
+    }
+
+    it('should return error if getAndValidateFile fails', async () => {
+        const file = createMockUploadFile('hack.exe', 'bad');
+        const result = await getFileWebStream(E_UploadType.DOCUMENT, file as any);
+        expect(result.success).toBe(false);
+    });
+
+    it('should return a web stream that yields the original content', async () => {
+        const file = createMockUploadFile('test.txt', 'hello world');
+        const result = await getFileWebStream(E_UploadType.DOCUMENT, file as any);
+        expect(result.success).toBe(true);
+
+        if (result.success) {
+            const reader = result.result.getReader();
+            const { value, done } = await reader.read();
+            expect(done).toBe(false);
+            expect(Buffer.from(value!).toString()).toBe('hello world');
+        }
+    });
+
+    it('should throw stream error if size exceeds limit during stream consumption', async () => {
+        const customConfig = createUploadConfig({
+            [E_UploadType.DOCUMENT]: { allowedExtensions: ['txt'], sizeLimit: 5 },
+        });
+        let calls = 0;
+        const file = Promise.resolve({
+            file: {
+                filename: 'test.txt',
+                mimetype: 'text/plain',
+                createReadStream: () => {
+                    calls++;
+                    if (calls === 1) {
+                        return Readable.from([Buffer.from('123')]);
+                    }
+                    return Readable.from([Buffer.from('too large content')]);
+                },
+            },
+        });
+        const result = await getFileWebStream(E_UploadType.DOCUMENT, file as any, customConfig);
+
+        expect(result.success).toBe(true);
+
+        if (result.success) {
+            const reader = result.result.getReader();
+            await expect(reader.read()).rejects.toThrow('File size exceeds limit of');
+        }
     });
 });
 

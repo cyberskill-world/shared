@@ -13,7 +13,6 @@ import type { C_Document, I_CreateModelOptions, I_CreateSchemaOptions, I_Dynamic
 
 import { addGitIgnoreEntry, writeFileSync } from '../fs/index.js';
 import { MIGRATE_MONGO_CONFIG, PATH } from '../path/index.js';
-
 /**
  * Converts enum values to proper model names.
  * Handles common naming conventions like converting 'USER' to 'User'.
@@ -53,6 +52,7 @@ interface I_MongoUtils {
     isDynamicVirtual: <T, R extends string>(options?: T_VirtualOptions<T, R>) => options is I_DynamicVirtualOptions<T, R>;
     getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T[]>;
     getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T_WithId<T>[]>;
+    health: (mongooseInstance: typeof mongooseRaw) => Record<string, unknown>;
 }
 
 /**
@@ -236,8 +236,7 @@ export const mongo: I_MongoUtils = {
         const model = currentMongooseInstance.model<T>(name, createdSchema) as I_ExtendedModel<T>;
 
         if (virtuals.length > 0) {
-            // Mongoose Model has no typed _virtualConfigs; used by MongooseController.getDynamicVirtuals()
-            (model as any)._virtualConfigs = virtuals;
+            (model as I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals })._virtualConfigs = virtuals;
         }
 
         return model;
@@ -389,6 +388,7 @@ export const mongo: I_MongoUtils = {
      * @param filterFn - Function to determine if a record already exists
      * @param filter - Optional filter to narrow the query
      * @returns Array of records that don't exist in the database
+     * @since 3.13.0
      */
     async getNewRecords<T extends I_GenericDocument>(
         controller: MongoController<T>,
@@ -396,18 +396,31 @@ export const mongo: I_MongoUtils = {
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
         filter: T_Filter<T> = {} as T_Filter<T>,
     ): Promise<T[]> {
-        const existingRecords = await controller.findAll(filter);
+        const batchSize = 1000;
+        let skip = 0;
+        let isComplete = false;
 
-        if (!existingRecords.success) {
-            throw new Error(`Failed to query existing records: ${existingRecords.message}`);
-        }
+        const allExistingRecords: T_WithId<T>[] = [];
 
-        if ('truncated' in existingRecords && existingRecords.truncated) {
-            throw new Error('getNewRecords: Results were truncated by the default limit. Use pagination or set an explicit limit to ensure complete data.');
+        while (!isComplete) {
+            const pageResult = await controller.findAll(filter, { skip, limit: batchSize });
+
+            if (!pageResult.success) {
+                throw new Error(`Failed to query existing records on skip ${skip}: ${pageResult.message}`);
+            }
+
+            allExistingRecords.push(...pageResult.result);
+
+            if (pageResult.truncated && pageResult.result.length === batchSize) {
+                skip += batchSize;
+            }
+            else {
+                isComplete = true;
+            }
         }
 
         const filteredRecords = recordsToCheck.filter(newRecord =>
-            !existingRecords.result.some((existingRecord: T_WithId<T>) =>
+            !allExistingRecords.some((existingRecord: T_WithId<T>) =>
                 filterFn(existingRecord, newRecord),
             ),
         );
@@ -431,23 +444,54 @@ export const mongo: I_MongoUtils = {
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
         filter: T_Filter<T> = {} as T_Filter<T>,
     ): Promise<T_WithId<T>[]> {
-        const existingRecords = await controller.findAll(filter);
+        const batchSize = 1000;
+        let skip = 0;
+        let isComplete = false;
 
-        if (!existingRecords.success) {
-            throw new Error(`Failed to query existing records: ${existingRecords.message}`);
+        const allExistingRecords: T_WithId<T>[] = [];
+
+        while (!isComplete) {
+            const pageResult = await controller.findAll(filter, { skip, limit: batchSize });
+
+            if (!pageResult.success) {
+                throw new Error(`Failed to query existing records on skip ${skip}: ${pageResult.message}`);
+            }
+
+            allExistingRecords.push(...pageResult.result);
+
+            if (pageResult.truncated && pageResult.result.length === batchSize) {
+                skip += batchSize;
+            }
+            else {
+                isComplete = true;
+            }
         }
 
-        if ('truncated' in existingRecords && existingRecords.truncated) {
-            throw new Error('getExistingRecords: Results were truncated by the default limit. Use pagination or set an explicit limit to ensure complete data.');
-        }
-
-        const foundRecords = existingRecords.result.filter((existingRecord: T_WithId<T>) =>
+        const foundRecords = allExistingRecords.filter((existingRecord: T_WithId<T>) =>
             recordsToCheck.some((newRecord: T) =>
                 filterFn(existingRecord, newRecord),
             ),
         );
 
         return foundRecords;
+    },
+
+    /**
+     * Retrieves health and connection pool statistics for the Mongoose connection.
+     * This utility helps monitor database connection health and observability.
+     *
+     * @param mongooseInstance - The Mongoose instance to check.
+     * @returns An object containing connection health statistics.
+     */
+    health(mongooseInstance: typeof mongooseRaw): Record<string, unknown> {
+        const conn = mongooseInstance.connection;
+
+        return {
+            readyState: conn.readyState,
+            host: conn.host,
+            name: conn.name,
+            models: Object.keys(mongooseInstance.models).length,
+        };
     },
 };
 

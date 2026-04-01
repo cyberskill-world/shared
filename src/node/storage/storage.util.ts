@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { getEnv } from '#config/env/index.js';
 
+import { createTtlEnvelope, isExpiredEnvelope, isTtlEnvelope } from '../../util/storage/storage-envelope.js';
 import { catchError, log } from '../log/index.js';
 import { STORAGE_KEY_EXTENSION } from './storage.constant.js';
 
@@ -12,10 +13,13 @@ interface NodeFsDriverState {
     baseDir: string;
 }
 
-interface I_StorageEnvelope<T> {
-    __isTtlEnvelope: true;
-    expiresAt?: number;
-    value: T;
+export interface I_StorageDriver {
+    init: (options?: unknown) => Promise<void>;
+    clear: () => Promise<void>;
+    getItem: <T>(key: string) => Promise<T | null>;
+    keys: () => Promise<string[]>;
+    removeItem: (key: string) => Promise<void>;
+    setItem: <T>(key: string, value: T) => Promise<T>;
 }
 
 const nodeFsDriverState: NodeFsDriverState = {
@@ -52,11 +56,10 @@ function getFilePath(key: string, baseDir: string): string {
 /**
  * Filesystem-backed storage driver that stores JSON-encoded values on disk.
  * Directly implements all storage operations without any external dependencies.
- * storage operations without the unnecessary browser-oriented dependency.
  */
-const fsDriver = {
+const fsDriver: I_StorageDriver = {
     /** Ensures the storage directory exists. */
-    async init(baseDir?: string) {
+    async init(baseDir?: unknown) {
         try {
             if (typeof baseDir === 'string' && baseDir.length > 0) {
                 nodeFsDriverState.baseDir = baseDir;
@@ -161,25 +164,25 @@ const fsDriver = {
 };
 
 let initPromise: Promise<void> | null = null;
+let activeDriver: I_StorageDriver = fsDriver;
 
 /**
- * Initializes the filesystem storage driver (singleton, idempotent).
- * Ensures the storage directory exists before any read/write operations.
+ * Initializes the storage driver (singleton, idempotent).
  */
-async function ensureDriverReady(): Promise<typeof fsDriver> {
+async function ensureDriverReady(): Promise<I_StorageDriver> {
     if (initPromise) {
         await initPromise;
-        return fsDriver;
+        return activeDriver;
     }
 
-    initPromise = fsDriver.init().catch((error) => {
+    initPromise = activeDriver.init().catch((error) => {
         initPromise = null;
         throw error;
     });
 
     await initPromise;
 
-    return fsDriver;
+    return activeDriver;
 }
 
 /**
@@ -188,6 +191,18 @@ async function ensureDriverReady(): Promise<typeof fsDriver> {
  * with automatic initialization and error handling.
  */
 export const storage = {
+    /**
+     * Initializes the utility with a custom storage driver instead of the default filesystem driver.
+     * This allows swapping to Redis, Memory, or cloud-based drivers.
+     * Must optionally be called before the first read/write operation.
+     *
+     * @param driver - The custom storage driver object that adheres to I_StorageDriver.
+     */
+    async initDriver(driver: I_StorageDriver): Promise<void> {
+        activeDriver = driver;
+        initPromise = null;
+        await ensureDriverReady();
+    },
     /**
      * Retrieves a value from persistent storage by key.
      * This method fetches data that was previously stored using the set method.
@@ -205,16 +220,14 @@ export const storage = {
                 return null;
             }
 
-            if (typeof result === 'object' && result !== null && '__isTtlEnvelope' in result) {
-                const envelope = result as I_StorageEnvelope<T>;
-
-                if (envelope.expiresAt && Date.now() > envelope.expiresAt) {
+            if (isTtlEnvelope<T>(result)) {
+                if (isExpiredEnvelope(result)) {
                     driver.removeItem(key).catch(() => { });
 
                     return null;
                 }
 
-                return envelope.value;
+                return result.value;
             }
 
             return result as T;
@@ -241,11 +254,7 @@ export const storage = {
             let payloadToStore: unknown = value;
 
             if (options?.ttlMs) {
-                payloadToStore = {
-                    __isTtlEnvelope: true,
-                    expiresAt: Date.now() + options.ttlMs,
-                    value,
-                } as I_StorageEnvelope<T>;
+                payloadToStore = createTtlEnvelope(value, options.ttlMs);
             }
 
             await driver.setItem(key, payloadToStore);
@@ -267,6 +276,51 @@ export const storage = {
             const driver = await ensureDriverReady();
 
             await driver.removeItem(key);
+        }
+        catch (error) {
+            catchError(error);
+        }
+    },
+    /**
+     * Checks if a key exists in persistent storage.
+     * This method efficiently checks for key existence and respects TTL parsing.
+     * Returns false if the key exists but has expired.
+     *
+     * @param key - The unique identifier to check.
+     * @returns A promise that resolves to true if the key exists and has not expired.
+     * @since 3.13.0
+     */
+    async has(key: string): Promise<boolean> {
+        try {
+            const driver = await ensureDriverReady();
+            const result = await driver.getItem<unknown>(key);
+
+            if (result === null) {
+                return false;
+            }
+
+            if (isTtlEnvelope<unknown>(result)) {
+                if (isExpiredEnvelope(result)) {
+                    driver.removeItem(key).catch(() => { });
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        catch (error) {
+            return catchError(error, { returnValue: false });
+        }
+    },
+    /**
+     * Clears all entries from storage atomically.
+     * @returns A promise that resolves when the clearing operation is complete.
+     */
+    async clear(): Promise<void> {
+        try {
+            const driver = await ensureDriverReady();
+            await driver.clear();
         }
         catch (error) {
             catchError(error);
@@ -343,5 +397,6 @@ export const storage = {
  */
 export function resetStorageForTesting(): void {
     initPromise = null;
+    activeDriver = fsDriver;
     nodeFsDriverState.baseDir = '';
 }

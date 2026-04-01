@@ -1,4 +1,6 @@
 import type {
+    AnyBulkWriteOperation,
+    BulkWriteResult,
     DeleteResult,
     Filter,
     InsertManyResult,
@@ -51,6 +53,10 @@ export type T_InsertManyResult<T> = InsertManyResult<T>;
 export type T_UpdateResult = UpdateResult | UpdateWriteOpResult;
 
 export type T_DeleteResult = DeleteResult;
+
+export type T_BulkWriteOperation<T extends import('mongodb').Document = import('mongodb').Document> = AnyBulkWriteOperation<T>;
+
+export type T_BulkWriteResult = BulkWriteResult;
 
 export type T_WithId<T> = WithId<T>;
 

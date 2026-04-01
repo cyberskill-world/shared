@@ -4,6 +4,8 @@ import { log } from '../log/index.js';
 import { storage } from '../storage/index.js';
 import { clearAllErrorLists, formatCommand, getStoredErrorLists, rawCommand, resolveCommands, runCommand } from './command.util.js';
 
+const RE_QUOTE = /"/g;
+
 vi.mock('#config/env/index.js', () => ({
     getEnv: () => ({ DEBUG: true }),
 }));
@@ -212,6 +214,61 @@ describe('runCommand', () => {
         await expect(
             runCommand('throws', rawCommand('false').cmd, { throwOnError: true }),
         ).rejects.toThrow();
+    });
+
+    it('should parse JSON ESLint errors via runCommand output', async () => {
+        const json = [{
+            filePath: '/root/test.ts',
+            messages: [{ severity: 2, line: 2, column: 4, ruleId: 'no-console', message: 'error msg' }],
+        }];
+        const cmdString = `node -e "console.log(JSON.stringify(${JSON.stringify(json).replace(RE_QUOTE, '\\"')}))"`;
+        await runCommand('test json parse', cmdString);
+
+        expect(storage.set).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.arrayContaining([
+                expect.objectContaining({ file: '/root/test.ts', type: 'error', rule: 'no-console' }),
+            ]),
+        );
+    });
+
+    it('should parse text-based ESLint errors', async () => {
+        const output = `\\n/root/other.ts\\n  10:5 error  Missing semi  semi\\n`;
+        const cmdString = `node -e "console.log(\\"${output}\\")"`;
+        await runCommand('test text parse', cmdString);
+
+        expect(storage.set).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.arrayContaining([
+                expect.objectContaining({ file: '/root/other.ts', type: 'error', message: 'Missing semi' }),
+            ]),
+        );
+    });
+
+    it('should parse text-based TypeScript errors', async () => {
+        const output = `\\n/root/tsfile.ts(15,20): error TS2322: Type error msg\\n`;
+        const cmdString = `node -e "console.log(\\"${output}\\")"`;
+        await runCommand('test ts parse', cmdString);
+
+        expect(storage.set).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.arrayContaining([
+                expect.objectContaining({ file: '/root/tsfile.ts', type: 'error', message: 'Type error msg' }),
+            ]),
+        );
+    });
+
+    it('should parse commitlint errors', async () => {
+        const output = `✖   subject may not be empty   [subject-empty]`;
+        const cmdString = `node -e "console.log(\\"${output}\\")"`;
+        await runCommand('test commitlint', cmdString);
+
+        expect(storage.set).toHaveBeenCalledWith(
+            expect.any(String),
+            expect.arrayContaining([
+                expect.objectContaining({ file: 'commitlint', type: 'error', message: 'subject may not be empty' }),
+            ]),
+        );
     });
 });
 

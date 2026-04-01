@@ -150,4 +150,28 @@ describe('storage', () => {
             expect(stored.value).toBe('computed-value');
         });
     });
+    describe('has', () => {
+        it('should return true if key exists', async () => {
+            await storage.set('has-key', 'value');
+            const result = await storage.has('has-key');
+            expect(result).toBe(true);
+        });
+
+        it('should return false if key does not exist', async () => {
+            const result = await storage.has('missing-key');
+            expect(result).toBe(false);
+        });
+    });
+
+    describe('clear', () => {
+        it('should clear all keys from storage', async () => {
+            await storage.set('key1', 'val1');
+            await storage.set('key2', 'val2');
+
+            await storage.clear();
+
+            expect(mockStore).toEqual({});
+            expect(localStorage.clear).toHaveBeenCalledOnce();
+        });
+    });
 });

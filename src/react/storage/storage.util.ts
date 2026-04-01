@@ -1,10 +1,5 @@
+import { createTtlEnvelope, isExpiredEnvelope, isTtlEnvelope } from '../../util/storage/storage-envelope.js';
 import { catchError } from '../log/index.js';
-
-interface I_StorageEnvelope<T> {
-    __isTtlEnvelope: true;
-    expiresAt?: number;
-    value: T;
-}
 
 /**
  * Browser storage utility object using native localStorage.
@@ -31,16 +26,14 @@ export const storage = {
 
             const obj = JSON.parse(raw);
 
-            if (typeof obj === 'object' && obj !== null && '__isTtlEnvelope' in obj) {
-                const envelope = obj as I_StorageEnvelope<T>;
-
-                if (envelope.expiresAt && Date.now() > envelope.expiresAt) {
+            if (isTtlEnvelope<T>(obj)) {
+                if (isExpiredEnvelope(obj)) {
                     localStorage.removeItem(key);
 
                     return null;
                 }
 
-                return envelope.value;
+                return obj.value;
             }
 
             return obj as T;
@@ -65,11 +58,7 @@ export const storage = {
             let payloadToStore: unknown = value;
 
             if (options?.ttlMs) {
-                payloadToStore = {
-                    __isTtlEnvelope: true,
-                    expiresAt: Date.now() + options.ttlMs,
-                    value,
-                } as I_StorageEnvelope<T>;
+                payloadToStore = createTtlEnvelope(value, options.ttlMs);
             }
 
             localStorage.setItem(key, JSON.stringify(payloadToStore));
@@ -117,6 +106,52 @@ export const storage = {
         }
         catch (error) {
             return catchError(error, { returnValue: [] });
+        }
+    },
+    /**
+     * Checks if a key exists in browser storage.
+     * This method efficiently checks for key existence without deserializing the value.
+     * It also respects TTL — returns false if the key exists but has expired.
+     *
+     * @param key - The unique identifier to check.
+     * @returns A promise that resolves to true if the key exists and has not expired.
+     */
+    async has(key: string): Promise<boolean> {
+        try {
+            const raw = localStorage.getItem(key);
+
+            if (raw === null) {
+                return false;
+            }
+
+            const obj = JSON.parse(raw);
+
+            if (isTtlEnvelope<unknown>(obj)) {
+                if (isExpiredEnvelope(obj)) {
+                    localStorage.removeItem(key);
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        catch (error) {
+            return catchError(error, { returnValue: false });
+        }
+    },
+    /**
+     * Clears all values from browser storage.
+     * This method permanently removes all stored data.
+     *
+     * @returns A promise that resolves when the clear operation is complete.
+     */
+    async clear(): Promise<void> {
+        try {
+            localStorage.clear();
+        }
+        catch (error) {
+            catchError(error);
         }
     },
     /**

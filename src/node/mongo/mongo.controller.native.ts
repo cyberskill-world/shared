@@ -1,6 +1,6 @@
 import type { I_Return } from '#typescript/index.js';
 
-import type { C_Collection, C_Db, C_Document, T_DeleteResult, T_Filter, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from './mongo.type.js';
+import type { C_Collection, C_Db, C_Document, T_BulkWriteOperation, T_BulkWriteResult, T_DeleteResult, T_Filter, T_OptionalUnlessRequiredId, T_UpdateResult, T_WithId } from './mongo.type.js';
 
 import { catchError, log } from '../log/index.js';
 import { MONGO_MAX_TIME_MS } from './mongo.constant.js';
@@ -124,14 +124,22 @@ export class MongoController<D extends Partial<C_Document>> {
      */
     async findAll(
         filter: T_Filter<D> = {},
+        options?: { skip?: number; limit?: number },
     ): Promise<I_Return<T_WithId<D>[]>> {
         try {
-            const result = await this.collection.find(filter).limit(this.defaultLimit).maxTimeMS(MONGO_MAX_TIME_MS).toArray();
+            const limit = options?.limit ?? this.defaultLimit;
+            let query = this.collection.find(filter).limit(limit).maxTimeMS(MONGO_MAX_TIME_MS);
 
-            const truncated = result.length === this.defaultLimit;
+            if (options?.skip) {
+                query = query.skip(options.skip);
+            }
+
+            const result = await query.toArray();
+
+            const truncated = result.length === limit;
 
             if (truncated) {
-                log.warn(`[${this.collectionName}] findAll returned exactly ${this.defaultLimit} documents (the default limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
+                log.warn(`[${this.collectionName}] findAll returned exactly ${limit} documents (the limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
             }
 
             return {
@@ -282,4 +290,53 @@ export class MongoController<D extends Partial<C_Document>> {
             return catchError<T_DeleteResult>(error);
         }
     }
+
+    /**
+     * Executes multiple write operations in a single batch.
+     * Use this for high-performance ingestion or batched updates.
+     * Note: This method does NOT automatically add generic fields (id, timestamps)
+     * to the documents. If required, inject these fields before invoking bulkWrite.
+     *
+     * @param operations - The array of bulk write operations.
+     * @returns A promise that resolves to a standardized response with the bulk write result.
+     */
+    async bulkWrite(
+        operations: T_BulkWriteOperation<D>[],
+    ): Promise<I_Return<T_BulkWriteResult>> {
+        try {
+            if (!operations.length) {
+                return wrapError('No bulk write operations provided');
+            }
+
+            const result = await this.collection.bulkWrite(operations);
+
+            return {
+                success: true,
+                message: 'Bulk write executed successfully',
+                result,
+            };
+        }
+        catch (error) {
+            return catchError<T_BulkWriteResult>(error);
+        }
+    }
+}
+
+/**
+ * Factory function to create a native MongoController.
+ * Use this method to construct controllers in migration scripts or services.
+ *
+ * @param db - The MongoDB database instance.
+ * @param collectionName - The name of the collection.
+ * @param options - Controller options.
+ * @param options.defaultLimit - Optional default limit for pagination.
+ * @returns A new MongoController instance for the given collection.
+ * @since 3.13.0
+ */
+export function createMongoController<D extends Partial<C_Document>>(
+    db: C_Db,
+    collectionName: string,
+    options?: { defaultLimit?: number },
+): MongoController<D> {
+    return new MongoController<D>(db, collectionName, options);
 }

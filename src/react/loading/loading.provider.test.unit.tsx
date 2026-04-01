@@ -24,6 +24,22 @@ function TestConsumer() {
     );
 }
 
+/**
+ *
+ */
+function ContextCapture({ onCapture }: { onCapture: (val: any) => void }) {
+    onCapture(useLoading());
+    return null;
+}
+
+/**
+ *
+ */
+function Reader({ onRead }: { onRead: (val: unknown) => void }) {
+    onRead(React.use(LoadingContext));
+    return null;
+}
+
 describe('LoadingProvider', () => {
     it('should render children when not loading', () => {
         render(<LoadingProvider><span>content</span></LoadingProvider>);
@@ -54,6 +70,38 @@ describe('LoadingProvider', () => {
         });
         expect(screen.getByTestId('loading').textContent).toBe('local');
     });
+
+    it('should hide loading when hideLoading is called', async () => {
+        let capturedContext: any;
+        /**
+         *
+         */
+        // ContextCapture component moved to module scope
+
+        const handleCapture = (val: any) => {
+            capturedContext = val;
+        };
+
+        render(
+            <LoadingProvider>
+                <ContextCapture onCapture={handleCapture} />
+            </LoadingProvider>,
+        );
+
+        await act(() => {
+            capturedContext.showLoading();
+        });
+        expect(screen.getByTestId('loading')).toBeInTheDocument();
+
+        // At this point ContextCapture is unmounted because isLoading=true replaces children.
+        // But we have captured `hideLoading` reference!
+        await act(() => {
+            capturedContext.hideLoading();
+        });
+
+        // Now children are mounted again!
+        expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    });
 });
 
 describe('useLoading', () => {
@@ -76,14 +124,10 @@ describe('useLoading', () => {
 describe('LoadingContext', () => {
     it('should default to undefined', () => {
         let contextValue: unknown;
-        /**
-         *
-         */
-        function Reader() {
-            contextValue = React.use(LoadingContext);
-            return null;
-        }
-        render(<Reader />);
+        const handleRead = (v: unknown) => {
+            contextValue = v;
+        };
+        render(<Reader onRead={handleRead} />);
         expect(contextValue).toBeUndefined();
     });
 });
