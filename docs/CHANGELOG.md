@@ -1,38 +1,10 @@
-## [3.15.0](https://github.com/cyberskill-world/shared/compare/v3.14.0...v3.15.0) (2026-04-01)
+## [3.16.0](https://github.com/cyberskill-world/shared/compare/v3.15.0...v3.16.0) (2026-04-01)
 
 ### ✨ Features
 
+* auto-merge unreleased changelog on deploy ([2ef2a3d](https://github.com/cyberskill-world/shared/commit/2ef2a3d23ef90fd7b65548629b94a8c584845929))
+* fix SBOM ([e0aa71f](https://github.com/cyberskill-world/shared/commit/e0aa71f78027e378454c17a9d425faf3b514e12e))
 * new deploy flow ([6712d92](https://github.com/cyberskill-world/shared/commit/6712d92ad1be492a120bfdb4cb870d07414214d7))
-
-### 🐛 Bug Fixes
-
-* use full commit SHA for GitHub Action refs ([87952ac](https://github.com/cyberskill-world/shared/commit/87952ac9efa662239594ab7fafd56671d0127d0a))
-* use full commit SHA for GitHub Action refs ([a42cbdb](https://github.com/cyberskill-world/shared/commit/a42cbdb920896755f0e932b83fc4325d63054edf))
-
-## [Unreleased] — Codebase Health Audit (2026-04-01)
-
-> Agent-driven audit: 11 issues identified, 7 code fixes applied, 2 documentation improvements, 2 accepted as-is.
-> Verified: 734/734 tests pass · Clean build · 0 dependency vulnerabilities.
-
-### 🔒 Security
-
-* **serializer:** guard `RegExp` reconstruction against ReDoS with `MAX_REGEXP_SOURCE_LENGTH` (1000 chars) and flag validation ([H-2])
-* **serializer:** add JSDoc warning that serializer is NOT for untrusted external input ([H-2])
-* **express:** fix CORS bypass where `...rest` spread could override `origin`/`credentials` callbacks ([M-3])
-* **express:** add `cookieSecret` option to `I_ExpressOptions` and `I_NestOptions` for signed cookie support ([M-6])
-
-### 🐛 Bug Fixes
-
-* **command:** fix regex evaluation ordering for TS vs. ESLint output parser so that absolute paths don't falsely abort matching
-
-### ♻️ Refactoring
-
-* **mongo:** replace unsafe `(model as any)._virtualConfigs` with typed intersection `I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals }` ([H-1])
-* **vitest:** remove triple `as any` cast in `vitest.e2e.ts` and `vitest.unit.ts`; use `deepMerge<UserConfig>()` generic ([M-1])
-* **mongo:** implement cursor-based pagination loop in `getNewRecords` and `getExistingRecords` to avoid data truncation
-
-### ✨ Features
-
 * **mongo:** implement `bulkWrite` with typing in native controller ([SC-2])
 * **mongo:** export `createMongoController` factory function for native driver symmetry
 * **cli:** add usage examples to command help documentation ([DX-1])
@@ -41,6 +13,25 @@
 * **command:** export `resetCommandCacheForTesting()` for test isolation of `_cachedPackageName` ([L-3])
 * **next-intl:** export `getTranslationsNextIntl` Server Component function in dual entry point `./react/next-intl/server`
 * **i18next:** export `getTranslationsI18next` non-hook function with dual instance support in `./react/i18next/server`
+
+### 🐛 Bug Fixes
+
+* use full commit SHA for GitHub Action refs ([87952ac](https://github.com/cyberskill-world/shared/commit/87952ac9efa662239594ab7fafd56671d0127d0a))
+* use full commit SHA for GitHub Action refs ([a42cbdb](https://github.com/cyberskill-world/shared/commit/a42cbdb920896755f0e932b83fc4325d63054edf))
+* **command:** fix regex evaluation ordering for TS vs. ESLint output parser so that absolute paths don't falsely abort matching
+
+### 🔒 Security
+
+* **serializer:** guard `RegExp` reconstruction against ReDoS with `MAX_REGEXP_SOURCE_LENGTH` (1000 chars) and flag validation ([H-2])
+* **serializer:** add JSDoc warning that serializer is NOT for untrusted external input ([H-2])
+* **express:** fix CORS bypass where `...rest` spread could override `origin`/`credentials` callbacks ([M-3])
+* **express:** add `cookieSecret` option to `I_ExpressOptions` and `I_NestOptions` for signed cookie support ([M-6])
+
+### ♻️ Refactoring
+
+* **mongo:** replace unsafe `(model as any)._virtualConfigs` with typed intersection `I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals }` ([H-1])
+* **vitest:** remove triple `as any` cast in `vitest.e2e.ts` and `vitest.unit.ts`; use `deepMerge<UserConfig>()` generic ([M-1])
+* **mongo:** implement cursor-based pagination loop in `getNewRecords` and `getExistingRecords` to avoid data truncation
 
 ### 📝 Documentation
 
@@ -69,8 +60,6 @@
 * **config:** extend branch coverage for `mergeConfigs` with comprehensive mock configuration evaluation
 * **apollo-error:** add E2E tests validating provider context rendering and interaction
 * **storage:** optimize unit test mocks by refactoring dynamic module loading to standard static imports
-
----
 
 ## [3.13.0](https://github.com/cyberskill-world/shared/compare/v3.12.0...v3.13.0) (2026-03-27)
 
