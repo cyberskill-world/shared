@@ -26,6 +26,13 @@ export const MIGRATE_MONGO_CONFIG = '.migrate-mongo.config.js';
 let _cyberskillDir: string | null = null;
 
 /**
+ * Resets the cached directory path. For testing only.
+ */
+export function resetCyberskillDirCacheForTesting(): void {
+    _cyberskillDir = null;
+}
+
+/**
  * Lazily computes the CyberSkill directory path.
  * Reads package.json on first access to determine whether this is the shared package itself
  * or a consumer project, avoiding filesystem reads at module load time.

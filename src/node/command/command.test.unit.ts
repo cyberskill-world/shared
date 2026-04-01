@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { log } from '../log/index.js';
@@ -7,7 +8,7 @@ import { clearAllErrorLists, formatCommand, getStoredErrorLists, rawCommand, res
 const RE_QUOTE = /"/g;
 
 vi.mock('#config/env/index.js', () => ({
-    getEnv: () => ({ DEBUG: true }),
+    getEnv: vi.fn(() => ({ DEBUG: true })),
 }));
 
 vi.mock('../log/index.js', () => ({
@@ -208,6 +209,29 @@ describe('runCommand', () => {
         await runCommand('no-op', undefined);
         expect(log.start).toHaveBeenCalledWith('no-op');
         expect(log.success).toHaveBeenCalledWith('no-op done.');
+    });
+
+    it('should set and clear progress timer when DEBUG is false', async () => {
+        const { getEnv } = await import('#config/env/index.js');
+        vi.mocked(getEnv).mockReturnValueOnce({ DEBUG: false } as any);
+
+        vi.useFakeTimers();
+        const spyStdout = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+
+        const promise = runCommand('timer test', rawCommand('echo hi').cmd);
+
+        // Wait for the setInterval to advance past 1 second
+        vi.advanceTimersByTime(1100);
+        expect(spyStdout).toHaveBeenCalledWith(expect.stringContaining('timer test... 1s'));
+
+        // Let the test finish
+        vi.useRealTimers();
+        await promise;
+
+        // verify clearing character written
+        expect(spyStdout).toHaveBeenCalledWith('\r\x1B[K');
+
+        spyStdout.mockRestore();
     });
 
     it('should throw when throwOnError is true', async () => {

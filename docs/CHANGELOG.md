@@ -51,6 +51,11 @@
 * **tests:** mock `log` module in WebSockets and Mongo tests to silence expected warnings and error stack traces during negative assertions
 * **upload:** simulate partial streams to cover transform limits in WebStream parser payload sizing
 * **validate:** extend `isEmpty` coverage across exotic JS collections (`Date`, `Set`, `Map`, `ArrayBuffer`)
+* **path:** optimize `path.fallback.test.unit.ts` execution time by 450x via cached directory resets instead of dynamic module busting
+* **command:** add test coverage for progress timer interval logic within `runCommand`
+* **config:** extend branch coverage for `mergeConfigs` with comprehensive mock configuration evaluation
+* **apollo-error:** add E2E tests validating provider context rendering and interaction
+* **storage:** optimize unit test mocks by refactoring dynamic module loading to standard static imports
 
 ---
 

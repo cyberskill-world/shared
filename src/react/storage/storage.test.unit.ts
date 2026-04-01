@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { storage } from './storage.util.js';
+
 vi.mock('../log/index.js', () => ({
     catchError: vi.fn((_error: unknown, opts?: { returnValue?: unknown }) => opts?.returnValue !== undefined ? opts.returnValue : undefined),
 }));
 
 describe('storage', () => {
-    let storage: typeof import('./storage.util.js')['storage'];
-
     const mockStore: Record<string, string> = {};
 
     beforeEach(async () => {
@@ -23,9 +23,6 @@ describe('storage', () => {
             get length() { return Object.keys(mockStore).length; },
             clear: vi.fn(() => { Object.keys(mockStore).forEach(k => delete mockStore[k]); }),
         });
-
-        const mod = await import('./storage.util.js');
-        storage = mod.storage;
     });
 
     afterEach(() => {
