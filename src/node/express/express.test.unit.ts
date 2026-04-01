@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createCors, createCorsOptions, createExpress, createNest, createSession } from './express.util.js';
+import { createCors, createCorsOptions, createCSP, createExpress, createNest, createSession } from './express.util.js';
 
 // ---------------------------------------------------------------------------
 // createCorsOptions
@@ -229,5 +229,43 @@ describe('createNest', () => {
     it('should accept trustProxy option', async () => {
         const app = await createNest({ module: {} as any, trustProxy: true });
         expect(app).toBeDefined();
+    });
+});
+
+// ---------------------------------------------------------------------------
+// createCSP
+// ---------------------------------------------------------------------------
+describe('createCSP', () => {
+    it('should return default preset CSP directives', () => {
+        const csp = createCSP();
+        expect((csp.directives as any)['defaultSrc']).toContain('\'self\'');
+        expect((csp.directives as any)['scriptSrc']).toEqual(['\'self\'']);
+        expect((csp.directives as any)['styleSrc']).toEqual(['\'self\'', '\'unsafe-inline\'']);
+    });
+
+    it('should return graphql preset CSP directives', () => {
+        const csp = createCSP(undefined, 'graphql');
+        expect((csp.directives as any)['scriptSrc']).toContain('\'unsafe-inline\'');
+        expect((csp.directives as any)['scriptSrc']).toContain('https://cdn.jsdelivr.net');
+    });
+
+    it('should merge user provided directives', () => {
+        const csp = createCSP({ frameSrc: ['\'none\''] });
+        expect((csp.directives as any)['frameSrc']).toEqual(['\'none\'']);
+        expect((csp.directives as any)['defaultSrc']).toContain('\'self\''); // default still there
+    });
+});
+
+// ---------------------------------------------------------------------------
+// createSession (Additional coverage)
+// ---------------------------------------------------------------------------
+describe('createSession additional coverage', () => {
+    it('should throw if no secret is provided', () => {
+        expect(() => createSession({} as any)).toThrowError('Session secret is required');
+    });
+
+    it('should set secure defaults', () => {
+        const sessionMiddleware = createSession({ secret: 'test-secret' });
+        expect(typeof sessionMiddleware).toBe('function');
     });
 });

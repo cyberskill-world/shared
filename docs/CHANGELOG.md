@@ -18,10 +18,12 @@
 
 * **mongo:** replace unsafe `(model as any)._virtualConfigs` with typed intersection `I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals }` ([H-1])
 * **vitest:** remove triple `as any` cast in `vitest.e2e.ts` and `vitest.unit.ts`; use `deepMerge<UserConfig>()` generic ([M-1])
+* **mongo:** implement cursor-based pagination loop in `getNewRecords` and `getExistingRecords` to avoid data truncation
 
 ### ✨ Features
 
 * **mongo:** implement `bulkWrite` with typing in native controller ([SC-2])
+* **mongo:** export `createMongoController` factory function for native driver symmetry
 * **cli:** add usage examples to command help documentation ([DX-1])
 * **typescript:** add `unwrapOrThrow` alias for standard result extraction ([DX-2])
 * **apollo-client:** add `debug?: boolean` option to `I_ApolloOptions`; `roundTripLink` excluded from link chain by default ([M-5])
@@ -37,6 +39,7 @@
 * **apollo-error:** mock JSDOM location reloads to verify exact component recovery parameters
 * **apollo-server:** add coverage for query depth limiting AST visitor logic and plugin initialization
 * **command:** enhance unit tests to evaluate ESLint/TS text output parsing logic and improve failure path coverage
+* **express:** create unit tests for `createCSP()` and `createSession()` presets and overrides
 * **loading:** capture closure reference to validate `hideLoading` unmount resilience
 * **loading:** add preliminary component-level E2E coverage for global loading provider and hooks in a simulated DOM environment
 * **log:** mock `log.warn`/`log.error` in expected failure tests to significantly reduce noisy console output

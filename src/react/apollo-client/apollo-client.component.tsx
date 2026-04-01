@@ -31,8 +31,7 @@ import { getClient } from './apollo-client.util.js';
 export function ApolloProvider({ options, children, onError }: I_ApolloProviderProps) {
     const client = useMemo(
         () => getClient(options ?? {}),
-        // Depend on stable primitive values to avoid recreating ApolloClient when parent re-renders
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react/exhaustive-deps -- intended to only recreate on uri/wsUrl change
         [options?.uri, options?.wsUrl],
     );
 

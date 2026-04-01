@@ -7,7 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { I_ReturnSuccess } from '../../typescript/common.type.js';
 import type { C_Db } from './mongo.type.js';
 
-import { MongoController } from './mongo.controller.native.js';
+import { createMongoController, MongoController } from './mongo.controller.native.js';
 
 vi.mock('@dotenvx/dotenvx', () => ({
     default: { config: vi.fn() },
@@ -275,6 +275,18 @@ describe('MongoController (Native)', () => {
 
             expect(result.success).toBe(false);
             expect(result.code).toBe(404);
+        });
+    });
+
+    describe('createMongoController', () => {
+        it('should create and return a native MongoController instance', () => {
+            const { db } = createMockDb();
+            const controller = createMongoController(db, 'factoryCollection', { defaultLimit: 50 });
+
+            expect(controller).toBeInstanceOf(MongoController);
+            // Since db and collection properties are private, we just test if the returned instance is correct
+            expect(controller).toHaveProperty('findAll');
+            expect(controller).toHaveProperty('findOne');
         });
     });
 });

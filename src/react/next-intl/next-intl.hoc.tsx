@@ -12,6 +12,36 @@ import { NEXT_INTL_DEFAULT_LANGUAGE } from './next-intl.constant.js';
 import { useNextIntl } from './next-intl.hook.js';
 
 /**
+ * Internal component wrapper for the HOC
+ */
+// eslint-disable-next-line react-refresh/only-export-components -- HOC is an allowed export
+function PageWithI18nInternal<T extends I_Children>(
+    props: T & { languages: I_NextIntlLanguage[]; messages: T_NextIntlMessageList; TargetComponent: ComponentType<T> },
+) {
+    const { currentLanguage } = useNextIntl();
+    const { messages, languages, TargetComponent } = props;
+    const defaultLang = 'en';
+
+    const defaultMessages = messages[currentLanguage?.value || defaultLang];
+    const timeZone = languages.find(lang => lang.value === currentLanguage?.value)?.timezone ?? NEXT_INTL_DEFAULT_LANGUAGE.timezone;
+
+    if (!messages) {
+        log.warn(`Missing messages for language: ${currentLanguage?.value || defaultLang}`);
+        return null;
+    }
+
+    return (
+        <NextIntlClientProvider
+            locale={currentLanguage?.value || defaultLang}
+            messages={defaultMessages || null}
+            timeZone={timeZone}
+        >
+            <TargetComponent {...(props as T)} />
+        </NextIntlClientProvider>
+    );
+}
+
+/**
  * Higher-Order Component (HOC) that wraps components with Next.js internationalization support.
  * This HOC provides internationalization capabilities to React components by wrapping them
  * with the NextIntlClientProvider. It automatically handles language detection, message
@@ -28,31 +58,11 @@ import { useNextIntl } from './next-intl.hook.js';
  * @returns A new component with internationalization capabilities and additional props for languages and messages.
  */
 export function withNextIntl<T extends I_Children>(Component: ComponentType<T>) {
-    const PageWithI18n = (props: T & { languages: I_NextIntlLanguage[]; messages: T_NextIntlMessageList }) => {
-        const { currentLanguage } = useNextIntl();
-        const { messages, languages } = props;
-        const defaultLang = 'en';
-
-        const defaultMessages = messages[currentLanguage?.value || defaultLang];
-        const timeZone = languages.find(lang => lang.value === currentLanguage?.value)?.timezone ?? NEXT_INTL_DEFAULT_LANGUAGE.timezone;
-
-        if (!messages) {
-            log.warn(`Missing messages for language: ${currentLanguage?.value || defaultLang}`);
-            return null;
-        }
-
-        return (
-            <NextIntlClientProvider
-                locale={currentLanguage?.value || defaultLang}
-                messages={defaultMessages || null}
-                timeZone={timeZone}
-            >
-                <Component {...(props as T)} />
-            </NextIntlClientProvider>
-        );
+    const hoc = (props: T & { languages: I_NextIntlLanguage[]; messages: T_NextIntlMessageList }) => {
+        return <PageWithI18nInternal {...props} TargetComponent={Component} />;
     };
 
-    PageWithI18n.displayName = `withNextIntl(${Component.displayName || Component.name || 'Component'})`;
+    hoc.displayName = `withNextIntl(${Component.displayName || Component.name || 'Component'})`;
 
-    return PageWithI18n;
+    return hoc as unknown as ComponentType<T & { languages: I_NextIntlLanguage[]; messages: T_NextIntlMessageList }>;
 }

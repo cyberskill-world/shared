@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { getEnv } from '#config/env/index.js';
 
+import { createTtlEnvelope, isExpiredEnvelope, isTtlEnvelope } from '../../util/storage/storage-envelope.js';
 import { catchError, log } from '../log/index.js';
 import { STORAGE_KEY_EXTENSION } from './storage.constant.js';
 
@@ -19,12 +20,6 @@ export interface I_StorageDriver {
     keys: () => Promise<string[]>;
     removeItem: (key: string) => Promise<void>;
     setItem: <T>(key: string, value: T) => Promise<T>;
-}
-
-interface I_StorageEnvelope<T> {
-    __isTtlEnvelope: true;
-    expiresAt?: number;
-    value: T;
 }
 
 const nodeFsDriverState: NodeFsDriverState = {
@@ -225,16 +220,14 @@ export const storage = {
                 return null;
             }
 
-            if (typeof result === 'object' && result !== null && '__isTtlEnvelope' in result) {
-                const envelope = result as I_StorageEnvelope<T>;
-
-                if (envelope.expiresAt && Date.now() > envelope.expiresAt) {
+            if (isTtlEnvelope<T>(result)) {
+                if (isExpiredEnvelope(result)) {
                     driver.removeItem(key).catch(() => { });
 
                     return null;
                 }
 
-                return envelope.value;
+                return result.value;
             }
 
             return result as T;
@@ -261,11 +254,7 @@ export const storage = {
             let payloadToStore: unknown = value;
 
             if (options?.ttlMs) {
-                payloadToStore = {
-                    __isTtlEnvelope: true,
-                    expiresAt: Date.now() + options.ttlMs,
-                    value,
-                } as I_StorageEnvelope<T>;
+                payloadToStore = createTtlEnvelope(value, options.ttlMs);
             }
 
             await driver.setItem(key, payloadToStore);
@@ -290,6 +279,38 @@ export const storage = {
         }
         catch (error) {
             catchError(error);
+        }
+    },
+    /**
+     * Checks if a key exists in persistent storage.
+     * This method efficiently checks for key existence and respects TTL parsing.
+     * Returns false if the key exists but has expired.
+     *
+     * @param key - The unique identifier to check.
+     * @returns A promise that resolves to true if the key exists and has not expired.
+     * @since 3.13.0
+     */
+    async has(key: string): Promise<boolean> {
+        try {
+            const driver = await ensureDriverReady();
+            const result = await driver.getItem<unknown>(key);
+
+            if (result === null) {
+                return false;
+            }
+
+            if (isTtlEnvelope<unknown>(result)) {
+                if (isExpiredEnvelope(result)) {
+                    driver.removeItem(key).catch(() => { });
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        catch (error) {
+            return catchError(error, { returnValue: false });
         }
     },
     /**

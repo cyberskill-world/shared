@@ -114,6 +114,42 @@ describe('storage.getOrSet', () => {
 });
 
 // ---------------------------------------------------------------------------
+// storage.has
+// ---------------------------------------------------------------------------
+describe('storage.has', () => {
+    it('should return true if key exists', async () => {
+        await storage.set('has-key', 'data');
+        const result = await storage.has('has-key');
+        expect(result).toBe(true);
+    });
+
+    it('should return false if key does not exist', async () => {
+        const result = await storage.has('has-missing');
+        expect(result).toBe(false);
+    });
+
+    it('should return false and remove key if ttl expired', async () => {
+        vi.useFakeTimers();
+        try {
+            await storage.set('has-ttl', 'data', { ttlMs: 100 });
+            let result = await storage.has('has-ttl');
+            expect(result).toBe(true);
+
+            vi.advanceTimersByTime(150);
+            result = await storage.has('has-ttl');
+            expect(result).toBe(false);
+
+            // Verify it was actually removed
+            const getResult = await storage.get('has-ttl');
+            expect(getResult).toBeNull();
+        }
+        finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+// ---------------------------------------------------------------------------
 // storage.remove
 // ---------------------------------------------------------------------------
 describe('storage.remove', () => {

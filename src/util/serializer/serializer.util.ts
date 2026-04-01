@@ -46,7 +46,7 @@ export const serializer: I_Serializer<unknown> = {
      * @returns The serialized JSON string that can be safely stored or transmitted.
      */
     serialize(value) {
-        return JSON.stringify(value, function (this: any, _key, val) {
+        return JSON.stringify(value, function (this: Record<string, unknown>, _key, val) {
             // Date#toJSON fires before the replacer, converting a Date to an ISO string.
             // We must read this[_key] to detect the original Date object.
             const originalValue = this[_key];

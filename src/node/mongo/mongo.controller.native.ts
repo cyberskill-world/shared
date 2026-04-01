@@ -124,14 +124,22 @@ export class MongoController<D extends Partial<C_Document>> {
      */
     async findAll(
         filter: T_Filter<D> = {},
+        options?: { skip?: number; limit?: number },
     ): Promise<I_Return<T_WithId<D>[]>> {
         try {
-            const result = await this.collection.find(filter).limit(this.defaultLimit).maxTimeMS(MONGO_MAX_TIME_MS).toArray();
+            const limit = options?.limit ?? this.defaultLimit;
+            let query = this.collection.find(filter).limit(limit).maxTimeMS(MONGO_MAX_TIME_MS);
 
-            const truncated = result.length === this.defaultLimit;
+            if (options?.skip) {
+                query = query.skip(options.skip);
+            }
+
+            const result = await query.toArray();
+
+            const truncated = result.length === limit;
 
             if (truncated) {
-                log.warn(`[${this.collectionName}] findAll returned exactly ${this.defaultLimit} documents (the default limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
+                log.warn(`[${this.collectionName}] findAll returned exactly ${limit} documents (the limit). Results may be truncated. Consider using pagination or setting an explicit limit.`);
             }
 
             return {
@@ -312,4 +320,23 @@ export class MongoController<D extends Partial<C_Document>> {
             return catchError<T_BulkWriteResult>(error);
         }
     }
+}
+
+/**
+ * Factory function to create a native MongoController.
+ * Use this method to construct controllers in migration scripts or services.
+ *
+ * @param db - The MongoDB database instance.
+ * @param collectionName - The name of the collection.
+ * @param options - Controller options.
+ * @param options.defaultLimit - Optional default limit for pagination.
+ * @returns A new MongoController instance for the given collection.
+ * @since 3.13.0
+ */
+export function createMongoController<D extends Partial<C_Document>>(
+    db: C_Db,
+    collectionName: string,
+    options?: { defaultLimit?: number },
+): MongoController<D> {
+    return new MongoController<D>(db, collectionName, options);
 }

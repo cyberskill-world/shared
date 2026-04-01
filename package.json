@@ -235,14 +235,14 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@antfu/eslint-config": "7.7.3",
+        "@antfu/eslint-config": "8.0.0",
         "@apollo/client": "4.1.6",
         "@apollo/client-integration-nextjs": "0.14.4",
         "@apollo/server": "5.5.0",
         "@as-integrations/express5": "1.1.2",
         "@dotenvx/dotenvx": "1.59.1",
         "@eddeee888/gcg-typescript-resolver-files": "0.15.0",
-        "@eslint-react/eslint-plugin": "2.13.0",
+        "@eslint-react/eslint-plugin": "3.0.0",
         "@graphql-codegen/cli": "6.2.1",
         "@graphql-codegen/client-preset": "5.2.4",
         "@nestjs/common": "11.1.17",
@@ -293,6 +293,7 @@
     "devDependencies": {
         "@commitlint/cli": "20.5.0",
         "@commitlint/config-conventional": "20.5.0",
+        "@cyclonedx/cyclonedx-npm": "4.2.1",
         "@eslint/config-inspector": "1.5.0",
         "@next/eslint-plugin-next": "16.2.2",
         "@semantic-release/changelog": "6.0.3",
@@ -325,6 +326,7 @@
         "eslint": "10.1.0",
         "glob": "13.0.6",
         "jsdom": "29.0.1",
+        "license-checker": "25.0.1",
         "lint-staged": "16.4.0",
         "node-modules-inspector": "1.4.2",
         "npm-run-all2": "8.0.4",
@@ -344,6 +346,7 @@
     },
     "pnpm": {
         "overrides": {
+            "lodash": ">=4.17.23",
             "minimatch": ">=10.2.4",
             "path-to-regexp": "8.4.1"
         }

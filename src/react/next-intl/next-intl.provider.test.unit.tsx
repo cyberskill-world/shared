@@ -28,17 +28,21 @@ function TestConsumer() {
     return <span data-testid="lang">{ctx.currentLanguage.value}</span>;
 }
 
+/**
+ *
+ */
+function Reader({ onRead }: { onRead: (val: unknown) => void }) {
+    onRead(React.use(NextIntlContext));
+    return null;
+}
+
 describe('NextIntlContext', () => {
     it('should default to undefined', () => {
         let contextValue: unknown;
-        /**
-         *
-         */
-        function Reader() {
-            contextValue = React.use(NextIntlContext);
-            return null;
-        }
-        render(<Reader />);
+        const handleRead = (v: unknown) => {
+            contextValue = v;
+        };
+        render(<Reader onRead={handleRead} />);
         expect(contextValue).toBeUndefined();
     });
 });
@@ -68,14 +72,14 @@ describe('NextIntlProvider', () => {
     });
 });
 
-describe('withNextIntl HOC', () => {
-    /**
-     *
-     */
-    function BaseComponent({ children }: { children?: React.ReactNode }) {
-        return <div data-testid="base">{children}</div>;
-    }
+/**
+ *
+ */
+function BaseComponent({ children }: { children?: React.ReactNode }) {
+    return <div data-testid="base">{children}</div>;
+}
 
+describe('withNextIntl HOC', () => {
     const WrappedComponent = withNextIntl(BaseComponent);
 
     it('should set displayName', () => {
