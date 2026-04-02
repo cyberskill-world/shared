@@ -486,24 +486,30 @@ export const mongo: I_MongoUtils = {
     health(mongooseInstance: typeof mongooseRaw): Record<string, unknown> {
         const conn = mongooseInstance.connection;
 
-        let totalConnections = 0;
-        let availableConnections = 0;
+        let pool: { totalConnections: number; availableConnections: number } | null = null;
 
         try {
-            const client = (conn as any).client;
+            // Prefer the public getClient() API; fall back to the internal .client
+            // property for older mongoose versions that do not expose getClient().
+            const client = (conn as any).getClient?.() ?? (conn as any).client;
 
             if (client?.topology?.s?.servers && client.topology.s.servers instanceof Map) {
+                let totalConnections = 0;
+                let availableConnections = 0;
+
                 client.topology.s.servers.forEach((server: any) => {
-                    const pool = server.s?.pool;
-                    if (pool) {
-                        totalConnections += pool.totalConnectionCount ?? 0;
-                        availableConnections += pool.availableConnectionCount ?? 0;
+                    const serverPool = server.s?.pool;
+                    if (serverPool) {
+                        totalConnections += serverPool.totalConnectionCount ?? 0;
+                        availableConnections += serverPool.availableConnectionCount ?? 0;
                     }
                 });
+
+                pool = { totalConnections, availableConnections };
             }
         }
         catch {
-            // Safe fallback if internal topology API changes
+            // Pool metrics rely on driver internals that may change across upgrades
         }
 
         return {
@@ -511,10 +517,8 @@ export const mongo: I_MongoUtils = {
             host: conn.host,
             name: conn.name,
             models: Object.keys(mongooseInstance.models).length,
-            pool: {
-                totalConnections,
-                availableConnections,
-            },
+            pool,
+            poolMetricsAvailable: pool !== null,
         };
     },
 };

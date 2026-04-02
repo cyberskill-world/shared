@@ -1,4 +1,4 @@
-## Unreleased
+## [Unreleased]
 
 ### ✨ Features
 
@@ -11,7 +11,6 @@
 ### 🔒 Security
 
 * **deps:** fix 4 vulnerabilities (2 high, 2 moderate) — update \`lodash\` override to \`>=4.18.0\` and add \`lodash-es\` override to \`>=4.18.0\` in \`pnpm.overrides\` (GHSA-r5fr-rjxr-66jc, GHSA-f23m-r3pf-42rh)
-* **deps:** remove \`lodash\` overrides and update \`@semantic-release/changelog\` and \`@semantic-release/github\` to resolve transitive dependencies
 
 ### 🔧 CI
 

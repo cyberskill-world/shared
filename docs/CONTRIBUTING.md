@@ -77,7 +77,7 @@ pnpm run build
 pnpm run test
 ```
 
-> For the full list of development commands, see the [Development section in README.md](README.md#️-development).
+> For the full list of development commands, see the [Development section in README.md](README.md#development).
 
 ### Environment Configuration
 
