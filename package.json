@@ -230,7 +230,7 @@
     },
     "scripts": {
         "ai:setup": "tsx src/node/cli/index.ts ai:setup",
-        "build": "vite build",
+        "build": "tsx src/node/cli/index.ts build",
         "commitlint": "tsx src/node/cli/index.ts commitlint",
         "dev": "vite build --watch",
         "inspect": "tsx src/node/cli/index.ts inspect",
@@ -355,7 +355,6 @@
     },
     "pnpm": {
         "overrides": {
-            "lodash": ">=4.17.23",
             "minimatch": ">=10.2.4",
             "path-to-regexp": "8.4.1"
         }

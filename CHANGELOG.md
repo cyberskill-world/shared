@@ -1,3 +1,0 @@
-# Changelog
-
-See [docs/CHANGELOG.md](docs/CHANGELOG.md).

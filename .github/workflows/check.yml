@@ -23,12 +23,13 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
       - name: Env & Deps
-        uses: cyberskill-world/.github/actions/env-deps@e4fff023238a4ed6e243e848605d5afea30000cb # main
+        # keep @main, do not change
+        uses: cyberskill-world/.github/actions/env-deps@main
         with:
           NODE_VERSION: ${{ matrix.NODE_VERSION }}
 
       - name: Build Cache
-        uses: actions/cache@v4
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: |
             dist
@@ -38,13 +39,14 @@ jobs:
             ${{ runner.os }}-build-
 
       - name: Security Audit
-        run: pnpm audit --audit-level=high
+        run: pnpm audit --audit-level=moderate
 
       - name: License Compliance
         run: pnpm exec license-checker --summary --failOn "GPL;AGPL;LGPL;SSPL"
 
       - name: Lint
-        uses: cyberskill-world/.github/actions/lint@e4fff023238a4ed6e243e848605d5afea30000cb # main
+        # keep @main, do not change
+        uses: cyberskill-world/.github/actions/lint@main
 
       - name: Build
         run: pnpm build

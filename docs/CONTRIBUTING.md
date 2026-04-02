@@ -19,7 +19,16 @@ Thank you for your interest in contributing to CyberSkill Shared! This document 
 
 ## 🤝 Code of Conduct
 
-Please review our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing. We are committed to providing a welcoming and inclusive experience for everyone.
+We are committed to providing a welcoming and inclusive experience for everyone. All participants are expected to uphold the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
+
+**In short:**
+
+- ✅ Use welcoming and inclusive language
+- ✅ Respect differing viewpoints and gracefully accept constructive criticism
+- ✅ Focus on what is best for the community
+- ❌ No harassment, trolling, or publishing others' private information
+
+**Enforcement:** Report unacceptable behavior to [support@cyberskill.world](mailto:support@cyberskill.world). All complaints will be reviewed and investigated promptly.
 
 ---
 
@@ -68,18 +77,7 @@ pnpm run build
 pnpm run test
 ```
 
-### Development Commands
-
-| Command             | Description                            |
-| ------------------- | -------------------------------------- |
-| `pnpm run dev`      | Start development mode with hot reload |
-| `pnpm run build`    | Build for production                   |
-| `pnpm run lint`     | Check for linting issues               |
-| `pnpm run lint:fix` | Fix linting issues automatically       |
-| `pnpm run test`     | Run all tests                          |
-| `pnpm run inspect`  | Inspect project dependencies           |
-| `pnpm run reset`    | Reset project state                    |
-| `pnpm run ready`    | Prepare project for development        |
+> For the full list of development commands, see the [Development section in README.md](README.md#️-development).
 
 ### Environment Configuration
 
@@ -169,53 +167,40 @@ Closes #123"
 ## Description
 
 <!-- What and why: Describe your changes and the motivation behind them -->
-<!-- Be the storyteller here — what magic did you work and why does the world need it? -->
 
 ## Related Issue
-
-<!-- Link to the issue this PR addresses (if any). -->
-<!-- Psst... linking issues helps us all stay sane. If this’s a new feature or bug fix, please create an issue first — teamwork makes the dream work! -->
 
 - Resolve cyberskill-world/shared#<issue_number>
 - Fix cyberskill-world/shared#<issue_number>
 
 ## Type of Change
 
-<!-- Select all that apply -->
-
-- [ ] Bug fix (non-breaking change that resolves an issue — you’re a bug whisperer 🐛)
-- [ ] New feature (adding shiny new toys for everyone to enjoy ✨)
-- [ ] Optimization (speeding things up like a caffeinated cheetah ⚡)
-- [ ] Refactor (tidying up the code closet without changing behavior 🧹)
-- [ ] Documentation (making our life easier for future humans 📚)
+- [ ] Bug fix (non-breaking change that resolves an issue)
+- [ ] New feature (adding new functionality)
+- [ ] Optimization (performance improvements)
+- [ ] Refactor (code cleanup without changing behavior)
+- [ ] Documentation (improving docs)
 - [ ] Other (please describe):
 
 ## Testing
 
-<!-- How did you verify your changes? Include environment, test types, and relevant configurations -->
-<!-- Be the hero and tell us how you proved your code works. -->
-
-- [ ] Unit Tests (testing bits and pieces in isolation — like mini checkups 🩺)
-- [ ] Integration Tests (making sure all the parts play nice together 🤝)
+- [ ] Unit Tests
+- [ ] Integration Tests
 
 **Test Environment:**
 
-<!-- OS, tools, dependencies, or any other wizardry -->
+<!-- OS, tools, dependencies -->
 
 ## Screenshots (if applicable)
 
-<!-- A picture is worth a thousand words — show off your handiwork! 📸 -->
-
 ## Checklist:
 
-<!-- Mark all applicable items with an `x`. If unsure, shout for help! -->
-
-- [ ] Code follows style guidelines and has been self-reviewed (mirror time 🪞)
-- [ ] Comments added for complex or unclear code (be the guiding light 🔦)
-- [ ] Documentation updated if needed (help out future you 🙌)
-- [ ] No new warnings introduced; all tests pass locally (smooth sailing ⛵)
-- [ ] Tests added or updated to verify changes (proof is in the pudding 🍮)
-- [ ] Dependent changes merged and published (all linked up 🔗)
+- [ ] Code follows style guidelines and has been self-reviewed
+- [ ] Comments added for complex or unclear code
+- [ ] Documentation updated if needed
+- [ ] No new warnings introduced; all tests pass locally
+- [ ] Tests added or updated to verify changes
+- [ ] Dependent changes merged and published
 ```
 
 ---
@@ -261,8 +246,6 @@ Every exported function, class, interface, and constant must have JSDoc document
 ````typescript
 /**
  * Formats a phone number according to the specified locale.
- * This function handles various phone number formats and returns
- * a standardized string representation.
  *
  * @param phoneNumber - The phone number to format (can include spaces, dashes, etc.)
  * @param locale - The locale to use for formatting (default: 'en-US')
@@ -440,27 +423,54 @@ We use [Semantic Versioning](https://semver.org/):
 - **MINOR**: New features (backward compatible)
 - **PATCH**: Bug fixes (backward compatible)
 
-### Release Steps
+### Commit Message Convention
 
-Releases are **fully automated** via [semantic-release](https://github.com/semantic-release/semantic-release):
+Version bumps are determined automatically from commit messages following [Conventional Commits](https://www.conventionalcommits.org/):
 
-1. **Merge your PR** into `main` using conventional commit messages
-2. A maintainer triggers the **Deploy** workflow (`workflow_dispatch`)
-3. The CI automatically:
-    - Rebases `main` → `release`
-    - Builds and validates the package
-    - Resolves version conflicts (Zombie Tag strategy)
-    - Calculates the next version from commit history
-    - Updates `CHANGELOG.md` and `package.json`
-    - Publishes to npm with provenance
-    - Creates a GitHub Release
-    - Opens a PR back to `main`
+| Prefix             | Version Bump | Example                              |
+| ------------------ | ------------ | ------------------------------------ |
+| `fix:`             | Patch        | `fix: handle null input in validate` |
+| `feat:`            | Minor        | `feat: add formatPhoneNumber util`   |
+| `feat!:`           | Major        | `feat!: remove deprecated API`       |
+| `BREAKING CHANGE:` | Major        | In commit body or footer             |
 
-> **Conventional Commits** drive versioning:
->
-> - `fix:` → PATCH bump
-> - `feat:` → MINOR bump
-> - `feat!:` or `BREAKING CHANGE:` → MAJOR bump
+### Automated Releases
+
+Releases are fully automated via [semantic-release](https://github.com/semantic-release/semantic-release) and the org-level **Deploy** workflow (`cyberskill-world/.github`):
+
+1. Merge changes to `main` branch
+2. Trigger the **Deploy** workflow via `workflow_dispatch`
+3. The workflow will:
+    - Rebase `main` → `release`
+    - Build the project
+    - Run `semantic-release` to determine the next version
+    - Publish to [npm](https://www.npmjs.com/package/@cyberskill/shared)
+    - Create a GitHub Release with auto-generated notes
+    - Open a PR from `release` → `main`
+
+### Manual Release (if needed)
+
+If the automated release fails:
+
+```bash
+# Ensure you're on the release branch
+git checkout release
+git pull origin release
+
+# Build and verify
+pnpm run build
+pnpm run test
+
+# Publish (requires NPM_TOKEN)
+npm publish --provenance --access public
+```
+
+### Release Checklist
+
+- [ ] All CI checks pass on `main`
+- [ ] No pending security advisories (`pnpm audit`)
+- [ ] CHANGELOG updated via GitHub Releases
+- [ ] npm package published with provenance
 
 ---
 
@@ -486,29 +496,9 @@ New contributors can request mentorship by:
 
 ---
 
-## 🏆 Recognition
-
-### Contributors
-
-All contributors are recognized in:
-
-- **README.md** contributors section
-- **GitHub contributors** page
-- **Release notes** for significant contributions
-- **Company blog** for major features
-
-### Contribution Levels
-
-- **🥉 Bronze**: 1-5 contributions
-- **🥈 Silver**: 6-20 contributions
-- **🥇 Gold**: 21+ contributions
-- **💎 Diamond**: Core maintainer status
-
----
-
 ## 📄 License
 
-By contributing to CyberSkill Shared, you agree that your contributions will be licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+By contributing to CyberSkill Shared, you agree that your contributions will be licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.
 
 ---
 

@@ -486,11 +486,35 @@ export const mongo: I_MongoUtils = {
     health(mongooseInstance: typeof mongooseRaw): Record<string, unknown> {
         const conn = mongooseInstance.connection;
 
+        let totalConnections = 0;
+        let availableConnections = 0;
+
+        try {
+            const client = (conn as any).client;
+
+            if (client?.topology?.s?.servers && client.topology.s.servers instanceof Map) {
+                client.topology.s.servers.forEach((server: any) => {
+                    const pool = server.s?.pool;
+                    if (pool) {
+                        totalConnections += pool.totalConnectionCount ?? 0;
+                        availableConnections += pool.availableConnectionCount ?? 0;
+                    }
+                });
+            }
+        }
+        catch {
+            // Safe fallback if internal topology API changes
+        }
+
         return {
             readyState: conn.readyState,
             host: conn.host,
             name: conn.name,
             models: Object.keys(mongooseInstance.models).length,
+            pool: {
+                totalConnections,
+                availableConnections,
+            },
         };
     },
 };

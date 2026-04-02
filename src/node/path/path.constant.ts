@@ -351,7 +351,7 @@ export const command = {
     }),
     build: buildCommand({
         type: E_CommandType.STRING,
-        command: `${PNPM_CLI} run --if-present build`,
+        command: `vite build`,
     }),
     pnpmInstallStandard: buildCommand({
         type: E_CommandType.STRING,

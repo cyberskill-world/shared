@@ -392,6 +392,16 @@ async function storybookBuild() {
             .command('lint:inspect', 'View active ESLint configuration', inspectLint)
             .command('lint-staged', 'Run lint checks on staged files', lintStaged)
             .command('commitlint', 'Validate commit message format', commitLint)
+            .command('build', 'Build the package', y =>
+                y.option('filter', {
+                    describe: 'Filter entry points to build',
+                    type: 'string',
+                }), async (argv) => {
+                if (argv.filter) {
+                    process.env['FILTER'] = argv.filter;
+                }
+                await runCommand('Building package', await command.build(), { throwOnError: true });
+            })
             .command('ready', 'Initialize project and dependencies', ready)
             .command('reset', 'Reset the project and reinstall dependencies', reset)
             .command('inspect', 'Analyze installed project dependencies', inspect)

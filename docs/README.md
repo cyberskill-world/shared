@@ -135,15 +135,13 @@ pnpm install && pnpm run build
 
 ## 📚 Documentation
 
-| Document                                 | Description                               |
-| ---------------------------------------- | ----------------------------------------- |
-| [API.md](API.md)                         | API reference and usage examples          |
-| [CODEBASE.md](CODEBASE.md)               | Architecture, modules, and conventions    |
-| [CONTRIBUTING.md](CONTRIBUTING.md)       | Development guidelines and code standards |
-| [RELEASING.md](RELEASING.md)             | Release process and versioning            |
-| [SECURITY.md](SECURITY.md)               | Vulnerability disclosure policy           |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community guidelines                      |
-| [CHANGELOG.md](../CHANGELOG.md)          | Release history                           |
+| Document                           | Description                                                 |
+| ---------------------------------- | ----------------------------------------------------------- |
+| [API.md](API.md)                   | API reference and usage examples                            |
+| [CODEBASE.md](CODEBASE.md)         | Architecture, modules, and conventions                      |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Development guidelines, code standards, and release process |
+| [SECURITY.md](SECURITY.md)         | Vulnerability disclosure policy                             |
+| [CHANGELOG.md](CHANGELOG.md)       | Release history                                             |
 
 ---
 

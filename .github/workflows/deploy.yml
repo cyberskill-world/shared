@@ -20,13 +20,18 @@ jobs:
           persist-credentials: false
 
       - name: Env & Deps
-        uses: cyberskill-world/.github/actions/env-deps@2453dcc49e3e194ddfcfc88da94924acee9a8e1f # main
+        # keep @main, do not change
+        uses: cyberskill-world/.github/actions/env-deps@main
 
       - name: Build
-        uses: cyberskill-world/.github/actions/build@2453dcc49e3e194ddfcfc88da94924acee9a8e1f # main
+        # keep @main, do not change
+        uses: cyberskill-world/.github/actions/build@main
 
       - name: Generate SBOM
         run: npx -y @cyclonedx/cdxgen -o bom.json
+
+      - name: Security Audit
+        run: pnpm audit --audit-level=high
 
       - name: Deploy
         env:
