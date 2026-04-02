@@ -1,3 +1,29 @@
+## [Unreleased]
+
+### ✨ Features
+
+* **build:** leverage Vite \`optimizeDeps\` for \`mongoose\` and \`mongodb\` to improve HMR startup
+* **build:** add \`FILTER\` environment variable check to selectively build entrypoints
+* **cli:** add \`build\` subcommand to internal CLI
+* **mongo:** implement \`health()\` tracking mapping to underlying driver pool metrics
+* **test:** add unit tests for \`scripts/merge-changelog-unreleased.mjs\`
+
+### 🔒 Security
+
+* **deps:** fix 4 vulnerabilities (2 high, 2 moderate) — update \`lodash\` override to \`>=4.18.0\` and add \`lodash-es\` override to \`>=4.18.0\` in \`pnpm.overrides\` (GHSA-r5fr-rjxr-66jc, GHSA-f23m-r3pf-42rh)
+
+### 🔧 CI
+
+* **check.yml:** set security audit level constraint from high to moderate
+* **deploy.yml:** add pre-deployment security audit gate guaranteeing high severity baseline
+* **check.yml:** SHA-pin \`actions/cache\` from mutable \`v4\` tag to \`5a3ec84eff668545956fd18022155c47e93e2684\` (v4.2.3) for supply-chain security
+* **codeql.yml:** remove stale \`release\` branch from push and pull_request triggers (deployment now targets \`main\` only)
+
+### 📝 Documentation
+
+* create `.agent/issue_report_2026-04-02_13-01.md` — 2 high, 2 medium, 3 low findings
+* create `.agent/feature_report_2026-04-02_13-01.md` — 10 new enhancement suggestions across 5 categories
+
 ## [3.16.0](https://github.com/cyberskill-world/shared/compare/v3.15.0...v3.16.0) (2026-04-01)
 
 ### ✨ Features

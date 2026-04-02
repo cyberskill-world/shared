@@ -486,11 +486,39 @@ export const mongo: I_MongoUtils = {
     health(mongooseInstance: typeof mongooseRaw): Record<string, unknown> {
         const conn = mongooseInstance.connection;
 
+        let pool: { totalConnections: number; availableConnections: number } | null = null;
+
+        try {
+            // Prefer the public getClient() API; fall back to the internal .client
+            // property for older mongoose versions that do not expose getClient().
+            const client = (conn as any).getClient?.() ?? (conn as any).client;
+
+            if (client?.topology?.s?.servers && client.topology.s.servers instanceof Map) {
+                let totalConnections = 0;
+                let availableConnections = 0;
+
+                client.topology.s.servers.forEach((server: any) => {
+                    const serverPool = server.s?.pool;
+                    if (serverPool) {
+                        totalConnections += serverPool.totalConnectionCount ?? 0;
+                        availableConnections += serverPool.availableConnectionCount ?? 0;
+                    }
+                });
+
+                pool = { totalConnections, availableConnections };
+            }
+        }
+        catch {
+            // Pool metrics rely on driver internals that may change across upgrades
+        }
+
         return {
             readyState: conn.readyState,
             host: conn.host,
             name: conn.name,
             models: Object.keys(mongooseInstance.models).length,
+            pool,
+            poolMetricsAvailable: pool !== null,
         };
     },
 };

@@ -2,6 +2,7 @@ import { glob } from 'glob';
 import fs from 'node:fs';
 import { builtinModules } from 'node:module';
 import { resolve } from 'node:path';
+import process from 'node:process';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
@@ -63,12 +64,20 @@ const entryPoints = glob.sync(['src/**/index.{ts,tsx}', 'src/**/*.rsc.ts', 'src/
     absolute: true,
 }).reduce<Record<string, string>>((entries, file) => {
     const entryName = file.replace(RE_SRC_PREFIX, '').replace(RE_TS_EXT, '');
+
+    if (process.env.FILTER && !file.includes(process.env.FILTER)) {
+        return entries;
+    }
+
     entries[entryName] = file;
 
     return entries;
 }, {});
 
 export default defineConfig({
+    optimizeDeps: {
+        include: ['mongoose', 'mongodb'],
+    },
     resolve: {
         alias: {
             '#public': resolve(import.meta.dirname, 'public'),

@@ -2,11 +2,11 @@
 
 ## Supported Versions
 
-| Version | Supported              |
-| ------- | ---------------------- |
-| 3.x     | ✅ Active support      |
-| 2.x     | ⚠️ Security fixes only |
-| 1.x     | ❌ End of life         |
+| Package Version | Built For Node | Supported              |
+| --------------- | -------------- | ---------------------- |
+| 3.x             | >=24.0.0       | ✅ Active support      |
+| 2.x             | ^20.0.0        | ⚠️ Security fixes only |
+| 1.x             | <20.0.0        | ❌ End of life         |
 
 ## Reporting a Vulnerability
 
