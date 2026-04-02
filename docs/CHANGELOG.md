@@ -1,12 +1,19 @@
-## [Unreleased]
+## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
 
 ### ✨ Features
 
+* code audit 2nd April 2026 ([11518cf](https://github.com/cyberskill-world/shared/commit/11518cf5b1d1cda3b5d26cc854b121e275fd0dae))
+* code audit 2nd April 2026 ([c404181](https://github.com/cyberskill-world/shared/commit/c404181def7f381842b6a7422ad6ef78a3388952))
+* update libs ([75aafdc](https://github.com/cyberskill-world/shared/commit/75aafdcd0af168c7a58393a7f0fbe94e111e6289))
 * **build:** leverage Vite \`optimizeDeps\` for \`mongoose\` and \`mongodb\` to improve HMR startup
 * **build:** add \`FILTER\` environment variable check to selectively build entrypoints
 * **cli:** add \`build\` subcommand to internal CLI
 * **mongo:** implement \`health()\` tracking mapping to underlying driver pool metrics
 * **test:** add unit tests for \`scripts/merge-changelog-unreleased.mjs\`
+
+### 🐛 Bug Fixes
+
+* address code review comments from PR [#313](https://github.com/cyberskill-world/shared/issues/313) ([cdf9532](https://github.com/cyberskill-world/shared/commit/cdf953295566b8ce29c65bf964a106f7a1460973))
 
 ### 🔒 Security
 
