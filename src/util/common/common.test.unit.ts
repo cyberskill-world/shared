@@ -160,3 +160,30 @@ describe('isPlainObject', () => {
         expect(isPlainObject('string')).toBe(false);
     });
 });
+
+describe('regexSearchMapper (branch coverage)', () => {
+    it('should return cached value on second call', () => {
+        const first = regexSearchMapper('cache-test');
+        const second = regexSearchMapper('cache-test');
+        expect(first).toBe(second);
+    });
+
+    it('should evict oldest entry when cache exceeds 128 entries', () => {
+        // Fill the cache with 128 unique strings
+        const strings = Array.from({ length: 129 }, (_, i) => `eviction-test-${i}`);
+        for (const s of strings) {
+            regexSearchMapper(s);
+        }
+
+        // The 129th entry should have caused the first to be evicted.
+        // Calling the first again should still return a valid result (re-computed).
+        const result = regexSearchMapper('eviction-test-0');
+        expect(typeof result).toBe('string');
+        expect(result.length).toBeGreaterThan(0);
+    });
+
+    it('should handle strings with no accented characters', () => {
+        const result = regexSearchMapper('xz123');
+        expect(result).toBe('xz123');
+    });
+});

@@ -158,6 +158,63 @@ describe('storage', () => {
             const result = await storage.has('missing-key');
             expect(result).toBe(false);
         });
+
+        it('should return false on error', async () => {
+            vi.mocked(localStorage.getItem).mockImplementation(() => {
+                throw new Error('fail');
+            });
+            const result = await storage.has('key');
+            expect(result).toBe(false);
+        });
+    });
+
+    describe('has (TTL branches)', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should return false and cleanup when TTL has expired', async () => {
+            await storage.set('ttl-has', 'val', { ttlMs: 50 });
+            expect(await storage.has('ttl-has')).toBe(true);
+
+            vi.advanceTimersByTime(100);
+
+            expect(await storage.has('ttl-has')).toBe(false);
+            expect(localStorage.removeItem).toHaveBeenCalledWith('ttl-has');
+        });
+
+        it('should return true when TTL has NOT expired', async () => {
+            await storage.set('ttl-has-fresh', 'val', { ttlMs: 200 });
+            vi.advanceTimersByTime(50);
+            expect(await storage.has('ttl-has-fresh')).toBe(true);
+        });
+    });
+
+    describe('getOrSet (extended)', () => {
+        it('should invoke sync factory when value is missing', async () => {
+            const factory = vi.fn(() => 'sync-computed');
+            const result = await storage.getOrSet('sync-factory', factory);
+            expect(result).toBe('sync-computed');
+            expect(factory).toHaveBeenCalledOnce();
+        });
+
+        it('should invoke factory and store when expired TTL key exists', async () => {
+            vi.useFakeTimers();
+
+            await storage.set('ttl-gor', 'old-value', { ttlMs: 50 });
+            vi.advanceTimersByTime(100);
+
+            const factory = vi.fn(async () => 'refreshed');
+            const result = await storage.getOrSet('ttl-gor', factory);
+            expect(result).toBe('refreshed');
+            expect(factory).toHaveBeenCalledOnce();
+
+            vi.useRealTimers();
+        });
     });
 
     describe('clear', () => {
@@ -169,6 +226,13 @@ describe('storage', () => {
 
             expect(mockStore).toEqual({});
             expect(localStorage.clear).toHaveBeenCalledOnce();
+        });
+
+        it('should catch errors silently on clear', async () => {
+            vi.mocked(localStorage.clear).mockImplementation(() => {
+                throw new Error('fail');
+            });
+            await expect(storage.clear()).resolves.toBeUndefined();
         });
     });
 });
