@@ -280,6 +280,9 @@ describe('mongo', () => {
     describe('createGenericSchema', () => {
         it('should create a schema with id, isDel, timestamps', () => {
             const mockSchema = { add: vi.fn(), statics: {}, virtual: vi.fn() };
+            /**
+             *
+             */
             function MockSchema() {
                 return mockSchema;
             }
@@ -301,6 +304,9 @@ describe('mongo', () => {
             virtual: vi.fn(() => mockVirtual),
             ...schemaOverrides,
         };
+        /**
+         *
+         */
         function MockSchema() {
             return mockSchema;
         }
@@ -308,6 +314,9 @@ describe('mongo', () => {
     }
 
     describe('createSchema', () => {
+        /**
+         *
+         */
         function createMockMongoose() {
             const { MockSchema, mockSchema, mockVirtual } = createBaseMockMongoose();
             return {
@@ -384,6 +393,9 @@ describe('mongo', () => {
     });
 
     describe('createModel', () => {
+        /**
+         *
+         */
         function createMockMongoose(existingModels: Record<string, any> = {}) {
             const { MockSchema, mockSchema } = createBaseMockMongoose({
                 plugin: vi.fn(),
