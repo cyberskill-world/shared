@@ -212,6 +212,17 @@ describe('getPackage', () => {
         const result = await getPackage({ name: 'my-dep' });
         expect(result.success).toBe(true);
     });
+    it('should catch errors if internal logic throws', async () => {
+        const { catchError } = await import('../log/index.js');
+        const customError = new Error('simulated getPackage exception');
+        vi.mocked(pathExistsSync).mockImplementation(() => {
+            throw customError;
+        });
+
+        await getPackage({ name: 'my-dep' });
+
+        expect(catchError).toHaveBeenCalledWith(customError);
+    });
 });
 
 describe('updatePackage', () => {
@@ -248,6 +259,29 @@ describe('updatePackage', () => {
         const { writeFileSync: wfs } = await import('../fs/index.js');
         expect(wfs).toHaveBeenCalled();
     });
+    it('should catch errors when internal logic throws', async () => {
+        const { writeFileSync: wfs } = await import('../fs/index.js');
+        const customError = new Error('simulated update throw');
+        vi.mocked(wfs).mockImplementation(() => {
+            throw customError;
+        });
+        const { catchError } = await import('../log/index.js');
+
+        await updatePackage({
+            name: 'my-dep',
+            latestVersion: '3.0.0',
+            isDependency: true,
+            isDevDependency: false,
+            currentVersion: '1.0.0',
+            isCurrentProject: false,
+            isInstalled: true,
+            isUpToDate: false,
+            installedPath: '',
+            file: {},
+        } as any);
+
+        expect(catchError).toHaveBeenCalledWith(customError);
+    });
 });
 
 describe('installDependencies', () => {
@@ -255,6 +289,41 @@ describe('installDependencies', () => {
         await installDependencies();
         const { runCommand } = await import('../command/index.js');
         expect(runCommand).toHaveBeenCalled();
+    });
+    it('should fallback to legacy and force install on failures', async () => {
+        const { runCommand } = await import('../command/index.js');
+        const { catchError } = await import('../log/index.js');
+
+        const error1 = new Error('std command failed');
+        const error2 = new Error('legacy command failed');
+        const error3 = new Error('force command failed');
+
+        vi.mocked(runCommand)
+            .mockRejectedValueOnce(error1)
+            .mockRejectedValueOnce(error2)
+            .mockRejectedValueOnce(error3);
+
+        await installDependencies();
+
+        expect(runCommand).toHaveBeenCalledTimes(3);
+        expect(catchError).toHaveBeenCalledWith(error1);
+        expect(catchError).toHaveBeenCalledWith(error2);
+        expect(catchError).toHaveBeenCalledWith(error3);
+    });
+
+    it('should trigger outer catch block if an inner catch throws', async () => {
+        const { catchError } = await import('../log/index.js');
+        const { runCommand } = await import('../command/index.js');
+
+        vi.mocked(runCommand).mockRejectedValueOnce(new Error('fail std'));
+        const outerError = new Error('catchError itself failed');
+        vi.mocked(catchError).mockImplementationOnce(() => {
+            throw outerError;
+        });
+
+        await installDependencies();
+
+        expect(catchError).toHaveBeenCalledWith(outerError);
     });
 });
 

@@ -1,8 +1,13 @@
+import type * as React from 'react';
+
 import { CombinedGraphQLErrors, CombinedProtocolErrors, ServerError } from '@apollo/client/core';
+import { ApolloLink } from '@apollo/client/link';
 import { ErrorLink } from '@apollo/client/link/error';
 import { describe, expect, it, vi } from 'vitest';
 
+import { hasCustomApolloErrorHandler, showGlobalApolloError } from '../apollo-error/index.js';
 import { log } from '../log/index.js';
+import { toast } from '../toast/index.js';
 import { createApolloLinks, getClient } from './apollo-client.util.js';
 
 // All vi.mock factories are hoisted to the top of the file by vitest.
@@ -82,11 +87,15 @@ vi.mock('../log/index.js', () => ({
 }));
 
 vi.mock('../toast/index.js', () => ({
-    toast: { error: vi.fn() },
+    toast: { error: vi.fn(), dismiss: vi.fn() },
 }));
 
 vi.mock('./apollo-client.module.scss', () => ({
     default: {},
+}));
+
+vi.mock('#constant/index.js', () => ({
+    IS_BROWSER: true,
 }));
 
 // ---------------------------------------------------------------------------
@@ -110,6 +119,20 @@ describe('createApolloLinks', () => {
     it('should work without wsUrl', () => {
         const links = createApolloLinks({ uri: 'http://localhost:4000/graphql' });
         expect(links.length).toBeGreaterThan(0);
+    });
+
+    it('should configure splitLink correctly when wsUrl is provided', () => {
+        createApolloLinks({
+            uri: 'http://localhost:4000/graphql',
+            wsUrl: 'ws://localhost:4000/graphql',
+        });
+
+        const splitMock = vi.mocked(ApolloLink.split);
+        expect(splitMock).toHaveBeenCalled();
+
+        const predicate = splitMock.mock.calls[0]?.[0] as (operation: any) => boolean;
+        expect(predicate({ operationType: 'subscription' })).toBe(true);
+        expect(predicate({ operationType: 'mutation' })).toBe(false);
     });
 
     it('should include custom links when provided', () => {
@@ -208,5 +231,43 @@ describe('errorLink callback', () => {
             operation: mockOperation,
         });
         expect(log.error).toHaveBeenCalledWith(expect.stringContaining('Network error'));
+    });
+
+    it('should invoke custom apollo error handler in browser when available', () => {
+        vi.mocked(ServerError.is).mockReturnValue(true);
+        vi.mocked(hasCustomApolloErrorHandler).mockReturnValueOnce(true);
+
+        const handler = getErrorHandler();
+        handler({
+            error: { message: 'Test error' },
+            operation: mockOperation,
+        });
+
+        expect(showGlobalApolloError).toHaveBeenCalled();
+        vi.mocked(ServerError.is).mockReset();
+    });
+
+    it('should invoke toast.error in browser when no custom handler', () => {
+        vi.mocked(ServerError.is).mockReturnValue(true);
+        vi.mocked(hasCustomApolloErrorHandler).mockReturnValueOnce(false);
+
+        const handler = getErrorHandler();
+        handler({
+            error: { message: 'Test error' },
+            operation: mockOperation,
+        });
+        expect(toast.error).toHaveBeenCalled();
+        const renderArg = vi.mocked(toast.error).mock.calls[0]?.[0];
+        if (typeof renderArg === 'function') {
+            const result = renderArg({ id: 'test-id' } as any) as React.ReactElement;
+            expect(result).toBeDefined();
+            // Extract the button from the JSX and invoke onClick
+            const buttonElement = (result.props as any).children[1];
+            expect(buttonElement.type).toBe('button');
+            buttonElement.props.onClick();
+            expect(showGlobalApolloError).toHaveBeenCalled();
+            expect(toast.dismiss).toHaveBeenCalledWith('test-id');
+        }
+        vi.mocked(ServerError.is).mockReset();
     });
 });

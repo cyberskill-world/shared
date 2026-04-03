@@ -294,4 +294,55 @@ describe('storage - edge cases', () => {
         spy.mockRestore();
         resetStorageForTesting(); // restore state for future tests
     });
+
+    it('should bubble up non-ENOENT errors when reading getItem', async () => {
+        const fs = await import('node:fs/promises');
+        const spy = vi.spyOn(fs.default, 'readFile').mockRejectedValueOnce(new Error('EACCES: permission denied'));
+
+        await expect(storage.get('some-key')).resolves.toBeNull();
+        expect(log.error).toHaveBeenCalled();
+        spy.mockRestore();
+    });
+});
+
+describe('storage custom driver & errors', () => {
+    it('should handle invalid keys array from driver', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        await storage.initDriver({
+            init: async () => {},
+            clear: async () => {},
+            getItem: async () => null,
+            keys: async () => 'not-an-array' as any,
+            removeItem: async () => {},
+            setItem: async (_k, _v) => _v,
+        });
+
+        const result = await storage.keys();
+        expect(result).toEqual([]);
+        expect(log.warn).toHaveBeenCalledWith(expect.stringContaining('Invalid keys response'), 'not-an-array');
+
+        resetStorageForTesting();
+    });
+
+    it('should catch error from driver keys()', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        await storage.initDriver({
+            init: async () => {},
+            clear: async () => {},
+            getItem: async () => null,
+            keys: async () => { throw new Error('keys crash'); },
+            removeItem: async () => {},
+            setItem: async (_k, _v) => _v,
+        });
+
+        const result = await storage.keys();
+        expect(result).toEqual([]);
+        expect(log.error).toHaveBeenCalledWith(expect.stringContaining('keys crash'));
+
+        resetStorageForTesting();
+    });
 });

@@ -124,6 +124,17 @@ describe('MongoController (Native)', () => {
             expect(result.success).toBe(false);
             expect(result.message).toContain('No documents were inserted');
         });
+
+        it('should handle errors in createMany', async () => {
+            const { db } = createMockDb({
+                insertMany: vi.fn().mockRejectedValue(new Error('Connection lost')),
+            });
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.createMany([{ name: 'a' }] as any);
+
+            expect(result.success).toBe(false);
+        });
     });
 
     describe('findOne', () => {
@@ -207,6 +218,17 @@ describe('MongoController (Native)', () => {
             expect(result.message).toContain('No documents matched');
             expect(result.code).toBe(404);
         });
+
+        it('should handle errors in updateOne', async () => {
+            const { db } = createMockDb({
+                updateOne: vi.fn().mockRejectedValue(new Error('Connection lost')),
+            });
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.updateOne({ _id: '1' } as any, { name: 'updated' } as any);
+
+            expect(result.success).toBe(false);
+        });
     });
 
     describe('updateMany', () => {
@@ -230,6 +252,17 @@ describe('MongoController (Native)', () => {
             expect(result.success).toBe(false);
             expect(result.code).toBe(404);
         });
+
+        it('should handle errors in updateMany', async () => {
+            const { db } = createMockDb({
+                updateMany: vi.fn().mockRejectedValue(new Error('Connection lost')),
+            });
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.updateMany({}, { active: true } as any);
+
+            expect(result.success).toBe(false);
+        });
     });
 
     describe('deleteOne', () => {
@@ -252,6 +285,17 @@ describe('MongoController (Native)', () => {
 
             expect(result.success).toBe(false);
             expect(result.code).toBe(404);
+        });
+
+        it('should handle errors in deleteOne', async () => {
+            const { db } = createMockDb({
+                deleteOne: vi.fn().mockRejectedValue(new Error('Connection lost')),
+            });
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.deleteOne({ _id: '1' } as any);
+
+            expect(result.success).toBe(false);
         });
     });
 
