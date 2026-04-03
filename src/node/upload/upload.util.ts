@@ -345,7 +345,7 @@ export async function upload(options: I_UploadOptions): Promise<I_Return<string>
             code: RESPONSE_STATUS.OK.CODE,
         };
     }
-    catch (error) {
+    catch (error: unknown) {
         return {
             success: false,
             message: error instanceof Error ? error.message : 'File upload failed',

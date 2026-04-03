@@ -1,3 +1,29 @@
+## Unreleased
+
+### 🔒 Security
+
+* **deploy.yml:** align audit gate from `--audit-level=high` to `--audit-level=moderate` to match check.yml strictness — prevents moderate-severity vulnerabilities from reaching npm publish (H-1)
+
+### 🔧 CI
+
+* **check.yml:** replace stale `branches-ignore: release` with explicit `branches: [main]` in pull_request trigger — `release` branch was deprecated in v3.16.0 (M-1)
+* **check.yml:** add `concurrency` group (`${{ github.workflow }}-${{ github.ref }}`) with `cancel-in-progress: true` to cancel superseded check runs and reduce CI minutes (SC-1)
+
+### 🧹 Chores
+
+* **package.json:** fix ESLint `style/eol-last` violation — add missing trailing newline (M-3)
+
+### ♻️ Refactors
+
+* **mongo.util:** extract `fetchAllRecords()` helper to DRY up duplicated batch pagination loop in `getNewRecords()` and `getExistingRecords()` (MA-2)
+* **catch blocks:** standardise all `catch (error)` to `catch (error: unknown)` across 11 source files (~60 catch blocks) for explicit TypeScript type safety (MA-1)
+
+### 📝 Documentation
+
+* **CODEOWNERS:** add `/scripts/` and `/docs/` ownership rules for change visibility (MA-3)
+* create `.agent/issue_report_2026-04-04_00-58.md` — 1 high, 3 medium, 3 low new findings
+* create `.agent/feature_report_2026-04-04_00-58.md` — 10 new enhancement suggestions across 5 categories
+
 ## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
 
 ### ✨ Features
@@ -13,6 +39,7 @@
 
 ### 🐛 Bug Fixes
 
+* **string:** fix latent Fisher-Yates shuffle bug in `generateRandomPassword` character-class enforcement where random indices could overwrite the only occurrence of a required character class, causing boundary failures at small lengths
 * address code review comments from PR [#313](https://github.com/cyberskill-world/shared/issues/313) ([cdf9532](https://github.com/cyberskill-world/shared/commit/cdf953295566b8ce29c65bf964a106f7a1460973))
 
 ### 🔒 Security
@@ -30,6 +57,30 @@
 
 * create `.agent/issue_report_2026-04-02_13-01.md` — 2 high, 2 medium, 3 low findings
 * create `.agent/feature_report_2026-04-02_13-01.md` — 10 new enhancement suggestions across 5 categories
+
+### 🧪 Testing
+
+* **log:** add test coverage for `ensureLogLevel()` idempotency check path (`DEBUG=false` equivalent)
+* **storage:** add E2E test suite for `useStorage` hook exercising native `localStorage` behaviors
+* **mongo:** add unit test suite for `mongo.health()` covering topology metrics and connection states
+* **string:** add test coverage for `generateRandomFromCharset` rejection sampling logic and chunked large arrays
+* **log:** add coverage for `log.withContext()` correlation ID generation and contextual logger methods
+* **log:** fix weak assertion in `catchError` shouldLog test — now verifies `log.error` is actually called
+* **storage:** add TTL expiration branch coverage for `storage.has()` — verify cleanup on expired keys
+* **storage:** add sync factory and expired-TTL `getOrSet()` coverage
+* **storage:** add error-path coverage for `storage.clear()`
+* **mongo:** add `bulkWrite` success, empty-ops validation, and error-path coverage for native controller
+* **mongo:** add `deleteMany` error-path coverage for native controller
+* **string:** add password charset validation tests for `generateRandomPassword` enforcement code path
+* **object:** add `normalizeMongoFilter` coverage for non-POJO values, null-prototype objects, max-depth guard, and mixed nested Mongo operators
+* **common:** add `regexSearchMapper` LRU cache hit and eviction tests (128-entry boundary)
+* create `.agent/test_coverage_report_2026-04-02_17-27.md` — comprehensive gap analysis
+* create `.agent/test_refinement_report_2026-04-02_17-27.md` — assertion quality and structural improvements
+
+### ♻️ Refactoring
+
+* **test:** extract shared base mongoose mock factory in `mongo.util.test.unit.ts` to eliminate structural duplication
+* resolve test reporting tasks in coverage and refinement logs
 
 ## [3.16.0](https://github.com/cyberskill-world/shared/compare/v3.15.0...v3.16.0) (2026-04-01)
 

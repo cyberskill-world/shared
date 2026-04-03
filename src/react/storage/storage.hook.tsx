@@ -56,7 +56,7 @@ export function useStorage<T>(
                     }
                 }
             }
-            catch (error) {
+            catch (error: unknown) {
                 catchError(error);
 
                 if (isMounted) {
@@ -88,7 +88,7 @@ export function useStorage<T>(
                     await storage.set(key, serialized);
                 }
             }
-            catch (error) {
+            catch (error: unknown) {
                 catchError(error);
             }
         };
@@ -113,7 +113,7 @@ export function useStorage<T>(
             await storage.remove(key);
             setValue(undefined);
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
     }, [key]);

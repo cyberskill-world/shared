@@ -1,6 +1,6 @@
 # @cyberskill/shared — API Reference
 
-> v3.10.0 · ESM-only · Node ≥ 22
+> v3.10.0 · ESM-only · Node ≥ 24
 
 ## Quick Install
 

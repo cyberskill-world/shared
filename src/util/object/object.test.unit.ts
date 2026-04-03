@@ -292,4 +292,43 @@ describe('normalizeMongoFilter (branch coverage)', () => {
         const filter = { a: { b: { c: 1 } } };
         expect(normalizeMongoFilter(filter)).toEqual({ 'a.b.c': 1 });
     });
+
+    it('should preserve non-POJO values (class instances) as-is', () => {
+        class CustomId {
+            id: string;
+            constructor(id: string) { this.id = id; }
+        }
+        const customId = new CustomId('abc');
+        const filter = { owner: customId };
+        const result = normalizeMongoFilter(filter);
+        expect(result).toEqual({ owner: customId });
+    });
+
+    it('should handle null-prototype objects as POJO', () => {
+        const nullProto = Object.create(null);
+        nullProto.nested = 'value';
+        const filter = { data: nullProto };
+        const result = normalizeMongoFilter(filter);
+        expect(result).toEqual({ 'data.nested': 'value' });
+    });
+
+    it('should throw on excessively deep nesting (max-depth guard)', () => {
+        // Build a filter nested > 10 levels deep
+        let filter: Record<string, unknown> = { deep: 'value' };
+        for (let i = 0; i < 12; i++) {
+            filter = { [`level${i}`]: filter };
+        }
+        expect(() => normalizeMongoFilter(filter)).toThrow('Maximum depth');
+    });
+
+    it('should handle mixed nested levels with Mongo operators at various depths', () => {
+        const filter = { a: { b: { c: { $exists: true } } } };
+        const result = normalizeMongoFilter(filter);
+        expect(result).toEqual({ 'a.b.c': { $exists: true } });
+    });
+
+    it('should pass through non-object input types', () => {
+        expect(normalizeMongoFilter(0 as any)).toBe(0);
+        expect(normalizeMongoFilter('' as any)).toBe('');
+    });
 });

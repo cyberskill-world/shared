@@ -240,7 +240,7 @@ describe('mongo', () => {
         it('should throw when findAll fails', async () => {
             const controller = { findAll: vi.fn().mockResolvedValue({ success: false }) } as any;
             const records = [{ id: '1' }, { id: '2' }] as any[];
-            await expect(mongo.getNewRecords(controller, records, () => false)).rejects.toThrow('Failed to query existing records');
+            await expect(mongo.getNewRecords(controller, records, () => false)).rejects.toThrow('Failed to query records');
         });
 
         it('should filter out existing records', async () => {
@@ -260,7 +260,7 @@ describe('mongo', () => {
     describe('getExistingRecords', () => {
         it('should throw when findAll fails', async () => {
             const controller = { findAll: vi.fn().mockResolvedValue({ success: false }) } as any;
-            await expect(mongo.getExistingRecords(controller, [{ id: '1' }] as any[], () => true)).rejects.toThrow('Failed to query existing records');
+            await expect(mongo.getExistingRecords(controller, [{ id: '1' }] as any[], () => true)).rejects.toThrow('Failed to query records');
         });
 
         it('should return matching existing records', async () => {
@@ -293,23 +293,32 @@ describe('mongo', () => {
         });
     });
 
+    /**
+     * Shared mock factory for mongoose-like objects used across createSchema and createModel tests.
+     */
+    function createBaseMockMongoose(schemaOverrides: Record<string, unknown> = {}) {
+        const mockVirtual = { get: vi.fn().mockReturnThis() };
+        const mockSchema = {
+            add: vi.fn(),
+            statics: {} as Record<string, unknown>,
+            virtual: vi.fn(() => mockVirtual),
+            ...schemaOverrides,
+        };
+        /**
+         *
+         */
+        function MockSchema() {
+            return mockSchema;
+        }
+        return { MockSchema, mockSchema, mockVirtual };
+    }
+
     describe('createSchema', () => {
         /**
          *
          */
         function createMockMongoose() {
-            const mockVirtual = { get: vi.fn().mockReturnThis() };
-            const mockSchema = {
-                add: vi.fn(),
-                statics: {} as Record<string, unknown>,
-                virtual: vi.fn(() => mockVirtual),
-            };
-            /**
-             *
-             */
-            function MockSchema() {
-                return mockSchema;
-            }
+            const { MockSchema, mockSchema, mockVirtual } = createBaseMockMongoose();
             return {
                 mongoose: { Schema: MockSchema } as any,
                 mockSchema,
@@ -388,28 +397,18 @@ describe('mongo', () => {
          *
          */
         function createMockMongoose(existingModels: Record<string, any> = {}) {
-            const mockVirtual = { get: vi.fn().mockReturnThis() };
-            const mockSchema = {
-                add: vi.fn(),
-                statics: {} as Record<string, unknown>,
-                virtual: vi.fn(() => mockVirtual),
+            const { MockSchema, mockSchema } = createBaseMockMongoose({
                 plugin: vi.fn(),
                 pre: vi.fn(),
                 post: vi.fn(),
-            };
-            /**
-             *
-             */
-            function MockSchema() {
-                return mockSchema;
-            }
+            });
             return {
                 mongoose: {
                     Schema: MockSchema,
                     model: vi.fn(() => ({ modelName: 'Test', schema: mockSchema })),
                     models: { ...existingModels },
                 } as any,
-                mockSchema,
+                mockSchema: mockSchema as any,
             };
         }
 
@@ -451,6 +450,151 @@ describe('mongo', () => {
             const virtuals = [{ name: 'avatar', options: { ref: 'Media', localField: 'id', foreignField: 'entityId' } }];
             const result = mongo.createModel({ mongoose, name: 'WithVirtuals', schema: {} as any, virtuals: virtuals as any });
             expect((result as any)._virtualConfigs).toEqual(virtuals);
+        });
+    });
+
+    describe('health', () => {
+        /**
+         * Creates a mock mongoose instance with configurable connection state.
+         */
+        function createMockMongooseForHealth(overrides: Record<string, unknown> = {}) {
+            return {
+                connection: {
+                    readyState: 1,
+                    host: 'localhost',
+                    name: 'testdb',
+                    ...overrides,
+                },
+                models: { User: {}, Post: {} },
+            } as any;
+        }
+
+        it('should return basic health stats', () => {
+            const mockMongoose = createMockMongooseForHealth();
+            const result = mongo.health(mockMongoose);
+            expect(result['readyState']).toBe(1);
+            expect(result['host']).toBe('localhost');
+            expect(result['name']).toBe('testdb');
+            expect(result['models']).toBe(2);
+            expect(result['pool']).toBeNull();
+            expect(result['poolMetricsAvailable']).toBe(false);
+        });
+
+        it('should extract pool metrics from topology servers', () => {
+            const serversMap = new Map();
+            serversMap.set('srv1', {
+                s: {
+                    pool: {
+                        totalConnectionCount: 10,
+                        availableConnectionCount: 7,
+                    },
+                },
+            });
+            serversMap.set('srv2', {
+                s: {
+                    pool: {
+                        totalConnectionCount: 5,
+                        availableConnectionCount: 3,
+                    },
+                },
+            });
+
+            const mockMongoose = createMockMongooseForHealth({
+                getClient: () => ({
+                    topology: { s: { servers: serversMap } },
+                }),
+            });
+
+            const result = mongo.health(mockMongoose);
+            expect(result['pool']).toEqual({ totalConnections: 15, availableConnections: 10 });
+            expect(result['poolMetricsAvailable']).toBe(true);
+        });
+
+        it('should handle servers with missing pool data', () => {
+            const serversMap = new Map();
+            serversMap.set('srv1', { s: {} }); // No pool on this server
+
+            const mockMongoose = createMockMongooseForHealth({
+                getClient: () => ({
+                    topology: { s: { servers: serversMap } },
+                }),
+            });
+
+            const result = mongo.health(mockMongoose);
+            expect(result['pool']).toEqual({ totalConnections: 0, availableConnections: 0 });
+            expect(result['poolMetricsAvailable']).toBe(true);
+        });
+
+        it('should return null pool when topology is unavailable', () => {
+            const mockMongoose = createMockMongooseForHealth({
+                getClient: () => ({ topology: null }),
+            });
+
+            const result = mongo.health(mockMongoose);
+            expect(result['pool']).toBeNull();
+            expect(result['poolMetricsAvailable']).toBe(false);
+        });
+
+        it('should fallback to .client when getClient is unavailable', () => {
+            const serversMap = new Map();
+            serversMap.set('srv1', {
+                s: {
+                    pool: {
+                        totalConnectionCount: 3,
+                        availableConnectionCount: 2,
+                    },
+                },
+            });
+
+            const mockMongoose = createMockMongooseForHealth({
+                client: {
+                    topology: { s: { servers: serversMap } },
+                },
+            });
+
+            const result = mongo.health(mockMongoose);
+            expect(result['pool']).toEqual({ totalConnections: 3, availableConnections: 2 });
+            expect(result['poolMetricsAvailable']).toBe(true);
+        });
+
+        it('should gracefully handle errors during pool metric extraction', () => {
+            const mockMongoose = createMockMongooseForHealth({
+                getClient: () => {
+                    throw new Error('driver internal error');
+                },
+            });
+
+            const result = mongo.health(mockMongoose);
+            expect(result['pool']).toBeNull();
+            expect(result['poolMetricsAvailable']).toBe(false);
+            expect(result['readyState']).toBe(1);
+        });
+
+        it('should handle disconnected state', () => {
+            const mockMongoose = createMockMongooseForHealth({ readyState: 0 });
+            const result = mongo.health(mockMongoose);
+            expect(result['readyState']).toBe(0);
+        });
+
+        it('should handle pool with partial metrics (missing availableConnectionCount)', () => {
+            const serversMap = new Map();
+            serversMap.set('srv1', {
+                s: {
+                    pool: {
+                        totalConnectionCount: 5,
+                        // availableConnectionCount is undefined
+                    },
+                },
+            });
+
+            const mockMongoose = createMockMongooseForHealth({
+                getClient: () => ({
+                    topology: { s: { servers: serversMap } },
+                }),
+            });
+
+            const result = mongo.health(mockMongoose);
+            expect(result['pool']).toEqual({ totalConnections: 5, availableConnections: 0 });
         });
     });
 });

@@ -276,6 +276,63 @@ describe('MongoController (Native)', () => {
             expect(result.success).toBe(false);
             expect(result.code).toBe(404);
         });
+
+        it('should handle errors in deleteMany', async () => {
+            const { db } = createMockDb({
+                deleteMany: vi.fn().mockRejectedValue(new Error('Connection lost')),
+            });
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.deleteMany({});
+
+            expect(result.success).toBe(false);
+        });
+    });
+
+    describe('bulkWrite', () => {
+        it('should execute bulk write operations successfully', async () => {
+            const { db } = createMockDb({
+                bulkWrite: vi.fn().mockResolvedValue({
+                    insertedCount: 2,
+                    matchedCount: 0,
+                    modifiedCount: 0,
+                    deletedCount: 0,
+                    upsertedCount: 0,
+                }),
+            });
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.bulkWrite([
+                { insertOne: { document: { name: 'a' } } } as any,
+                { insertOne: { document: { name: 'b' } } } as any,
+            ]);
+
+            expect(result.success).toBe(true);
+            expect(result.message).toContain('Bulk write executed');
+        });
+
+        it('should return error when no operations provided', async () => {
+            const { db } = createMockDb();
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.bulkWrite([]);
+
+            expect(result.success).toBe(false);
+            expect(result.message).toContain('No bulk write operations');
+        });
+
+        it('should handle bulkWrite errors', async () => {
+            const { db } = createMockDb({
+                bulkWrite: vi.fn().mockRejectedValue(new Error('Write conflict')),
+            });
+            const controller = new MongoController(db, 'testCollection');
+
+            const result = await controller.bulkWrite([
+                { insertOne: { document: { name: 'a' } } } as any,
+            ]);
+
+            expect(result.success).toBe(false);
+        });
     });
 
     describe('createMongoController', () => {

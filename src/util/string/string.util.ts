@@ -172,30 +172,37 @@ export function generateRandomPassword(length = 8): string {
             return password;
         }
 
-        // Replace random positions with missing classes to avoid predictable placement
-        const chars = [...password];
-        const missing: { test: boolean; pool: string }[] = [
-            { test: hasLower, pool: lower },
-            { test: hasUpper, pool: upper },
-            { test: hasDigit, pool: digits },
-            { test: hasSpecial, pool: special },
+        // If the pure random string lacks required classes, construct a guaranteed-valid one
+        const chars = [
+            generateRandomFromCharset(1, lower),
+            generateRandomFromCharset(1, upper),
+            generateRandomFromCharset(1, digits),
+            generateRandomFromCharset(1, special),
         ];
 
-        // Collect random, unique indices via Fisher-Yates partial shuffle
-        const indices = Array.from({ length }, (_, i) => i);
-        for (let i = indices.length - 1; i > 0; i--) {
-            const buf = new Uint32Array(1);
-            crypto.getRandomValues(buf);
-            const j = buf[0]! % (i + 1);
-            [indices[i], indices[j]] = [indices[j]!, indices[i]!];
+        // Fill the rest with random characters
+        if (length > 4) {
+            const rest = generateRandomFromCharset(length - 4, charset);
+            for (const c of rest) {
+                chars.push(c);
+            }
         }
 
-        let pos = 0;
-        for (const { test, pool } of missing) {
-            if (!test) {
-                chars[indices[pos]!] = generateRandomFromCharset(1, pool);
-                pos++;
-            }
+        // Fisher-Yates shuffle using rejection sampling to avoid modulo bias
+        for (let i = chars.length - 1; i > 0; i--) {
+            const range = i + 1;
+            // 0x1_0000_0000 = 2^32, the exclusive upper bound of Uint32Array values
+            const maxUnbiased = Math.floor(0x1_0000_0000 / range) * range;
+            const buf = new Uint32Array(1);
+            let randomValue: number;
+
+            do {
+                crypto.getRandomValues(buf);
+                randomValue = buf[0]!;
+            } while (randomValue >= maxUnbiased);
+
+            const j = randomValue % range;
+            [chars[i], chars[j]] = [chars[j]!, chars[i]!];
         }
 
         return chars.join('');

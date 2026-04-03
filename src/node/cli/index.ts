@@ -300,7 +300,7 @@ async function testUnit() {
 
         await runCommand('Running unit tests', cmd, { throwOnError: true });
     }
-    catch (error) {
+    catch (error: unknown) {
         log.error(error);
         process.exit(1);
     }
@@ -319,7 +319,7 @@ async function testE2E() {
 
         await runCommand('Running end-to-end tests', cmd, { throwOnError: true });
     }
-    catch (error) {
+    catch (error: unknown) {
         log.error(error);
         process.exit(1);
     }
@@ -436,7 +436,7 @@ async function storybookBuild() {
             .epilog('💡 Tip: Use "--help" with any command to see options\n')
             .parse();
     }
-    catch (error) {
+    catch (error: unknown) {
         catchError(error);
         process.exit(1);
     }

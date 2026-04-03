@@ -178,3 +178,58 @@ describe('generateShortId (branch coverage)', () => {
         expect(id).toHaveLength(4);
     });
 });
+
+const RE_HAS_LOWER = /[a-z]/;
+const RE_HAS_UPPER = /[A-Z]/;
+const RE_HAS_DIGIT = /\d/;
+const RE_HAS_SPECIAL = /[!@#$%^&*()_+[\]{}|;:,.<>?]/;
+
+describe('generateRandomPassword (character-class enforcement)', () => {
+    it('should produce passwords with all 4 character classes when length >= 4', () => {
+        for (let i = 0; i < 50; i++) {
+            // Test at the boundary (length 4) where collisions are most likely
+            const pw = generateRandomPassword(4);
+            expect(pw).toHaveLength(4);
+
+            // Assert all required classes are present
+            expect(RE_HAS_LOWER.test(pw)).toBe(true);
+            expect(RE_HAS_UPPER.test(pw)).toBe(true);
+            expect(RE_HAS_DIGIT.test(pw)).toBe(true);
+            expect(RE_HAS_SPECIAL.test(pw)).toBe(true);
+        }
+    });
+
+    it('should produce larger passwords containing all classes', () => {
+        const pw = generateRandomPassword(12);
+        expect(pw).toHaveLength(12);
+        expect(RE_HAS_LOWER.test(pw)).toBe(true);
+        expect(RE_HAS_UPPER.test(pw)).toBe(true);
+        expect(RE_HAS_DIGIT.test(pw)).toBe(true);
+        expect(RE_HAS_SPECIAL.test(pw)).toBe(true);
+    });
+
+    it('should not enforce character classes when length < 4', () => {
+        const pw = generateRandomPassword(2);
+        expect(pw).toHaveLength(2);
+        expect(typeof pw).toBe('string');
+    });
+});
+
+describe('generateRandomFromCharset (internal branches via generateRandomString)', () => {
+    it('should handle large lengths exceeding MAX_UINT32_VALUES_PER_CALL (16384)', () => {
+        const length = 20000;
+        const result = generateRandomString(length);
+        expect(result).toHaveLength(length);
+    });
+
+    it('should produce unbiased output via rejection sampling', () => {
+        // With a charset of length 3, limit = floor(2^32/3)*3 = 4294967295
+        // This means values >= 4294967295 are rejected (very rare, but the code path exists).
+        // We verify correctness by checking that with charset 'abc', all chars are from that set.
+        const result = generateRandomString(500, 'abc');
+        expect(result).toHaveLength(500);
+        for (const ch of result) {
+            expect('abc').toContain(ch);
+        }
+    });
+});

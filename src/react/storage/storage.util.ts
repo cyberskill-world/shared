@@ -38,7 +38,7 @@ export const storage = {
 
             return obj as T;
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError(error, { returnValue: null });
         }
     },
@@ -63,7 +63,7 @@ export const storage = {
 
             localStorage.setItem(key, JSON.stringify(payloadToStore));
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
     },
@@ -79,7 +79,7 @@ export const storage = {
         try {
             localStorage.removeItem(key);
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
     },
@@ -104,7 +104,7 @@ export const storage = {
 
             return keys;
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError(error, { returnValue: [] });
         }
     },
@@ -136,7 +136,7 @@ export const storage = {
 
             return true;
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError(error, { returnValue: false });
         }
     },
@@ -150,7 +150,7 @@ export const storage = {
         try {
             localStorage.clear();
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
     },

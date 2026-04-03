@@ -70,7 +70,7 @@ const fsDriver: I_StorageDriver = {
 
             await fs.mkdir(nodeFsDriverState.baseDir, { recursive: true });
         }
-        catch (error) {
+        catch (error: unknown) {
             log.error('[Storage:init]', error);
             throw error;
         }
@@ -119,7 +119,7 @@ const fsDriver: I_StorageDriver = {
 
             return JSON.parse(content) as T;
         }
-        catch (error) {
+        catch (error: unknown) {
             if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
                 return null;
             }
@@ -137,7 +137,7 @@ const fsDriver: I_StorageDriver = {
                 .filter(file => file.endsWith(STORAGE_KEY_EXTENSION))
                 .map(decodeKey);
         }
-        catch (error) {
+        catch (error: unknown) {
             if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
                 return [];
             }
@@ -232,7 +232,7 @@ export const storage = {
 
             return result as T;
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError(error, { returnValue: null });
         }
     },
@@ -259,7 +259,7 @@ export const storage = {
 
             await driver.setItem(key, payloadToStore);
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
             throw error;
         }
@@ -277,7 +277,7 @@ export const storage = {
 
             await driver.removeItem(key);
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
     },
@@ -309,7 +309,7 @@ export const storage = {
 
             return true;
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError(error, { returnValue: false });
         }
     },
@@ -322,7 +322,7 @@ export const storage = {
             const driver = await ensureDriverReady();
             await driver.clear();
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
     },
@@ -345,7 +345,7 @@ export const storage = {
 
             return keys;
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError(error, { returnValue: [] });
         }
     },
@@ -363,7 +363,7 @@ export const storage = {
 
             return `${storagePath} (key: ${key})`;
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError(error, { returnValue: null });
         }
     },
