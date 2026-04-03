@@ -240,7 +240,7 @@ describe('mongo', () => {
         it('should throw when findAll fails', async () => {
             const controller = { findAll: vi.fn().mockResolvedValue({ success: false }) } as any;
             const records = [{ id: '1' }, { id: '2' }] as any[];
-            await expect(mongo.getNewRecords(controller, records, () => false)).rejects.toThrow('Failed to query existing records');
+            await expect(mongo.getNewRecords(controller, records, () => false)).rejects.toThrow('Failed to query records');
         });
 
         it('should filter out existing records', async () => {
@@ -260,7 +260,7 @@ describe('mongo', () => {
     describe('getExistingRecords', () => {
         it('should throw when findAll fails', async () => {
             const controller = { findAll: vi.fn().mockResolvedValue({ success: false }) } as any;
-            await expect(mongo.getExistingRecords(controller, [{ id: '1' }] as any[], () => true)).rejects.toThrow('Failed to query existing records');
+            await expect(mongo.getExistingRecords(controller, [{ id: '1' }] as any[], () => true)).rejects.toThrow('Failed to query records');
         });
 
         it('should return matching existing records', async () => {

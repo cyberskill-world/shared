@@ -59,7 +59,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result: finalDocument,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<(D | Partial<D>)>(error);
         }
     }
@@ -90,7 +90,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result: finalDocuments,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<(D | Partial<D>)[]>(error);
         }
     }
@@ -111,7 +111,7 @@ export class MongoController<D extends Partial<C_Document>> {
 
             return { success: true, message: 'Document found', result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_WithId<D>>(error);
         }
     }
@@ -149,7 +149,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 truncated,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_WithId<D>[]>(error);
         }
     }
@@ -172,7 +172,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<number>(error);
         }
     }
@@ -202,7 +202,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_UpdateResult>(error);
         }
     }
@@ -233,7 +233,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_UpdateResult>(error);
         }
     }
@@ -259,7 +259,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_DeleteResult>(error);
         }
     }
@@ -286,7 +286,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_DeleteResult>(error);
         }
     }
@@ -316,7 +316,7 @@ export class MongoController<D extends Partial<C_Document>> {
                 result,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_BulkWriteResult>(error);
         }
     }

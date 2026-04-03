@@ -14,3 +14,7 @@
 # /src/react/    @cyberskill-world/frontend
 # /src/node/     @cyberskill-world/backend
 /src/ @cyberskill-world/maintainers
+
+# Scripts and documentation
+/scripts/ @cyberskill-world/maintainers
+/docs/ @cyberskill-world/maintainers

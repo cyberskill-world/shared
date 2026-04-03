@@ -157,7 +157,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: toPlainObject(finalResult) };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T>(error);
         }
     }
@@ -206,7 +206,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: finalResult.map(item => toPlainObject(item)), truncated };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T[]>(error);
         }
     }
@@ -243,7 +243,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: { ...result, docs: result.docs.map(item => toPlainObject(item)) } };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_PaginateResult<T>>(error);
         }
     }
@@ -277,7 +277,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: { ...result, docs: finalDocs.map(item => toPlainObject(item)) } };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_AggregatePaginateResult<T>>(error);
         }
     }
@@ -295,7 +295,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<number>(error);
         }
     }
@@ -312,7 +312,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: (result as T)?.toObject?.() ?? result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T>(error);
         }
     }
@@ -333,7 +333,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: createdDocuments.map(item => item?.toObject?.() ?? item) as T[] };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T[]>(error);
         }
     }
@@ -366,7 +366,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: result?.toObject?.() ?? result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T>(error);
         }
     }
@@ -392,7 +392,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_UpdateResult>(error);
         }
     }
@@ -420,7 +420,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: result?.toObject?.() ?? result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T>(error);
         }
     }
@@ -446,7 +446,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T_DeleteResult>(error);
         }
     }
@@ -487,7 +487,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 code: RESPONSE_STATUS.INTERNAL_SERVER_ERROR.CODE,
             };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<string>(error);
         }
     }
@@ -634,7 +634,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: uniqueSlug as R };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<R>(error);
         }
     }
@@ -689,7 +689,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result: exists !== null };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<boolean>(error);
         }
     }
@@ -706,7 +706,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<T[]>(error);
         }
     }
@@ -729,7 +729,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
             return { success: true, result };
         }
-        catch (error) {
+        catch (error: unknown) {
             return catchError<unknown[]>(error);
         }
     }

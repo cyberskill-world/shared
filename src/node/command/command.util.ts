@@ -79,7 +79,7 @@ async function saveErrorListToStorage(errorList: I_IssueEntry[]): Promise<void> 
             log.info(`📂 Open the error list manually: ${logPath}`);
         }
     }
-    catch (error) {
+    catch (error: unknown) {
         catchError(error);
     }
 }
@@ -97,7 +97,7 @@ export async function getStoredErrorLists(): Promise<I_IssueEntry[]> {
 
         return allErrors ?? [];
     }
-    catch (error) {
+    catch (error: unknown) {
         return catchError<I_IssueEntry[]>(error, {
             returnValue: [],
         });
@@ -115,7 +115,7 @@ export async function clearAllErrorLists(): Promise<void> {
         const packageName = await getPackageName();
         await storage.remove(packageName);
     }
-    catch (error) {
+    catch (error: unknown) {
         catchError(error);
     }
 }
@@ -265,7 +265,7 @@ async function executeCommand(command: string | void, parser = parseCommandOutpu
             await Promise.all([result.stdout, result.stderr].map(output => output && parser(output)));
         }
     }
-    catch (error) {
+    catch (error: unknown) {
         const { stdout, stderr, message } = error as {
             stdout?: string;
             stderr?: string;
@@ -397,7 +397,7 @@ export async function runCommand(label: string, command: string | void, options:
 
         log.success(`${label} done.`);
     }
-    catch (error) {
+    catch (error: unknown) {
         if (options.throwOnError) {
             throw error;
         }

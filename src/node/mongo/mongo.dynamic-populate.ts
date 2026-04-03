@@ -114,7 +114,7 @@ export function remapDynamicPopulate<T, R extends string = string>(
                 modelGroups.get(convertedModelName)!.push(doc);
             }
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(new Error(`Dynamic ref function failed for virtual "${virtualName}": ${error instanceof Error ? error.message : String(error)}`));
         }
     });

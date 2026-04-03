@@ -50,6 +50,7 @@ interface I_MongoUtils {
     };
     regexify: <T>(filter?: T_QueryFilter<T>, fields?: (keyof T | string)[]) => T_QueryFilter<T>;
     isDynamicVirtual: <T, R extends string>(options?: T_VirtualOptions<T, R>) => options is I_DynamicVirtualOptions<T, R>;
+    fetchAllRecords: <T extends I_GenericDocument>(controller: MongoController<T>, filter?: T_Filter<T>, batchSize?: number) => Promise<T_WithId<T>[]>;
     getNewRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T[]>;
     getExistingRecords: <T extends I_GenericDocument>(controller: MongoController<T>, recordsToCheck: T[], filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean, filter?: T_Filter<T>) => Promise<T_WithId<T>[]>;
     health: (mongooseInstance: typeof mongooseRaw) => Record<string, unknown>;
@@ -382,6 +383,47 @@ export const mongo: I_MongoUtils = {
     },
 
     /**
+     * Fetches all records from a collection by paginating through results in batches.
+     * Handles the offset-based pagination loop internally so callers don't need
+     * to reimplement it.
+     *
+     * @param controller - MongoController instance
+     * @param filter - Optional filter to narrow the query
+     * @param batchSize - Number of records per page (default: 1000)
+     * @returns All records matching the filter
+     * @throws {Error} When a page query fails
+     * @since 3.17.0
+     */
+    async fetchAllRecords<T extends I_GenericDocument>(
+        controller: MongoController<T>,
+        filter: T_Filter<T> = {} as T_Filter<T>,
+        batchSize = 1000,
+    ): Promise<T_WithId<T>[]> {
+        const allRecords: T_WithId<T>[] = [];
+        let skip = 0;
+        let isComplete = false;
+
+        while (!isComplete) {
+            const pageResult = await controller.findAll(filter, { skip, limit: batchSize });
+
+            if (!pageResult.success) {
+                throw new Error(`Failed to query records on skip ${skip}: ${pageResult.message}`);
+            }
+
+            allRecords.push(...pageResult.result);
+
+            if (pageResult.truncated && pageResult.result.length === batchSize) {
+                skip += batchSize;
+            }
+            else {
+                isComplete = true;
+            }
+        }
+
+        return allRecords;
+    },
+
+    /**
      * Generic utility function to get new records from the database
      * @param controller - MongoController instance
      * @param recordsToCheck - Array of records to check
@@ -396,36 +438,13 @@ export const mongo: I_MongoUtils = {
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
         filter: T_Filter<T> = {} as T_Filter<T>,
     ): Promise<T[]> {
-        const batchSize = 1000;
-        let skip = 0;
-        let isComplete = false;
+        const allExistingRecords = await mongo.fetchAllRecords(controller, filter);
 
-        const allExistingRecords: T_WithId<T>[] = [];
-
-        while (!isComplete) {
-            const pageResult = await controller.findAll(filter, { skip, limit: batchSize });
-
-            if (!pageResult.success) {
-                throw new Error(`Failed to query existing records on skip ${skip}: ${pageResult.message}`);
-            }
-
-            allExistingRecords.push(...pageResult.result);
-
-            if (pageResult.truncated && pageResult.result.length === batchSize) {
-                skip += batchSize;
-            }
-            else {
-                isComplete = true;
-            }
-        }
-
-        const filteredRecords = recordsToCheck.filter(newRecord =>
+        return recordsToCheck.filter(newRecord =>
             !allExistingRecords.some((existingRecord: T_WithId<T>) =>
                 filterFn(existingRecord, newRecord),
             ),
         );
-
-        return filteredRecords;
     },
 
     /**
@@ -444,36 +463,13 @@ export const mongo: I_MongoUtils = {
         filterFn: (existingRecord: T_WithId<T>, newRecord: T) => boolean,
         filter: T_Filter<T> = {} as T_Filter<T>,
     ): Promise<T_WithId<T>[]> {
-        const batchSize = 1000;
-        let skip = 0;
-        let isComplete = false;
+        const allExistingRecords = await mongo.fetchAllRecords(controller, filter);
 
-        const allExistingRecords: T_WithId<T>[] = [];
-
-        while (!isComplete) {
-            const pageResult = await controller.findAll(filter, { skip, limit: batchSize });
-
-            if (!pageResult.success) {
-                throw new Error(`Failed to query existing records on skip ${skip}: ${pageResult.message}`);
-            }
-
-            allExistingRecords.push(...pageResult.result);
-
-            if (pageResult.truncated && pageResult.result.length === batchSize) {
-                skip += batchSize;
-            }
-            else {
-                isComplete = true;
-            }
-        }
-
-        const foundRecords = allExistingRecords.filter((existingRecord: T_WithId<T>) =>
+        return allExistingRecords.filter((existingRecord: T_WithId<T>) =>
             recordsToCheck.some((newRecord: T) =>
                 filterFn(existingRecord, newRecord),
             ),
         );
-
-        return foundRecords;
     },
 
     /**

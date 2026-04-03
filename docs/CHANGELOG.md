@@ -1,3 +1,29 @@
+## Unreleased
+
+### 🔒 Security
+
+* **deploy.yml:** align audit gate from `--audit-level=high` to `--audit-level=moderate` to match check.yml strictness — prevents moderate-severity vulnerabilities from reaching npm publish (H-1)
+
+### 🔧 CI
+
+* **check.yml:** replace stale `branches-ignore: release` with explicit `branches: [main]` in pull_request trigger — `release` branch was deprecated in v3.16.0 (M-1)
+* **check.yml:** add `concurrency` group (`${{ github.workflow }}-${{ github.ref }}`) with `cancel-in-progress: true` to cancel superseded check runs and reduce CI minutes (SC-1)
+
+### 🧹 Chores
+
+* **package.json:** fix ESLint `style/eol-last` violation — add missing trailing newline (M-3)
+
+### ♻️ Refactors
+
+* **mongo.util:** extract `fetchAllRecords()` helper to DRY up duplicated batch pagination loop in `getNewRecords()` and `getExistingRecords()` (MA-2)
+* **catch blocks:** standardise all `catch (error)` to `catch (error: unknown)` across 11 source files (~60 catch blocks) for explicit TypeScript type safety (MA-1)
+
+### 📝 Documentation
+
+* **CODEOWNERS:** add `/scripts/` and `/docs/` ownership rules for change visibility (MA-3)
+* create `.agent/issue_report_2026-04-04_00-58.md` — 1 high, 3 medium, 3 low new findings
+* create `.agent/feature_report_2026-04-04_00-58.md` — 10 new enhancement suggestions across 5 categories
+
 ## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
 
 ### ✨ Features

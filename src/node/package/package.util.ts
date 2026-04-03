@@ -35,7 +35,7 @@ export async function getLatestPackageVersion(packageName: string): Promise<I_Re
             result: version,
         };
     }
-    catch (error) {
+    catch (error: unknown) {
         return catchError<string>(error);
     }
 }
@@ -238,7 +238,7 @@ export async function getPackage(inputPackage?: I_PackageInput): Promise<I_Retur
             },
         };
     }
-    catch (error) {
+    catch (error: unknown) {
         return catchError<I_PackageInfo>(error);
     }
 }
@@ -269,7 +269,7 @@ export async function updatePackage(packageInfo: I_PackageInfo): Promise<void> {
 
         log.info(`Updated "${packageInfo.name}" to version ${packageInfo.latestVersion}`);
     }
-    catch (error) {
+    catch (error: unknown) {
         catchError(error);
     }
 }
@@ -290,7 +290,7 @@ export async function installDependencies(): Promise<void> {
             await runCommand(`Installing dependencies (standard) using: ${cmd}`, cmd);
             return;
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
 
@@ -299,7 +299,7 @@ export async function installDependencies(): Promise<void> {
             await runCommand(`Retrying with legacy peer dependencies using: ${cmd}`, cmd);
             return;
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
 
@@ -307,11 +307,11 @@ export async function installDependencies(): Promise<void> {
             const cmd = await command.pnpmInstallForce();
             await runCommand(`Retrying with force install using: ${cmd}`, cmd);
         }
-        catch (error) {
+        catch (error: unknown) {
             catchError(error);
         }
     }
-    catch (error) {
+    catch (error: unknown) {
         catchError(error);
     }
 }
@@ -372,7 +372,7 @@ export async function setupPackages(
 
         await options?.callback?.();
     }
-    catch (error) {
+    catch (error: unknown) {
         catchError(error);
     }
 }
