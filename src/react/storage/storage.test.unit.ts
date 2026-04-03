@@ -205,15 +205,18 @@ describe('storage', () => {
         it('should invoke factory and store when expired TTL key exists', async () => {
             vi.useFakeTimers();
 
-            await storage.set('ttl-gor', 'old-value', { ttlMs: 50 });
-            vi.advanceTimersByTime(100);
+            try {
+                await storage.set('ttl-gor', 'old-value', { ttlMs: 50 });
+                vi.advanceTimersByTime(100);
 
-            const factory = vi.fn(async () => 'refreshed');
-            const result = await storage.getOrSet('ttl-gor', factory);
-            expect(result).toBe('refreshed');
-            expect(factory).toHaveBeenCalledOnce();
-
-            vi.useRealTimers();
+                const factory = vi.fn(async () => 'refreshed');
+                const result = await storage.getOrSet('ttl-gor', factory);
+                expect(result).toBe('refreshed');
+                expect(factory).toHaveBeenCalledOnce();
+            }
+            finally {
+                vi.useRealTimers();
+            }
         });
     });
 

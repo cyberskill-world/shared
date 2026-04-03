@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import '@testing-library/jest-dom/vitest';
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -90,11 +90,9 @@ describe('useStorage E2E (real localStorage)', () => {
         });
 
         expect(screen.getByTestId('value').textContent).toBe('hello');
-        // Give the async save effect time to flush
-        await act(async () => {
-            await new Promise(r => setTimeout(r, 10));
+        await waitFor(() => {
+            expect(localStorage.getItem('e2e-update')).toBe(expectedStoredValue('hello'));
         });
-        expect(localStorage.getItem('e2e-update')).toBe(expectedStoredValue('hello'));
     });
 
     it('should remove value from localStorage when remove is called', async () => {
@@ -136,9 +134,8 @@ describe('useStorage E2E (real localStorage)', () => {
         });
         expect(screen.getByTestId('value').textContent).toBe('world');
 
-        await act(async () => {
-            await new Promise(r => setTimeout(r, 10));
+        await waitFor(() => {
+            expect(localStorage.getItem('e2e-seq')).toBe(expectedStoredValue('world'));
         });
-        expect(localStorage.getItem('e2e-seq')).toBe(expectedStoredValue('world'));
     });
 });

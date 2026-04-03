@@ -188,11 +188,19 @@ export function generateRandomPassword(length = 8): string {
             }
         }
 
-        // Secure Fisher-Yates shuffle of the array
+        // Fisher-Yates shuffle using rejection sampling to avoid modulo bias
         for (let i = chars.length - 1; i > 0; i--) {
+            const range = i + 1;
+            const maxUnbiased = Math.floor(0x1_0000_0000 / range) * range;
             const buf = new Uint32Array(1);
-            crypto.getRandomValues(buf);
-            const j = buf[0]! % (i + 1);
+            let randomValue: number;
+
+            do {
+                crypto.getRandomValues(buf);
+                randomValue = buf[0]!;
+            } while (randomValue >= maxUnbiased);
+
+            const j = randomValue % range;
             [chars[i], chars[j]] = [chars[j]!, chars[i]!];
         }
 

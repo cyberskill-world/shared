@@ -162,21 +162,21 @@ describe('isPlainObject', () => {
 });
 
 describe('regexSearchMapper (branch coverage)', () => {
-    it('should return cached value on second call', () => {
+    it('should return the same result for the same input (deterministic)', () => {
         const first = regexSearchMapper('cache-test');
         const second = regexSearchMapper('cache-test');
         expect(first).toBe(second);
     });
 
-    it('should evict oldest entry when cache exceeds 128 entries', () => {
-        // Fill the cache with 128 unique strings
+    it('should still return a valid result after the 128-entry cache limit is reached', () => {
+        // Fill the cache with 129 unique strings to trigger the eviction path
         const strings = Array.from({ length: 129 }, (_, i) => `eviction-test-${i}`);
         for (const s of strings) {
             regexSearchMapper(s);
         }
 
-        // The 129th entry should have caused the first to be evicted.
-        // Calling the first again should still return a valid result (re-computed).
+        // Regardless of whether the first entry was evicted, re-computing it
+        // should still produce a valid non-empty string result.
         const result = regexSearchMapper('eviction-test-0');
         expect(typeof result).toBe('string');
         expect(result.length).toBeGreaterThan(0);

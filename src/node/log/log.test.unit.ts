@@ -201,14 +201,12 @@ describe('log.printBoxedLog', () => {
     });
 });
 
-describe('ensureLogLevel (DEBUG=false branch)', () => {
-    it('should exercise the non-DEBUG code path without error', async () => {
-        // The main module already imports with DEBUG=true.
-        // We verify the ensureLogLevel guard path by:
-        //   - resetting the internal _logLevelConfigured flag via a fresh dynamic import
-        //   - calling any log method (which triggers ensureLogLevel internally)
-        // Since the vi.mock for getEnv returns { DEBUG: true }, this test
-        // simply validates no crash when the ensureLogLevel runs with the idempotency guard.
+describe('ensureLogLevel guard', () => {
+    it('should allow repeated ensureLogLevel-triggering calls without error', async () => {
+        // The module is imported under the shared getEnv mock, which returns { DEBUG: true }.
+        // This test does not cover the DEBUG=false branch; it validates that invoking a
+        // log method through a contextual logger does not crash when ensureLogLevel runs
+        // through its guard/idempotency path.
         const ctxLog = log.withContext();
         expect(() => ctxLog.info('test')).not.toThrow();
     });

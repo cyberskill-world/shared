@@ -387,6 +387,10 @@ export const mongo: I_MongoUtils = {
      * Handles the offset-based pagination loop internally so callers don't need
      * to reimplement it.
      *
+     * **Warning:** All matched documents are accumulated into memory before returning.
+     * This helper is intended for bounded datasets only. Avoid using it on large or
+     * unbounded collections to prevent excessive memory usage or OOM errors.
+     *
      * @param controller - MongoController instance
      * @param filter - Optional filter to narrow the query
      * @param batchSize - Number of records per page (default: 1000)
