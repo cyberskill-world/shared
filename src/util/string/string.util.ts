@@ -191,6 +191,7 @@ export function generateRandomPassword(length = 8): string {
         // Fisher-Yates shuffle using rejection sampling to avoid modulo bias
         for (let i = chars.length - 1; i > 0; i--) {
             const range = i + 1;
+            // 0x1_0000_0000 = 2^32, the exclusive upper bound of Uint32Array values
             const maxUnbiased = Math.floor(0x1_0000_0000 / range) * range;
             const buf = new Uint32Array(1);
             let randomValue: number;
