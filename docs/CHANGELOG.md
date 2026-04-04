@@ -23,6 +23,18 @@
 * **CODEOWNERS:** add `/scripts/` and `/docs/` ownership rules for change visibility (MA-3)
 * create `.agent/issue_report_2026-04-04_00-58.md` — 1 high, 3 medium, 3 low new findings
 * create `.agent/feature_report_2026-04-04_00-58.md` — 10 new enhancement suggestions across 5 categories
+* resolve test coverage gaps tracked in `test_coverage_report_2026-04-04_02-15.md`
+
+### 🧪 Testing
+
+* **userback:** implement JSDOM-based component simulation testing for dynamic `MutationObserver` unmounting and hidden node queries
+* **package:** augment exception limits covering boundary dependencies mapping inside package util loops and fallback catch logic
+* **mongo:** implement complete coverage map asserting native driver unmapped exceptions inside bulk `controller.native` operations
+* **upload:** add coverage for stream pipeline cleanup logic via `readStream.destroy()`
+* **apollo-client:** add coverage for `splitLink` subscription resolution and `getErrorHandler` UI interactions
+* **storage:** expand exception coverage for missing properties, `keys()` rejection, and `localStorage` driver setup failures
+* **e2e:** refactor DOM wait conditions across test suites to use reliable `waitFor` polling instead of static timers
+
 
 ## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
 

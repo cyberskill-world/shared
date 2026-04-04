@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import '@testing-library/jest-dom/vitest';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { describe, expect, it } from 'vitest';
 
@@ -57,12 +57,11 @@ describe('Loading Flow E2E', () => {
         expect(document.body).toHaveClass('noscroll');
 
         // Wait for the async operation (50ms) to complete and hide the loading overlay
-        await act(async () => {
-            await new Promise(resolve => setTimeout(resolve, 60)); // slightly longer to assure resolution
+        await waitFor(() => {
+            expect(screen.queryByRole('status')).not.toBeInTheDocument();
         });
 
         // The loading overlay is unmounted, noscroll class removed, and children remounted
-        expect(screen.queryByRole('status')).not.toBeInTheDocument();
         expect(screen.getByTestId('content')).toBeInTheDocument();
         expect(document.body).not.toHaveClass('noscroll');
     });

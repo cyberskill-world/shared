@@ -1,6 +1,6 @@
 import { Buffer } from 'node:buffer';
 import { Readable } from 'node:stream';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { RESPONSE_STATUS } from '#constant/index.js';
 
@@ -366,6 +366,48 @@ describe('upload', () => {
         });
         expect(result).toBeDefined();
         expect(typeof result.success).toBe('boolean');
+    });
+
+    it('should destroy readStream if writeStream emits error', async () => {
+        let destroyed = false;
+        const file = {
+            file: {
+                filename: 'photo.jpg',
+                createReadStream: () => {
+                    const stream = new Readable({
+                        read() {
+                            this.push('data');
+                            this.push(null);
+                        },
+                    });
+                    const originalDestroy = stream.destroy.bind(stream);
+                    stream.destroy = (error?: Error) => {
+                        destroyed = true;
+                        return originalDestroy(error);
+                    };
+                    return stream;
+                },
+            },
+        };
+
+        const fs = await import('../fs/index.js');
+        const { Writable } = await import('node:stream');
+        const mockOut = new Writable({
+            write(_chunk, _encoding, callback) {
+                callback(new Error('write error'));
+            },
+        });
+        const spy = vi.spyOn(fs, 'createWriteStream').mockReturnValueOnce(mockOut as any);
+
+        const result = await upload({
+            path: '/tmp/test-upload-out-error/photo.jpg',
+            file: Promise.resolve(file as any),
+            type: E_UploadType.IMAGE,
+        });
+
+        expect(result.success).toBe(false);
+        expect(destroyed).toBe(true);
+        spy.mockRestore();
     });
 });
 
