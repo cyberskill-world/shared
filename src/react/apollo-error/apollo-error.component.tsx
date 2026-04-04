@@ -61,7 +61,7 @@ export function ApolloErrorComponent() {
         if (event.key !== 'Tab' || !dialogRef.current)
             return;
 
-        const focusableElements = [...dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)].filter(el => !el.hasAttribute('disabled'));
+        const focusableElements = [...dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)].filter(el => el && !el.hasAttribute('disabled'));
 
         if (focusableElements.length === 0)
             return;

@@ -248,4 +248,79 @@ describe('ApolloErrorComponent', () => {
 
         expect(mockHideError).not.toHaveBeenCalled();
     });
+
+    it('does not error when no focusable elements are found', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        render(
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext>,
+        );
+
+        const dialog = screen.getByRole('dialog');
+        const buttons = dialog.querySelectorAll('button');
+        buttons.forEach((btn) => {
+            btn.setAttribute('disabled', 'true');
+        });
+
+        expect(() => {
+            fireEvent.keyDown(dialog, { key: 'Tab' });
+        }).not.toThrow();
+    });
+
+    it('does not error when firstElement or lastElement is somehow undefined', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        render(
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext>,
+        );
+
+        const dialog = screen.getByRole('dialog');
+
+        // We override querySelectorAll to return an array-like object with missing elements
+        vi.spyOn(dialog, 'querySelectorAll').mockReturnValue([undefined] as any);
+
+        expect(() => {
+            fireEvent.keyDown(dialog, { key: 'Tab' });
+        }).not.toThrow();
+
+        vi.restoreAllMocks();
+    });
+
+    it('does not do anything when there is no firstElement or lastElement focus setup issue', () => {
+        const mockHideError = vi.fn();
+        const mockError = { message: 'Test Error' };
+
+        render(
+            <ApolloErrorContext value={{ error: mockError as any, hideError: mockHideError, showError: vi.fn() }}>
+                <ApolloErrorComponent />
+            </ApolloErrorContext>,
+        );
+
+        const dialog = screen.getByRole('dialog');
+
+        const mockNodeList = [{
+            hasAttribute: () => false,
+        }] as any;
+        vi.spyOn(dialog, 'querySelectorAll').mockReturnValue(mockNodeList);
+
+        const spyAt = vi.spyOn(Array.prototype, 'at').mockReturnValue(undefined);
+
+        expect(() => {
+            fireEvent.keyDown(dialog, { key: 'Tab' });
+        }).not.toThrow();
+
+        // Also test the branch with Shift+Tab (where the active element logic is checked)
+        expect(() => {
+            fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
+        }).not.toThrow();
+
+        spyAt.mockRestore();
+        vi.restoreAllMocks();
+    });
 });

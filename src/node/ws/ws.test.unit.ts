@@ -15,6 +15,24 @@ vi.mock('../log/index.js', () => ({
 }));
 
 describe('createWSServer', () => {
+    it('should throw when no server is provided', () => {
+        expect(() => {
+            createWSServer({ path: '/ws' } as any);
+        }).toThrow('[WS] HTTP server instance is required to create a WebSocket server.');
+    });
+
+    it('should throw when path is invalid', () => {
+        const server = http.createServer();
+        expect(() => {
+            createWSServer({ server, path: '' } as any);
+        }).toThrow('[WS] WebSocket path must be a non-empty string starting with "/".');
+
+        expect(() => {
+            createWSServer({ server, path: 'ws' } as any);
+        }).toThrow('[WS] WebSocket path must be a non-empty string starting with "/".');
+        server.close();
+    });
+
     it('should create a WebSocketServer with server and path (no session parser)', () => {
         const server = http.createServer();
         const wss = createWSServer({ server, path: '/ws' });

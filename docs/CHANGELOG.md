@@ -1,3 +1,9 @@
+## [2026-04-04]
+
+### Unit
+- Added tests to `src/react/apollo-error/apollo-error.test.unit.tsx` to handle focus trap missing edge cases. `apollo-error.component.tsx` coverage reached 100%.
+- Added tests to `src/node/ws/ws.test.unit.ts` to handle path and server validation. `ws.util.ts` coverage reached 100%.
+
 ## [3.18.0](https://github.com/cyberskill-world/shared/compare/v3.17.0...v3.18.0) (2026-04-04)
 
 ### ✨ Features
