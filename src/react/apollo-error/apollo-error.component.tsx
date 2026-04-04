@@ -128,7 +128,13 @@ export function ApolloErrorComponent() {
                         {errorMessage || 'Error details'}
                     </span>
                 </div>
-                <div id="apollo-error-details" className={style['error-details']}>
+                <div
+                    id="apollo-error-details"
+                    className={style['error-details']}
+                    tabIndex={0}
+                    role="region"
+                    aria-label="Error details"
+                >
                     {isGraphQLError && 'locations' in error && error.locations && (
                         <pre className="locations">
                             <strong>Locations:</strong>

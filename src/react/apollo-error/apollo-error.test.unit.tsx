@@ -99,13 +99,14 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const buttons = screen.getAllByRole('button');
-        const lastButton = buttons.at(-1)!;
+        const focusableElements = [...dialog.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(el => !el.hasAttribute('disabled'));
+        const firstElement = focusableElements[0]!;
+        const lastElement = focusableElements.at(-1)!;
 
         // Simulate Tab from last focusable element — focus should wrap to first
-        lastButton.focus();
+        lastElement.focus();
         fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: false });
-        expect(document.activeElement).toBe(buttons[0]);
+        expect(document.activeElement).toBe(firstElement);
     });
 
     it('traps focus within the dialog on Shift+Tab key', () => {
@@ -119,14 +120,14 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const buttons = screen.getAllByRole('button');
-        const firstButton = buttons[0]!;
-        const lastButton = buttons.at(-1)!;
+        const focusableElements = [...dialog.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(el => !el.hasAttribute('disabled'));
+        const firstElement = focusableElements[0]!;
+        const lastElement = focusableElements.at(-1)!;
 
         // Simulate Shift+Tab from first focusable element — focus should wrap to last
-        firstButton.focus();
+        firstElement.focus();
         fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
-        expect(document.activeElement).toBe(lastButton);
+        expect(document.activeElement).toBe(lastElement);
     });
 
     it('wraps focus to last focusable element when Shift+Tab is pressed on the dialog container', () => {
@@ -140,8 +141,8 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const buttons = screen.getAllByRole('button');
-        const lastButton = buttons.at(-1)!;
+        const focusableElements = [...dialog.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(el => !el.hasAttribute('disabled'));
+        const lastElement = focusableElements.at(-1)!;
 
         // Ensure the dialog container has focus (it is focused programmatically on open)
         dialog.focus();
@@ -149,7 +150,7 @@ describe('ApolloErrorComponent', () => {
 
         // Simulate Shift+Tab from the dialog container — focus should wrap to last focusable element
         fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
-        expect(document.activeElement).toBe(lastButton);
+        expect(document.activeElement).toBe(lastElement);
     });
 
     it('returns focus to the previously focused element when dialog closes', () => {
