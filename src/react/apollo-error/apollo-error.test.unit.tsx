@@ -5,6 +5,13 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApolloErrorComponent } from './apollo-error.component.js';
 import { ApolloErrorContext } from './apollo-error.context.js';
 
+const FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/** Returns all focusable, non-disabled elements within the given container. */
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+    return [...container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(el => !el.hasAttribute('disabled'));
+}
+
 describe('ApolloErrorComponent', () => {
     it('renders error message with accessibility attributes', () => {
         const mockHideError = vi.fn();
@@ -29,6 +36,13 @@ describe('ApolloErrorComponent', () => {
 
         expect(screen.getByLabelText('Close error details (Esc)')).toBeInTheDocument();
         expect(screen.getByLabelText('Reload page')).toBeInTheDocument();
+
+        // Verify error details container accessibility attributes
+        const errorDetails = document.getElementById('apollo-error-details');
+        expect(errorDetails).toBeInTheDocument();
+        expect(errorDetails).toHaveAttribute('tabindex', '0');
+        expect(errorDetails).toHaveAttribute('role', 'region');
+        expect(errorDetails).toHaveAttribute('aria-label', 'Error details');
 
         // Verify Escape key closes the modal
         fireEvent.keyDown(window, { key: 'Escape' });
@@ -99,13 +113,14 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const buttons = screen.getAllByRole('button');
-        const lastButton = buttons.at(-1)!;
+        const focusableElements = getFocusableElements(dialog);
+        const firstElement = focusableElements[0]!;
+        const lastElement = focusableElements.at(-1)!;
 
         // Simulate Tab from last focusable element — focus should wrap to first
-        lastButton.focus();
+        lastElement.focus();
         fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: false });
-        expect(document.activeElement).toBe(buttons[0]);
+        expect(document.activeElement).toBe(firstElement);
     });
 
     it('traps focus within the dialog on Shift+Tab key', () => {
@@ -119,14 +134,14 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const buttons = screen.getAllByRole('button');
-        const firstButton = buttons[0]!;
-        const lastButton = buttons.at(-1)!;
+        const focusableElements = getFocusableElements(dialog);
+        const firstElement = focusableElements[0]!;
+        const lastElement = focusableElements.at(-1)!;
 
         // Simulate Shift+Tab from first focusable element — focus should wrap to last
-        firstButton.focus();
+        firstElement.focus();
         fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
-        expect(document.activeElement).toBe(lastButton);
+        expect(document.activeElement).toBe(lastElement);
     });
 
     it('wraps focus to last focusable element when Shift+Tab is pressed on the dialog container', () => {
@@ -140,8 +155,8 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const buttons = screen.getAllByRole('button');
-        const lastButton = buttons.at(-1)!;
+        const focusableElements = getFocusableElements(dialog);
+        const lastElement = focusableElements.at(-1)!;
 
         // Ensure the dialog container has focus (it is focused programmatically on open)
         dialog.focus();
@@ -149,7 +164,7 @@ describe('ApolloErrorComponent', () => {
 
         // Simulate Shift+Tab from the dialog container — focus should wrap to last focusable element
         fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
-        expect(document.activeElement).toBe(lastButton);
+        expect(document.activeElement).toBe(lastElement);
     });
 
     it('returns focus to the previously focused element when dialog closes', () => {

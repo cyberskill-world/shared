@@ -59,10 +59,10 @@ describe('Loading Flow E2E', () => {
         // Wait for the async operation (50ms) to complete and hide the loading overlay
         await waitFor(() => {
             expect(screen.queryByRole('status')).not.toBeInTheDocument();
+            expect(document.body).not.toHaveClass('noscroll');
         });
 
         // The loading overlay is unmounted, noscroll class removed, and children remounted
         expect(screen.getByTestId('content')).toBeInTheDocument();
-        expect(document.body).not.toHaveClass('noscroll');
     });
 });
