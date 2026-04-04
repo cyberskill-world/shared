@@ -122,15 +122,17 @@ describe('createApolloLinks', () => {
     });
 
     it('should configure splitLink correctly when wsUrl is provided', () => {
+        const splitMock = vi.mocked(ApolloLink.split);
+        splitMock.mockClear();
+
         createApolloLinks({
             uri: 'http://localhost:4000/graphql',
             wsUrl: 'ws://localhost:4000/graphql',
         });
 
-        const splitMock = vi.mocked(ApolloLink.split);
         expect(splitMock).toHaveBeenCalled();
 
-        const predicate = splitMock.mock.calls[0]?.[0] as (operation: any) => boolean;
+        const predicate = splitMock.mock.lastCall?.[0] as (operation: any) => boolean;
         expect(predicate({ operationType: 'subscription' })).toBe(true);
         expect(predicate({ operationType: 'mutation' })).toBe(false);
     });
@@ -258,16 +260,20 @@ describe('errorLink callback', () => {
         });
         expect(toast.error).toHaveBeenCalled();
         const renderArg = vi.mocked(toast.error).mock.calls[0]?.[0];
-        if (typeof renderArg === 'function') {
-            const result = renderArg({ id: 'test-id' } as any) as React.ReactElement;
-            expect(result).toBeDefined();
-            // Extract the button from the JSX and invoke onClick
-            const buttonElement = (result.props as any).children[1];
-            expect(buttonElement.type).toBe('button');
-            buttonElement.props.onClick();
-            expect(showGlobalApolloError).toHaveBeenCalled();
-            expect(toast.dismiss).toHaveBeenCalledWith('test-id');
-        }
+        expect(typeof renderArg).toBe('function');
+
+        const result = (renderArg as (props: { id: string }) => React.ReactElement)({ id: 'test-id' });
+        expect(result).toBeDefined();
+        // Extract the button from the JSX and invoke onClick
+        const buttonElement = (result.props as any).children[1];
+        expect(buttonElement.type).toBe('button');
+
+        vi.mocked(showGlobalApolloError).mockClear();
+        vi.mocked(toast.dismiss).mockClear();
+
+        buttonElement.props.onClick();
+        expect(showGlobalApolloError).toHaveBeenCalled();
+        expect(toast.dismiss).toHaveBeenCalledWith('test-id');
         vi.mocked(ServerError.is).mockReset();
     });
 });

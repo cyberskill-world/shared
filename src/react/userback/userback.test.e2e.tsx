@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import UserbackWidget from '@userback/widget';
 import * as React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -42,7 +42,7 @@ describe('Userback Widget', () => {
         const token = 'test-token-123';
         render(<Userback token={token} options={{ widget_settings: { language: 'en' }, hide: [] }} />);
 
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await waitFor(() => expect(UserbackWidget).toHaveBeenCalled());
 
         expect(UserbackWidget).toHaveBeenCalledWith(token, { widget_settings: { language: 'en' } });
     });
@@ -55,9 +55,7 @@ describe('Userback Widget', () => {
 
         render(<Userback token={token} options={{ hide: ['.hide-me-initial'] }} />);
 
-        await new Promise(resolve => setTimeout(resolve, 0));
-
-        expect(document.querySelector('.hide-me-initial')).toBeNull();
+        await waitFor(() => expect(document.querySelector('.hide-me-initial')).toBeNull());
     });
 
     it('should setup MutationObserver to remove elements dynamically added later', async () => {
@@ -81,7 +79,7 @@ describe('Userback Widget', () => {
         };
 
         render(<Userback token={token} options={{ hide: ['.hide-me-dynamic'] }} />);
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await waitFor(() => expect(observeSpy).toHaveBeenCalled());
 
         expect(observeSpy).toHaveBeenCalledWith(document.body, { childList: true, subtree: true });
 
@@ -101,6 +99,7 @@ describe('Userback Widget', () => {
     it('should disconnect observer on component unmount', async () => {
         const token = 'test-token-123';
         const disconnectSpy = vi.fn();
+        const observeSpy = vi.fn();
 
         (globalThis as any).MutationObserver = class {
             public callback: MutationCallback;
@@ -111,13 +110,13 @@ describe('Userback Widget', () => {
 
             disconnect = disconnectSpy;
 
-            observe = vi.fn();
+            observe = observeSpy;
 
             takeRecords = vi.fn();
         };
 
         const { unmount } = render(<Userback token={token} />);
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await waitFor(() => expect(observeSpy).toHaveBeenCalled());
 
         unmount();
 

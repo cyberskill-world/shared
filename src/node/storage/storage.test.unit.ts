@@ -295,7 +295,7 @@ describe('storage - edge cases', () => {
         resetStorageForTesting(); // restore state for future tests
     });
 
-    it('should bubble up non-ENOENT errors when reading getItem', async () => {
+    it('should log error and return null for non-ENOENT read errors', async () => {
         const fs = await import('node:fs/promises');
         const spy = vi.spyOn(fs.default, 'readFile').mockRejectedValueOnce(new Error('EACCES: permission denied'));
 

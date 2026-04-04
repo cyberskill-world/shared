@@ -262,7 +262,7 @@ describe('updatePackage', () => {
     it('should catch errors when internal logic throws', async () => {
         const { writeFileSync: wfs } = await import('../fs/index.js');
         const customError = new Error('simulated update throw');
-        vi.mocked(wfs).mockImplementation(() => {
+        vi.mocked(wfs).mockImplementationOnce(() => {
             throw customError;
         });
         const { catchError } = await import('../log/index.js');
