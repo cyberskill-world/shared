@@ -7,6 +7,7 @@ import { ApolloErrorContext } from './apollo-error.context.js';
 
 const FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
+/** Returns all focusable, non-disabled elements within the given container. */
 function getFocusableElements(container: HTMLElement): HTMLElement[] {
     return [...container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(el => !el.hasAttribute('disabled'));
 }
