@@ -5,6 +5,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApolloErrorComponent } from './apollo-error.component.js';
 import { ApolloErrorContext } from './apollo-error.context.js';
 
+const FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+    return [...container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)].filter(el => !el.hasAttribute('disabled'));
+}
+
 describe('ApolloErrorComponent', () => {
     it('renders error message with accessibility attributes', () => {
         const mockHideError = vi.fn();
@@ -29,6 +35,13 @@ describe('ApolloErrorComponent', () => {
 
         expect(screen.getByLabelText('Close error details (Esc)')).toBeInTheDocument();
         expect(screen.getByLabelText('Reload page')).toBeInTheDocument();
+
+        // Verify error details container accessibility attributes
+        const errorDetails = document.getElementById('apollo-error-details');
+        expect(errorDetails).toBeInTheDocument();
+        expect(errorDetails).toHaveAttribute('tabindex', '0');
+        expect(errorDetails).toHaveAttribute('role', 'region');
+        expect(errorDetails).toHaveAttribute('aria-label', 'Error details');
 
         // Verify Escape key closes the modal
         fireEvent.keyDown(window, { key: 'Escape' });
@@ -99,7 +112,7 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const focusableElements = [...dialog.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(el => !el.hasAttribute('disabled'));
+        const focusableElements = getFocusableElements(dialog);
         const firstElement = focusableElements[0]!;
         const lastElement = focusableElements.at(-1)!;
 
@@ -120,7 +133,7 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const focusableElements = [...dialog.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(el => !el.hasAttribute('disabled'));
+        const focusableElements = getFocusableElements(dialog);
         const firstElement = focusableElements[0]!;
         const lastElement = focusableElements.at(-1)!;
 
@@ -141,7 +154,7 @@ describe('ApolloErrorComponent', () => {
         );
 
         const dialog = screen.getByRole('dialog');
-        const focusableElements = [...dialog.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')].filter(el => !el.hasAttribute('disabled'));
+        const focusableElements = getFocusableElements(dialog);
         const lastElement = focusableElements.at(-1)!;
 
         // Ensure the dialog container has focus (it is focused programmatically on open)
