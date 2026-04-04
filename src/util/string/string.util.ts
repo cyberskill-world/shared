@@ -8,7 +8,6 @@ const RE_NON_ALNUM = /[^a-z0-9\s-]/gi;
 const RE_MULTI_SPACE_DASH = /[\s-]+/g;
 const RE_LEADING_TRAILING_DASH = /^-+|-+$/g;
 const RE_HYPHEN = /-/g;
-const RE_QUERY_FRAGMENT = /[?#]/;
 const RE_HAS_LOWER = /[a-z]/;
 const RE_HAS_UPPER = /[A-Z]/;
 const RE_HAS_DIGIT = /\d/;
@@ -246,7 +245,19 @@ export function generateRandomString(
  * @returns The file name extracted from the URL, with or without the extension.
  */
 export function getFileName(url = '', getExtension = false): string {
-    const withoutQuery = url.split(RE_QUERY_FRAGMENT)[0] || '';
+    let withoutQuery = url;
+
+    // Fast path: avoid RegExp split overhead for common URLs
+    const qIndex = url.indexOf('?');
+    if (qIndex !== -1) {
+        withoutQuery = url.slice(0, qIndex);
+    }
+
+    const hIndex = withoutQuery.indexOf('#');
+    if (hIndex !== -1) {
+        withoutQuery = withoutQuery.slice(0, hIndex);
+    }
+
     const fileName = withoutQuery.substring(withoutQuery.lastIndexOf('/') + 1);
 
     if (getExtension) {
