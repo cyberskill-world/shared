@@ -1,3 +1,18 @@
+## [3.18.0](https://github.com/cyberskill-world/shared/compare/v3.17.0...v3.18.0) (2026-04-04)
+
+### ✨ Features
+
+* code audit 4th April 2026 ([f4b98fb](https://github.com/cyberskill-world/shared/commit/f4b98fb070675614f1c79e84d2503bd02b54fb93))
+* test audit 2nd April 2026 ([1f66f2e](https://github.com/cyberskill-world/shared/commit/1f66f2e6524a611d5479decfb295f0f03ae59784))
+* test audit 4th April 2026 ([ee27dd7](https://github.com/cyberskill-world/shared/commit/ee27dd7b34949e9d3c1d94b9f4b33b1bdbf33ef7))
+
+### 🐛 Bug Fixes
+
+* add clarifying comment for 0x1_0000_0000 magic number in shuffle ([c5d5080](https://github.com/cyberskill-world/shared/commit/c5d5080a69d09fd2b7340606b217fd1326269784))
+* address PR review comments from code audit ([122d851](https://github.com/cyberskill-world/shared/commit/122d851e46d59190ee0e06fa0da486f4035c472a))
+* apply review feedback to improve test reliability ([2ce7072](https://github.com/cyberskill-world/shared/commit/2ce7072e52572fcfd0e029e23cb275617658fad1))
+* lint ([3f65a62](https://github.com/cyberskill-world/shared/commit/3f65a624aaa419180a8e6612e39b50be19fc7ee1))
+
 ## Unreleased
 
 ### 🔒 Security
