@@ -294,6 +294,29 @@ describe('runCommand', () => {
             ]),
         );
     });
+
+    it('should log the storage issue directory link on error', async () => {
+        (storage.getLogLink as any).mockResolvedValueOnce('/fake/storage/.agent');
+        const output = `\\n/root/other.ts\\n  10:5 error  Missing semi  semi\\n`;
+        const cmdString = `node -e "console.log(\\"${output}\\")"`;
+        await runCommand('test text parse', cmdString);
+
+        expect(log.info).toHaveBeenCalledWith(expect.stringContaining('/fake/storage/.agent'));
+    });
+
+    it('should handle SIGINT gracefully', async () => {
+        const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+        const cmdString = `node -e "setTimeout(() => {}, 100)"`;
+
+        const promise = runCommand('test sigint', cmdString);
+        await new Promise(r => setTimeout(r, 20));
+        process.emit('SIGINT');
+        await promise.catch(() => {});
+
+        expect(log.warn).toHaveBeenCalledWith('Process interrupted. Terminating...');
+        expect(exitSpy).toHaveBeenCalledWith(130);
+        exitSpy.mockRestore();
+    });
 });
 
 describe('resolveCommands - failure path', () => {

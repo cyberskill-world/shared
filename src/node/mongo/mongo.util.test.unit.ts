@@ -236,6 +236,13 @@ describe('mongo', () => {
         });
     });
 
+    describe('migrate.getModule', () => {
+        it('should dynamically import migrate-mongo', async () => {
+            const module = await mongo.migrate.getModule();
+            expect(module).toBeDefined();
+        });
+    });
+
     describe('getNewRecords', () => {
         it('should throw when findAll fails', async () => {
             const controller = { findAll: vi.fn().mockResolvedValue({ success: false }) } as any;
@@ -283,7 +290,12 @@ describe('mongo', () => {
             /**
              *
              */
-            function MockSchema() {
+            function MockSchema(definition: any) {
+                if (definition?.id?.default) {
+                    const uuid = definition.id.default();
+                    expect(typeof uuid).toBe('string');
+                    expect(uuid.length).toBeGreaterThan(10);
+                }
                 return mockSchema;
             }
             const mockMongoose = { Schema: MockSchema } as any;
@@ -389,6 +401,31 @@ describe('mongo', () => {
             });
             expect(mockSchema.virtual).toHaveBeenCalledWith('fullName', expect.any(Object));
             expect(mockVirtual.get).not.toHaveBeenCalled();
+        });
+
+        it('should setup dynamic virtual without get using fallback logic', () => {
+            const { mongoose, mockVirtual } = createMockMongoose();
+            mongo.createSchema({
+                mongoose,
+                schema: {} as any,
+                virtuals: [{ name: 'entity', options: { ref: () => 'User', localField: 'id', foreignField: 'entityId' } }],
+            });
+
+            expect(mockVirtual.get).toHaveBeenCalled();
+            const getFn = mockVirtual.get.mock.calls[0]?.[0] as any;
+
+            // when no populated object
+            expect(getFn.call({})).toEqual([]);
+            // when array expected
+            expect(getFn.call({ _populated: { entity: ['1'] } })).toEqual(['1']);
+
+            mongo.createSchema({
+                mongoose,
+                schema: {} as any,
+                virtuals: [{ name: 'entityOne', options: { justOne: true, ref: () => 'User', localField: 'id', foreignField: 'entityId' } }],
+            });
+            const getFnOne = mockVirtual.get.mock.calls[1]?.[0] as any;
+            expect(getFnOne.call({})).toBeNull();
         });
     });
 
@@ -595,6 +632,26 @@ describe('mongo', () => {
 
             const result = mongo.health(mockMongoose);
             expect(result['pool']).toEqual({ totalConnections: 5, availableConnections: 0 });
+        });
+    });
+    describe('fetchAllRecords', () => {
+        it('should increment skip when truncated and result equals batchSize', async () => {
+            let callCount = 0;
+            const controller = {
+                findAll: vi.fn().mockImplementation(() => {
+                    callCount++;
+                    if (callCount === 1) {
+                        return Promise.resolve({ success: true, result: Array.from({ length: 2 }).fill({ id: '1' }), truncated: true });
+                    }
+                    return Promise.resolve({ success: true, result: [], truncated: false });
+                }),
+            } as any;
+
+            const records = await mongo.fetchAllRecords(controller, {}, 2);
+            expect(controller.findAll).toHaveBeenCalledTimes(2);
+            expect(controller.findAll).toHaveBeenNthCalledWith(1, {}, { skip: 0, limit: 2 });
+            expect(controller.findAll).toHaveBeenNthCalledWith(2, {}, { skip: 2, limit: 2 });
+            expect(records).toHaveLength(2);
         });
     });
 });

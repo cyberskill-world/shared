@@ -66,6 +66,11 @@
 * **apollo-client:** add coverage for `splitLink` subscription resolution and `getErrorHandler` UI interactions
 * **storage:** expand exception coverage for missing properties, `keys()` rejection, and `localStorage` driver setup failures
 * **e2e:** refactor DOM wait conditions across test suites to use reliable `waitFor` polling instead of static timers
+* **command:** add SIGINT process exit termination and `getLogLink` log.info tests for full statement capability
+* **mongo:** implement tests for default generic schema UUID generation, virtual populates empty fallback arrays, and dynamic migration lazy loads
+* **mongo:** implement fetchAllRecords skip offset truncation assertion
+* **storage:** expand driver storage throw simulations spanning `clear()`, `has()`, and `remove()` methods
+* **e2e:** implement deterministic `resolve()` promises testing to isolate and remove brittle `setTimeout` delays in global loading rendering tests
 
 ## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
 
