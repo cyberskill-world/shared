@@ -8,17 +8,21 @@ import { describe, expect, it } from 'vitest';
 import { useLoading } from './loading.hook.js';
 import { LoadingProvider } from './loading.provider.js';
 
+let resolveWork: () => void;
+
 /**
  * A testing component that utilizes the loading hook
- * to simulate an async loading sequence.
+ * to simulate an async loading sequence deterministically.
  */
 function AsyncTestComponent() {
     const { showLoading, hideLoading } = useLoading();
 
     const doAsyncWork = async () => {
         showLoading(true); // Full screen global loading
-        // Simulate an asynchronous API call taking 50ms
-        await new Promise(resolve => setTimeout(resolve, 50));
+        // Await deterministic promise resolution from the test runner
+        await new Promise<void>((resolve) => {
+            resolveWork = resolve;
+        });
         hideLoading();
     };
 
@@ -56,7 +60,12 @@ describe('Loading Flow E2E', () => {
         expect(screen.queryByTestId('content')).not.toBeInTheDocument();
         expect(document.body).toHaveClass('noscroll');
 
-        // Wait for the async operation (50ms) to complete and hide the loading overlay
+        // Resolve the async operation deterministically
+        await act(async () => {
+            resolveWork();
+        });
+
+        // Wait for state updates to apply and hide the loading overlay
         await waitFor(() => {
             expect(screen.queryByRole('status')).not.toBeInTheDocument();
             expect(document.body).not.toHaveClass('noscroll');

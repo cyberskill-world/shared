@@ -345,4 +345,62 @@ describe('storage custom driver & errors', () => {
 
         resetStorageForTesting();
     });
+
+    it('should catch error from driver removeItem', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        await storage.initDriver({
+            init: async () => {},
+            clear: async () => {},
+            getItem: async () => null,
+            keys: async () => [],
+            removeItem: async () => { throw new Error('remove crash'); },
+            setItem: async (_k, _v) => _v,
+        });
+
+        await storage.remove('some-key');
+        expect(log.error).toHaveBeenCalledWith(expect.stringContaining('remove crash'));
+
+        resetStorageForTesting();
+    });
+
+    it('should catch error from driver getItem via has()', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        await storage.initDriver({
+            init: async () => {},
+            clear: async () => {},
+            getItem: async () => { throw new Error('getItem crash'); },
+            keys: async () => [],
+            removeItem: async () => {},
+            setItem: async (_k, _v) => _v,
+        });
+
+        const result = await storage.has('some-key');
+        expect(result).toBe(false);
+        expect(log.error).toHaveBeenCalledWith(expect.stringContaining('getItem crash'));
+
+        resetStorageForTesting();
+    });
+
+    it('should catch error from driver clear()', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        await storage.initDriver({
+            init: async () => {},
+            clear: async () => { throw new Error('clear crash'); },
+            getItem: async () => null,
+            keys: async () => [],
+            removeItem: async () => {},
+            setItem: async (_k, _v) => _v,
+        });
+
+        await storage.clear();
+        expect(log.error).toHaveBeenCalledWith(expect.stringContaining('clear crash'));
+
+        resetStorageForTesting();
+    });
 });

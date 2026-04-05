@@ -17,10 +17,15 @@
 
 ### 🔒 Security
 
+* **check.yml:** add `persist-credentials: false` to checkout step — prevents GITHUB_TOKEN from being persisted in local git config during CI, matching deploy.yml security posture (H-1, 2026-04-05)
 * **deploy.yml:** align audit gate from `--audit-level=high` to `--audit-level=moderate` to match check.yml strictness — prevents moderate-severity vulnerabilities from reaching npm publish (H-1)
 
 ### 🔧 CI
 
+* **check.yml:** add `timeout-minutes: 15` to prevent runaway builds (SC-1, 2026-04-05)
+* **deploy.yml:** add `timeout-minutes: 20` to prevent hung semantic-release (SC-1, 2026-04-05)
+* **codeql.yml:** add `timeout-minutes: 30` and `CODEQL_THREADS: 0` for faster, bound analysis (SC-1, SC-2, 2026-04-05)
+* **codeql.yml:** add `concurrency: { group: codeql-${{ github.ref }}, cancel-in-progress: true }` to prevent duplicate analysis runs on rapid pushes (S-1, 2026-04-05)
 * **check.yml:** replace stale `branches-ignore: release` with explicit `branches: [main]` in pull_request trigger — `release` branch was deprecated in v3.16.0 (M-1)
 * **check.yml:** add `concurrency` group (`${{ github.workflow }}-${{ github.ref }}`) with `cancel-in-progress: true` to cancel superseded check runs and reduce CI minutes (SC-1)
 
@@ -35,11 +40,23 @@
 
 ### 📝 Documentation
 
+* create `CONTRIBUTING.md` starting guide mapping git hook commands for initial containerizing (L-3, 2026-04-05)
+* document issue audit results from 2026-04-05 13:38 — 1 high, 2 medium, 3 low findings (all new, zero duplication)
+* document feature audit results from 2026-04-05 13:38 — 10 new enhancement suggestions across 5 categories
 * **CODEOWNERS:** add `/scripts/` and `/docs/` ownership rules for change visibility (MA-3)
 * create `.agent/issue_report_2026-04-04_00-58.md` — 1 high, 3 medium, 3 low new findings
 * create `.agent/feature_report_2026-04-04_00-58.md` — 10 new enhancement suggestions across 5 categories
 * resolve test coverage gaps tracked in `test_coverage_report_2026-04-04_02-15.md`
 
+### ✨ Features
+
+* **cli:** add `--filter` documentation examples inside root prompt (U-1, 2026-04-05)
+* **cli:** add `--watch` interactive testing feature via CLI mapping (U-2, 2026-04-05)
+
+### 🏎️ Performance
+
+* **vitest:** migrate thread model to `pool: 'forks'` bypassing vm concurrency bottlenecks (P-1, 2026-04-05)
+* **eslint:** enable pipeline incremental `--cache` and persistence under `node_modules/.cache/eslint/` (P-2, 2026-04-05)
 ### 🧪 Testing
 
 * **userback:** implement JSDOM-based component simulation testing for dynamic `MutationObserver` unmounting and hidden node queries
@@ -49,7 +66,11 @@
 * **apollo-client:** add coverage for `splitLink` subscription resolution and `getErrorHandler` UI interactions
 * **storage:** expand exception coverage for missing properties, `keys()` rejection, and `localStorage` driver setup failures
 * **e2e:** refactor DOM wait conditions across test suites to use reliable `waitFor` polling instead of static timers
-
+* **command:** add SIGINT process exit termination and `getLogLink` log.info tests for full statement capability
+* **mongo:** implement tests for default generic schema UUID generation, virtual populates empty fallback arrays, and dynamic migration lazy loads
+* **mongo:** implement fetchAllRecords skip offset truncation assertion
+* **storage:** expand driver storage throw simulations spanning `clear()`, `has()`, and `remove()` methods
+* **e2e:** implement deterministic `resolve()` promises testing to isolate and remove brittle `setTimeout` delays in global loading rendering tests
 
 ## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
 
