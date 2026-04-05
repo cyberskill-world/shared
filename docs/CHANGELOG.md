@@ -56,7 +56,7 @@
 ### 🏎️ Performance
 
 * **vitest:** migrate thread model to `pool: 'forks'` bypassing vm concurrency bottlenecks (P-1, 2026-04-05)
-* **eslint:** enable pipeline incremental `--cache` and `.eslintcache` persistence (P-2, 2026-04-05)
+* **eslint:** enable pipeline incremental `--cache` and persistence under `node_modules/.cache/eslint/` (P-2, 2026-04-05)
 ### 🧪 Testing
 
 * **userback:** implement JSDOM-based component simulation testing for dynamic `MutationObserver` unmounting and hidden node queries
@@ -66,8 +66,6 @@
 * **apollo-client:** add coverage for `splitLink` subscription resolution and `getErrorHandler` UI interactions
 * **storage:** expand exception coverage for missing properties, `keys()` rejection, and `localStorage` driver setup failures
 * **e2e:** refactor DOM wait conditions across test suites to use reliable `waitFor` polling instead of static timers
-
-
 
 ## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
 

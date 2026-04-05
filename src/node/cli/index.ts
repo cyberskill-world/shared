@@ -297,11 +297,8 @@ async function inspect() {
  */
 async function testUnit(watch = false) {
     try {
-        let cmd = await command.testUnit();
-
-        if (watch) {
-            cmd = `${cmd} --watch`;
-        }
+        const baseCmd = await command.testUnit();
+        const cmd = watch ? `${baseCmd} --watch` : `${baseCmd} --run`;
 
         await runCommand('Running unit tests', cmd, { throwOnError: true });
     }
