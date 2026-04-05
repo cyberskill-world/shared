@@ -359,7 +359,7 @@ describe('storage custom driver & errors', () => {
             setItem: async (_k, _v) => _v,
         });
 
-        await expect(storage.remove('some-key')).resolves.not.toThrow();
+        await storage.remove('some-key');
         expect(log.error).toHaveBeenCalledWith(expect.stringContaining('remove crash'));
 
         resetStorageForTesting();
@@ -398,7 +398,7 @@ describe('storage custom driver & errors', () => {
             setItem: async (_k, _v) => _v,
         });
 
-        await expect(storage.clear()).resolves.not.toThrow();
+        await storage.clear();
         expect(log.error).toHaveBeenCalledWith(expect.stringContaining('clear crash'));
 
         resetStorageForTesting();
