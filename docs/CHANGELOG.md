@@ -17,10 +17,12 @@
 
 ### 🔒 Security
 
+* **check.yml:** add `persist-credentials: false` to checkout step — prevents GITHUB_TOKEN from being persisted in local git config during CI, matching deploy.yml security posture (H-1, 2026-04-05)
 * **deploy.yml:** align audit gate from `--audit-level=high` to `--audit-level=moderate` to match check.yml strictness — prevents moderate-severity vulnerabilities from reaching npm publish (H-1)
 
 ### 🔧 CI
 
+* **codeql.yml:** add `concurrency: { group: codeql-${{ github.ref }}, cancel-in-progress: true }` to prevent duplicate analysis runs on rapid pushes (S-1, 2026-04-05)
 * **check.yml:** replace stale `branches-ignore: release` with explicit `branches: [main]` in pull_request trigger — `release` branch was deprecated in v3.16.0 (M-1)
 * **check.yml:** add `concurrency` group (`${{ github.workflow }}-${{ github.ref }}`) with `cancel-in-progress: true` to cancel superseded check runs and reduce CI minutes (SC-1)
 
@@ -35,6 +37,8 @@
 
 ### 📝 Documentation
 
+* create `.agent/issue_report_2026-04-05_13-38.md` — 1 high, 2 medium, 3 low findings (all new, zero duplication)
+* create `.agent/feature_report_2026-04-05_13-38.md` — 10 new enhancement suggestions across 5 categories
 * **CODEOWNERS:** add `/scripts/` and `/docs/` ownership rules for change visibility (MA-3)
 * create `.agent/issue_report_2026-04-04_00-58.md` — 1 high, 3 medium, 3 low new findings
 * create `.agent/feature_report_2026-04-04_00-58.md` — 10 new enhancement suggestions across 5 categories
@@ -49,6 +53,7 @@
 * **apollo-client:** add coverage for `splitLink` subscription resolution and `getErrorHandler` UI interactions
 * **storage:** expand exception coverage for missing properties, `keys()` rejection, and `localStorage` driver setup failures
 * **e2e:** refactor DOM wait conditions across test suites to use reliable `waitFor` polling instead of static timers
+
 
 
 ## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
