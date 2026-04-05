@@ -67,14 +67,16 @@ cd shared
 # Add the upstream repository
 git remote add upstream https://github.com/cyberskill-world/shared.git
 
-# Install dependencies
-pnpm install
+# Install dependencies and configure Git hooks
+pnpm ready
+```
 
-# Build the project
-pnpm run build
+> **⚠️ Important:** Running `pnpm ready` is **required** after cloning. It installs dependencies **and** sets up Git hooks (`pre-commit`, `commit-msg`, `pre-push`) via [simple-git-hooks](https://github.com/toplenboren/simple-git-hooks). Without this step, your commits won't be locally validated and the lint-staged pipeline won't run.
 
-# Run tests to ensure everything works
-pnpm run test
+If you encounter dependency issues or stale caches, reset everything with:
+
+```bash
+pnpm reset
 ```
 
 > For the full list of development commands, see the [Development section in README.md](README.md#development).

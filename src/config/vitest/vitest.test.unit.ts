@@ -14,8 +14,8 @@ describe('vitestUnit', () => {
         expect(config.test.environment).toBe('jsdom');
     });
 
-    it('should use vmThreads pool', () => {
-        expect(config.test.pool).toBe('vmThreads');
+    it('should use forks pool', () => {
+        expect(config.test.pool).toBe('forks');
     });
 
     it('should configure istanbul coverage provider', () => {

@@ -229,7 +229,7 @@ export const command = {
             },
 
         ],
-        command: `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --no-cache`,
+        command: `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --cache --cache-location node_modules/.cache/eslint/`,
     }),
     eslintFix: buildCommand({
         type: E_CommandType.CLI,
@@ -240,7 +240,7 @@ export const command = {
             },
 
         ],
-        command: `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix --no-cache`,
+        command: `${ESLINT_CLI} ${PATH.WORKING_DIRECTORY} --fix --cache --cache-location node_modules/.cache/eslint/`,
     }),
     typescriptCheck: buildCommand({
         type: E_CommandType.CLI,

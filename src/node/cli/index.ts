@@ -292,11 +292,16 @@ async function inspect() {
  * This function executes unit tests using the configured test runner
  * and displays the test results.
  *
+ * @param watch - Whether to run in watch mode for continuous testing (default: false).
  * @returns A promise that resolves when unit tests are complete.
  */
-async function testUnit() {
+async function testUnit(watch = false) {
     try {
-        const cmd = await command.testUnit();
+        let cmd = await command.testUnit();
+
+        if (watch) {
+            cmd = `${cmd} --watch`;
+        }
 
         await runCommand('Running unit tests', cmd, { throwOnError: true });
     }
@@ -405,7 +410,14 @@ async function storybookBuild() {
             .command('ready', 'Initialize project and dependencies', ready)
             .command('reset', 'Reset the project and reinstall dependencies', reset)
             .command('inspect', 'Analyze installed project dependencies', inspect)
-            .command('test:unit', 'Run unit test suite', testUnit)
+            .command('test:unit', 'Run unit test suite', y =>
+                y.option('watch', {
+                    describe: 'Run in watch mode for continuous testing',
+                    type: 'boolean',
+                    default: false,
+                }), async (argv) => {
+                await testUnit(argv.watch);
+            })
             .command('test:e2e', 'Run end-to-end test suite', testE2E)
             .command('mongo:migrate:create <name>', 'Create a MongoDB migration', y =>
                 y.positional('name', {
@@ -426,6 +438,8 @@ async function storybookBuild() {
             .command('storybook:build', 'Build Storybook for production', storybookBuild)
             .example('$0 lint:fix', 'Automatically block and fix linter errors')
             .example('$0 test:unit', 'Run the unit test suite')
+            .example('$0 test:unit --watch', 'Run unit tests in watch mode')
+            .example('$0 build --filter react', 'Build only React entry points')
             .example('$0 mongo:migrate:create init_db', 'Create a new migration file named "init_db"')
             .demandCommand(1, 'Please specify a valid command.')
             .strict()

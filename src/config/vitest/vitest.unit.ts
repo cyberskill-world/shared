@@ -15,7 +15,7 @@ import { deepMerge } from '#util/object/index.js';
  * - React SWC plugin for fast React compilation
  * - JSDOM environment for DOM simulation
  * - Global test functions availability
- * - VM threads pool for parallel test execution
+ * - Forked processes pool for parallel test execution across CPU cores
  * - Unit test file pattern matching
  * - Setup files for testing library configuration
  * - Configurable options merging
@@ -29,7 +29,7 @@ export function vitestUnit(options: UserConfig) {
         test: {
             globals: true,
             environment: 'jsdom',
-            pool: 'vmThreads',
+            pool: 'forks',
             include: ['**/*.test.unit.?(c|m)[jt]s?(x)'],
             setupFiles: [`${import.meta.dirname}/vitest.unit.setup.js`],
             coverage: {
