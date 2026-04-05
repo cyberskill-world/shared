@@ -22,11 +22,11 @@ jobs:
 
       - name: Env & Deps
         # keep @main, do not change
-        uses: cyberskill-world/.github/actions/env-deps@main
+        uses: cyberskill-world/.github/actions/env-deps@a39693a469dab622e54354885b1c541d3df2976d # main
 
       - name: Build
         # keep @main, do not change
-        uses: cyberskill-world/.github/actions/build@main
+        uses: cyberskill-world/.github/actions/build@a39693a469dab622e54354885b1c541d3df2976d # main
 
       - name: Generate SBOM
         run: npx -y @cyclonedx/cdxgen -o bom.json
