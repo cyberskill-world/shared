@@ -5,5 +5,5 @@
 
 ## 2025-02-14 - Improve accessibility of global toast notifications
 
-**Learning:** The default `react-hot-toast` Toaster component may not have the best accessibility ARIA attributes for screen readers. Using `toastOptions={{ ariaProps: { role: 'status', 'aria-live': 'polite' } }}` on the `<Toaster />` correctly announces all toasts across the application.
-**Action:** Always verify third-party notification or toast libraries have `role="alert"` or `role="status"` and an `aria-live` attribute configured either internally or via props for screen reader users.
+**Learning:** The default `react-hot-toast` Toaster component may not have the best accessibility ARIA attributes for screen readers. Using `toastOptions={{ ariaProps: { role: 'status', 'aria-live': 'polite' } }}` improves announcements for the specific `<Toaster />` instance it is applied to, so every `<Toaster />` provider in the application must use the same configuration for consistent screen reader behavior.
+**Action:** Always verify third-party notification or toast libraries have `role="alert"` or `role="status"` and an `aria-live` attribute configured either internally or via props for screen reader users, and when multiple toast providers exist, configure each one consistently or centralize toast rendering behind a shared provider.
