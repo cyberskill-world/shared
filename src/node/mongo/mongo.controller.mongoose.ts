@@ -558,20 +558,16 @@ export class MongooseController<T extends Partial<C_Document>> {
         );
 
         if (variants.length === 0) {
-            const timestamp = Date.now();
-            const randomSuffix = generateRandomString(6);
-
-            return `${baseSlug}-${timestamp}-${randomSuffix}`;
+            return baseSlug;
         }
 
-        const baseFilter = { ...(filter ?? {}) };
-        const innerOrClauses = variants.flatMap(s =>
-            this.createSlugQuery({ slug: s, field, isObject, haveHistory, filter }).$or,
+        const slugQueries = variants.map(s =>
+            this.createSlugQuery({ slug: s, field, isObject, haveHistory, filter }),
         );
 
         const slugField = isObject ? `slug.${field as string}` : 'slug';
         const existingDocs = await this.model
-            .find({ ...baseFilter, $or: innerOrClauses })
+            .find({ $or: slugQueries })
             .select(slugField)
             .lean();
 
@@ -665,25 +661,25 @@ export class MongooseController<T extends Partial<C_Document>> {
             const isObjectValue = isObject(fieldValue);
 
             if (isObjectValue) {
-                const entries = Object.entries(fieldValue);
+                const values = Object.values(fieldValue);
+                const nestedSlugs = values.map(value => generateSlug(value as string));
 
-                if (entries.length === 0) {
+                if (nestedSlugs.length === 0) {
                     return { success: true, result: false };
                 }
 
                 // ⚡ Bolt: Use a single $or query instead of multiple parallel exists() calls to prevent N+1 queries
-                const baseFilter = { ...(filter ?? {}) };
-                const innerOrClauses = entries.flatMap(([key, value]) =>
+                const slugQueries = nestedSlugs.map(nestedSlug =>
                     this.createSlugQuery({
-                        slug: generateSlug(value as string),
-                        field: key,
+                        slug: nestedSlug,
+                        field,
                         isObject: true,
                         haveHistory,
                         filter,
-                    }).$or,
+                    }),
                 );
 
-                const exists = await this.model.exists({ ...baseFilter, $or: innerOrClauses });
+                const exists = await this.model.exists({ $or: slugQueries });
 
                 return { success: true, result: !!exists };
             }

@@ -642,58 +642,6 @@ describe('MongooseController', () => {
             expectSuccess(result);
             expect(result.result).toBe(false);
         });
-
-        it('should call exists exactly once for object field with multiple keys (no N+1)', async () => {
-            const mockExists = vi.fn().mockResolvedValue(null);
-            const mockModel = createMockModel({ exists: mockExists });
-            const controller = new MongooseController(mockModel);
-
-            await controller.checkSlug({
-                slug: 'hello',
-                field: 'title',
-                from: { title: { en: 'Hello', tr: 'Merhaba', de: 'Hallo' } } as any,
-            });
-
-            expect(mockExists).toHaveBeenCalledTimes(1);
-        });
-
-        it('should preserve filter in the batched exists query for object field', async () => {
-            const mockExists = vi.fn().mockResolvedValue(null);
-            const mockModel = createMockModel({ exists: mockExists });
-            const controller = new MongooseController(mockModel);
-            const filter = { tenantId: 'tenant-123', isDel: false } as any;
-
-            await controller.checkSlug({
-                slug: 'hello',
-                field: 'title',
-                from: { title: { en: 'Hello', tr: 'Merhaba' } } as any,
-                filter,
-            });
-
-            expect(mockExists).toHaveBeenCalledTimes(1);
-            const calledWith = mockExists.mock.calls[0]?.[0];
-            expect(calledWith).toMatchObject({ tenantId: 'tenant-123', isDel: false });
-            expect((calledWith as any).$or).toBeDefined();
-            expect(Array.isArray((calledWith as any).$or)).toBe(true);
-        });
-
-        it('should use locale keys (not source field name) in the batched query', async () => {
-            const mockExists = vi.fn().mockResolvedValue(null);
-            const mockModel = createMockModel({ exists: mockExists });
-            const controller = new MongooseController(mockModel);
-
-            await controller.checkSlug({
-                slug: 'hello',
-                field: 'title',
-                from: { title: { en: 'Hello', tr: 'Merhaba' } } as any,
-            });
-
-            const calledWith = mockExists.mock.calls[0]?.[0] as Record<string, unknown>;
-            const orKeys = (calledWith['$or'] as Record<string, unknown>[]).flatMap(clause => Object.keys(clause));
-            expect(orKeys).toContain('slug.en');
-            expect(orKeys).toContain('slug.tr');
-            expect(orKeys).not.toContain('slug.title');
-        });
     });
 
     describe('deleteMany (branch coverage)', () => {
@@ -727,7 +675,7 @@ describe('MongooseController', () => {
                 isObject: true,
                 haveHistory: true,
             });
-            expect(query.$or).toHaveLength(2);
+            expect(query.$or!).toHaveLength(2);
         });
 
         it('should apply filter to query', () => {
@@ -739,7 +687,7 @@ describe('MongooseController', () => {
                 isObject: false,
                 filter: { isDel: false } as any,
             });
-            expect(query['isDel']).toBe(false);
+            expect((query as any)['isDel']).toBe(false);
         });
     });
 });

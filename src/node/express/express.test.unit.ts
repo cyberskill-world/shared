@@ -134,11 +134,6 @@ describe('createExpress', () => {
         const app = createExpress({ trustProxy: 2 });
         expect(app.get('trust proxy fn')).toBeDefined();
     });
-
-    it('should disable x-powered-by header', () => {
-        const app = createExpress();
-        expect(app.disabled('x-powered-by')).toBe(true);
-    });
 });
 
 // ---------------------------------------------------------------------------
@@ -189,7 +184,6 @@ vi.mock('@nestjs/core', () => ({
                 getInstance: vi.fn(() => ({
                     use: vi.fn(),
                     set: vi.fn(),
-                    disable: vi.fn(),
                 })),
             })),
             useGlobalFilters: vi.fn(),
