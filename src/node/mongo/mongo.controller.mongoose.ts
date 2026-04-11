@@ -563,7 +563,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
         const slugField = isObject ? `slug.${field as string}` : 'slug';
         const existingDocs = await this.model
-            .find({ $or: slugQueries.map(q => q.$or).flat() })
+            .find({ $or: slugQueries })
             .select(slugField)
             .lean();
 
@@ -660,23 +660,20 @@ export class MongooseController<T extends Partial<C_Document>> {
                 const values = Object.values(fieldValue);
                 const nestedSlugs = values.map(value => generateSlug(value as string));
 
-                const existenceChecks = await Promise.all(
-                    nestedSlugs.map(nestedSlug =>
-                        this.model.exists(this.createSlugQuery({
-                            slug: nestedSlug,
-                            field,
-                            isObject: true,
-                            haveHistory,
-                            filter,
-                        })),
-                    ),
+                // ⚡ Bolt: Use a single $or query instead of multiple parallel exists() calls to prevent N+1 queries
+                const slugQueries = nestedSlugs.map(nestedSlug =>
+                    this.createSlugQuery({
+                        slug: nestedSlug,
+                        field,
+                        isObject: true,
+                        haveHistory,
+                        filter,
+                    }),
                 );
 
-                if (existenceChecks.some(exists => exists)) {
-                    return { success: true, result: true };
-                }
+                const exists = await this.model.exists({ $or: slugQueries });
 
-                return { success: true, result: false };
+                return { success: true, result: exists !== null };
             }
 
             const baseSlug = generateSlug(slug);
