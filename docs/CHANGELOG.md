@@ -67,3 +67,34 @@
 * **storage:** add 3 integration tests for node `storage.size()` (TEST-1775887787, 2026-04-11)
   - Covers empty state, populated state (2 keys), and driver error fallback.
   - **WHERE:** `src/node/storage/storage.test.unit.ts`
+
+### 🔒 Security (2026-04-12)
+
+* **ci:** add top-level `permissions: {}` to `deploy.yml` for least-privilege enforcement (FIX-1775930297, 2026-04-12)
+  - **WHAT:** Add `permissions: {}` at the workflow level in `deploy.yml`.
+  - **WHY:** Without top-level restrictions, any future jobs added to this workflow inherit overly permissive repo-default permissions.
+  - **WHERE:** `.github/workflows/deploy.yml`
+  - **HOW:** Inserted `permissions: {}` between `concurrency` and `jobs`, consistent with `check.yml` and `codeql.yml`.
+* **ci:** pin `@cyclonedx/cdxgen` to `12.1.5` in deploy workflow (FIX-1775930298, 2026-04-12)
+  - **WHAT:** Replace unpinned `npx -y @cyclonedx/cdxgen` with `npx -y @cyclonedx/cdxgen@12.1.5`.
+  - **WHY:** Unpinned `npx -y` fetches the latest version at runtime; a compromised NPM release could execute arbitrary code inside the privileged deploy pipeline.
+  - **WHERE:** `.github/workflows/deploy.yml`
+  - **HOW:** Pinned version in the `npx` invocation with inline comment for explicit bumping.
+* **deps:** add `minimumReleaseAge: "3 days"` to Renovate config (FIX-1775930299, 2026-04-12)
+  - **WHAT:** Add `minimumReleaseAge` field to prevent auto-merging packages published less than 3 days ago.
+  - **WHY:** Protects against supply-chain attacks (e.g., ua-parser-js, event-stream) where malicious versions are quickly yanked.
+  - **WHERE:** `renovate.json`
+  - **HOW:** Added `"minimumReleaseAge": "3 days"` to root config object.
+
+### ✨ Features (2026-04-12)
+
+* **common:** add `debounce(fn, waitMs)` utility with `.cancel()` support (FEAT-1775930300, 2026-04-12)
+  - **WHAT:** Add type-safe `debounce<T>(fn, waitMs): T & { cancel(): void }` to common utilities.
+  - **WHY:** Debounce is needed across search inputs, resize handlers, and form validation. Eliminates scattered, inconsistent implementations.
+  - **WHERE:** `src/util/common/common.util.ts`, `src/util/common/common.test.unit.ts`
+  - **HOW:** Uses `setTimeout`/`clearTimeout` with proper `this` binding. Added 6 unit tests covering delay, reset, cancel, zero-wait, invalid args, argument forwarding.
+* **common:** add `retry(fn, options)` async utility with exponential backoff (FEAT-1775930301, 2026-04-12)
+  - **WHAT:** Add `retry<T>(fn, { attempts?, delayMs?, backoff? }): Promise<T>` for async retry operations.
+  - **WHY:** Retry logic is needed across HTTP clients, database connections, and external APIs. Eliminates scattered implementations with inconsistent backoff strategies.
+  - **WHERE:** `src/util/common/common.util.ts`, `src/util/common/common.test.unit.ts`
+  - **HOW:** Configurable attempts (default 3), delay (default 1000ms), optional exponential backoff. Added 7 unit tests covering first-try success, retry-then-succeed, exhaustion, defaults, backoff timing, zero-delay, and invalid args.

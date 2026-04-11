@@ -5,6 +5,7 @@ on:
 concurrency:
   group: deploy
   cancel-in-progress: false
+permissions: {}
 jobs:
   deploy:
     name: 🚀 Deploy
@@ -29,7 +30,7 @@ jobs:
         uses: cyberskill-world/.github/actions/build@dce044cbb91f1568eb59b782151b4e099b310249 # main
 
       - name: Generate SBOM
-        run: npx -y @cyclonedx/cdxgen -o bom.json
+        run: npx -y @cyclonedx/cdxgen@12.1.5 -o bom.json  # pinned — bump explicitly
 
       - name: Security Audit
         run: pnpm audit --audit-level=moderate

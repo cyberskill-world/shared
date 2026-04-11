@@ -155,6 +155,9 @@ function setupMiddleware(
     rateLimitOptions: false | import('./express.type.js').I_RateLimitOptions = {},
     cookieSecret?: string,
 ) {
+    // Defense-in-depth: explicitly disable x-powered-by header even if helmet is disabled/reconfigured
+    app.disable('x-powered-by');
+
     if (trustProxy) {
         app.set('trust proxy', trustProxy);
     }
