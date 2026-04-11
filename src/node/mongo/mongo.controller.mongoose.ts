@@ -557,6 +557,10 @@ export class MongooseController<T extends Partial<C_Document>> {
             (_, i) => `${baseSlug}-${i + 1}`,
         );
 
+        if (variants.length === 0) {
+            return baseSlug;
+        }
+
         const slugQueries = variants.map(s =>
             this.createSlugQuery({ slug: s, field, isObject, haveHistory, filter }),
         );
@@ -660,6 +664,10 @@ export class MongooseController<T extends Partial<C_Document>> {
                 const values = Object.values(fieldValue);
                 const nestedSlugs = values.map(value => generateSlug(value as string));
 
+                if (nestedSlugs.length === 0) {
+                    return { success: true, result: false };
+                }
+
                 // ⚡ Bolt: Use a single $or query instead of multiple parallel exists() calls to prevent N+1 queries
                 const slugQueries = nestedSlugs.map(nestedSlug =>
                     this.createSlugQuery({
@@ -673,7 +681,7 @@ export class MongooseController<T extends Partial<C_Document>> {
 
                 const exists = await this.model.exists({ $or: slugQueries });
 
-                return { success: true, result: exists !== null };
+                return { success: true, result: !!exists };
             }
 
             const baseSlug = generateSlug(slug);
@@ -684,7 +692,7 @@ export class MongooseController<T extends Partial<C_Document>> {
                 filter,
             }));
 
-            return { success: true, result: exists !== null };
+            return { success: true, result: !!exists };
         }
         catch (error: unknown) {
             return catchError<boolean>(error);
