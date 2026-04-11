@@ -9,15 +9,19 @@ describe('deepMerge', () => {
     it('should ignore __proto__ in merged objects to prevent prototype pollution', () => {
         const target = {};
         const malicious = JSON.parse('{"__proto__": {"polluted3": true}}');
-        deepMerge(target, malicious);
+        const result = deepMerge(target, malicious);
         expect(({} as any).polluted3).toBeUndefined();
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect((result as any).polluted3).toBeUndefined();
     });
 
-    it('should ignore constructor in merged objects to prevent prototype pollution', () => {
+    it('should treat constructor as a regular key (not a prototype-pollution vector)', () => {
         const target = {};
         const malicious = JSON.parse('{"constructor": {"prototype": {"polluted4": true}}}');
-        deepMerge(target, malicious);
+        const result = deepMerge(target, malicious);
         expect(({} as any).polluted4).toBeUndefined();
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect((result as any).polluted4).toBeUndefined();
     });
     it('should merge two objects', () => {
         const obj1 = { a: 1, b: { c: 2 } };
@@ -175,15 +179,21 @@ describe('getNestedValue', () => {
 describe('setNestedValue', () => {
     it('should ignore __proto__ to prevent prototype pollution', () => {
         const obj = {};
-        setNestedValue(obj, ['__proto__', 'polluted'], true);
+        const result = setNestedValue(obj, ['__proto__', 'polluted'], true);
         expect(({} as any).polluted).toBeUndefined();
+        expect((result as any).polluted).toBeUndefined();
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(obj).toEqual({});
     });
 
-    it('should ignore constructor.prototype to prevent prototype pollution', () => {
+    it('should allow constructor as a legitimate data key', () => {
         const obj = {};
-        setNestedValue(obj, ['constructor', 'prototype', 'polluted2'], true);
-        expect(({} as any).polluted2).toBeUndefined();
+        const result = setNestedValue(obj, ['constructor', 'name'], 'MyClass');
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect((result as any).constructor).toEqual({ name: 'MyClass' });
+        expect(obj).toEqual({});
     });
+
     it('should set nested value', () => {
         const obj = {};
         const result = setNestedValue(obj, ['a', 'b'], 1);
