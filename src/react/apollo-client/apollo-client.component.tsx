@@ -43,7 +43,7 @@ export function ApolloProvider({ options, children, onError }: I_ApolloProviderP
                 </ApolloClientProvider>
                 {!onError && <ApolloErrorComponent />}
             </ApolloErrorProvider>
-            <Toaster position="top-right" />
+            <Toaster position="top-right" toastOptions={{ ariaProps: { 'role': 'status', 'aria-live': 'polite' } }} />
         </>
     );
 }
