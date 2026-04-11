@@ -46,9 +46,9 @@ export function ApolloProvider({ options, children, onError }: I_ApolloProviderP
             <Toaster
                 position="top-right"
                 toastOptions={{
-                    ariaProps: { role: 'status', 'aria-live': 'polite' },
+                    ariaProps: { 'role': 'status', 'aria-live': 'polite' },
                     error: {
-                        ariaProps: { role: 'alert', 'aria-live': 'assertive' },
+                        ariaProps: { 'role': 'alert', 'aria-live': 'assertive' },
                     },
                 }}
             />
