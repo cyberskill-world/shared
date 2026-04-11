@@ -671,10 +671,10 @@ describe('MongooseController', () => {
             });
 
             expect(mockExists).toHaveBeenCalledTimes(1);
-            const calledWith = mockExists.mock.calls[0][0];
+            const calledWith = mockExists.mock.calls[0]?.[0];
             expect(calledWith).toMatchObject({ tenantId: 'tenant-123', isDel: false });
-            expect(calledWith.$or).toBeDefined();
-            expect(Array.isArray(calledWith.$or)).toBe(true);
+            expect((calledWith as any).$or).toBeDefined();
+            expect(Array.isArray((calledWith as any).$or)).toBe(true);
         });
 
         it('should use locale keys (not source field name) in the batched query', async () => {
@@ -688,8 +688,8 @@ describe('MongooseController', () => {
                 from: { title: { en: 'Hello', tr: 'Merhaba' } } as any,
             });
 
-            const calledWith = mockExists.mock.calls[0][0];
-            const orKeys = calledWith.$or.flatMap((clause: Record<string, unknown>) => Object.keys(clause));
+            const calledWith = mockExists.mock.calls[0]?.[0] as Record<string, unknown>;
+            const orKeys = (calledWith['$or'] as Record<string, unknown>[]).flatMap(clause => Object.keys(clause));
             expect(orKeys).toContain('slug.en');
             expect(orKeys).toContain('slug.tr');
             expect(orKeys).not.toContain('slug.title');
