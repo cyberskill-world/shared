@@ -17,7 +17,6 @@
     "automerge": true,
     "automergeType": "pr",
     "platformAutomerge": true,
-    "minimumReleaseAge": "3 days",
     "major": {
         "automerge": false
     }
