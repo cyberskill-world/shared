@@ -66,6 +66,10 @@ function setNestedValueHelper<T>(obj: T, path: (string | number)[], value: unkno
 
     const head = path[index];
 
+    if (head === '__proto__' || head === 'constructor' || head === 'prototype') {
+        return obj;
+    }
+
     if (index === path.length - 1) {
         return {
             ...(obj as Record<string | number, unknown>),
@@ -186,6 +190,8 @@ function deepCloneInternal<T>(obj: T, seen: WeakMap<object, unknown>): T {
     seen.set(obj as object, result);
 
     for (const key in obj) {
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype')
+            continue;
         if (Object.hasOwn(obj, key)) {
             result[key] = deepCloneInternal((obj as Record<string, unknown>)[key], seen);
         }
@@ -262,6 +268,8 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                 const obj = arg as Record<string, unknown>;
 
                 for (const key in obj) {
+                    if (key === '__proto__' || key === 'constructor' || key === 'prototype')
+                        continue;
                     if (Object.hasOwn(obj, key)) {
                         const value = obj[key];
 
@@ -388,6 +396,9 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
         }
 
         for (const key in current) {
+            if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+                continue;
+            }
             if (!Object.hasOwn(current, key)) {
                 continue;
             }
