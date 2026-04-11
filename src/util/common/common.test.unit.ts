@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { E_Environment } from '#typescript/index.js';
 
-import { clamp, escapeRegExp, groupBy, isObject, isPlainObject, mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
+import { clamp, debounce, escapeRegExp, groupBy, isObject, isPlainObject, mapEnvironment, regexSearchMapper, removeAccent, retry, uniqueArray } from './common.util.js';
 
 const RE_TEST = /regex/;
 
@@ -263,5 +263,167 @@ describe('groupBy', () => {
         const result = groupBy([1, 2, 3], n => n);
         expect(result.size).toBe(3);
         expect(result.get(1)).toEqual([1]);
+    });
+});
+
+describe('debounce', () => {
+    it('should delay invocation until waitMs elapsed', async () => {
+        vi.useFakeTimers();
+        const fn = vi.fn();
+        const debounced = debounce(fn, 100);
+
+        debounced();
+        expect(fn).not.toHaveBeenCalled();
+
+        vi.advanceTimersByTime(100);
+        expect(fn).toHaveBeenCalledTimes(1);
+        vi.useRealTimers();
+    });
+
+    it('should reset timer on repeated calls', () => {
+        vi.useFakeTimers();
+        const fn = vi.fn();
+        const debounced = debounce(fn, 100);
+
+        debounced();
+        vi.advanceTimersByTime(50);
+        debounced(); // reset
+        vi.advanceTimersByTime(50);
+        expect(fn).not.toHaveBeenCalled();
+
+        vi.advanceTimersByTime(50);
+        expect(fn).toHaveBeenCalledTimes(1);
+        vi.useRealTimers();
+    });
+
+    it('should cancel pending invocation', () => {
+        vi.useFakeTimers();
+        const fn = vi.fn();
+        const debounced = debounce(fn, 100);
+
+        debounced();
+        debounced.cancel();
+        vi.advanceTimersByTime(200);
+
+        expect(fn).not.toHaveBeenCalled();
+        vi.useRealTimers();
+    });
+
+    it('should invoke immediately when waitMs is 0', () => {
+        vi.useFakeTimers();
+        const fn = vi.fn();
+        const debounced = debounce(fn, 0);
+
+        debounced('arg1');
+        vi.advanceTimersByTime(0);
+
+        expect(fn).toHaveBeenCalledWith('arg1');
+        vi.useRealTimers();
+    });
+
+    it('should throw RangeError for negative waitMs', () => {
+        expect(() => debounce(() => {}, -1)).toThrow(RangeError);
+        expect(() => debounce(() => {}, Number.NaN)).toThrow(RangeError);
+        expect(() => debounce(() => {}, Number.POSITIVE_INFINITY)).toThrow(RangeError);
+    });
+
+    it('should forward arguments to the original function', () => {
+        vi.useFakeTimers();
+        const fn = vi.fn();
+        const debounced = debounce(fn, 50);
+
+        debounced('a', 'b', 3);
+        vi.advanceTimersByTime(50);
+
+        expect(fn).toHaveBeenCalledWith('a', 'b', 3);
+        vi.useRealTimers();
+    });
+});
+
+describe('retry', () => {
+    it('should return result on first success', async () => {
+        const result = await retry(async () => 42, { attempts: 3, delayMs: 0 });
+        expect(result).toBe(42);
+    });
+
+    it('should retry until success', async () => {
+        let calls = 0;
+        const result = await retry(async () => {
+            calls++;
+            if (calls < 3)
+                throw new Error('not yet');
+            return 'ok';
+        }, { attempts: 5, delayMs: 0 });
+
+        expect(result).toBe('ok');
+        expect(calls).toBe(3);
+    });
+
+    it('should throw last error after exhausting attempts', async () => {
+        const fn = async () => {
+            throw new Error('always fail');
+        };
+        await expect(retry(fn, { attempts: 3, delayMs: 0 })).rejects.toThrow('always fail');
+    });
+
+    it('should use defaults (3 attempts, 1000ms delay)', async () => {
+        vi.useFakeTimers();
+        let calls = 0;
+        const promise = retry(async () => {
+            calls++;
+            if (calls < 3)
+                throw new Error('fail');
+            return 'done';
+        });
+
+        // After first call, advance past first delay
+        await vi.advanceTimersByTimeAsync(1000);
+        // After second call, advance past second delay
+        await vi.advanceTimersByTimeAsync(1000);
+
+        const result = await promise;
+        expect(result).toBe('done');
+        expect(calls).toBe(3);
+        vi.useRealTimers();
+    });
+
+    it('should apply exponential backoff when enabled', async () => {
+        vi.useFakeTimers();
+        let calls = 0;
+        const promise = retry(async () => {
+            calls++;
+            if (calls < 3)
+                throw new Error('fail');
+            return 'ok';
+        }, { attempts: 3, delayMs: 100, backoff: true });
+
+        // First retry delay: 100ms (100 * 2^0)
+        await vi.advanceTimersByTimeAsync(100);
+        expect(calls).toBe(2);
+
+        // Second retry delay: 200ms (100 * 2^1)
+        await vi.advanceTimersByTimeAsync(200);
+        const result = await promise;
+
+        expect(result).toBe('ok');
+        expect(calls).toBe(3);
+        vi.useRealTimers();
+    });
+
+    it('should work with zero delay', async () => {
+        let calls = 0;
+        const result = await retry(async () => {
+            calls++;
+            if (calls < 2)
+                throw new Error('once');
+            return calls;
+        }, { delayMs: 0 });
+
+        expect(result).toBe(2);
+    });
+
+    it('should throw RangeError for invalid options', async () => {
+        await expect(retry(async () => 1, { attempts: 0 })).rejects.toThrow(RangeError);
+        await expect(retry(async () => 1, { delayMs: -1 })).rejects.toThrow(RangeError);
     });
 });
