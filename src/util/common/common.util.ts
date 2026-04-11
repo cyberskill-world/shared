@@ -198,3 +198,56 @@ export function isPlainObject(value: unknown): value is Record<string, unknown> 
 
     return proto === Object.prototype || proto === null;
 }
+
+/**
+ * Clamps a number between a minimum and maximum value (inclusive).
+ * Returns `min` if `value < min`, `max` if `value > max`, otherwise `value`.
+ *
+ * @param value - The number to clamp.
+ * @param min - The lower bound.
+ * @param max - The upper bound (must be ≥ min).
+ * @returns The clamped number.
+ * @throws {RangeError} If `min > max`.
+ * @since 3.19.0
+ */
+export function clamp(value: number, min: number, max: number): number {
+    if (min > max) {
+        throw new RangeError(`clamp: min (${min}) must be ≤ max (${max})`);
+    }
+
+    return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * Groups an array of items into a `Map` keyed by the result of a selector function.
+ * Items that produce the same key are collected into an array in insertion order.
+ *
+ * @example
+ * ```ts
+ * const users = [{ role: 'admin', name: 'A' }, { role: 'user', name: 'B' }, { role: 'admin', name: 'C' }];
+ * groupBy(users, u => u.role);
+ * // Map { 'admin' => [{ role: 'admin', name: 'A' }, { role: 'admin', name: 'C' }], 'user' => [...] }
+ * ```
+ *
+ * @param items - The array to group.
+ * @param keyFn - A function that returns the grouping key for each item.
+ * @returns A `Map` from keys to arrays of items.
+ * @since 3.19.0
+ */
+export function groupBy<T, K>(items: readonly T[], keyFn: (item: T) => K): Map<K, T[]> {
+    const map = new Map<K, T[]>();
+
+    for (const item of items) {
+        const key = keyFn(item);
+        const group = map.get(key);
+
+        if (group) {
+            group.push(item);
+        }
+        else {
+            map.set(key, [item]);
+        }
+    }
+
+    return map;
+}

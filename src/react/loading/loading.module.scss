@@ -1,30 +1,14 @@
 @use 'sass:map';
 
-$colors: (
-    1: hsl(315, 90%, 60%),
-    2: hsl(345, 90%, 50%),
-    3: hsl(180, 80%, 40%),
-    4: hsl(40, 100%, 45%),
-);
-
-$size-small: clamp(40px, 8vw, 100px);
-$size-medium: clamp(60px, 10vw, 150px);
-$size-large: clamp(80px, 12vw, 190px);
-
 .overlay {
     z-index: 999999;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.7));
-    backdrop-filter: blur(20px) saturate(200%);
+    background-color: rgba(255, 255, 255, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
     animation: overlay-fade-in 0.5s ease-out;
-    border: 1.5px solid rgba(255, 255, 255, 0.35);
-    box-shadow:
-        0 4px 32px rgba(31, 38, 135, 0.18),
-        inset 0 1.5px 8px rgba(255, 255, 255, 0.25);
 }
 
 .full,
@@ -49,93 +33,84 @@ $size-large: clamp(80px, 12vw, 190px);
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    touch-action: manipulation;
     position: relative;
-    padding: 1rem;
-    gap: 1.5rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    perspective: 780px;
 
-    .ring {
-        width: $size-medium;
-        height: $size-medium;
-        border: 2px solid transparent;
-        border-radius: 50%;
+    .load-inner {
         position: absolute;
-        transition: transform 0.3s ease;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border-radius: 50%;
+        will-change: transform;
 
-        @for $i from 1 through 4 {
-            &:nth-child(#{$i}) {
-                border-bottom: 8px solid map.get($colors, $i);
-                animation: rotate#{$i} 1s linear infinite;
-            }
+        &.load-one {
+            left: 0%;
+            top: 0%;
+            border-bottom: 3px solid #5c5edc;
+            animation: rotate1 1.15s linear infinite;
+        }
+
+        &.load-two {
+            right: 0%;
+            top: 0%;
+            border-right: 3px solid #9147ff;
+            animation: rotate2 1.15s 0.1s linear infinite;
+        }
+
+        &.load-three {
+            right: 0%;
+            bottom: 0%;
+            border-top: 3px solid #3b82f6;
+            animation: rotate3 1.15s 0.15s linear infinite;
         }
     }
 
     .message {
-        font-weight: bold;
-        color: hsl(240, 8%, 20%);
-        text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-        animation: text-fade 2s ease-in-out infinite alternate;
-        word-break: break-word;
-        hyphens: auto;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1c1c1c;
+        z-index: 10;
     }
 }
 
 @keyframes rotate1 {
-    from {
-        transform: rotateX(50deg) rotateZ(110deg);
+    0% {
+        transform: rotateX(45deg) rotateY(-45deg) rotateZ(0deg);
     }
 
-    to {
-        transform: rotateX(50deg) rotateZ(470deg);
+    100% {
+        transform: rotateX(45deg) rotateY(-45deg) rotateZ(360deg);
     }
 }
 
 @keyframes rotate2 {
-    from {
-        transform: rotateX(20deg) rotateY(50deg) rotateZ(20deg);
+    0% {
+        transform: rotateX(45deg) rotateY(45deg) rotateZ(0deg);
     }
 
-    to {
-        transform: rotateX(20deg) rotateY(50deg) rotateZ(380deg);
+    100% {
+        transform: rotateX(45deg) rotateY(45deg) rotateZ(360deg);
     }
 }
 
 @keyframes rotate3 {
-    from {
-        transform: rotateX(40deg) rotateY(130deg) rotateZ(450deg);
-    }
-
-    to {
-        transform: rotateX(40deg) rotateY(130deg) rotateZ(90deg);
-    }
-}
-
-@keyframes rotate4 {
-    from {
-        transform: rotateX(70deg) rotateZ(270deg);
-    }
-
-    to {
-        transform: rotateX(70deg) rotateZ(630deg);
-    }
-}
-
-@keyframes text-fade {
     0% {
-        opacity: 0.6;
+        transform: rotateX(-60deg) rotateY(0deg) rotateZ(0deg);
     }
 
     100% {
-        opacity: 1;
+        transform: rotateX(-60deg) rotateY(0deg) rotateZ(360deg);
     }
 }
 
@@ -150,8 +125,7 @@ $size-large: clamp(80px, 12vw, 190px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .ring,
-    .message,
+    .load-inner,
     .overlay {
         animation: none !important;
     }

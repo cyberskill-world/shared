@@ -67,10 +67,16 @@ export const validate = {
      * @returns True if the IP is valid IPv4 or IPv6, false otherwise.
      */
     isValidIP(ip: string): boolean {
+        // Guard: IPv6 max length is 45 chars (39 + %zone); reject longer inputs early
+        if (ip.length > 45) {
+            return false;
+        }
+
         const ipv4Parts = ip.split('.');
 
         if (ipv4Parts.length === 4 && ipv4Parts.every(octet =>
             RE_DIGITS_ONLY.test(octet)
+            && !(octet.length > 1 && octet.startsWith('0')) // Reject leading zeros (RFC 6943 §3.3)
             && Number(octet) >= 0
             && Number(octet) <= 255,
         )) {

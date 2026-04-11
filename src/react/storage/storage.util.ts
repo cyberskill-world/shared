@@ -155,6 +155,21 @@ export const storage = {
         }
     },
     /**
+     * Returns the number of stored keys in browser storage.
+     * This uses `localStorage.length` for O(1) performance.
+     *
+     * @returns A promise that resolves to the number of stored keys.
+     * @since 3.19.0
+     */
+    async size(): Promise<number> {
+        try {
+            return localStorage.length;
+        }
+        catch (error: unknown) {
+            return catchError(error, { returnValue: 0 });
+        }
+    },
+    /**
      * Retrieves a value from browser storage, or creates and stores it if it doesn't exist.
      * This method combines check, creation, and storage into a single convenient operation.
      *

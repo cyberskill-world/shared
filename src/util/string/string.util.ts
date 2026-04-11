@@ -295,3 +295,33 @@ export function substringBetween(s: string, a: string, b: string): string {
 
     return s.slice(from, end);
 }
+
+/**
+ * Truncates a string to a maximum length, appending a suffix when truncated.
+ * If the string is already within the limit, it is returned unchanged.
+ * The returned string (including suffix) will never exceed `maxLength`.
+ *
+ * @param str - The string to truncate.
+ * @param maxLength - The maximum length of the result (including suffix).
+ * @param suffix - The suffix to append when truncated (default: `…` U+2026).
+ * @returns The original string if within limits, or the truncated string with suffix.
+ * @throws {RangeError} If `maxLength` is less than the suffix length.
+ *
+ * @example
+ * ```typescript
+ * truncate('Hello, World!', 8);       // 'Hello, …'
+ * truncate('Hello', 10);              // 'Hello'
+ * truncate('Hello, World!', 8, '..'); // 'Hello,..'
+ * ```
+ */
+export function truncate(str: string, maxLength: number, suffix = '\u2026'): string {
+    if (maxLength < suffix.length) {
+        throw new RangeError(`maxLength (${maxLength}) must be >= suffix length (${suffix.length})`);
+    }
+
+    if (str.length <= maxLength) {
+        return str;
+    }
+
+    return str.slice(0, maxLength - suffix.length) + suffix;
+}

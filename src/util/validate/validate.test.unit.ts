@@ -66,5 +66,21 @@ describe('validate', () => {
         it('should validate IPv4-mapped IPv6', () => {
             expect(validate.isValidIP('::ffff:192.168.0.1')).toBe(true);
         });
+
+        it('should reject IPv4 with leading zeros (SSRF/octal ambiguity)', () => {
+            expect(validate.isValidIP('010.0.0.1')).toBe(false);
+            expect(validate.isValidIP('192.168.01.1')).toBe(false);
+            expect(validate.isValidIP('0.0.0.01')).toBe(false);
+            expect(validate.isValidIP('00.0.0.0')).toBe(false);
+        });
+
+        it('should allow valid single-zero IPv4 octets', () => {
+            expect(validate.isValidIP('0.0.0.0')).toBe(true);
+            expect(validate.isValidIP('0.0.0.1')).toBe(true);
+        });
+
+        it('should reject overlong input strings', () => {
+            expect(validate.isValidIP('a'.repeat(100))).toBe(false);
+        });
     });
 });

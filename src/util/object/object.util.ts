@@ -433,3 +433,60 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
 
     return normalized as T;
 }
+
+/**
+ * Creates a new object with only the specified keys from the source object.
+ * Non-existent keys are silently ignored.
+ *
+ * @param obj - The source object to pick keys from.
+ * @param keys - An array of keys to include in the result.
+ * @returns A new object containing only the specified keys and their values.
+ *
+ * @example
+ * ```typescript
+ * pick({ a: 1, b: 2, c: 3 }, ['a', 'c']); // { a: 1, c: 3 }
+ * ```
+ */
+export function pick<T extends Record<string, unknown>, K extends keyof T>(
+    obj: T,
+    keys: readonly K[],
+): Pick<T, K> {
+    const result = {} as Pick<T, K>;
+    const keySet = new Set<K>(keys);
+
+    for (const key of keySet) {
+        if (Object.hasOwn(obj, key as string)) {
+            result[key] = obj[key];
+        }
+    }
+
+    return result;
+}
+
+/**
+ * Creates a new object without the specified keys from the source object.
+ *
+ * @param obj - The source object to omit keys from.
+ * @param keys - An array of keys to exclude from the result.
+ * @returns A new object without the specified keys.
+ *
+ * @example
+ * ```typescript
+ * omit({ a: 1, b: 2, c: 3 }, ['b']); // { a: 1, c: 3 }
+ * ```
+ */
+export function omit<T extends Record<string, unknown>, K extends keyof T>(
+    obj: T,
+    keys: readonly K[],
+): Omit<T, K> {
+    const result = {} as Record<string, unknown>;
+    const keySet = new Set<string>(keys as unknown as string[]);
+
+    for (const key in obj) {
+        if (Object.hasOwn(obj, key) && !keySet.has(key)) {
+            result[key] = obj[key];
+        }
+    }
+
+    return result as Omit<T, K>;
+}
