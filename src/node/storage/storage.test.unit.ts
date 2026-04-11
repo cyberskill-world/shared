@@ -404,3 +404,42 @@ describe('storage custom driver & errors', () => {
         resetStorageForTesting();
     });
 });
+
+// ---------------------------------------------------------------------------
+// storage.size
+// ---------------------------------------------------------------------------
+describe('storage.size', () => {
+    it('should return 0 after clearing', async () => {
+        await storage.clear();
+        const result = await storage.size();
+        expect(result).toBe(0);
+    });
+
+    it('should return correct count after adding items', async () => {
+        await storage.clear();
+        await storage.set('size-a', 'val-a');
+        await storage.set('size-b', 'val-b');
+
+        const result = await storage.size();
+        expect(result).toBe(2);
+    });
+
+    it('should return 0 on driver error', async () => {
+        const { resetStorageForTesting } = await import('./storage.util.js');
+        resetStorageForTesting();
+
+        await storage.initDriver({
+            init: async () => {},
+            clear: async () => {},
+            getItem: async () => null,
+            keys: async () => { throw new Error('keys crash'); },
+            removeItem: async () => {},
+            setItem: async (_k, _v) => _v,
+        });
+
+        const result = await storage.size();
+        expect(result).toBe(0);
+
+        resetStorageForTesting();
+    });
+});

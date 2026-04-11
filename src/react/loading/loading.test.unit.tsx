@@ -24,12 +24,11 @@ describe('Loading Component', () => {
         expect(screen.getByText(customMessage)).toBeInTheDocument();
     });
 
-    it('hides decorative rings from screen readers', () => {
+    it('hides decorative loader elements from screen readers', () => {
         const { container } = render(<Loading />);
-        // Select elements by class name isn't ideal for testing library but we need to check internal structure here
-        // or check generic divs with aria-hidden
-        const rings = container.querySelectorAll('[aria-hidden="true"]');
-        expect(rings.length).toBeGreaterThan(0);
+        // Check that the load-inner elements are hidden from assistive technologies
+        const loaderElements = container.querySelectorAll('[aria-hidden="true"]');
+        expect(loaderElements.length).toBe(3);
     });
 
     it('allows overriding aria attributes', () => {

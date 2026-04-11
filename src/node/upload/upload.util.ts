@@ -118,6 +118,15 @@ export async function getFileWebStream(type: E_UploadType, file: I_UploadFile, c
         },
     });
     const originalStream = createReadStream();
+
+    // Destroy the source stream when the transform errors (e.g., size overflow)
+    // to release the file descriptor immediately instead of waiting for GC.
+    sizeValidationStream.on('error', () => {
+        if ('destroy' in originalStream && typeof originalStream.destroy === 'function') {
+            originalStream.destroy();
+        }
+    });
+
     const validatedStream = originalStream.pipe(sizeValidationStream);
 
     return {

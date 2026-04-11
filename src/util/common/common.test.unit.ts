@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { E_Environment } from '#typescript/index.js';
 
-import { escapeRegExp, isObject, isPlainObject, mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
+import { clamp, escapeRegExp, groupBy, isObject, isPlainObject, mapEnvironment, regexSearchMapper, removeAccent, uniqueArray } from './common.util.js';
 
 const RE_TEST = /regex/;
 
@@ -185,5 +185,83 @@ describe('regexSearchMapper (branch coverage)', () => {
     it('should handle strings with no accented characters', () => {
         const result = regexSearchMapper('xz123');
         expect(result).toBe('xz123');
+    });
+});
+
+describe('clamp', () => {
+    it('should return value when within range', () => {
+        expect(clamp(5, 0, 10)).toBe(5);
+    });
+
+    it('should clamp to min when value is below', () => {
+        expect(clamp(-3, 0, 10)).toBe(0);
+    });
+
+    it('should clamp to max when value is above', () => {
+        expect(clamp(15, 0, 10)).toBe(10);
+    });
+
+    it('should return boundary values exactly', () => {
+        expect(clamp(0, 0, 10)).toBe(0);
+        expect(clamp(10, 0, 10)).toBe(10);
+    });
+
+    it('should handle min === max (single valid value)', () => {
+        expect(clamp(5, 3, 3)).toBe(3);
+        expect(clamp(3, 3, 3)).toBe(3);
+    });
+
+    it('should handle negative ranges', () => {
+        expect(clamp(-5, -10, -1)).toBe(-5);
+        expect(clamp(0, -10, -1)).toBe(-1);
+    });
+
+    it('should throw RangeError when min > max', () => {
+        expect(() => clamp(5, 10, 0)).toThrow(RangeError);
+    });
+
+    it('should handle decimal values', () => {
+        expect(clamp(0.5, 0, 1)).toBe(0.5);
+        expect(clamp(1.5, 0, 1)).toBe(1);
+    });
+});
+
+describe('groupBy', () => {
+    it('should group items by key function', () => {
+        const items = [
+            { role: 'admin', name: 'Alice' },
+            { role: 'user', name: 'Bob' },
+            { role: 'admin', name: 'Carol' },
+        ];
+        const result = groupBy(items, i => i.role);
+        expect(result.get('admin')).toEqual([
+            { role: 'admin', name: 'Alice' },
+            { role: 'admin', name: 'Carol' },
+        ]);
+        expect(result.get('user')).toEqual([{ role: 'user', name: 'Bob' }]);
+    });
+
+    it('should return empty map for empty array', () => {
+        const result = groupBy([], (x: number) => x);
+        expect(result.size).toBe(0);
+    });
+
+    it('should handle numeric keys', () => {
+        const result = groupBy([1, 2, 3, 4, 5], n => n % 2);
+        expect(result.get(0)).toEqual([2, 4]);
+        expect(result.get(1)).toEqual([1, 3, 5]);
+    });
+
+    it('should preserve insertion order within groups', () => {
+        const items = ['banana', 'apple', 'blueberry', 'avocado'];
+        const result = groupBy(items, s => s[0]!);
+        expect(result.get('b')).toEqual(['banana', 'blueberry']);
+        expect(result.get('a')).toEqual(['apple', 'avocado']);
+    });
+
+    it('should handle single-element groups', () => {
+        const result = groupBy([1, 2, 3], n => n);
+        expect(result.size).toBe(3);
+        expect(result.get(1)).toEqual([1]);
     });
 });

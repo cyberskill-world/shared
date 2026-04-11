@@ -29,13 +29,14 @@ function injectNoScrollStyle() {
 }
 
 /**
- * Loading component that displays animated loading indicators.
- * This component provides a customizable loading interface with animated rings
- * and optional full-screen overlay. It includes features for preventing user
- * interaction during loading states and supports both inline and full-screen modes.
+ * Loading component that displays an animated 3D perspective loader.
+ * This component provides a customizable loading interface with three rotating
+ * rings in a 3D perspective view and optional full-screen overlay. It includes
+ * features for preventing user interaction during loading states and supports
+ * both inline and full-screen modes.
  *
  * Features:
- * - Animated loading rings with multiple colors
+ * - Three rotating rings with 3D perspective transforms
  * - Full-screen overlay mode with scroll prevention
  * - Context menu prevention during full-screen loading
  * - Customizable loading message
@@ -69,9 +70,9 @@ export function Loading({ full = false, className = '', message = 'Loading', ...
     }, []);
 
     /**
-     * Renders the core loading animation with rings and message.
-     * This function creates the animated loading rings and optional message
-     * that are used in both full-screen and inline loading modes.
+     * Renders the core loading animation with 3D rotating rings and message.
+     * This function creates three load-inner elements that rotate in 3D space
+     * with staggered animations, along with a centered message text.
      *
      * @returns A React element containing the loading animation and message.
      */
@@ -84,11 +85,10 @@ export function Loading({ full = false, className = '', message = 'Loading', ...
                 className={style['container']}
                 {...rest}
             >
-                <div className={style['ring']} aria-hidden="true"></div>
-                <div className={style['ring']} aria-hidden="true"></div>
-                <div className={style['ring']} aria-hidden="true"></div>
-                <div className={style['ring']} aria-hidden="true"></div>
-                {message && <div className={style['message']}>{message}</div>}
+                <div className={clsx(style['load-inner'], style['load-one'])} aria-hidden="true"></div>
+                <div className={clsx(style['load-inner'], style['load-two'])} aria-hidden="true"></div>
+                <div className={clsx(style['load-inner'], style['load-three'])} aria-hidden="true"></div>
+                {message && <span className={style['message']}>{message}</span>}
             </div>
         );
     }

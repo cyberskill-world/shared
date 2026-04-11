@@ -111,16 +111,14 @@ export function copySync(src: string, dest: string, options: I_CopySyncOptions =
  * @param entry - The entry name to add (e.g. '.agent', '.simple-git-hooks.json').
  */
 export function addGitIgnoreEntry(gitIgnorePath: string, entry: string): void {
-    const gitIgnoreContent = `\n${entry}\n`;
-
     if (pathExistsSync(gitIgnorePath)) {
         const gitignore = readFileSync(gitIgnorePath, 'utf-8').split('\n');
 
         if (!gitignore.includes(entry)) {
-            appendFileSync(gitIgnorePath, gitIgnoreContent);
+            appendFileSync(gitIgnorePath, `\n${entry}\n`);
         }
     }
     else {
-        writeFileSync(gitIgnorePath, gitIgnoreContent);
+        writeFileSync(gitIgnorePath, `${entry}\n`);
     }
 }

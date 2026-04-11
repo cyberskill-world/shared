@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { generateRandomPassword, generateRandomString, generateShortId, generateSlug, getFileName, substringBetween } from './string.util.js';
+import { generateRandomPassword, generateRandomString, generateShortId, generateSlug, getFileName, substringBetween, truncate } from './string.util.js';
 
 const RE_ABC_ONLY = /^[abc]+$/;
 
@@ -231,5 +231,43 @@ describe('generateRandomFromCharset (internal branches via generateRandomString)
         for (const ch of result) {
             expect('abc').toContain(ch);
         }
+    });
+});
+
+describe('truncate', () => {
+    it('should truncate a long string with default suffix', () => {
+        expect(truncate('Hello, World!', 8)).toBe('Hello, \u2026');
+    });
+
+    it('should return original string if within limit', () => {
+        expect(truncate('Hello', 10)).toBe('Hello');
+    });
+
+    it('should return original string if exactly at limit', () => {
+        expect(truncate('Hello', 5)).toBe('Hello');
+    });
+
+    it('should use custom suffix', () => {
+        expect(truncate('Hello, World!', 8, '..')).toBe('Hello,..');
+    });
+
+    it('should handle empty string', () => {
+        expect(truncate('', 5)).toBe('');
+    });
+
+    it('should handle maxLength equal to suffix length', () => {
+        expect(truncate('Hello', 1)).toBe('\u2026');
+    });
+
+    it('should throw RangeError when maxLength < suffix length', () => {
+        expect(() => truncate('Hello', 0)).toThrow(RangeError);
+    });
+
+    it('should throw RangeError with multi-char suffix exceeding maxLength', () => {
+        expect(() => truncate('Hello', 1, '...')).toThrow(RangeError);
+    });
+
+    it('should handle empty suffix', () => {
+        expect(truncate('Hello, World!', 5, '')).toBe('Hello');
     });
 });

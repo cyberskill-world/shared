@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { deepClone, deepMerge, getNestedValue, isJSON, normalizeMongoFilter, setNestedValue } from './object.util.js';
+import { deepClone, deepMerge, getNestedValue, isJSON, normalizeMongoFilter, omit, pick, setNestedValue } from './object.util.js';
 
 const RE_ABC_I = /abc/i;
 const RE_TEST_GI = /test/gi;
@@ -330,5 +330,75 @@ describe('normalizeMongoFilter (branch coverage)', () => {
     it('should pass through non-object input types', () => {
         expect(normalizeMongoFilter(0 as any)).toBe(0);
         expect(normalizeMongoFilter('' as any)).toBe('');
+    });
+});
+
+describe('pick', () => {
+    it('should pick specified keys from an object', () => {
+        const obj = { a: 1, b: 2, c: 3 };
+        expect(pick(obj, ['a', 'c'])).toEqual({ a: 1, c: 3 });
+    });
+
+    it('should return empty object for empty keys array', () => {
+        expect(pick({ a: 1, b: 2 }, [])).toEqual({});
+    });
+
+    it('should silently ignore non-existent keys', () => {
+        const obj = { a: 1, b: 2 };
+        expect(pick(obj, ['a', 'z' as keyof typeof obj])).toEqual({ a: 1 });
+    });
+
+    it('should not mutate the source object', () => {
+        const obj = { a: 1, b: 2, c: 3 };
+        const result = pick(obj, ['a']);
+        expect(result).toEqual({ a: 1 });
+        expect(obj).toEqual({ a: 1, b: 2, c: 3 });
+    });
+
+    it('should handle all keys', () => {
+        const obj = { x: 10, y: 20 };
+        expect(pick(obj, ['x', 'y'])).toEqual({ x: 10, y: 20 });
+    });
+
+    it('should deduplicate keys', () => {
+        const obj = { a: 1, b: 2 };
+        expect(pick(obj, ['a', 'a'])).toEqual({ a: 1 });
+    });
+});
+
+describe('omit', () => {
+    it('should omit specified keys from an object', () => {
+        const obj = { a: 1, b: 2, c: 3 };
+        expect(omit(obj, ['b'])).toEqual({ a: 1, c: 3 });
+    });
+
+    it('should return full object for empty keys array', () => {
+        const obj = { a: 1, b: 2 };
+        const result = omit(obj, []);
+        expect(result).toEqual({ a: 1, b: 2 });
+    });
+
+    it('should silently ignore non-existent keys', () => {
+        const obj = { a: 1, b: 2 };
+        expect(omit(obj, ['z' as keyof typeof obj])).toEqual({ a: 1, b: 2 });
+    });
+
+    it('should not mutate the source object', () => {
+        const obj = { a: 1, b: 2, c: 3 };
+        const result = omit(obj, ['c']);
+        expect(result).toEqual({ a: 1, b: 2 });
+        expect(obj).toEqual({ a: 1, b: 2, c: 3 });
+    });
+
+    it('should return empty object when all keys are omitted', () => {
+        const obj = { a: 1, b: 2 };
+        expect(omit(obj, ['a', 'b'])).toEqual({});
+    });
+
+    it('should skip inherited properties', () => {
+        const proto = { inherited: true };
+        const obj = Object.create(proto);
+        obj.own = 1;
+        expect(omit(obj, [])).toEqual({ own: 1 });
     });
 });

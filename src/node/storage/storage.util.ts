@@ -368,6 +368,19 @@ export const storage = {
         }
     },
     /**
+     * Returns the number of stored keys.
+     * Expired TTL entries are NOT pre-cleaned; use this for approximate counts
+     * or monitoring, not as a precise non-expired count.
+     *
+     * @returns A promise that resolves to the number of stored keys.
+     * @since 3.19.0
+     */
+    async size(): Promise<number> {
+        const allKeys = await this.keys();
+
+        return allKeys.length;
+    },
+    /**
      * Retrieves a value from persistent storage, or creates and stores it if it doesn't exist.
      * This method combines check, creation, and storage into a single convenient operation.
      *

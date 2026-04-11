@@ -238,4 +238,29 @@ describe('storage', () => {
             await expect(storage.clear()).resolves.toBeUndefined();
         });
     });
+
+    describe('size', () => {
+        it('should return 0 for empty storage', async () => {
+            const result = await storage.size();
+            expect(result).toBe(0);
+        });
+
+        it('should return correct count after adding items', async () => {
+            await storage.set('a', 1);
+            await storage.set('b', 2);
+            await storage.set('c', 3);
+
+            const result = await storage.size();
+            expect(result).toBe(3);
+        });
+
+        it('should return 0 on error', async () => {
+            Object.defineProperty(localStorage, 'length', {
+                get: () => { throw new Error('fail'); },
+                configurable: true,
+            });
+            const result = await storage.size();
+            expect(result).toBe(0);
+        });
+    });
 });

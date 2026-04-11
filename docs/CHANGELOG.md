@@ -1,334 +1,69 @@
-## [3.18.0](https://github.com/cyberskill-world/shared/compare/v3.17.0...v3.18.0) (2026-04-04)
-
-### ✨ Features
-
-* code audit 4th April 2026 ([f4b98fb](https://github.com/cyberskill-world/shared/commit/f4b98fb070675614f1c79e84d2503bd02b54fb93))
-* test audit 2nd April 2026 ([1f66f2e](https://github.com/cyberskill-world/shared/commit/1f66f2e6524a611d5479decfb295f0f03ae59784))
-* test audit 4th April 2026 ([ee27dd7](https://github.com/cyberskill-world/shared/commit/ee27dd7b34949e9d3c1d94b9f4b33b1bdbf33ef7))
-
-### 🐛 Bug Fixes
-
-* add clarifying comment for 0x1_0000_0000 magic number in shuffle ([c5d5080](https://github.com/cyberskill-world/shared/commit/c5d5080a69d09fd2b7340606b217fd1326269784))
-* address PR review comments from code audit ([122d851](https://github.com/cyberskill-world/shared/commit/122d851e46d59190ee0e06fa0da486f4035c472a))
-* apply review feedback to improve test reliability ([2ce7072](https://github.com/cyberskill-world/shared/commit/2ce7072e52572fcfd0e029e23cb275617658fad1))
-* lint ([3f65a62](https://github.com/cyberskill-world/shared/commit/3f65a624aaa419180a8e6612e39b50be19fc7ee1))
-
 ## Unreleased
 
 ### 🔒 Security
 
-* **check.yml:** add `persist-credentials: false` to checkout step — prevents GITHUB_TOKEN from being persisted in local git config during CI, matching deploy.yml security posture (H-1, 2026-04-05)
-* **deploy.yml:** align audit gate from `--audit-level=high` to `--audit-level=moderate` to match check.yml strictness — prevents moderate-severity vulnerabilities from reaching npm publish (H-1)
-
-### 🔧 CI
-
-* **check.yml:** add `timeout-minutes: 15` to prevent runaway builds (SC-1, 2026-04-05)
-* **deploy.yml:** add `timeout-minutes: 20` to prevent hung semantic-release (SC-1, 2026-04-05)
-* **codeql.yml:** add `timeout-minutes: 30` and `CODEQL_THREADS: 0` for faster, bound analysis (SC-1, SC-2, 2026-04-05)
-* **codeql.yml:** add `concurrency: { group: codeql-${{ github.ref }}, cancel-in-progress: true }` to prevent duplicate analysis runs on rapid pushes (S-1, 2026-04-05)
-* **check.yml:** replace stale `branches-ignore: release` with explicit `branches: [main]` in pull_request trigger — `release` branch was deprecated in v3.16.0 (M-1)
-* **check.yml:** add `concurrency` group (`${{ github.workflow }}-${{ github.ref }}`) with `cancel-in-progress: true` to cancel superseded check runs and reduce CI minutes (SC-1)
-
-### 🧹 Chores
-
-* **package.json:** fix ESLint `style/eol-last` violation — add missing trailing newline (M-3)
-
-### ♻️ Refactors
-
-* **mongo.util:** extract `fetchAllRecords()` helper to DRY up duplicated batch pagination loop in `getNewRecords()` and `getExistingRecords()` (MA-2)
-* **catch blocks:** standardise all `catch (error)` to `catch (error: unknown)` across 11 source files (~60 catch blocks) for explicit TypeScript type safety (MA-1)
-
-### 📝 Documentation
-
-* create `CONTRIBUTING.md` starting guide mapping git hook commands for initial containerizing (L-3, 2026-04-05)
-* document issue audit results from 2026-04-05 13:38 — 1 high, 2 medium, 3 low findings (all new, zero duplication)
-* document feature audit results from 2026-04-05 13:38 — 10 new enhancement suggestions across 5 categories
-* **CODEOWNERS:** add `/scripts/` and `/docs/` ownership rules for change visibility (MA-3)
-* create `.agent/issue_report_2026-04-04_00-58.md` — 1 high, 3 medium, 3 low new findings
-* create `.agent/feature_report_2026-04-04_00-58.md` — 10 new enhancement suggestions across 5 categories
-* resolve test coverage gaps tracked in `test_coverage_report_2026-04-04_02-15.md`
-
-### ✨ Features
-
-* **cli:** add `--filter` documentation examples inside root prompt (U-1, 2026-04-05)
-* **cli:** add `--watch` interactive testing feature via CLI mapping (U-2, 2026-04-05)
-
-### 🏎️ Performance
-
-* **vitest:** migrate thread model to `pool: 'forks'` bypassing vm concurrency bottlenecks (P-1, 2026-04-05)
-* **eslint:** enable pipeline incremental `--cache` and persistence under `node_modules/.cache/eslint/` (P-2, 2026-04-05)
-### 🧪 Testing
-
-* **userback:** implement JSDOM-based component simulation testing for dynamic `MutationObserver` unmounting and hidden node queries
-* **package:** augment exception limits covering boundary dependencies mapping inside package util loops and fallback catch logic
-* **mongo:** implement complete coverage map asserting native driver unmapped exceptions inside bulk `controller.native` operations
-* **upload:** add coverage for stream pipeline cleanup logic via `readStream.destroy()`
-* **apollo-client:** add coverage for `splitLink` subscription resolution and `getErrorHandler` UI interactions
-* **storage:** expand exception coverage for missing properties, `keys()` rejection, and `localStorage` driver setup failures
-* **e2e:** refactor DOM wait conditions across test suites to use reliable `waitFor` polling instead of static timers
-* **command:** add SIGINT process exit termination and `getLogLink` log.info tests for full statement capability
-* **mongo:** implement tests for default generic schema UUID generation, virtual populates empty fallback arrays, and dynamic migration lazy loads
-* **mongo:** implement fetchAllRecords skip offset truncation assertion
-* **storage:** expand driver storage throw simulations spanning `clear()`, `has()`, and `remove()` methods
-* **e2e:** implement deterministic `resolve()` promises testing to isolate and remove brittle `setTimeout` delays in global loading rendering tests
-
-## [3.17.0](https://github.com/cyberskill-world/shared/compare/v3.16.0...v3.17.0) (2026-04-02)
-
-### ✨ Features
-
-* code audit 2nd April 2026 ([11518cf](https://github.com/cyberskill-world/shared/commit/11518cf5b1d1cda3b5d26cc854b121e275fd0dae))
-* code audit 2nd April 2026 ([c404181](https://github.com/cyberskill-world/shared/commit/c404181def7f381842b6a7422ad6ef78a3388952))
-* update libs ([75aafdc](https://github.com/cyberskill-world/shared/commit/75aafdcd0af168c7a58393a7f0fbe94e111e6289))
-* **build:** leverage Vite \`optimizeDeps\` for \`mongoose\` and \`mongodb\` to improve HMR startup
-* **build:** add \`FILTER\` environment variable check to selectively build entrypoints
-* **cli:** add \`build\` subcommand to internal CLI
-* **mongo:** implement \`health()\` tracking mapping to underlying driver pool metrics
-* **test:** add unit tests for \`scripts/merge-changelog-unreleased.mjs\`
+* **deps:** fix `next-intl` open redirect vulnerability (GHSA-8f24-v5vv-gm5j) — bump from `4.9.0` to `4.9.1` (FIX-1775887777, 2026-04-11)
+  - **WHAT:** Bump `next-intl` to `4.9.1` to patch open redirect vulnerability.
+  - **WHY:** Consumers using redirect/rewrite utilities were at risk of arbitrary URL redirects.
+  - **WHERE:** `package.json`
+  - **HOW:** Version bump + `pnpm install` + `pnpm audit` verification.
+* **deps:** fix transitive `next` DoS with Server Components (GHSA-q4gf-8mx6-v5v3) — force `next@16.2.3` via `pnpm.overrides` and bump `eslint-config-next`/`@next/eslint-plugin-next` to `16.2.3` (FIX-1775887778, 2026-04-11)
+  - **WHAT:** Pin `next` to `16.2.3` via override; bump Next.js ESLint deps to `16.2.3`.
+  - **WHY:** Transitive `next@16.2.2` via `@apollo/client-integration-nextjs` was vulnerable to DoS with Server Components.
+  - **WHERE:** `package.json` (`pnpm.overrides`, `dependencies`, `devDependencies`)
+  - **HOW:** Added `"next": "16.2.3"` to `pnpm.overrides`; bumped `eslint-config-next` and `@next/eslint-plugin-next` to `16.2.3`; regenerated lockfile; verified 0 audit vulnerabilities.
+* **validate:** reject IPv4 addresses with leading zeros in `isValidIP` to prevent SSRF/ACL bypass (RFC 6943 §3.3) and add input length guard (FIX-1775887779, 2026-04-11)
+  - **WHAT:** Reject ambiguous leading-zero IPv4 octets (e.g., `010.0.0.1`); cap input to 45 chars.
+  - **WHY:** Leading zeros cause octal interpretation on some platforms (`010.0.0.1` → `8.0.0.1`), enabling SSRF bypass on IP-based allowlists.
+  - **WHERE:** `src/util/validate/validate.util.ts`, `src/util/validate/validate.test.unit.ts`
+  - **HOW:** Added octet-level leading-zero check; added length guard; added 7 regression tests covering SSRF vectors and edge cases.
 
 ### 🐛 Bug Fixes
 
-* **string:** fix latent Fisher-Yates shuffle bug in `generateRandomPassword` character-class enforcement where random indices could overwrite the only occurrence of a required character class, causing boundary failures at small lengths
-* address code review comments from PR [#313](https://github.com/cyberskill-world/shared/issues/313) ([cdf9532](https://github.com/cyberskill-world/shared/commit/cdf953295566b8ce29c65bf964a106f7a1460973))
-
-### 🔒 Security
-
-* **deps:** fix 4 vulnerabilities (2 high, 2 moderate) — update \`lodash\` override to \`>=4.18.0\` and add \`lodash-es\` override to \`>=4.18.0\` in \`pnpm.overrides\` (GHSA-r5fr-rjxr-66jc, GHSA-f23m-r3pf-42rh)
-
-### 🔧 CI
-
-* **check.yml:** set security audit level constraint from high to moderate
-* **deploy.yml:** add pre-deployment security audit gate guaranteeing high severity baseline
-* **check.yml:** SHA-pin \`actions/cache\` from mutable \`v4\` tag to \`5a3ec84eff668545956fd18022155c47e93e2684\` (v4.2.3) for supply-chain security
-* **codeql.yml:** remove stale \`release\` branch from push and pull_request triggers (deployment now targets \`main\` only)
-
-### 📝 Documentation
-
-* create `.agent/issue_report_2026-04-02_13-01.md` — 2 high, 2 medium, 3 low findings
-* create `.agent/feature_report_2026-04-02_13-01.md` — 10 new enhancement suggestions across 5 categories
-
-### 🧪 Testing
-
-* **log:** add test coverage for `ensureLogLevel()` idempotency check path (`DEBUG=false` equivalent)
-* **storage:** add E2E test suite for `useStorage` hook exercising native `localStorage` behaviors
-* **mongo:** add unit test suite for `mongo.health()` covering topology metrics and connection states
-* **string:** add test coverage for `generateRandomFromCharset` rejection sampling logic and chunked large arrays
-* **log:** add coverage for `log.withContext()` correlation ID generation and contextual logger methods
-* **log:** fix weak assertion in `catchError` shouldLog test — now verifies `log.error` is actually called
-* **storage:** add TTL expiration branch coverage for `storage.has()` — verify cleanup on expired keys
-* **storage:** add sync factory and expired-TTL `getOrSet()` coverage
-* **storage:** add error-path coverage for `storage.clear()`
-* **mongo:** add `bulkWrite` success, empty-ops validation, and error-path coverage for native controller
-* **mongo:** add `deleteMany` error-path coverage for native controller
-* **string:** add password charset validation tests for `generateRandomPassword` enforcement code path
-* **object:** add `normalizeMongoFilter` coverage for non-POJO values, null-prototype objects, max-depth guard, and mixed nested Mongo operators
-* **common:** add `regexSearchMapper` LRU cache hit and eviction tests (128-entry boundary)
-* create `.agent/test_coverage_report_2026-04-02_17-27.md` — comprehensive gap analysis
-* create `.agent/test_refinement_report_2026-04-02_17-27.md` — assertion quality and structural improvements
-
-### ♻️ Refactoring
-
-* **test:** extract shared base mongoose mock factory in `mongo.util.test.unit.ts` to eliminate structural duplication
-* resolve test reporting tasks in coverage and refinement logs
-
-## [3.16.0](https://github.com/cyberskill-world/shared/compare/v3.15.0...v3.16.0) (2026-04-01)
+* **upload:** fix file-descriptor leak in `getFileWebStream` when file exceeds size limit (FIX-1775887782, 2026-04-11)
+  - **WHAT:** Destroy source `ReadStream` when size-validation `Transform` stream emits overflow error.
+  - **WHY:** Without cleanup, the file descriptor leaks until GC — causing resource exhaustion under heavy upload load.
+  - **WHERE:** `src/node/upload/upload.util.ts`
+  - **HOW:** Added `sizeValidationStream.on('error', () => originalStream.destroy())` after pipe setup.
 
 ### ✨ Features
 
-* auto-merge unreleased changelog on deploy ([2ef2a3d](https://github.com/cyberskill-world/shared/commit/2ef2a3d23ef90fd7b65548629b94a8c584845929))
-* fix SBOM ([e0aa71f](https://github.com/cyberskill-world/shared/commit/e0aa71f78027e378454c17a9d425faf3b514e12e))
-* new deploy flow ([6712d92](https://github.com/cyberskill-world/shared/commit/6712d92ad1be492a120bfdb4cb870d07414214d7))
-* **mongo:** implement `bulkWrite` with typing in native controller ([SC-2])
-* **mongo:** export `createMongoController` factory function for native driver symmetry
-* **cli:** add usage examples to command help documentation ([DX-1])
-* **typescript:** add `unwrapOrThrow` alias for standard result extraction ([DX-2])
-* **apollo-client:** add `debug?: boolean` option to `I_ApolloOptions`; `roundTripLink` excluded from link chain by default ([M-5])
-* **command:** export `resetCommandCacheForTesting()` for test isolation of `_cachedPackageName` ([L-3])
-* **next-intl:** export `getTranslationsNextIntl` Server Component function in dual entry point `./react/next-intl/server`
-* **i18next:** export `getTranslationsI18next` non-hook function with dual instance support in `./react/i18next/server`
-
-### 🐛 Bug Fixes
-
-* use full commit SHA for GitHub Action refs ([87952ac](https://github.com/cyberskill-world/shared/commit/87952ac9efa662239594ab7fafd56671d0127d0a))
-* use full commit SHA for GitHub Action refs ([a42cbdb](https://github.com/cyberskill-world/shared/commit/a42cbdb920896755f0e932b83fc4325d63054edf))
-* **command:** fix regex evaluation ordering for TS vs. ESLint output parser so that absolute paths don't falsely abort matching
-
-### 🔒 Security
-
-* **serializer:** guard `RegExp` reconstruction against ReDoS with `MAX_REGEXP_SOURCE_LENGTH` (1000 chars) and flag validation ([H-2])
-* **serializer:** add JSDoc warning that serializer is NOT for untrusted external input ([H-2])
-* **express:** fix CORS bypass where `...rest` spread could override `origin`/`credentials` callbacks ([M-3])
-* **express:** add `cookieSecret` option to `I_ExpressOptions` and `I_NestOptions` for signed cookie support ([M-6])
-
-### ♻️ Refactoring
-
-* **mongo:** replace unsafe `(model as any)._virtualConfigs` with typed intersection `I_ExtendedModel<T> & { _virtualConfigs: typeof virtuals }` ([H-1])
-* **vitest:** remove triple `as any` cast in `vitest.e2e.ts` and `vitest.unit.ts`; use `deepMerge<UserConfig>()` generic ([M-1])
-* **mongo:** implement cursor-based pagination loop in `getNewRecords` and `getExistingRecords` to avoid data truncation
-
-### 📝 Documentation
-
-* **apollo-error:** strengthen SSR warning — explicitly document client-side-only design and cross-request leak risk ([M-2])
-* **serializer:** document ReDoS mitigation and untrusted-input warning in JSDoc ([H-2])
-
-### 🧪 Testing
-
-* **apollo-error:** mock JSDOM location reloads to verify exact component recovery parameters
-* **apollo-server:** add coverage for query depth limiting AST visitor logic and plugin initialization
-* **command:** enhance unit tests to evaluate ESLint/TS text output parsing logic and improve failure path coverage
-* **express:** create unit tests for `createCSP()` and `createSession()` presets and overrides
-* **loading:** capture closure reference to validate `hideLoading` unmount resilience
-* **loading:** add preliminary component-level E2E coverage for global loading provider and hooks in a simulated DOM environment
-* **log:** mock `log.warn`/`log.error` in expected failure tests to significantly reduce noisy console output
-* **mongo:** create complete unit test suite validating all 5 response wrapper helpers
-* **package:** add integration-level mocks for error catching and dependency tracking workflow
-* **path:** mock `setupPackages` to bypass excessive simulated package installations, improving test execution times by >1000ms
-* **path:** simulate `fs-extra` throw for unmocked path verification and fallback path validation
-* **storage:** expand unit coverage for error catch blocks, directory initialization fallbacks, and `getLogLink` behavior
-* **tests:** mock `log` module in WebSockets and Mongo tests to silence expected warnings and error stack traces during negative assertions
-* **upload:** simulate partial streams to cover transform limits in WebStream parser payload sizing
-* **validate:** extend `isEmpty` coverage across exotic JS collections (`Date`, `Set`, `Map`, `ArrayBuffer`)
-* **path:** optimize `path.fallback.test.unit.ts` execution time by 450x via cached directory resets instead of dynamic module busting
-* **command:** add test coverage for progress timer interval logic within `runCommand`
-* **config:** extend branch coverage for `mergeConfigs` with comprehensive mock configuration evaluation
-* **apollo-error:** add E2E tests validating provider context rendering and interaction
-* **storage:** optimize unit test mocks by refactoring dynamic module loading to standard static imports
-
-## [3.13.0](https://github.com/cyberskill-world/shared/compare/v3.12.0...v3.13.0) (2026-03-27)
-
-### ✨ Features
-
-* correct vite.config.ts ([702e2bf](https://github.com/cyberskill-world/shared/commit/702e2bfa05a69dc51708346d7b0972dfc30b5c2b))
-
-## [3.12.0](https://github.com/cyberskill-world/shared/compare/v3.11.0...v3.12.0) (2026-03-27)
-
-### ✨ Features
-
-* register before recursing to handle circular references within arrays ([87a6426](https://github.com/cyberskill-world/shared/commit/87a642600269020a031f094988d2d888d5f6a5fb))
-* update libs ([d8f841f](https://github.com/cyberskill-world/shared/commit/d8f841f714ffe34dba4a7e889957d3334ea47716))
-
-### 🐛 Bug Fixes
-
-* **deps:** update all non-major dependencies ([#301](https://github.com/cyberskill-world/shared/issues/301)) ([f2677be](https://github.com/cyberskill-world/shared/commit/f2677be14635cf1723c1467eed1c123634d95d80))
-
-### ⚡ Performance
-
-* optimize serializer to prevent array allocation on each node ([5148579](https://github.com/cyberskill-world/shared/commit/5148579f8a728599afff14bf69b0ae935b085b2e))
-
-### ♻️ Refactoring
-
-* **serializer:** improve type safety and exclude Date handler from precomputed array ([3af23f6](https://github.com/cyberskill-world/shared/commit/3af23f64808b20e7aa04282e2da9d00efec3e8db))
-
-## [3.11.0](https://github.com/cyberskill-world/shared/compare/v3.10.0...v3.11.0) (2026-03-20)
-
-### ✨ Features
-
-* remove localforage ([e2ef422](https://github.com/cyberskill-world/shared/commit/e2ef422248fd5538c4486219d5289b9e72b5587c))
-
-## [3.10.0](https://github.com/cyberskill-world/shared/compare/v3.9.0...v3.10.0) (2026-03-19)
-
-### ✨ Features
-
-* correct trustProxy ([3e0a766](https://github.com/cyberskill-world/shared/commit/3e0a7664a17b15adad6c0b2dc94befa8909782d3))
-
-## [3.9.0](https://github.com/cyberskill-world/shared/compare/v3.8.0...v3.9.0) (2026-03-19)
-
-### ✨ Features
-
-* when trustProxy is not explicitly set, suppress the ERR_ERL_UNEXPECTED_X_FORWARDED_FOR ([9749772](https://github.com/cyberskill-world/shared/commit/9749772a017ec23f5d07db86fcdcef22126b57ad))
-
-## [3.8.0](https://github.com/cyberskill-world/shared/compare/v3.7.0...v3.8.0) (2026-03-18)
-
-### ✨ Features
-
-* revert eslint plugins ([08a7462](https://github.com/cyberskill-world/shared/commit/08a7462798e61684463ae62dfc08399c88ef5f76))
-
-## [3.7.0](https://github.com/cyberskill-world/shared/compare/v3.6.0...v3.7.0) (2026-03-18)
-
-### ✨ Features
-
-* improvement ([7f66f79](https://github.com/cyberskill-world/shared/commit/7f66f795666afa5d9781d437a8d765b277bfc91f))
-* replace @vitejs/plugin-react-swc with @vitejs/plugin-react ([3ec25fb](https://github.com/cyberskill-world/shared/commit/3ec25fbb93957e4a3545f51c37a02c561b4b6186))
-
-# [3.6.0](https://github.com/cyberskill-world/shared/compare/v3.5.0...v3.6.0) (2026-03-18)
-
-
-### Features
-
-* add --if-present to pre-push script ([e48cfe0](https://github.com/cyberskill-world/shared/commit/e48cfe0bbbc5f2f99ab363d9206f6c8ce001ba7f))
-* add --if-present to pre-push script ([eb4e8b1](https://github.com/cyberskill-world/shared/commit/eb4e8b15823cd1986030d85f17e12e220c80bd03))
-* remove .simple-git-hooks.json when reset ([e4c8c3b](https://github.com/cyberskill-world/shared/commit/e4c8c3ba02bbd593e6f10ed7503fbabe07e332e1))
-
-# [3.5.0](https://github.com/cyberskill-world/shared/compare/v3.4.0...v3.5.0) (2026-03-18)
-
-
-### Features
-
-* add default exports ([9daba4f](https://github.com/cyberskill-world/shared/commit/9daba4f0a9c2ca1eb5e1aafa49e00afb0fb38491))
-* add pnpm test to pre-push hook ([8a2861d](https://github.com/cyberskill-world/shared/commit/8a2861d278e4c1d3e252613f94ebea8251bcb9e0))
-* improvements ([f2de0e8](https://github.com/cyberskill-world/shared/commit/f2de0e81bc515f46ff484158dc7616c67df99d1f))
-
-# [3.4.0](https://github.com/cyberskill-world/shared/compare/v3.3.0...v3.4.0) (2026-03-17)
-
-
-### Features
-
-* make second param of createModel as optional ([fd77033](https://github.com/cyberskill-world/shared/commit/fd77033ebeb770527d04726d05a3c4a6ad5b76a6))
-
-# [3.3.0](https://github.com/cyberskill-world/shared/compare/v3.2.1...v3.3.0) (2026-03-17)
-
-
-### Bug Fixes
-
-* address rate limiting review feedback - configurable options, proxy trust, and tests ([fc75594](https://github.com/cyberskill-world/shared/commit/fc755945a55ce1427e5839acdc66744e80ee559b))
-* **deps:** update all non-major dependencies ([d2309e8](https://github.com/cyberskill-world/shared/commit/d2309e87019465a6b367bc16b4c7426bff28741e))
-* **deps:** update dependency vite to v8 ([4164b21](https://github.com/cyberskill-world/shared/commit/4164b21dd2159b52e3052aa79138fe1a48956865))
-* rebase palette-a11y-apollo-error onto main ([0951335](https://github.com/cyberskill-world/shared/commit/0951335ab71d725440e2f544f2e76d7b1a548b55))
-* Revert unprompted package upgrades and out-of-scope changes ([d4964f2](https://github.com/cyberskill-world/shared/commit/d4964f289a2984a1dba9bee6b29754472bf2ca7b))
-* update overrides to fix high severity vulnerabilities in CI ([a073332](https://github.com/cyberskill-world/shared/commit/a0733323add264b13980b81712d07e0f61d159c8))
-* vite config ([f20ce3b](https://github.com/cyberskill-world/shared/commit/f20ce3b8d3ccb6f1125a453137be4c557a5aabe7))
-
-
-### Features
-
-* **a11y:** add aria-describedby to ApolloErrorComponent ([e955f58](https://github.com/cyberskill-world/shared/commit/e955f587f2ccd32667b0b0af7fbe3f0aaa7e72f6))
-* implement global rate limiting using express-rate-limit ([82fcb23](https://github.com/cyberskill-world/shared/commit/82fcb23cda7b5af555c21bf0871eb41801da5814))
-* implement global rate limiting using express-rate-limit ([a8d0b33](https://github.com/cyberskill-world/shared/commit/a8d0b33044c1c770ad5042b125473481fdcb956c))
-* improvements ([6072088](https://github.com/cyberskill-world/shared/commit/6072088a6bdaf1e02be16e3536e5df9cf2d20eba))
-* improvements ([179a32d](https://github.com/cyberskill-world/shared/commit/179a32d8ef49c55393f57b466509ed76f2ce0063))
-* improvements ([095a70b](https://github.com/cyberskill-world/shared/commit/095a70b35d74010a63a2858c4273af3bcd18b237))
-* update libs ([ef0a460](https://github.com/cyberskill-world/shared/commit/ef0a460106c4b413f4652474732efa1af0e2fc76))
-
-
-### Performance Improvements
-
-* optimize `deepClone` with pre-allocated array and `for` loop ([39be0d8](https://github.com/cyberskill-world/shared/commit/39be0d81abca36776b8c8279876b8da64cd62b30))
-
-## [3.2.1](https://github.com/cyberskill-world/shared/compare/v3.2.0...v3.2.1) (2026-03-06)
-
-
-### Bug Fixes
-
-* ci ([d0b90b3](https://github.com/cyberskill-world/shared/commit/d0b90b3e0e284c4fa5fdcec30f66b2f9bde893f4))
-* ci ([59b84e6](https://github.com/cyberskill-world/shared/commit/59b84e6de1e215d94751c2f97c88ceda00070d74))
-
-# [3.2.0](https://github.com/cyberskill-world/shared/compare/v3.1.0...v3.2.0) (2026-03-06)
-
-
-### Features
-
-* add more test cases ([6cf237e](https://github.com/cyberskill-world/shared/commit/6cf237ee579742b65f3036b528d6e2d091afc997))
-* update libs ([4102ec9](https://github.com/cyberskill-world/shared/commit/4102ec979d5678d23d5651132af16b58ec6e90d2))
-
-# [3.1.0](https://github.com/cyberskill-world/shared/compare/v3.0.0...v3.1.0) (2026-03-03)
-
-
-### Features
-
-* turn off cjs ([4a8e974](https://github.com/cyberskill-world/shared/commit/4a8e974911ad5880b1d7f6dfe887289da00f32dc))
-* turn off cjs ([4f0897c](https://github.com/cyberskill-world/shared/commit/4f0897cd718f3286f9f65d70c6fdce7023003e7b))
-
-# Changelog
-
-All notable changes to this project are documented in [GitHub Releases](https://github.com/cyberskill-world/shared/releases).
-
-This project adheres to [Semantic Versioning](https://semver.org/) and uses [semantic-release](https://github.com/semantic-release/semantic-release) for automated versioning and changelog generation.
+* **storage:** add `storage.size()` to node and react storage drivers (FEAT-1775887783, 2026-04-11)
+  - **WHAT:** Add `size(): Promise<number>` to both `localStorage` (O(1)) and filesystem (`keys().length`) storage drivers.
+  - **WHY:** Monitoring and dashboards need key counts without loading all values.
+  - **WHERE:** `src/node/storage/storage.util.ts`, `src/react/storage/storage.util.ts`
+  - **HOW:** Browser uses `localStorage.length`; node delegates to `keys()`. Added 3 unit tests.
+* **object:** add type-safe `pick()` and `omit()` utilities (FEAT-1775887784, 2026-04-11)
+  - **WHAT:** Add `pick<T, K>(obj, keys): Pick<T, K>` and `omit<T, K>(obj, keys): Omit<T, K>`.
+  - **WHY:** Most common object subsetting operation — eliminates ad-hoc spread/delete patterns across consumers.
+  - **WHERE:** `src/util/object/object.util.ts`
+  - **HOW:** Set-based key lookup for O(K+N) performance. Added 12 unit tests.
+* **string:** add `truncate()` utility with configurable suffix (FEAT-1775887785, 2026-04-11)
+  - **WHAT:** Add `truncate(str, maxLength, suffix='…')` — guarantees result never exceeds `maxLength`.
+  - **WHY:** Needed across UI components, log formatting, and error messages.
+  - **WHERE:** `src/util/string/string.util.ts`
+  - **HOW:** Unicode ellipsis default, `RangeError` guard for invalid bounds. Added 9 unit tests.
+* **common:** add `clamp(value, min, max)` utility for numeric range clamping (FEAT-1775887788, 2026-04-11)
+  - **WHAT:** Constrain a number to `[min, max]` with `RangeError` guard for invalid bounds.
+  - **WHY:** Eliminates ad-hoc `Math.min(Math.max(...))` patterns across consumers.
+  - **WHERE:** `src/util/common/common.util.ts`
+  - **HOW:** One-liner with `RangeError` guard. Added 8 unit tests.
+* **common:** add `groupBy(items, keyFn)` utility for array-to-Map transformation (FEAT-1775887789, 2026-04-11)
+  - **WHAT:** Group array items into `Map<K, T[]>` keyed by selector function result.
+  - **WHY:** Eliminates ad-hoc `reduce` patterns; `Map` return enables O(1) group lookup and arbitrary key types.
+  - **WHERE:** `src/util/common/common.util.ts`
+  - **HOW:** Single-pass iteration with `Map.get()`/`.set()`. Added 5 unit tests.
+
+### 🐛 Bug Fixes (Phase 3)
+
+* **fs:** fix `addGitIgnoreEntry` writing a leading newline when creating a new `.gitignore` (FIX-1775887786, 2026-04-11)
+  - **WHAT:** New `.gitignore` files started with a blank line because the template used `\n${entry}\n`.
+  - **WHY:** Creates non-standard file format; some linting tools and editors flag leading whitespace.
+  - **WHERE:** `src/node/fs/fs.util.ts`
+  - **HOW:** Changed new-file branch to `${entry}\n`; append branch still uses `\n${entry}\n`.
+
+### 🧪 Test Coverage (Phase 3)
+
+* **storage:** add 3 integration tests for node `storage.size()` (TEST-1775887787, 2026-04-11)
+  - Covers empty state, populated state (2 keys), and driver error fallback.
+  - **WHERE:** `src/node/storage/storage.test.unit.ts`
