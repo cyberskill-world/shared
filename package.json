@@ -289,7 +289,7 @@
         "mongoose": "9.3.3",
         "mongoose-aggregate-paginate-v2": "1.1.4",
         "mongoose-paginate-v2": "1.9.4",
-        "next-intl": "4.9.0",
+        "next-intl": "4.9.1",
         "path-to-regexp": "8.4.2",
         "qs": "6.15.0",
         "react": "19.2.4",
