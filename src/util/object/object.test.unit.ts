@@ -6,6 +6,23 @@ const RE_ABC_I = /abc/i;
 const RE_TEST_GI = /test/gi;
 
 describe('deepMerge', () => {
+    it('should ignore __proto__ in merged objects to prevent prototype pollution', () => {
+        const target = {};
+        const malicious = JSON.parse('{"__proto__": {"polluted3": true}}');
+        const result = deepMerge(target, malicious);
+        expect(({} as any).polluted3).toBeUndefined();
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect((result as any).polluted3).toBeUndefined();
+    });
+
+    it('should treat constructor as a regular key (not a prototype-pollution vector)', () => {
+        const target = {};
+        const malicious = JSON.parse('{"constructor": {"prototype": {"polluted4": true}}}');
+        const result = deepMerge(target, malicious);
+        expect(({} as any).polluted4).toBeUndefined();
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect((result as any).polluted4).toBeUndefined();
+    });
     it('should merge two objects', () => {
         const obj1 = { a: 1, b: { c: 2 } };
         const obj2 = { b: { d: 3 }, e: 4 };
@@ -103,6 +120,12 @@ describe('isJSON', () => {
 });
 
 describe('normalizeMongoFilter', () => {
+    it('should ignore __proto__ to prevent prototype pollution', () => {
+        const malicious = JSON.parse('{"__proto__": {"polluted5": true}}');
+        const result = normalizeMongoFilter(malicious);
+        expect(({} as any).polluted5).toBeUndefined();
+        expect((result as any).polluted5).toBeUndefined();
+    });
     it('should flatten nested objects to dot notation', () => {
         const filter = { a: { b: 1 } };
         const result = normalizeMongoFilter(filter);
@@ -154,6 +177,23 @@ describe('getNestedValue', () => {
 });
 
 describe('setNestedValue', () => {
+    it('should ignore __proto__ to prevent prototype pollution', () => {
+        const obj = {};
+        const result = setNestedValue(obj, ['__proto__', 'polluted'], true);
+        expect(({} as any).polluted).toBeUndefined();
+        expect((result as any).polluted).toBeUndefined();
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect(obj).toEqual({});
+    });
+
+    it('should allow constructor as a legitimate data key', () => {
+        const obj = {};
+        const result = setNestedValue(obj, ['constructor', 'name'], 'MyClass');
+        expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+        expect((result as any).constructor).toEqual({ name: 'MyClass' });
+        expect(obj).toEqual({});
+    });
+
     it('should set nested value', () => {
         const obj = {};
         const result = setNestedValue(obj, ['a', 'b'], 1);

@@ -1,4 +1,14 @@
 /**
+ * Set of keys that can trigger prototype mutation when used as property names
+ * during object traversal. Only `__proto__` is included because it is the sole
+ * key that actually mutates the prototype chain when assigned as an own property
+ * (via the Object.prototype `__proto__` setter). Keys like `constructor` and
+ * `prototype` are legitimate data-field names on plain objects and must NOT be
+ * blocked, as doing so would silently drop valid data.
+ */
+const PROTOTYPE_POLLUTION_KEYS = new Set(['__proto__']);
+
+/**
  * Check if a string is a valid JSON string.
  * This function attempts to parse the string as JSON and returns true if successful,
  * false if the string is not valid JSON.
@@ -65,6 +75,10 @@ function setNestedValueHelper<T>(obj: T, path: (string | number)[], value: unkno
         return obj;
 
     const head = path[index];
+
+    if (typeof head === 'string' && PROTOTYPE_POLLUTION_KEYS.has(head)) {
+        return obj;
+    }
 
     if (index === path.length - 1) {
         return {
@@ -186,6 +200,8 @@ function deepCloneInternal<T>(obj: T, seen: WeakMap<object, unknown>): T {
     seen.set(obj as object, result);
 
     for (const key in obj) {
+        if (PROTOTYPE_POLLUTION_KEYS.has(key))
+            continue;
         if (Object.hasOwn(obj, key)) {
             result[key] = deepCloneInternal((obj as Record<string, unknown>)[key], seen);
         }
@@ -262,6 +278,8 @@ export function deepMerge<T = Record<string, unknown> | unknown[]>(
                 const obj = arg as Record<string, unknown>;
 
                 for (const key in obj) {
+                    if (PROTOTYPE_POLLUTION_KEYS.has(key))
+                        continue;
                     if (Object.hasOwn(obj, key)) {
                         const value = obj[key];
 
@@ -388,6 +406,9 @@ export function normalizeMongoFilter<T extends Record<string, unknown>>(filter: 
         }
 
         for (const key in current) {
+            if (PROTOTYPE_POLLUTION_KEYS.has(key)) {
+                continue;
+            }
             if (!Object.hasOwn(current, key)) {
                 continue;
             }
